@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  bool _password = true;
   @override
   Widget build(BuildContext context) {
     Widget usernameInput() {
@@ -69,6 +75,7 @@ class LoginPage extends StatelessWidget {
             Expanded(
               child: TextFormField(
                 textAlignVertical: TextAlignVertical.center,
+                obscureText: _password,
                 decoration: InputDecoration.collapsed(
                   hintText: 'Password',
                   hintStyle: mono3TextStyle.copyWith(
@@ -77,9 +84,16 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
             ),
-            Icon(
-              Icons.visibility_off,
-              color: mono3Color,
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  _password = !_password;
+                });
+              },
+              child: Icon(
+                _password ? Icons.visibility_off : Icons.visibility,
+                color: mono3Color,
+              ),
             ),
           ],
         ),
