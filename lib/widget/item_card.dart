@@ -48,6 +48,10 @@ class ItemCard extends StatelessWidget {
               alignment: Alignment.center,
               child: Text(
                 text,
+                style: mono1TextStyle.copyWith(
+                  fontSize: 10,
+                  fontWeight: semiBold,
+                ),
                 textAlign: TextAlign.center,
               ),
             ),
