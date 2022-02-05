@@ -1,8 +1,6 @@
-import 'package:adistetsa/providers/auth_provider.dart';
 import 'package:adistetsa/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
-import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -14,31 +12,22 @@ FocusNode passwordFocusNode = new FocusNode();
 FocusNode usernameFocusNode = new FocusNode();
 bool isActivePassword = false;
 bool isActiveUsername = false;
+bool isLoading = false;
 
 class _LoginPageState extends State<LoginPage> {
-<<<<<<< HEAD
-  bool _password = true;
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-
-=======
   TextEditingController usernameController = TextEditingController(text: '');
   TextEditingController passwordController = TextEditingController(text: '');
->>>>>>> cce061c4ba1160fcca27de602bcc294cdcc5863f
   @override
   Widget build(BuildContext context) {
-    AuthpProvider authpProvider = Provider.of<AuthpProvider>(context);
-
     handleLogin() async {
+      setState(() {
+        isLoading = true;
+      });
       if (await AuthService().login(
           username: usernameController.text,
           password: passwordController.text)) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            backgroundColor: successColor,
-            content: Text(
-              'Berhasil Login',
-              textAlign: TextAlign.center,
-            )));
+        Navigator.pushNamedAndRemoveUntil(
+            context, '/roles-page', (route) => false);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             backgroundColor: dangerColor,
@@ -47,6 +36,9 @@ class _LoginPageState extends State<LoginPage> {
               textAlign: TextAlign.center,
             )));
       }
+      setState(() {
+        isLoading = false;
+      });
     }
 
     Widget usernameInput() {
@@ -77,15 +69,6 @@ class _LoginPageState extends State<LoginPage> {
               width: 12,
             ),
             Expanded(
-<<<<<<< HEAD
-              child: TextFormField(
-                controller: usernameController,
-                textAlignVertical: TextAlignVertical.center,
-                decoration: InputDecoration.collapsed(
-                  hintText: 'Username/NIS/NIP',
-                  hintStyle: mono3TextStyle.copyWith(
-                    fontSize: 12,
-=======
               child: GestureDetector(
                 child: TextFormField(
                   onTap: () {
@@ -117,7 +100,6 @@ class _LoginPageState extends State<LoginPage> {
                             : mono3TextStyle.copyWith(
                                 fontSize: 12,
                               ),
->>>>>>> cce061c4ba1160fcca27de602bcc294cdcc5863f
                   ),
                   style: usernameFocusNode.hasFocus || isActiveUsername == true
                       ? m2TextStyle.copyWith(
@@ -161,8 +143,6 @@ class _LoginPageState extends State<LoginPage> {
             ),
             Expanded(
               child: TextFormField(
-<<<<<<< HEAD
-=======
                 style: passwordFocusNode.hasFocus || isActivePassword == true
                     ? m2TextStyle.copyWith(
                         fontSize: 12,
@@ -187,7 +167,6 @@ class _LoginPageState extends State<LoginPage> {
                   });
                 },
                 focusNode: passwordFocusNode,
->>>>>>> cce061c4ba1160fcca27de602bcc294cdcc5863f
                 controller: passwordController,
                 textAlignVertical: TextAlignVertical.center,
                 obscureText: showPassword == false ? true : false,
@@ -244,18 +223,38 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
           onPressed: () {
-<<<<<<< HEAD
             handleLogin();
-=======
-            Navigator.pushNamedAndRemoveUntil(
-                context, '/roles-page', (route) => false);
->>>>>>> cce061c4ba1160fcca27de602bcc294cdcc5863f
           },
           child: Text(
             'Masuk',
             style: mono6TextStyle.copyWith(
               fontWeight: bold,
               fontSize: 16,
+            ),
+          ),
+        ),
+      );
+    }
+
+    Widget loadingButton() {
+      return Container(
+        width: 177,
+        height: 46,
+        child: TextButton(
+          style: TextButton.styleFrom(
+            backgroundColor: m1Color,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          onPressed: () {},
+          child: Container(
+            alignment: Alignment.center,
+            width: 14,
+            height: 14,
+            child: CircularProgressIndicator(
+              color: mono6Color,
+              strokeWidth: 2,
             ),
           ),
         ),
@@ -349,7 +348,7 @@ class _LoginPageState extends State<LoginPage> {
                         SizedBox(
                           height: 111,
                         ),
-                        buttonSubmit(),
+                        isLoading == false ? buttonSubmit() : loadingButton(),
                         Container(
                           height: MediaQuery.of(context).size.height * 0.12,
                           child: Column(

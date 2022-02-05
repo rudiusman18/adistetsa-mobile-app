@@ -1,5 +1,11 @@
+import 'package:adistetsa/providers/auth_provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'models/role_model.dart';
 
 class RolesPage extends StatefulWidget {
   @override
@@ -7,16 +13,47 @@ class RolesPage extends StatefulWidget {
 }
 
 int currentIndex = -1;
+bool isLoading = false;
 
 class _RolesPageState extends State<RolesPage> {
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+
+    roleHandler() async {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      var role = preferences.getString('role');
+      if (currentIndex == -1) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: dangerColor,
+          content: Text(
+            "Pilih akun dulu",
+            textAlign: TextAlign.center,
+          ),
+        ));
+      } else {
+        setState(() {
+          isLoading = true;
+        });
+        print(role);
+      }
+      setState(() {
+        isLoading = false;
+      });
+    }
+
     Widget option({required int index, required String text}) {
       return GestureDetector(
         onTap: () {
           setState(() {
+            authProvider.roles = RolesModel(name: text);
             currentIndex = index;
-            print(currentIndex);
+            Future saveRoles() async {
+              SharedPreferences pref = await SharedPreferences.getInstance();
+              return pref.setString('role', text);
+            }
+
+            saveRoles();
           });
         },
         child: Container(
@@ -57,6 +94,49 @@ class _RolesPageState extends State<RolesPage> {
                     )
                   : Container(),
             ],
+          ),
+        ),
+      );
+    }
+
+    Widget loadingButton() {
+      return TextButton(
+        onPressed: () {},
+        style: TextButton.styleFrom(
+          backgroundColor: m1Color,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+              8,
+            ),
+          ),
+        ),
+        child: Container(
+          height: 14,
+          width: 14,
+          child: CircularProgressIndicator(
+            color: mono6Color,
+            strokeWidth: 4,
+          ),
+        ),
+      );
+    }
+
+    Widget submitButton() {
+      return TextButton(
+        style: TextButton.styleFrom(
+          backgroundColor: m2Color,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        onPressed: () {
+          roleHandler();
+        },
+        child: Text(
+          'Pilih',
+          style: mono6TextStyle.copyWith(
+            fontSize: 16,
+            fontWeight: bold,
           ),
         ),
       );
@@ -147,8 +227,33 @@ class _RolesPageState extends State<RolesPage> {
                               fontSize: 16,
                             ),
                           ),
-                          option(index: 0, text: 'Guru'),
-                          option(index: 1, text: 'Staff Kurikulum'),
+                          FutureBuilder(
+                            future: Service().getRoles(),
+                            builder:
+                                (BuildContext context, AsyncSnapshot snapshot) {
+                              if (snapshot.hasData) {
+                                int index = 0;
+                                List<RolesModel> data = snapshot.data;
+                                return Column(
+                                    children: data.map((item) {
+                                  index += 1;
+                                  return option(
+                                      index: index, text: item.name.toString());
+                                }).toList());
+                              } else {
+                                return Column(children: [
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Center(
+                                    child: CircularProgressIndicator(
+                                      color: m1Color,
+                                    ),
+                                  ),
+                                ]);
+                              }
+                            },
+                          ),
                           SizedBox(
                             height: 18,
                           ),
@@ -166,39 +271,32 @@ class _RolesPageState extends State<RolesPage> {
                             height: 37,
                           ),
                           Container(
-                            width: 163,
-                            height: 46,
-                            child: TextButton(
-                              style: TextButton.styleFrom(
-                                backgroundColor: m2Color,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              onPressed: () {
-                                Navigator.pushNamedAndRemoveUntil(
-                                    context, '/main-page', (route) => false);
-                              },
-                              child: Text(
-                                'Pilih',
-                                style: mono6TextStyle.copyWith(
-                                  fontSize: 16,
-                                  fontWeight: bold,
-                                ),
-                              ),
-                            ),
-                          ),
+                              width: 163,
+                              height: 46,
+                              child: isLoading == true
+                                  ? loadingButton()
+                                  : submitButton()),
                         ],
                       ),
                     ),
                     SizedBox(
                       height: 71,
                     ),
-                    Text(
-                      'Keluar',
-                      style: m3TextStyle.copyWith(
-                        fontSize: 16,
-                        fontWeight: semiBold,
+                    GestureDetector(
+                      onTap: () async {
+                        currentIndex = -1;
+                        SharedPreferences preferences =
+                            await SharedPreferences.getInstance();
+                        preferences.clear();
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, '/login-page', (route) => false);
+                      },
+                      child: Text(
+                        'Keluar',
+                        style: m3TextStyle.copyWith(
+                          fontSize: 16,
+                          fontWeight: semiBold,
+                        ),
                       ),
                     ),
                     Container(
