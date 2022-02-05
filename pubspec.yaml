@@ -54,6 +54,9 @@ flutter:
     - assets/
     - assets/splash_screen/
     - assets/login/
+    - assets/roles/
+    - assets/home/
+    - assets/home/profile/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
