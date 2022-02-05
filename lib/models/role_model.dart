@@ -1,5 +1,5 @@
 class RolesModel {
-  String name = '';
+  String? name;
 
   RolesModel({
     required this.name,

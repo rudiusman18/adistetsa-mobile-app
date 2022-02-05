@@ -52,8 +52,14 @@ class HomePage extends StatelessWidget {
                             fontWeight: bold,
                           ),
                         ),
-                        Icon(
-                          Icons.group_outlined,
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamedAndRemoveUntil(
+                                context, '/roles-page', (route) => false);
+                          },
+                          child: Icon(
+                            Icons.group_outlined,
+                          ),
                         ),
                       ],
                     ),
