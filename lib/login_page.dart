@@ -1,5 +1,8 @@
+import 'package:adistetsa/providers/auth_provider.dart';
+import 'package:adistetsa/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -8,8 +11,33 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _password = true;
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    AuthpProvider authpProvider = Provider.of<AuthpProvider>(context);
+
+    handleLogin() async {
+      if (await AuthService().login(
+          username: usernameController.text,
+          password: passwordController.text)) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: successColor,
+            content: Text(
+              'Berhasil Login',
+              textAlign: TextAlign.center,
+            )));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: dangerColor,
+            content: Text(
+              'Gagal Login',
+              textAlign: TextAlign.center,
+            )));
+      }
+    }
+
     Widget usernameInput() {
       return Container(
         padding: EdgeInsets.all(12),
@@ -35,6 +63,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             Expanded(
               child: TextFormField(
+                controller: usernameController,
                 textAlignVertical: TextAlignVertical.center,
                 decoration: InputDecoration.collapsed(
                   hintText: 'Username/NIS/NIP',
@@ -74,6 +103,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             Expanded(
               child: TextFormField(
+                controller: passwordController,
                 textAlignVertical: TextAlignVertical.center,
                 obscureText: _password,
                 decoration: InputDecoration.collapsed(
@@ -111,7 +141,9 @@ class _LoginPageState extends State<LoginPage> {
               borderRadius: BorderRadius.circular(8),
             ),
           ),
-          onPressed: () {},
+          onPressed: () {
+            handleLogin();
+          },
           child: Text(
             'Masuk',
             style: mono6TextStyle.copyWith(
