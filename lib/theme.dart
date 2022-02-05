@@ -25,6 +25,7 @@ Color mono4Color = Color(0xffE5E5E5);
 Color mono5Color = Color(0xffF2F2F2);
 Color mono6Color = Color(0xffFFFFFF);
 Color blueIconColor = Color(0xff2E3A59);
+Color shadowColor = Color(0xffC5C5C5);
 
 // FontWeight
 FontWeight bold = FontWeight.w700;
