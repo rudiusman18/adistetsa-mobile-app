@@ -120,7 +120,7 @@ class _RolesPageState extends State<RolesPage> {
           width: 14,
           child: CircularProgressIndicator(
             color: mono6Color,
-            strokeWidth: 4,
+            strokeWidth: 2,
           ),
         ),
       );
