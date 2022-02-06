@@ -34,7 +34,6 @@ class Services extends ChangeNotifier {
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
-      print('cok');
       var data = jsonDecode(response.body);
       if (role == 'Guru') {
         GuruModel guruModel = GuruModel.fromJson(data);

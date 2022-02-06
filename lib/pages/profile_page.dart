@@ -4,6 +4,7 @@ import 'package:adistetsa/providers/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key? key}) : super(key: key);
@@ -227,13 +228,28 @@ class _ProfilePageState extends State<ProfilePage> {
                     SizedBox(
                       height: 20,
                     ),
-                    content(
-                      icon: Icons.switch_account_outlined,
-                      name: 'Ganti Akun',
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, '/roles-page', (route) => false);
+                      },
+                      child: content(
+                        icon: Icons.switch_account_outlined,
+                        name: 'Ganti Akun',
+                      ),
                     ),
-                    content(
-                      icon: Icons.logout_outlined,
-                      name: 'Keluar',
+                    GestureDetector(
+                      onTap: () async {
+                        SharedPreferences preferences =
+                            await SharedPreferences.getInstance();
+                        preferences.clear();
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, '/login-page', (route) => false);
+                      },
+                      child: content(
+                        icon: Icons.logout_outlined,
+                        name: 'Keluar',
+                      ),
                     ),
                   ],
                 ),
