@@ -14,7 +14,7 @@ class HomePage extends StatelessWidget {
           children: [
             GestureDetector(
               onTap: () {
-                Navigator.pushNamed(context, '/katalog-buku-page');
+                Navigator.pushNamed(context, '/staff-perpus/katalog-buku-page');
               },
               child: ItemCard(
                 urlImg: 'katalog buku',
@@ -25,9 +25,15 @@ class HomePage extends StatelessWidget {
               urlImg: 'anggota perpustakaan',
               text: 'Anggota Perpustakaan',
             ),
-            ItemCard(
-              urlImg: 'peminjaman buku',
-              text: 'Peminjaman Buku',
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(
+                    context, '/staff-perpus/peminjaman-buku-page');
+              },
+              child: ItemCard(
+                urlImg: 'peminjaman buku',
+                text: 'Peminjaman Buku',
+              ),
             ),
             ItemCard(
               urlImg: 'riwayat peminjaman',

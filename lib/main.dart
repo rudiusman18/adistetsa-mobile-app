@@ -1,7 +1,9 @@
 import 'package:adistetsa/login_page.dart';
 import 'package:adistetsa/pages/detail%20profile/update_password_page.dart';
 import 'package:adistetsa/pages/main_page.dart';
-import 'package:adistetsa/pages/staff%20perpustakaan/katalog%20buku/katalog_buku.dart';
+import 'package:adistetsa/pages/staff/perpustakaan/katalog%20buku/katalog_buku_page.dart';
+import 'package:adistetsa/pages/staff/perpustakaan/peminjaman%20buku/detail_peminjaman_buku_page.dart';
+import 'package:adistetsa/pages/staff/perpustakaan/peminjaman%20buku/peminjaman_buku_page.dart';
 import 'package:adistetsa/providers/auth_provider.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/roles_page.dart';
@@ -56,10 +58,25 @@ class AdiStetsa extends StatelessWidget {
                 child: UpdatePasswordPage(),
                 type: PageTransitionType.rightToLeft,
               );
-            case '/katalog-buku-page':
+            case '/staff-perpus/katalog-buku-page':
               return PageTransition(
-                child: KatalogBuku(),
+                child: KatalogBukuPage(),
                 type: PageTransitionType.rightToLeft,
+              );
+            case '/staff-perpus/peminjaman-buku-page':
+              return PageTransition(
+                child: PeminjamanBukuPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/staff-perpus/peminjaman-buku/detail-page':
+              return PageTransition(
+                child: DetailPeminjamanBukuPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/main-page/back':
+              return PageTransition(
+                child: MainPage(),
+                type: PageTransitionType.leftToRight,
               );
             case '/main-page':
               return PageTransition(
