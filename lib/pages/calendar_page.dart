@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:adistetsa/theme.dart';
 
 class CalendarPage extends StatelessWidget {
   @override

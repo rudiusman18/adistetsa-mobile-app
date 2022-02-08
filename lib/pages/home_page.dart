@@ -35,9 +35,15 @@ class HomePage extends StatelessWidget {
                 text: 'Peminjaman Buku',
               ),
             ),
-            ItemCard(
-              urlImg: 'riwayat peminjaman',
-              text: 'Riwayat Peminjaman',
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(
+                    context, '/staff-perpus/riwayat-peminjaman-page');
+              },
+              child: ItemCard(
+                urlImg: 'riwayat peminjaman',
+                text: 'Riwayat Peminjaman',
+              ),
             ),
             ItemCard(
               urlImg: 'laporan jumlah anggota',
