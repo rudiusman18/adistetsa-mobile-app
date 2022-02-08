@@ -1,9 +1,23 @@
+import 'package:adistetsa/models/guru_model.dart';
+import 'package:adistetsa/models/kompetensi_model.dart';
+import 'package:adistetsa/models/role_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class ProfileCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+    RolesModel rolesModel = provider.role;
+    GuruModel guruModel = provider.guru;
+
+    var role = rolesModel.name;
+    var _nama = role == 'Guru' ? '${guruModel.nAMALENGKAP}' : '';
+    var _noInduk = role == 'Guru' ? 'NIP ${guruModel.nIP}' : '';
+    var _spesialisParameter = role == 'Guru' ? 'Kompetensi' : '';
     return Container(
       decoration: BoxDecoration(
           color: m2Color,
@@ -46,7 +60,7 @@ class ProfileCard extends StatelessWidget {
                   width: 146.57,
                 ),
                 Text(
-                  'Staff',
+                  '$role',
                   style: mono6TextStyle.copyWith(
                     fontWeight: semiBold,
                     fontSize: 16,
@@ -64,7 +78,7 @@ class ProfileCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Aqsana Sirait M',
+                      '$_nama',
                       style: mono6TextStyle.copyWith(
                         fontWeight: semiBold,
                         fontSize: 18,
@@ -74,26 +88,62 @@ class ProfileCard extends StatelessWidget {
                       height: 4,
                     ),
                     Text(
-                      'NIP 199010102015051001',
+                      '$_noInduk',
                       style: mono6TextStyle,
                     ),
                     SizedBox(
                       height: 20,
                     ),
                     Text(
-                      'Bidang',
+                      '$_spesialisParameter',
                       style: mono6TextStyle.copyWith(
                         fontWeight: regular,
                         fontSize: 10,
                       ),
                     ),
-                    Text(
-                      'Kurikulum',
-                      style: mono6TextStyle.copyWith(
-                        fontWeight: semiBold,
-                        fontSize: 18,
-                      ),
-                    ),
+                    rolesModel.name == 'Guru'
+                        ? FutureBuilder(
+                            future: Services().getKompetensiGuru(),
+                            builder:
+                                (BuildContext context, AsyncSnapshot snapshot) {
+                              if (snapshot.hasData) {
+                                List<KompetensiModel> data = snapshot.data;
+                                return Column(
+                                    children: data.map((item) {
+                                  return Text(
+                                    item.bIDANGSTUDI.toString(),
+                                    style: mono6TextStyle.copyWith(
+                                      fontWeight: semiBold,
+                                      color: mono5Color,
+                                    ),
+                                  );
+                                }).toList());
+                              } else {
+                                return Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Container(
+                                      width: 180,
+                                      child: LinearProgressIndicator(
+                                        color: Colors.white,
+                                        minHeight: 2,
+                                        backgroundColor: m1Color,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }
+                            },
+                          )
+                        : Text(
+                            'Kurikulum',
+                            style: mono6TextStyle.copyWith(
+                              fontWeight: semiBold,
+                              fontSize: 18,
+                            ),
+                          ),
                   ],
                 ),
                 Opacity(

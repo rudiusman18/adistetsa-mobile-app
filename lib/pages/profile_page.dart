@@ -1,5 +1,10 @@
+import 'package:adistetsa/models/guru_model.dart';
+import 'package:adistetsa/models/role_model.dart';
+import 'package:adistetsa/providers/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key? key}) : super(key: key);
@@ -11,6 +16,15 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+    RolesModel rolesModel = provider.role;
+    GuruModel guruModel = provider.guru;
+
+    var role = rolesModel.name;
+    var _nama = role == 'Guru' ? '${guruModel.nAMALENGKAP}' : '';
+    var _noInduk = role == 'Guru' ? 'NIP ${guruModel.nIP}' : '';
+    var _email = role == 'Guru' ? '${guruModel.eMAIL}' : '';
+    var _noHp = role == 'Guru' ? '${guruModel.hP}' : '';
     PreferredSizeWidget header() {
       return AppBar(
         centerTitle: true,
@@ -58,13 +72,13 @@ class _ProfilePageState extends State<ProfilePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'NIP 199010102015051001',
+                      '$_noInduk',
                       style: mono2TextStyle.copyWith(
                         fontSize: 10,
                       ),
                     ),
                     Text(
-                      'Kevin Firmansyah',
+                      '$_nama',
                       style: mono1TextStyle.copyWith(
                         fontSize: 14,
                       ),
@@ -79,7 +93,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                     Text(
-                      'Kevinkevinkevinkevinfirmansyah@gmail.com',
+                      '$_email',
                       style: mono1TextStyle.copyWith(
                         fontSize: 14,
                       ),
@@ -94,7 +108,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                     Text(
-                      '+62818547342957',
+                      '$_noHp',
                       style: mono1TextStyle.copyWith(
                         fontSize: 14,
                       ),
@@ -214,13 +228,28 @@ class _ProfilePageState extends State<ProfilePage> {
                     SizedBox(
                       height: 20,
                     ),
-                    content(
-                      icon: Icons.switch_account_outlined,
-                      name: 'Ganti Akun',
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, '/roles-page', (route) => false);
+                      },
+                      child: content(
+                        icon: Icons.switch_account_outlined,
+                        name: 'Ganti Akun',
+                      ),
                     ),
-                    content(
-                      icon: Icons.logout_outlined,
-                      name: 'Keluar',
+                    GestureDetector(
+                      onTap: () async {
+                        SharedPreferences preferences =
+                            await SharedPreferences.getInstance();
+                        preferences.clear();
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, '/login-page', (route) => false);
+                      },
+                      child: content(
+                        icon: Icons.logout_outlined,
+                        name: 'Keluar',
+                      ),
                     ),
                   ],
                 ),

@@ -1,4 +1,4 @@
-import 'package:adistetsa/providers/auth_provider.dart';
+import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
@@ -12,13 +12,13 @@ class RolesPage extends StatefulWidget {
   _RolesPageState createState() => _RolesPageState();
 }
 
-int currentIndex = -1;
 bool isLoading = false;
 
 class _RolesPageState extends State<RolesPage> {
+  int currentIndex = -1;
   @override
   Widget build(BuildContext context) {
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    Providers provider = Provider.of<Providers>(context);
 
     roleHandler() async {
       SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -35,7 +35,12 @@ class _RolesPageState extends State<RolesPage> {
         setState(() {
           isLoading = true;
         });
-        print(role);
+        if (role == 'Guru') {
+          await provider.getGuruProfile();
+          currentIndex = -1;
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/main-page', (route) => false);
+        }
       }
       setState(() {
         isLoading = false;
@@ -48,7 +53,7 @@ class _RolesPageState extends State<RolesPage> {
       return GestureDetector(
         onTap: () {
           setState(() {
-            authProvider.roles = RolesModel(name: text);
+            provider.roles = RolesModel(name: text);
             currentIndex = index;
             Future saveRoles() async {
               SharedPreferences pref = await SharedPreferences.getInstance();
@@ -117,7 +122,7 @@ class _RolesPageState extends State<RolesPage> {
           width: 14,
           child: CircularProgressIndicator(
             color: mono6Color,
-            strokeWidth: 4,
+            strokeWidth: 2,
           ),
         ),
       );
@@ -230,7 +235,7 @@ class _RolesPageState extends State<RolesPage> {
                             ),
                           ),
                           FutureBuilder(
-                            future: Service().getRoles(),
+                            future: Services().getRoles(),
                             builder:
                                 (BuildContext context, AsyncSnapshot snapshot) {
                               if (snapshot.hasData) {

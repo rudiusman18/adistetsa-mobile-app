@@ -2,6 +2,7 @@ import 'package:adistetsa/login_page.dart';
 import 'package:adistetsa/pages/detail%20profile/update_password_page.dart';
 import 'package:adistetsa/pages/main_page.dart';
 import 'package:adistetsa/providers/auth_provider.dart';
+import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/roles_page.dart';
 import 'package:adistetsa/splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,9 @@ class AdiStetsa extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (context) => AuthProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => Providers(),
         ),
       ],
       child: MaterialApp(
