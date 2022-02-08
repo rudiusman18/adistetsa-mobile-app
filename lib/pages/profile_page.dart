@@ -1,6 +1,7 @@
 import 'package:adistetsa/models/guru_model.dart';
 import 'package:adistetsa/models/role_model.dart';
 import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:provider/provider.dart';
@@ -243,8 +244,12 @@ class _ProfilePageState extends State<ProfilePage> {
                         SharedPreferences preferences =
                             await SharedPreferences.getInstance();
                         preferences.clear();
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, '/login-page', (route) => false);
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    SplashScreen()),
+                            (route) => false);
                       },
                       child: content(
                         icon: Icons.logout_outlined,

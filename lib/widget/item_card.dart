@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 
 class ItemCard extends StatelessWidget {
-  // final String urlIcon;
+  final String urlImg;
   final String text;
   ItemCard({
-    // required this.urlIcon,
+    required this.urlImg,
     required this.text,
   });
   @override
@@ -28,7 +28,7 @@ class ItemCard extends StatelessWidget {
             blurRadius: 4,
             spreadRadius: 2,
             offset: Offset(0, 2),
-            color: shadowColor.withOpacity(0.25),
+            color: shadowColor,
           ),
         ],
       ),
@@ -36,7 +36,7 @@ class ItemCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.asset(
-            'assets/logo sekolah.png',
+            'assets/home/staff perpustakaan/$urlImg.png',
             width: 27,
             height: 30,
           ),

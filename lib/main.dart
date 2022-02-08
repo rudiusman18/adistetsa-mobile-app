@@ -1,6 +1,7 @@
 import 'package:adistetsa/login_page.dart';
 import 'package:adistetsa/pages/detail%20profile/update_password_page.dart';
 import 'package:adistetsa/pages/main_page.dart';
+import 'package:adistetsa/pages/staff%20perpustakaan/katalog%20buku/katalog_buku.dart';
 import 'package:adistetsa/providers/auth_provider.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/roles_page.dart';
@@ -50,15 +51,20 @@ class AdiStetsa extends StatelessWidget {
                 child: RolesPage(),
                 type: PageTransitionType.rightToLeft,
               );
-            case '/main-page':
-              return PageTransition(
-                child: MainPage(),
-                type: PageTransitionType.bottomToTop,
-              );
             case '/update-password-page':
               return PageTransition(
                 child: UpdatePasswordPage(),
                 type: PageTransitionType.rightToLeft,
+              );
+            case '/katalog-buku-page':
+              return PageTransition(
+                child: KatalogBuku(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/main-page':
+              return PageTransition(
+                child: MainPage(),
+                type: PageTransitionType.bottomToTop,
               );
           }
         },
