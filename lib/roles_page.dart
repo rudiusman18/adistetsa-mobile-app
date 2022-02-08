@@ -40,6 +40,8 @@ class _RolesPageState extends State<RolesPage> {
       setState(() {
         isLoading = false;
       });
+      Navigator.pushNamedAndRemoveUntil(
+          context, '/main-page', (route) => false);
     }
 
     Widget option({required int index, required String text}) {
