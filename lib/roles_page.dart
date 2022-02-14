@@ -41,12 +41,16 @@ class _RolesPageState extends State<RolesPage> {
           Navigator.pushNamedAndRemoveUntil(
               context, '/main-page', (route) => false);
         }
+        else if (role == 'Staf Perpustakaan') {
+          await provider.getGuruProfile();
+          currentIndex = -1;
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/main-page', (route) => false);
+        }
       }
       setState(() {
         isLoading = false;
       });
-      Navigator.pushNamedAndRemoveUntil(
-          context, '/main-page', (route) => false);
     }
 
     Widget option({required int index, required String text}) {
