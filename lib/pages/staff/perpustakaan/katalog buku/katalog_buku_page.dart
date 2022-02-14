@@ -1,9 +1,11 @@
 import 'dart:developer';
 
 import 'package:adistetsa/models/katalogbuku_model.dart';
+import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class KatalogBukuPage extends StatefulWidget {
   @override
@@ -16,6 +18,8 @@ class _KatalogBukuPageState extends State<KatalogBukuPage> {
 
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+
     PreferredSizeWidget katalogBukuHeader() {
       return AppBar(
         centerTitle: true,
@@ -93,7 +97,10 @@ class _KatalogBukuPageState extends State<KatalogBukuPage> {
       );
     }
 
-    Widget listItem({required String nama, required String tipe}) {
+    Widget listItem(
+        {required String nama,
+        required String tipe,
+        required String register}) {
       return Container(
         decoration: BoxDecoration(
           border: Border(
@@ -135,7 +142,7 @@ class _KatalogBukuPageState extends State<KatalogBukuPage> {
                         ),
                       ),
                       Text(
-                        '$tipe',
+                        'Buku $tipe',
                         style: mono2TextStyle.copyWith(
                           fontSize: 10,
                         ),
@@ -143,9 +150,16 @@ class _KatalogBukuPageState extends State<KatalogBukuPage> {
                     ],
                   ),
                 ),
-                Icon(
-                  Icons.chevron_right,
-                  color: mono1Color,
+                GestureDetector(
+                  onTap: () async {
+                    await provider.getDetailKatalogBuku(register: register);
+                    Navigator.pushNamed(
+                        context, '/staff-perpus/katalog-buku/detail-page');
+                  },
+                  child: Icon(
+                    Icons.chevron_right,
+                    color: mono1Color,
+                  ),
                 ),
               ],
             ),
@@ -175,8 +189,9 @@ class _KatalogBukuPageState extends State<KatalogBukuPage> {
                       return Column(
                           children: data.map((item) {
                         return listItem(
+                            register: item.rEGISTER.toString(),
                             nama: item.jUDUL.toString(),
-                            tipe: item.mEDIA.toString());
+                            tipe: item.jENISBUKU.toString());
                       }).toList());
                     } else {
                       return Column(children: [

@@ -1,9 +1,16 @@
+import 'package:adistetsa/models/katalogbuku_model.dart';
+import 'package:adistetsa/providers/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class DetailKatalogBukuPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+    KatalogBukuModel katalogBukuModel = provider.katalog;
+
+
     PreferredSizeWidget detailKatalogHeader() {
       return AppBar(
         centerTitle: true,
@@ -77,14 +84,14 @@ class DetailKatalogBukuPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Bumi',
+                  '${katalogBukuModel.jUDUL}',
                   style: mono5TextStyle.copyWith(
                     fontSize: 20,
                     fontWeight: bold,
                   ),
                 ),
                 Text(
-                  'Novel',
+                  '${katalogBukuModel.mEDIA}',
                   style: mono5TextStyle.copyWith(fontSize: 12),
                 ),
               ],
@@ -98,51 +105,27 @@ class DetailKatalogBukuPage extends StatelessWidget {
                 ),
                 listItem(
                   name: 'Pengarang',
-                  value: 'Tere Liye',
-                ),
-                listItem(
-                  name: 'Penerbit',
-                  value: 'Gramedia',
-                ),
-                listItem(
-                  name: 'Pengarang',
-                  value: 'Tere Liye',
-                ),
-                listItem(
-                  name: 'Kota Terbit',
-                  value: 'Jakarta',
+                  value: '${katalogBukuModel.pENULIS}',
                 ),
                 listItem(
                   name: 'Tahun Terbit',
-                  value: '2020',
+                  value: '${katalogBukuModel.tAHUNTERBIT}',
                 ),
                 listItem(
                   name: 'ISBN',
-                  value: '978-602-8519-93-9',
-                ),
-                listItem(
-                  name: 'Volume',
-                  value: '1',
-                ),
-                listItem(
-                  name: 'Edisi',
-                  value: '1',
+                  value: '${katalogBukuModel.rEGISTER}',
                 ),
                 listItem(
                   name: 'Bahasa',
-                  value: 'Indonesia',
+                  value: '${katalogBukuModel.bAHASA}',
                 ),
                 listItem(
                   name: 'Jumlah',
-                  value: '1 eks',
+                  value: '${katalogBukuModel.tERSEDIA}',
                 ),
                 listItem(
-                  name: 'Deskripsi Fisik',
-                  value: 'hlm 156, ilus 45 cm',
-                ),
-                listItem(
-                  name: 'Tipe Kode',
-                  value: 'Book',
+                  name: 'Jenis Buku',
+                  value: 'Buku ${katalogBukuModel.jENISBUKU}',
                 ),
               ],
             ),
