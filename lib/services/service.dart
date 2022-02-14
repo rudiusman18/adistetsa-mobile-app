@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:adistetsa/models/guru_model.dart';
+import 'package:adistetsa/models/katalogbuku_model.dart';
 import 'package:adistetsa/models/kompetensi_model.dart';
 import 'package:adistetsa/models/role_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -38,8 +39,11 @@ class Services extends ChangeNotifier {
       if (role == 'Guru') {
         GuruModel guruModel = GuruModel.fromJson(data);
         return guruModel;
+      } else if (role == 'Staf Perpustakaan') {
+        GuruModel guruModel = GuruModel.fromJson(data);
+        return guruModel;
       } else {
-        throw Exception('Gagal Login');
+        throw Exception('Gagal Mendapatkan Data');
       }
     }
   }
@@ -57,6 +61,22 @@ class Services extends ChangeNotifier {
       return roles;
     } else {
       throw Exception('Gagal Login');
+    }
+  }
+
+  getKatalogBuku() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var url = Uri.parse('$baseUrl/perpustakaan/katalog_buku');
+    var token = prefs.getString("token").toString();
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<KatalogBukuModel> katalogBuku =
+          data.map((item) => KatalogBukuModel.fromJson(item)).toList();
+      return katalogBuku;
+    } else {
+      throw Exception('Gagal Mendapatkan Katalog Buku');
     }
   }
 }

@@ -1,11 +1,18 @@
+import 'package:adistetsa/models/role_model.dart';
+import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/widget/item_card.dart';
 import 'package:adistetsa/widget/profile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+    RolesModel rolesModel = provider.role;
+
+    var role = rolesModel.name;
     Widget itemsStafPerpustakaan() {
       return Container(
         alignment: Alignment.center,
@@ -118,7 +125,7 @@ class HomePage extends StatelessWidget {
                   margin: EdgeInsets.only(
                     top: 20,
                   ),
-                  child: itemsStafPerpustakaan(),
+                  child: role == 'Staf Perpustakaan' ? itemsStafPerpustakaan() : SizedBox(),
                 ),
               ],
             ),

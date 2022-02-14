@@ -15,9 +15,22 @@ class ProfileCard extends StatelessWidget {
     GuruModel guruModel = provider.guru;
 
     var role = rolesModel.name;
-    var _nama = role == 'Guru' ? '${guruModel.nAMALENGKAP}' : '';
-    var _noInduk = role == 'Guru' ? 'NIP ${guruModel.nIP}' : '';
-    var _spesialisParameter = role == 'Guru' ? 'Kompetensi' : '';
+    var _nama = role == 'Guru'
+        ? '${guruModel.nAMALENGKAP}'
+        : role == 'Staf Perpustakaan'
+            ? '${guruModel.nAMALENGKAP}'
+            : '';
+    var _noInduk = role == 'Guru'
+        ? 'NIP ${guruModel.nIP}'
+        : role == 'Staf Perpustakaan'
+            ? 'NIP ${guruModel.nIP}'
+            : '';
+    var _spesialisParameter = role == 'Guru'
+        ? 'Kompetensi'
+        : role == 'Staf Perpustakaan'
+            ? 'Bidang'
+            : '';
+    var _parameter = role == 'Staf Perpustakaan' ? 'Perpustakaan' : '';
     return Container(
       decoration: BoxDecoration(
           color: m2Color,
@@ -60,7 +73,7 @@ class ProfileCard extends StatelessWidget {
                   width: 146.57,
                 ),
                 Text(
-                  '$role',
+                  role == 'Staf Perpustakaan' ? 'Staf' : '$role',
                   style: mono6TextStyle.copyWith(
                     fontWeight: semiBold,
                     fontSize: 16,
@@ -138,7 +151,7 @@ class ProfileCard extends StatelessWidget {
                             },
                           )
                         : Text(
-                            'Kurikulum',
+                            '$_parameter',
                             style: mono6TextStyle.copyWith(
                               fontWeight: semiBold,
                               fontSize: 18,

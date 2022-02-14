@@ -22,10 +22,26 @@ class _ProfilePageState extends State<ProfilePage> {
     GuruModel guruModel = provider.guru;
 
     var role = rolesModel.name;
-    var _nama = role == 'Guru' ? '${guruModel.nAMALENGKAP}' : '';
-    var _noInduk = role == 'Guru' ? 'NIP ${guruModel.nIP}' : '';
-    var _email = role == 'Guru' ? '${guruModel.eMAIL}' : '';
-    var _noHp = role == 'Guru' ? '${guruModel.hP}' : '';
+    var _nama = role == 'Guru'
+        ? '${guruModel.nAMALENGKAP}'
+        : role == 'Staf Perpustakaan'
+            ? '${guruModel.nAMALENGKAP}'
+            : '';
+    var _noInduk = role == 'Guru'
+        ? 'NIP ${guruModel.nIP}'
+        : role == 'Staf Perpustakaan'
+            ? 'NIP ${guruModel.nIP}'
+            : '';
+    var _email = role == 'Guru'
+        ? '${guruModel.eMAIL}'
+        : role == 'Staf Perpustakaan'
+            ? '${guruModel.eMAIL}'
+            : '';
+    var _noHp = role == 'Guru'
+        ? '${guruModel.hP}'
+        : role == 'Staf Perpustakaan'
+            ? '${guruModel.hP}'
+            : '';
     PreferredSizeWidget header() {
       return AppBar(
         centerTitle: true,
