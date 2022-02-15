@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:adistetsa/models/guru_model.dart';
+import 'package:adistetsa/models/karyawan_model.dart';
 import 'package:adistetsa/models/katalogbuku_model.dart';
 import 'package:adistetsa/models/kompetensi_model.dart';
 import 'package:adistetsa/models/role_model.dart';
+import 'package:adistetsa/models/siswa_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -40,8 +42,14 @@ class Services extends ChangeNotifier {
         GuruModel guruModel = GuruModel.fromJson(data);
         return guruModel;
       } else if (role == 'Staf Perpustakaan') {
-        GuruModel guruModel = GuruModel.fromJson(data);
-        return guruModel;
+        GuruModel stafPerpustakaan = GuruModel.fromJson(data);
+        return stafPerpustakaan;
+      } else if (role == 'Karyawan') {
+        KaryawanModel karyawanModel = KaryawanModel.fromJson(data);
+        return karyawanModel;
+      } else if (role == 'Siswa') {
+        SiswaModel siswaModel = SiswaModel.fromJson(data);
+        return siswaModel;
       } else {
         throw Exception('Gagal Mendapatkan Data');
       }

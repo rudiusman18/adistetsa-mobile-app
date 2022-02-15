@@ -1,6 +1,8 @@
 import 'package:adistetsa/models/guru_model.dart';
+import 'package:adistetsa/models/karyawan_model.dart';
 import 'package:adistetsa/models/kompetensi_model.dart';
 import 'package:adistetsa/models/role_model.dart';
+import 'package:adistetsa/models/siswa_model.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
 import 'package:flutter/material.dart';
@@ -13,24 +15,44 @@ class ProfileCard extends StatelessWidget {
     Providers provider = Provider.of<Providers>(context);
     RolesModel rolesModel = provider.role;
     GuruModel guruModel = provider.guru;
+    KaryawanModel karyawanModel = provider.karyawan;
+    SiswaModel siswaModel = provider.siswa;
 
     var role = rolesModel.name;
     var _nama = role == 'Guru'
         ? '${guruModel.nAMALENGKAP}'
         : role == 'Staf Perpustakaan'
             ? '${guruModel.nAMALENGKAP}'
-            : '';
+            : role == 'Karyawan'
+                ? '${karyawanModel.nAMALENGKAP}'
+                : role == 'Siswa'
+                    ? '${siswaModel.nAMA}'
+                    : '';
     var _noInduk = role == 'Guru'
         ? 'NIP ${guruModel.nIP}'
         : role == 'Staf Perpustakaan'
             ? 'NIP ${guruModel.nIP}'
-            : '';
+            : role == 'Karyawan'
+                ? 'NIP ${karyawanModel.nIP}'
+                : role == 'Siswa'
+                    ? 'NIS ${siswaModel.nIS}'
+                    : '';
     var _spesialisParameter = role == 'Guru'
         ? 'Kompetensi'
         : role == 'Staf Perpustakaan'
             ? 'Bidang'
-            : '';
-    var _parameter = role == 'Staf Perpustakaan' ? 'Perpustakaan' : '';
+            : role == 'Karyawan'
+                ? 'Jenis PTK'
+                : role == 'Siswa'
+                    ? 'Kelas'
+                    : '';
+    var _parameter = role == 'Staf Perpustakaan'
+        ? 'Perpustakaan'
+        : role == 'Karyawan'
+            ? '${karyawanModel.jENISPTK}'
+            : role == 'Siswa'
+                    ? 'Kelas'
+                    : '';
     return Container(
       decoration: BoxDecoration(
           color: m2Color,

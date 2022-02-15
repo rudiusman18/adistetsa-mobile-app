@@ -1,5 +1,7 @@
 import 'package:adistetsa/models/guru_model.dart';
+import 'package:adistetsa/models/karyawan_model.dart';
 import 'package:adistetsa/models/role_model.dart';
+import 'package:adistetsa/models/siswa_model.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -18,28 +20,46 @@ class _ProfilePageState extends State<ProfilePage> {
     Providers provider = Provider.of<Providers>(context);
     RolesModel rolesModel = provider.role;
     GuruModel guruModel = provider.guru;
+    KaryawanModel karyawanModel = provider.karyawan;
+    SiswaModel siswaModel = provider.siswa;
 
     var role = rolesModel.name;
     var _nama = role == 'Guru'
         ? '${guruModel.nAMALENGKAP}'
         : role == 'Staf Perpustakaan'
             ? '${guruModel.nAMALENGKAP}'
-            : '';
+            : role == 'Karyawan'
+                ? '${karyawanModel.nAMALENGKAP}'
+                : role == 'Siswa'
+                    ? '${siswaModel.nAMA}'
+                    : '';
     var _noInduk = role == 'Guru'
         ? 'NIP ${guruModel.nIP}'
         : role == 'Staf Perpustakaan'
             ? 'NIP ${guruModel.nIP}'
-            : '';
+            : role == 'Karyawan'
+                ? 'NIP ${karyawanModel.nIP}'
+                : role == 'Siswa'
+                    ? 'NIS ${siswaModel.nIS}'
+                    : '';
     var _email = role == 'Guru'
         ? '${guruModel.eMAIL}'
         : role == 'Staf Perpustakaan'
             ? '${guruModel.eMAIL}'
-            : '';
+            : role == 'Karyawan'
+                ? '${karyawanModel.eMAIL}'
+                : role == 'Siswa'
+                    ? '${siswaModel.eMAIL}'
+                    : '';
     var _noHp = role == 'Guru'
         ? '${guruModel.hP}'
         : role == 'Staf Perpustakaan'
             ? '${guruModel.hP}'
-            : '';
+            : role == 'Karyawan'
+                ? '${karyawanModel.hP}'
+                : role == 'Siswa'
+                    ? '${siswaModel.hP}'
+                    : '';
     PreferredSizeWidget header() {
       return AppBar(
         centerTitle: true,
@@ -86,48 +106,48 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    _noInduk != '' ? Text(
                       '$_noInduk',
                       style: mono2TextStyle.copyWith(
                         fontSize: 10,
                       ),
-                    ),
-                    Text(
+                    ) : SizedBox(),
+                    _nama != '' ? Text(
                       '$_nama',
                       style: mono1TextStyle.copyWith(
                         fontSize: 14,
                       ),
-                    ),
-                    SizedBox(
+                    ) : SizedBox(),
+                    _email != '' ? SizedBox(
                       height: 10,
-                    ),
-                    Text(
+                    ) : SizedBox(),
+                    _email != '' ? Text(
                       'Email',
                       style: mono2TextStyle.copyWith(
                         fontSize: 10,
                       ),
-                    ),
-                    Text(
+                    ) : SizedBox(),
+                    _email != '' ? Text(
                       '$_email',
                       style: mono1TextStyle.copyWith(
                         fontSize: 14,
                       ),
-                    ),
-                    SizedBox(
+                    ) : SizedBox(),
+                    _noHp != '' ? SizedBox(
                       height: 10,
-                    ),
-                    Text(
+                    ) : SizedBox(),
+                    _noHp != '' ? Text(
                       'Nomor HP',
                       style: mono2TextStyle.copyWith(
                         fontSize: 10,
                       ),
-                    ),
-                    Text(
+                    ) : SizedBox(),
+                    _noHp != '' ? Text(
                       '$_noHp',
                       style: mono1TextStyle.copyWith(
                         fontSize: 14,
                       ),
-                    ),
+                    ) : SizedBox(),
                   ],
                 ),
               ),

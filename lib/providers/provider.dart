@@ -1,6 +1,8 @@
 import 'package:adistetsa/models/guru_model.dart';
+import 'package:adistetsa/models/karyawan_model.dart';
 import 'package:adistetsa/models/katalogbuku_model.dart';
 import 'package:adistetsa/models/role_model.dart';
+import 'package:adistetsa/models/siswa_model.dart';
 import 'package:adistetsa/services/service.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -11,11 +13,27 @@ class Providers with ChangeNotifier {
   GuruModel _guru = GuruModel();
   GuruModel get guru => _guru;
 
+  KaryawanModel _karyawan = KaryawanModel();
+  KaryawanModel get karyawan => _karyawan;
+
+  SiswaModel _siswa = SiswaModel();
+  SiswaModel get siswa => _siswa;
+
   KatalogBukuModel _katalog = KatalogBukuModel();
   KatalogBukuModel get katalog => _katalog;
 
   set setGuru(GuruModel guru) {
     _guru = guru;
+    notifyListeners();
+  }
+
+  set setKaryawan(KaryawanModel karyawan){
+    _karyawan = karyawan;
+    notifyListeners();
+  }
+
+  set setSiswa(SiswaModel siswa){
+    _siswa = siswa;
     notifyListeners();
   }
 
@@ -33,6 +51,28 @@ class Providers with ChangeNotifier {
     try {
       GuruModel guruModel = await Services().getProfile();
       _guru = guruModel;
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> getKaryawan() async {
+    try {
+      KaryawanModel karyawanModel = await Services().getProfile();
+      _karyawan = karyawanModel;
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> getSiswa() async {
+    try {
+      SiswaModel siswaModel = await Services().getProfile();
+      _siswa = siswaModel;
       return true;
     } catch (e) {
       print(e);
