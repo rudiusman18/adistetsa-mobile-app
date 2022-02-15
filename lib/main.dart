@@ -7,6 +7,7 @@ import 'package:adistetsa/pages/staff/perpustakaan/peminjaman%20buku/detail_pemi
 import 'package:adistetsa/pages/staff/perpustakaan/peminjaman%20buku/peminjaman_buku_page.dart';
 import 'package:adistetsa/pages/staff/perpustakaan/riwayat%20peminjaman/detail_riwayat_peminjaman_buku_page.dart';
 import 'package:adistetsa/pages/staff/perpustakaan/riwayat%20peminjaman/riwayat_peminjaman_buku_page.dart';
+import 'package:adistetsa/pages/user/perpustakaan/list_perpustakaan_page.dart';
 import 'package:adistetsa/providers/auth_provider.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/roles_page.dart';
@@ -89,6 +90,11 @@ class AdiStetsa extends StatelessWidget {
             case '/staff-perpus/riwayat-peminjaman-buku/detail-page':
               return PageTransition(
                 child: DetailRiwayatPeminjamanBukuPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/guru/perpustakaan':
+              return PageTransition(
+                child: ListPerpustakaanPage(),
                 type: PageTransitionType.rightToLeft,
               );
 

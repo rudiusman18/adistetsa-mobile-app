@@ -1,5 +1,8 @@
+import 'package:adistetsa/models/role_model.dart';
+import 'package:adistetsa/providers/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class ItemCard extends StatelessWidget {
   final String urlImg;
@@ -8,8 +11,11 @@ class ItemCard extends StatelessWidget {
     required this.urlImg,
     required this.text,
   });
+
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+    RolesModel rolesModel = provider.role;
     return Container(
       margin: EdgeInsets.only(
         bottom: 18,
@@ -36,7 +42,11 @@ class ItemCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.asset(
-            'assets/home/staff perpustakaan/$urlImg.png',
+            rolesModel.name == 'Staf Perpustakaan'
+                ? 'assets/home/staff perpustakaan/$urlImg.png'
+                : rolesModel.name == 'Guru'
+                    ? 'assets/home/guru/$urlImg.png'
+                    : '',
             width: 27,
             height: 30,
           ),

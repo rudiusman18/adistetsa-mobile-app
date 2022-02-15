@@ -32,8 +32,7 @@ class _KatalogBukuPageState extends State<KatalogBukuPage> {
         elevation: 4,
         leading: IconButton(
           onPressed: () {
-            Navigator.pushNamedAndRemoveUntil(
-                context, '/main-page/back', (route) => false);
+            Navigator.pop(context);
           },
           icon: Icon(Icons.arrow_back),
           color: mono2Color,
@@ -165,34 +164,28 @@ class _KatalogBukuPageState extends State<KatalogBukuPage> {
           backgroundColor: mono6Color,
           body: Container(
             padding: EdgeInsets.only(top: 20),
-            child: ListView(
-              children: [
-                FutureBuilder(
-                  future: Services().getKatalogBuku(),
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    if (snapshot.hasData) {
-                      List<KatalogBukuModel> data = snapshot.data;
-                      return Column(
-                          children: data.map((item) {
-                        return listItem(
-                            nama: item.jUDUL.toString(),
-                            tipe: item.mEDIA.toString());
-                      }).toList());
-                    } else {
-                      return Column(children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Center(
-                          child: CircularProgressIndicator(
-                            color: m1Color,
-                          ),
-                        ),
-                      ]);
-                    }
-                  },
-                ),
-              ],
+            child: FutureBuilder(
+              future: Services().getKatalogBuku(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  List<KatalogBukuModel> data = snapshot.data;
+                  return ListView(
+                    children: data.map((item) {
+                      return listItem(
+                        nama: item.jUDUL.toString(),
+                        tipe: item.mEDIA.toString(),
+                      );
+                    }).toList(),
+                  );
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 4,
+                      color: m1Color,
+                    ),
+                  );
+                }
+              },
             ),
           )),
     );

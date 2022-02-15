@@ -69,6 +69,54 @@ class HomePage extends StatelessWidget {
       );
     }
 
+    Widget itemsGuru() {
+      return Container(
+        alignment: Alignment.center,
+        child: Wrap(
+          spacing: 25,
+          children: [
+            ItemCard(
+              urlImg: 'bimbingan konseling',
+              text: 'Bimbingan Konseling',
+            ),
+            ItemCard(
+              urlImg: 'kesiswaan',
+              text: 'Kesiswaan',
+            ),
+            ItemCard(
+              urlImg: 'kurikulum',
+              text: 'Kurikulum',
+            ),
+            ItemCard(
+              urlImg: 'tata usaha',
+              text: 'Tata Usaha',
+            ),
+            ItemCard(
+              urlImg: 'unit penjamin mutu',
+              text: 'Unit Penjamin Mutu',
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/guru/perpustakaan');
+              },
+              child: ItemCard(
+                urlImg: 'perpustakaan',
+                text: 'Perpustakaan',
+              ),
+            ),
+            ItemCard(
+              urlImg: 'adiwiyata',
+              text: 'Adiwiyata',
+            ),
+            ItemCard(
+              urlImg: 'sarana dan prasarana',
+              text: 'Sarana dan Prasarana',
+            ),
+          ],
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: mono6Color,
       body: SafeArea(
@@ -125,7 +173,11 @@ class HomePage extends StatelessWidget {
                   margin: EdgeInsets.only(
                     top: 20,
                   ),
-                  child: role == 'Staf Perpustakaan' ? itemsStafPerpustakaan() : SizedBox(),
+                  child: role == 'Staf Perpustakaan'
+                      ? itemsStafPerpustakaan()
+                      : role == 'Guru'
+                          ? itemsGuru()
+                          : SizedBox(),
                 ),
               ],
             ),

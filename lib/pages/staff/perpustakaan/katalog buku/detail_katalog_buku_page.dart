@@ -1,9 +1,14 @@
+import 'package:adistetsa/models/role_model.dart';
+import 'package:adistetsa/providers/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class DetailKatalogBukuPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+    RolesModel rolesModel = provider.role;
     PreferredSizeWidget detailKatalogHeader() {
       return AppBar(
         centerTitle: true,
@@ -144,6 +149,35 @@ class DetailKatalogBukuPage extends StatelessWidget {
                   name: 'Tipe Kode',
                   value: 'Book',
                 ),
+                rolesModel.name != 'Staf Perpustakaan'
+                    ? Center(
+                        child: Container(
+                          margin: EdgeInsets.only(
+                            top: 50,
+                            bottom: 30,
+                          ),
+                          width: 284,
+                          child: TextButton(
+                            onPressed: () {},
+                            style: TextButton.styleFrom(
+                              backgroundColor: m2Color,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                  8,
+                                ),
+                              ),
+                            ),
+                            child: Text(
+                              'Pinjam Buku',
+                              style: mono6TextStyle.copyWith(
+                                fontSize: 16,
+                                fontWeight: bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    : Container(),
               ],
             ),
           )
