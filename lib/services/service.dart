@@ -79,4 +79,19 @@ class Services extends ChangeNotifier {
       throw Exception('Gagal Mendapatkan Katalog Buku');
     }
   }
+
+  getDetailKatalogBuku({String? register}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var url = Uri.parse('$baseUrl/perpustakaan/katalog_buku/$register');
+    var token = prefs.getString("token").toString();
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      KatalogBukuModel detailKatalogBukuModel = KatalogBukuModel.fromJson(data);
+      return detailKatalogBukuModel;
+    } else {
+      throw Exception('Gagal Mendapatkan Katalog Buku');
+    }
+  }
 }
