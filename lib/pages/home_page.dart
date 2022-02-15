@@ -97,7 +97,7 @@ class HomePage extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.pushNamed(context, '/guru/perpustakaan');
+                Navigator.pushNamed(context, '/user/perpustakaan');
               },
               child: ItemCard(
                 urlImg: 'perpustakaan',

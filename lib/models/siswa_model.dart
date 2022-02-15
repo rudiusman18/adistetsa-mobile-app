@@ -37,11 +37,11 @@ class SiswaModel {
   String? lINTANG;
   String? bUJUR;
   String? nOKK;
-  Null? bERATBADAN;
-  Null? tINGGIBADAN;
-  Null? lINGKARKEPALA;
-  Null? jUMLAHSAUDARAKANDUNG;
-  Null? jARAKRUMAHKESEKOLAHKM;
+  int? bERATBADAN;
+  int? tINGGIBADAN;
+  int? lINGKARKEPALA;
+  int? jUMLAHSAUDARAKANDUNG;
+  int? jARAKRUMAHKESEKOLAHKM;
 
   SiswaModel(
       {this.nIS,

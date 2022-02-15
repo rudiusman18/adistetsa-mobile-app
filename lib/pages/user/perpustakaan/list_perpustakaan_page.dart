@@ -74,8 +74,14 @@ class ListPerpustakaanPage extends StatelessWidget {
               'katalog Buku',
             ),
           ),
-          contentItem(
-            'Peminjaman',
+          GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(
+                  context, '/user/perpustakaan/peminjaman-buku-page');
+            },
+            child: contentItem(
+              'Peminjaman',
+            ),
           ),
           contentItem(
             'Riwayat Peminjaman',
