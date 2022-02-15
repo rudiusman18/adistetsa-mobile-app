@@ -312,7 +312,9 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
             ),
             backgroundColor: m4Color,
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, '/staff-perpus/katalog-buku-page');
+          },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
