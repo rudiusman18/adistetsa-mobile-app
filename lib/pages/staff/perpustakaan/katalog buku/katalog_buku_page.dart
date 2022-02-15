@@ -2,6 +2,7 @@ import 'package:adistetsa/models/katalogbuku_model.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,6 +13,7 @@ class KatalogBukuPage extends StatefulWidget {
 
 class _KatalogBukuPageState extends State<KatalogBukuPage> {
   bool isSearch = false;
+
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -122,9 +124,11 @@ class _KatalogBukuPageState extends State<KatalogBukuPage> {
               setState(() {
                 searchController.clear();
                 isSearch = false;
+                loading(context);
               });
               await provider.getDetailKatalogBuku(register: register);
-              Navigator.pushNamed(
+
+              Navigator.pushReplacementNamed(
                   context, '/staff-perpus/katalog-buku/detail-page');
             },
             child: Row(
