@@ -117,6 +117,121 @@ class HomePage extends StatelessWidget {
       );
     }
 
+    Widget itemsSiswa() {
+      return Container(
+        alignment: Alignment.center,
+        child: Wrap(
+          spacing: 25,
+          children: [
+            ItemCard(
+              urlImg: 'kurikulum',
+              text: 'Kurikulum',
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/user/perpustakaan');
+              },
+              child: ItemCard(
+                urlImg: 'perpustakaan',
+                text: 'Perpustakaan',
+              ),
+            ),
+            ItemCard(
+              urlImg: 'bimbingan konseling',
+              text: 'Bimbingan Konseling',
+            ),
+            ItemCard(
+              urlImg: 'sarana prasarana',
+              text: 'Sarana Prasarana',
+            ),
+            ItemCard(
+              urlImg: 'kesiswaan',
+              text: 'Kesiswaan',
+            ),
+            ItemCard(
+              urlImg: 'tata usaha',
+              text: 'Tata Usaha',
+            ),
+            ItemCard(
+              urlImg: 'humas',
+              text: 'Humas',
+            ),
+            ItemCard(
+              urlImg: 'adiwiyata',
+              text: 'Adiwiyata',
+            ),
+            ItemCard(
+              urlImg: 'presensi',
+              text: 'Presensi',
+            ),
+            ItemCard(
+              urlImg: 'alumni',
+              text: 'Alumni',
+            ),
+            ItemCard(
+              urlImg: 'daftar harga koperasi',
+              text: 'Daftar Harga Koperasi',
+            ),
+            ItemCard(
+              urlImg: 'prestasi',
+              text: 'Prestasi',
+            ),
+            ItemCard(
+              urlImg: 'data kesehatan',
+              text: 'Data Kesehatan',
+            ),
+            ItemCard(
+              urlImg: 'tata tertib',
+              text: 'Tata Tertib',
+            ),
+            ItemCard(
+              urlImg: 'survey',
+              text: 'Survey',
+            ),
+          ],
+        ),
+      );
+    }
+
+    Widget itemsKaryawan() {
+      return Container(
+        alignment: Alignment.center,
+        child: Wrap(
+          spacing: 25,
+          children: [
+            ItemCard(
+              urlImg: 'kurikulum',
+              text: 'Kurikulum',
+            ),
+            ItemCard(
+              urlImg: 'tata usaha',
+              text: 'Tata Usaha',
+            ),
+            ItemCard(
+              urlImg: 'sarana prasarana',
+              text: 'Sarana Prasarana',
+            ),
+            ItemCard(
+              urlImg: 'presensi',
+              text: 'Presensi',
+            ),
+            ItemCard(
+              urlImg: 'tata tertib',
+              text: 'Tata Tertib',
+            ),
+            ItemCard(
+              urlImg: 'survey',
+              text: 'Survey',
+            ),
+            ItemCard(
+              urlImg: 'adiwiyata',
+              text: 'Adiwiyata',
+            ),
+          ],
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: mono6Color,
       body: SafeArea(
@@ -177,7 +292,11 @@ class HomePage extends StatelessWidget {
                       ? itemsStafPerpustakaan()
                       : role == 'Guru'
                           ? itemsGuru()
-                          : SizedBox(),
+                          : role == 'Siswa'
+                              ? itemsSiswa()
+                              : role == 'Karyawan'
+                                  ? itemsKaryawan()
+                                  : SizedBox(),
                 ),
               ],
             ),

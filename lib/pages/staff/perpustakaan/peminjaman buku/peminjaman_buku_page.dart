@@ -55,10 +55,10 @@ class _PeminjamanBukuPageState extends State<PeminjamanBukuPage> {
           ),
           tabs: [
             Tab(
-              text: 'Jangka Panjang',
+              text: 'Siswa',
             ),
             Tab(
-              text: 'Jangka Pendek',
+              text: 'Guru',
             ),
           ],
         ),
@@ -113,10 +113,10 @@ class _PeminjamanBukuPageState extends State<PeminjamanBukuPage> {
           ),
           tabs: [
             Tab(
-              text: 'Jangka Panjang',
+              text: 'Siswa',
             ),
             Tab(
-              text: 'Jangka Pendek',
+              text: 'Guru',
             ),
           ],
         ),
@@ -124,33 +124,33 @@ class _PeminjamanBukuPageState extends State<PeminjamanBukuPage> {
     }
 
     Widget listItem({required String nama, required String nis}) {
-      return Container(
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: mono3Color,
-              width: 0.5,
+      return GestureDetector(
+        onTap: () {
+          setState(() {
+            searchController.clear();
+            isSearch = false;
+          });
+          Navigator.pushNamed(
+              context, '/staff-perpus/peminjaman-buku/detail-page');
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: mono3Color,
+                width: 0.5,
+              ),
             ),
           ),
-        ),
-        margin: EdgeInsets.only(
-          left: 20,
-          right: 20,
-          bottom: 12,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(
+          margin: EdgeInsets.only(
+            left: 20,
+            right: 20,
             bottom: 12,
           ),
-          child: GestureDetector(
-            onTap: () {
-              setState(() {
-                searchController.clear();
-                isSearch = false;
-              });
-              Navigator.pushNamed(
-                  context, '/staff-perpus/peminjaman-buku/detail-page');
-            },
+          child: Padding(
+            padding: const EdgeInsets.only(
+              bottom: 12,
+            ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [

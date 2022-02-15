@@ -8,7 +8,9 @@ import 'package:adistetsa/pages/staff/perpustakaan/peminjaman%20buku/peminjaman_
 import 'package:adistetsa/pages/staff/perpustakaan/riwayat%20peminjaman/detail_riwayat_peminjaman_buku_page.dart';
 import 'package:adistetsa/pages/staff/perpustakaan/riwayat%20peminjaman/riwayat_peminjaman_buku_page.dart';
 import 'package:adistetsa/pages/user/perpustakaan/list_perpustakaan_page.dart';
-import 'package:adistetsa/pages/user/perpustakaan/peminjaman_buku_user_page.dart';
+import 'package:adistetsa/pages/user/perpustakaan/peminjaman%20buku/peminjaman_buku_user_page.dart';
+import 'package:adistetsa/pages/user/perpustakaan/riwayat%20peminjaman%20buku/detail_riwayat_peminjaman_buku_user_page.dart';
+import 'package:adistetsa/pages/user/perpustakaan/riwayat%20peminjaman%20buku/riwayat_peminjaman_buku_user_page.dart';
 import 'package:adistetsa/providers/auth_provider.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/roles_page.dart';
@@ -103,7 +105,16 @@ class AdiStetsa extends StatelessWidget {
                 child: PeminjamanBukuUserPage(),
                 type: PageTransitionType.rightToLeft,
               );
-
+            case '/user/perpustakaan/riwayat-peminjaman-buku-page':
+              return PageTransition(
+                child: RiwayatPeminjamanBukuUserPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/user/perpustakaan/riwayat-peminjaman-buku/detail-page':
+              return PageTransition(
+                child: DetailRiwayatPeminjamanBukuUserPage(),
+                type: PageTransitionType.rightToLeft,
+              );
             case '/main-page/back':
               return PageTransition(
                 child: MainPage(),

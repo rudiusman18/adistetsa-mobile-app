@@ -46,7 +46,11 @@ class ItemCard extends StatelessWidget {
                 ? 'assets/home/staff perpustakaan/$urlImg.png'
                 : rolesModel.name == 'Guru'
                     ? 'assets/home/guru/$urlImg.png'
-                    : '',
+                    : rolesModel.name == 'Siswa'
+                        ? 'assets/home/siswa/$urlImg.png'
+                        : rolesModel.name == 'Karyawan'
+                            ? 'assets/home/karyawan/$urlImg.png'
+                            : '',
             width: 27,
             height: 30,
           ),

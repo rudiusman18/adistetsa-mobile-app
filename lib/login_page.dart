@@ -37,6 +37,7 @@ class _LoginPageState extends State<LoginPage> {
             )));
       }
       setState(() {
+        passwordController.clear();
         isLoading = false;
       });
     }

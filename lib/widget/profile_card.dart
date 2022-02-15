@@ -51,8 +51,8 @@ class ProfileCard extends StatelessWidget {
         : role == 'Karyawan'
             ? '${karyawanModel.jENISPTK}'
             : role == 'Siswa'
-                    ? 'Kelas'
-                    : '';
+                ? 'Kelas'
+                : '';
     return Container(
       decoration: BoxDecoration(
           color: m2Color,

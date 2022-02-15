@@ -60,6 +60,8 @@ flutter:
     - assets/home/profile/
     - assets/home/staff perpustakaan/
     - assets/home/guru/
+    - assets/home/siswa/
+    - assets/home/karyawan/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

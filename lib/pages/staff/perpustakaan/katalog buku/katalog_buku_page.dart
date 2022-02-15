@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:adistetsa/models/katalogbuku_model.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
@@ -14,6 +16,7 @@ class KatalogBukuPage extends StatefulWidget {
 class _KatalogBukuPageState extends State<KatalogBukuPage> {
   bool isSearch = false;
   String urlSearch = '';
+  bool isLoading = false;
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -89,6 +92,11 @@ class _KatalogBukuPageState extends State<KatalogBukuPage> {
               }
               print(searchController.text);
               urlSearch = 'search=${searchController.text}';
+              isLoading = true;
+            });
+            await Services().getKatalogBuku(search: urlSearch);
+            setState(() {
+              isLoading = false;
             });
           },
         ),
@@ -102,36 +110,36 @@ class _KatalogBukuPageState extends State<KatalogBukuPage> {
       required String tipe,
       required String register,
     }) {
-      return Container(
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: mono3Color,
-              width: 0.5,
+      return GestureDetector(
+        onTap: () async {
+          setState(() {
+            searchController.clear();
+            isSearch = false;
+            loading(context);
+          });
+          await provider.getDetailKatalogBuku(register: register);
+
+          Navigator.pushReplacementNamed(
+              context, '/staff-perpus/katalog-buku/detail-page');
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: mono3Color,
+                width: 0.5,
+              ),
             ),
           ),
-        ),
-        margin: EdgeInsets.only(
-          left: 20,
-          right: 20,
-          bottom: 12,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(
+          margin: EdgeInsets.only(
+            left: 20,
+            right: 20,
             bottom: 12,
           ),
-          child: GestureDetector(
-            onTap: () async {
-              setState(() {
-                searchController.clear();
-                isSearch = false;
-                loading(context);
-              });
-              await provider.getDetailKatalogBuku(register: register);
-
-              Navigator.pushReplacementNamed(
-                  context, '/staff-perpus/katalog-buku/detail-page');
-            },
+          child: Padding(
+            padding: const EdgeInsets.only(
+              bottom: 12,
+            ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -170,30 +178,39 @@ class _KatalogBukuPageState extends State<KatalogBukuPage> {
         backgroundColor: mono6Color,
         body: Container(
           padding: EdgeInsets.only(top: 20),
-          child: FutureBuilder(
-            future: Services().getKatalogBuku(search: urlSearch),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData) {
-                List<KatalogBukuModel> data = snapshot.data;
-                return ListView(
-                  children: data.map((item) {
-                    return listItem(
-                      register: item.rEGISTER.toString(),
-                      nama: item.jUDUL.toString(),
-                      tipe: item.mEDIA.toString(),
-                    );
-                  }).toList(),
-                );
-              } else {
-                return Center(
-                  child: CircularProgressIndicator(
-                    strokeWidth: 4,
-                    color: m1Color,
-                  ),
-                );
-              }
-            },
-          ),
+          child: isLoading == true
+              ? Container()
+              : FutureBuilder(
+                  future: Services().getKatalogBuku(search: urlSearch),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData) {
+                      List<KatalogBukuModel> data = snapshot.data;
+                      return data.isEmpty
+                          ? Center(
+                              child: Text(
+                                'data tidak ditemukan',
+                                style: mono1TextStyle,
+                              ),
+                            )
+                          : ListView(
+                              children: data.map((item) {
+                                return listItem(
+                                  register: item.rEGISTER.toString(),
+                                  nama: item.jUDUL.toString(),
+                                  tipe: item.mEDIA.toString(),
+                                );
+                              }).toList(),
+                            );
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 4,
+                          color: m1Color,
+                        ),
+                      );
+                    }
+                  },
+                ),
         ));
   }
 }

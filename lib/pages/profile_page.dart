@@ -77,6 +77,130 @@ class _ProfilePageState extends State<ProfilePage> {
       );
     }
 
+    confirmLogout() async {
+      return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            backgroundColor: mono6Color,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                vertical: 12,
+                horizontal: 20,
+              ),
+              width: 305,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Stack(
+                    children: [
+                      Center(
+                        child: Text(
+                          'Notifikasi',
+                          style: mono1TextStyle.copyWith(
+                            fontWeight: semiBold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Image.asset(
+                            'assets/cancel_button.png',
+                            width: 14,
+                            height: 14,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 12,
+                  ),
+                  Text(
+                    'Apakah anda yakin?',
+                    style: mono1TextStyle.copyWith(
+                      fontSize: 12,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 120,
+                        height: 46,
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          style: TextButton.styleFrom(
+                            backgroundColor: mono3Color,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Text(
+                            'Batal',
+                            style: mono6TextStyle.copyWith(
+                              fontWeight: semiBold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Container(
+                        width: 120,
+                        height: 46,
+                        child: TextButton(
+                          onPressed: () async {
+                            SharedPreferences preferences =
+                                await SharedPreferences.getInstance();
+                            preferences.clear();
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        SplashScreen()),
+                                (route) => false);
+                          },
+                          style: TextButton.styleFrom(
+                            backgroundColor: dangerColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Text(
+                            'keluar',
+                            style: mono6TextStyle.copyWith(
+                              fontWeight: semiBold,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    }
+
     Widget dataProfile() {
       return Container(
         padding: EdgeInsets.symmetric(
@@ -106,48 +230,64 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _noInduk != '' ? Text(
-                      '$_noInduk',
-                      style: mono2TextStyle.copyWith(
-                        fontSize: 10,
-                      ),
-                    ) : SizedBox(),
-                    _nama != '' ? Text(
-                      '$_nama',
-                      style: mono1TextStyle.copyWith(
-                        fontSize: 14,
-                      ),
-                    ) : SizedBox(),
-                    _email != '' ? SizedBox(
-                      height: 10,
-                    ) : SizedBox(),
-                    _email != '' ? Text(
-                      'Email',
-                      style: mono2TextStyle.copyWith(
-                        fontSize: 10,
-                      ),
-                    ) : SizedBox(),
-                    _email != '' ? Text(
-                      '$_email',
-                      style: mono1TextStyle.copyWith(
-                        fontSize: 14,
-                      ),
-                    ) : SizedBox(),
-                    _noHp != '' ? SizedBox(
-                      height: 10,
-                    ) : SizedBox(),
-                    _noHp != '' ? Text(
-                      'Nomor HP',
-                      style: mono2TextStyle.copyWith(
-                        fontSize: 10,
-                      ),
-                    ) : SizedBox(),
-                    _noHp != '' ? Text(
-                      '$_noHp',
-                      style: mono1TextStyle.copyWith(
-                        fontSize: 14,
-                      ),
-                    ) : SizedBox(),
+                    _noInduk != ''
+                        ? Text(
+                            '$_noInduk',
+                            style: mono2TextStyle.copyWith(
+                              fontSize: 10,
+                            ),
+                          )
+                        : SizedBox(),
+                    _nama != ''
+                        ? Text(
+                            '$_nama',
+                            style: mono1TextStyle.copyWith(
+                              fontSize: 14,
+                            ),
+                          )
+                        : SizedBox(),
+                    _email != ''
+                        ? SizedBox(
+                            height: 10,
+                          )
+                        : SizedBox(),
+                    _email != ''
+                        ? Text(
+                            'Email',
+                            style: mono2TextStyle.copyWith(
+                              fontSize: 10,
+                            ),
+                          )
+                        : SizedBox(),
+                    _email != ''
+                        ? Text(
+                            '$_email',
+                            style: mono1TextStyle.copyWith(
+                              fontSize: 14,
+                            ),
+                          )
+                        : SizedBox(),
+                    _noHp != ''
+                        ? SizedBox(
+                            height: 10,
+                          )
+                        : SizedBox(),
+                    _noHp != ''
+                        ? Text(
+                            'Nomor HP',
+                            style: mono2TextStyle.copyWith(
+                              fontSize: 10,
+                            ),
+                          )
+                        : SizedBox(),
+                    _noHp != ''
+                        ? Text(
+                            '$_noHp',
+                            style: mono1TextStyle.copyWith(
+                              fontSize: 14,
+                            ),
+                          )
+                        : SizedBox(),
                   ],
                 ),
               ),
@@ -274,16 +414,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () async {
-                        SharedPreferences preferences =
-                            await SharedPreferences.getInstance();
-                        preferences.clear();
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    SplashScreen()),
-                            (route) => false);
+                      onTap: () {
+                        confirmLogout();
                       },
                       child: content(
                         icon: Icons.logout_outlined,

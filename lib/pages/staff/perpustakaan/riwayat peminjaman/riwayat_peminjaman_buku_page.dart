@@ -132,299 +132,35 @@ class _RiwayatPeminjamanBukuPageState extends State<RiwayatPeminjamanBukuPage> {
       );
     }
 
-    Widget dropdownList1({required String hint, required List item}) {
-      return Container(
-          height: 24,
-          padding: EdgeInsets.symmetric(
-            horizontal: 10,
-          ),
-          margin: EdgeInsets.symmetric(horizontal: 6),
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: flag1 == true ? p1Color : mono3Color,
-            ),
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: DropdownButtonHideUnderline(
-            child: GestureDetector(
-              onLongPress: () {
-                setState(() {
-                  flag1 = false;
-                  value1Item = null;
-                });
-              },
-              child: DropdownButton(
-                icon: Icon(
-                  Icons.keyboard_arrow_down_outlined,
-                  color: flag1 == true ? p1Color : mono3Color,
-                ),
-                hint: Text(
-                  hint,
-                  style: mono3TextStyle.copyWith(
-                    color: flag1 == true ? p1Color : mono3Color,
-                    fontSize: 10,
-                  ),
-                ),
-                dropdownColor: mono6Color,
-                elevation: 2,
-                value: value1Item,
-                items: item.map(
-                  (value) {
-                    return DropdownMenuItem(
-                      value: value,
-                      child: Text(
-                        value,
-                        style: mono3TextStyle.copyWith(
-                          color: value1Item == value ? p1Color : mono1Color,
-                          fontWeight: regular,
-                          fontSize: 10,
-                        ),
-                      ),
-                    );
-                  },
-                ).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    print(value);
-                    flag1 = true;
-                    value1Item = value;
-                  });
-                },
-              ),
-            ),
-          ));
-    }
-
-    Widget dropdownList2({required String hint, required List item}) {
-      return Container(
-          height: 24,
-          padding: EdgeInsets.symmetric(
-            horizontal: 10,
-          ),
-          margin: EdgeInsets.symmetric(horizontal: 6),
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: flag2 == true ? p1Color : mono3Color,
-            ),
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: DropdownButtonHideUnderline(
-            child: GestureDetector(
-              onLongPress: () {
-                setState(() {
-                  flag2 = false;
-                  value2Item = null;
-                });
-              },
-              child: DropdownButton(
-                icon: Icon(
-                  Icons.keyboard_arrow_down_outlined,
-                  color: flag2 == true ? p1Color : mono3Color,
-                ),
-                hint: Text(
-                  hint,
-                  style: mono3TextStyle.copyWith(
-                    color: flag2 == true ? p1Color : mono3Color,
-                    fontSize: 10,
-                  ),
-                ),
-                dropdownColor: mono6Color,
-                elevation: 2,
-                value: value2Item,
-                items: item.map(
-                  (value) {
-                    return DropdownMenuItem(
-                      value: value,
-                      child: Text(
-                        value,
-                        style: mono3TextStyle.copyWith(
-                          color: value2Item == value ? p1Color : mono1Color,
-                          fontWeight: regular,
-                          fontSize: 10,
-                        ),
-                      ),
-                    );
-                  },
-                ).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    print(value);
-                    flag2 = true;
-                    value2Item = value;
-                  });
-                },
-              ),
-            ),
-          ));
-    }
-
-    Widget filter1() {
-      return Row(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Container(
-                margin: EdgeInsets.only(
-                  top: 25,
-                  bottom: 30,
-                ),
-                padding: EdgeInsets.symmetric(horizontal: 19),
-                child: Row(
-                  children: [
-                    // NOTE: ini adalah button reset yang hanya akan muncul jika salah satu dropdown dipilih
-                    value1Item != null
-                        ? GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                value1Item = null;
-                                flag1 = false;
-                              });
-                            },
-                            child: Container(
-                              height: 24,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 5),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: m5Color,
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.restart_alt,
-                                    size: 9.22,
-                                    color: mono6Color,
-                                  ),
-                                  SizedBox(
-                                    width: 4,
-                                  ),
-                                  Text(
-                                    'Reset',
-                                    style:
-                                        mono6TextStyle.copyWith(fontSize: 10),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )
-                        : Container(),
-                    dropdownList1(
-                      hint: 'Status Peminjaman',
-                      item: [
-                        'Status Peminjaman',
-                        'Sedang Dipinjam',
-                        'Tenggat',
-                        'Selesai'
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      );
-    }
-
-    Widget filter2() {
-      return Row(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Container(
-                margin: EdgeInsets.only(
-                  top: 25,
-                  bottom: 30,
-                ),
-                padding: EdgeInsets.symmetric(horizontal: 19),
-                child: Row(
-                  children: [
-                    // NOTE: ini adalah button reset yang hanya akan muncul jika salah satu dropdown dipilih
-                    value2Item != null
-                        ? GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                value2Item = null;
-                                flag2 = false;
-                              });
-                            },
-                            child: Container(
-                              height: 24,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 5),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: m5Color,
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.restart_alt,
-                                    size: 9.22,
-                                    color: mono6Color,
-                                  ),
-                                  SizedBox(
-                                    width: 4,
-                                  ),
-                                  Text(
-                                    'Reset',
-                                    style:
-                                        mono6TextStyle.copyWith(fontSize: 10),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )
-                        : Container(),
-                    dropdownList2(
-                      hint: 'Status Peminjaman',
-                      item: [
-                        'Status Peminjaman',
-                        'Sedang Dipinjam',
-                        'Tenggat',
-                        'Selesai'
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      );
-    }
-
     Widget listItem(
         {required String nama, required String nis, required String status}) {
-      return Container(
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: mono3Color,
-              width: 0.5,
+      return GestureDetector(
+        onTap: () {
+          setState(() {
+            searchController.clear();
+            isSearch = false;
+          });
+          Navigator.pushNamed(
+              context, '/staff-perpus/riwayat-peminjaman-buku/detail-page');
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: mono3Color,
+                width: 0.5,
+              ),
             ),
           ),
-        ),
-        margin: EdgeInsets.only(
-          left: 20,
-          right: 20,
-          bottom: 12,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(
+          margin: EdgeInsets.only(
+            left: 20,
+            right: 20,
             bottom: 12,
           ),
-          child: GestureDetector(
-            onTap: () {
-              setState(() {
-                searchController.clear();
-                isSearch = false;
-              });
-              Navigator.pushNamed(
-                  context, '/staff-perpus/riwayat-peminjaman-buku/detail-page');
-            },
+          child: Padding(
+            padding: const EdgeInsets.only(
+              bottom: 12,
+            ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -488,7 +224,9 @@ class _RiwayatPeminjamanBukuPageState extends State<RiwayatPeminjamanBukuPage> {
                 children: [
                   Column(
                     children: [
-                      filter1(),
+                      SizedBox(
+                        height: 20,
+                      ),
                       Expanded(
                         child: ListView(
                           children: [
@@ -539,7 +277,9 @@ class _RiwayatPeminjamanBukuPageState extends State<RiwayatPeminjamanBukuPage> {
                   ),
                   Column(
                     children: [
-                      filter2(),
+                      SizedBox(
+                        height: 20,
+                      ),
                       Expanded(
                         child: ListView(
                           children: [

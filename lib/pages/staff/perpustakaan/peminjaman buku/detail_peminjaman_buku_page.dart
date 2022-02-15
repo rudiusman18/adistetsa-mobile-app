@@ -29,6 +29,236 @@ class _DetailPeminjamanBukuPageState extends State<DetailPeminjamanBukuPage> {
       );
     }
 
+    confirmAccept() async {
+      return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            backgroundColor: mono6Color,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                vertical: 12,
+                horizontal: 20,
+              ),
+              width: 305,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Stack(
+                    children: [
+                      Center(
+                        child: Text(
+                          'Konfirmasi',
+                          style: mono1TextStyle.copyWith(
+                            fontWeight: semiBold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Image.asset(
+                            'assets/cancel_button.png',
+                            width: 14,
+                            height: 14,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 12,
+                  ),
+                  Text(
+                    'Apakah anda yakin untuk menyetujui peminjaman?',
+                    style: mono1TextStyle.copyWith(
+                      fontSize: 12,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 120,
+                        height: 46,
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          style: TextButton.styleFrom(
+                            backgroundColor: mono3Color,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Text(
+                            'Batal',
+                            style: mono6TextStyle.copyWith(
+                              fontWeight: semiBold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Container(
+                        width: 120,
+                        height: 46,
+                        child: TextButton(
+                          onPressed: () async {},
+                          style: TextButton.styleFrom(
+                            backgroundColor: successColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Text(
+                            'setuju',
+                            style: mono6TextStyle.copyWith(
+                              fontWeight: semiBold,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    }
+
+    confirmDecline() async {
+      return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            backgroundColor: mono6Color,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                vertical: 12,
+                horizontal: 20,
+              ),
+              width: 305,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Stack(
+                    children: [
+                      Center(
+                        child: Text(
+                          'Konfirmasi',
+                          style: mono1TextStyle.copyWith(
+                            fontWeight: semiBold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Image.asset(
+                            'assets/cancel_button.png',
+                            width: 14,
+                            height: 14,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 12,
+                  ),
+                  Text(
+                    'Apakah anda yakin untuk menyetujui peminjaman?',
+                    style: mono1TextStyle.copyWith(
+                      fontSize: 12,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 120,
+                        height: 46,
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          style: TextButton.styleFrom(
+                            backgroundColor: mono3Color,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Text(
+                            'Batal',
+                            style: mono6TextStyle.copyWith(
+                              fontWeight: semiBold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Container(
+                        width: 120,
+                        height: 46,
+                        child: TextButton(
+                          onPressed: () async {},
+                          style: TextButton.styleFrom(
+                            backgroundColor: dangerColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Text(
+                            'Tolak',
+                            style: mono6TextStyle.copyWith(
+                              fontWeight: semiBold,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    }
+
     Widget infoPeminjam() {
       return Container(
         margin: EdgeInsets.only(
@@ -470,7 +700,9 @@ class _DetailPeminjamanBukuPageState extends State<DetailPeminjamanBukuPage> {
             ),
             backgroundColor: h1Color,
           ),
-          onPressed: () {},
+          onPressed: () {
+            confirmAccept();
+          },
           child: Text(
             'Setuju',
             style: mono6TextStyle.copyWith(
@@ -501,7 +733,9 @@ class _DetailPeminjamanBukuPageState extends State<DetailPeminjamanBukuPage> {
                   color: dangerColor,
                 ),
               ),
-              onPressed: () {},
+              onPressed: () {
+                confirmDecline();
+              },
               child: Text(
                 'Tolak',
                 style: dangerTextStyle.copyWith(

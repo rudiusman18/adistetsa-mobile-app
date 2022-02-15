@@ -83,8 +83,14 @@ class ListPerpustakaanPage extends StatelessWidget {
               'Peminjaman',
             ),
           ),
-          contentItem(
-            'Riwayat Peminjaman',
+          GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(
+                  context, '/user/perpustakaan/riwayat-peminjaman-buku-page');
+            },
+            child: contentItem(
+              'Riwayat Peminjaman',
+            ),
           ),
         ],
       ),
