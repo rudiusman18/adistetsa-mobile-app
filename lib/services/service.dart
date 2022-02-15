@@ -87,7 +87,9 @@ class Services extends ChangeNotifier {
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
+      print(response.body);
       var data = jsonDecode(response.body);
+
       KatalogBukuModel detailKatalogBukuModel = KatalogBukuModel.fromJson(data);
       return detailKatalogBukuModel;
     } else {

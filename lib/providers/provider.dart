@@ -42,7 +42,8 @@ class Providers with ChangeNotifier {
 
   Future<bool> getDetailKatalogBuku({String? register}) async {
     try {
-      KatalogBukuModel katalogBukuModel = await Services().getDetailKatalogBuku(register: register);
+      KatalogBukuModel katalogBukuModel =
+          await Services().getDetailKatalogBuku(register: register);
       _katalog = katalogBukuModel;
       return true;
     } catch (e) {

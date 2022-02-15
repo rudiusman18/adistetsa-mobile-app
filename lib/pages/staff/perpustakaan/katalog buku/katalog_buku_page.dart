@@ -94,10 +94,11 @@ class _KatalogBukuPageState extends State<KatalogBukuPage> {
       );
     }
 
-    Widget listItem(
-        {required String nama,
-        required String tipe,
-        required String register}) {
+    Widget listItem({
+      required String nama,
+      required String tipe,
+      required String register,
+    }) {
       return Container(
         decoration: BoxDecoration(
           border: Border(
@@ -117,11 +118,12 @@ class _KatalogBukuPageState extends State<KatalogBukuPage> {
             bottom: 12,
           ),
           child: GestureDetector(
-            onTap: () {
+            onTap: () async {
               setState(() {
                 searchController.clear();
                 isSearch = false;
               });
+              await provider.getDetailKatalogBuku(register: register);
               Navigator.pushNamed(
                   context, '/staff-perpus/katalog-buku/detail-page');
             },
