@@ -171,42 +171,35 @@ class _KatalogBukuPageState extends State<KatalogBukuPage> {
       );
     }
 
-    return WillPopScope(
-      onWillPop: () async {
-        Navigator.pushNamedAndRemoveUntil(
-            context, '/main-page/back', (route) => false);
-        return true;
-      },
-      child: Scaffold(
-          appBar: isSearch == true ? searchAppbar() : katalogBukuHeader(),
-          backgroundColor: mono6Color,
-          body: Container(
-            padding: EdgeInsets.only(top: 20),
-            child: FutureBuilder(
-              future: Services().getKatalogBuku(),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.hasData) {
-                  List<KatalogBukuModel> data = snapshot.data;
-                  return ListView(
-                    children: data.map((item) {
-                      return listItem(
-                        register: item.rEGISTER.toString(),
-                        nama: item.jUDUL.toString(),
-                        tipe: item.mEDIA.toString(),
-                      );
-                    }).toList(),
-                  );
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      strokeWidth: 4,
-                      color: m1Color,
-                    ),
-                  );
-                }
-              },
-            ),
-          )),
-    );
+    return Scaffold(
+        appBar: isSearch == true ? searchAppbar() : katalogBukuHeader(),
+        backgroundColor: mono6Color,
+        body: Container(
+          padding: EdgeInsets.only(top: 20),
+          child: FutureBuilder(
+            future: Services().getKatalogBuku(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                List<KatalogBukuModel> data = snapshot.data;
+                return ListView(
+                  children: data.map((item) {
+                    return listItem(
+                      register: item.rEGISTER.toString(),
+                      nama: item.jUDUL.toString(),
+                      tipe: item.mEDIA.toString(),
+                    );
+                  }).toList(),
+                );
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 4,
+                    color: m1Color,
+                  ),
+                );
+              }
+            },
+          ),
+        ));
   }
 }
