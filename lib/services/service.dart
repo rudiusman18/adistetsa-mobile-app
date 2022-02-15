@@ -64,9 +64,9 @@ class Services extends ChangeNotifier {
     }
   }
 
-  getKatalogBuku() async {
+  getKatalogBuku({String? search}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var url = Uri.parse('$baseUrl/perpustakaan/katalog_buku');
+    var url = Uri.parse('$baseUrl/perpustakaan/katalog_buku?$search');
     var token = prefs.getString("token").toString();
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);

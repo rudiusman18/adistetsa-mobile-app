@@ -13,7 +13,7 @@ class KatalogBukuPage extends StatefulWidget {
 
 class _KatalogBukuPageState extends State<KatalogBukuPage> {
   bool isSearch = false;
-
+  String urlSearch = '';
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -63,7 +63,7 @@ class _KatalogBukuPageState extends State<KatalogBukuPage> {
           onTap: () async {
             setState(() {
               searchController.clear();
-
+              urlSearch = '';
               isSearch = false;
             });
           },
@@ -88,6 +88,7 @@ class _KatalogBukuPageState extends State<KatalogBukuPage> {
                 searchController.text = newValue.toString();
               }
               print(searchController.text);
+              urlSearch = 'search=${searchController.text}';
             });
           },
         ),
@@ -153,16 +154,9 @@ class _KatalogBukuPageState extends State<KatalogBukuPage> {
                     ],
                   ),
                 ),
-                GestureDetector(
-                  onTap: () async {
-                    await provider.getDetailKatalogBuku(register: register);
-                    Navigator.pushNamed(
-                        context, '/staff-perpus/katalog-buku/detail-page');
-                  },
-                  child: Icon(
-                    Icons.chevron_right,
-                    color: mono1Color,
-                  ),
+                Icon(
+                  Icons.chevron_right,
+                  color: mono1Color,
                 ),
               ],
             ),
@@ -177,7 +171,7 @@ class _KatalogBukuPageState extends State<KatalogBukuPage> {
         body: Container(
           padding: EdgeInsets.only(top: 20),
           child: FutureBuilder(
-            future: Services().getKatalogBuku(),
+            future: Services().getKatalogBuku(search: urlSearch),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
                 List<KatalogBukuModel> data = snapshot.data;
