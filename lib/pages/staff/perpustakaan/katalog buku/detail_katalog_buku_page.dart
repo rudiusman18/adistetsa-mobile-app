@@ -137,7 +137,8 @@ class DetailKatalogBukuPage extends StatelessWidget {
                           ),
                           width: 284,
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: () =>
+                                provider.addBooks(buku: katalogBukuModel),
                             style: TextButton.styleFrom(
                               backgroundColor: m2Color,
                               shape: RoundedRectangleBorder(

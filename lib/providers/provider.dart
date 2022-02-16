@@ -22,17 +22,25 @@ class Providers with ChangeNotifier {
   KatalogBukuModel _katalog = KatalogBukuModel();
   KatalogBukuModel get katalog => _katalog;
 
+  List<KatalogBukuModel> _listKatalog = [];
+  List<KatalogBukuModel> get listKatalog => _listKatalog;
+
+  set listKatalog(List<KatalogBukuModel> listKatalog) {
+    _listKatalog = listKatalog;
+    notifyListeners();
+  }
+
   set setGuru(GuruModel guru) {
     _guru = guru;
     notifyListeners();
   }
 
-  set setKaryawan(KaryawanModel karyawan){
+  set setKaryawan(KaryawanModel karyawan) {
     _karyawan = karyawan;
     notifyListeners();
   }
 
-  set setSiswa(SiswaModel siswa){
+  set setSiswa(SiswaModel siswa) {
     _siswa = siswa;
     notifyListeners();
   }
@@ -89,6 +97,32 @@ class Providers with ChangeNotifier {
     } catch (e) {
       print(e);
       return false;
+    }
+  }
+
+  // NOTE: Untuk mendapatkan list dari katalog yang user ambil
+
+  // ? mengecek apakah buku sudah dipinjam oleh user yang sama
+  bookExist(KatalogBukuModel buku) {
+    // -1 menandakan bahwa data sudah ada dan tidak dapat dimasukkan kembali
+    if (_listKatalog
+            .indexWhere((element) => element.rEGISTER == buku.rEGISTER) ==
+        -1) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  // ? menambah buku kedalam list
+  addBooks({required KatalogBukuModel buku}) {
+    if (bookExist(buku)) {
+      print('${buku.jUDUL} wes masuk');
+      // _listKatalog.clear();
+      // throw Exception('Anda telah memasukkan buku ini ke daftar pinjaman');
+    } else {
+      print(buku.jUDUL);
+      _listKatalog.add(buku);
     }
   }
 }

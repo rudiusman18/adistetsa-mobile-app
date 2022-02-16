@@ -1,5 +1,7 @@
+import 'package:adistetsa/providers/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class PeminjamanBukuUserPage extends StatefulWidget {
   @override
@@ -16,6 +18,7 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
 
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
     PreferredSizeWidget header() {
       return AppBar(
         centerTitle: true,
@@ -87,106 +90,141 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
       );
     }
 
+    Widget emptyTable() {
+      return Container(
+        margin: EdgeInsets.only(
+          top: 10,
+          bottom: 20,
+        ),
+        child: Center(
+          child: Text(
+            'Belum ada data buku',
+            style: mono1TextStyle.copyWith(
+              fontSize: 12,
+            ),
+          ),
+        ),
+      );
+    }
+
+    Widget tableHeader() {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: 20,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              'Daftar Buku',
+              style: mono1TextStyle.copyWith(
+                fontWeight: semiBold,
+                fontSize: 12,
+              ),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.only(
+              top: 10,
+              left: 26,
+              right: 27,
+            ),
+            child: Table(
+              border: TableBorder.all(
+                color: mono6Color,
+              ),
+              columnWidths: const <int, TableColumnWidth>{
+                0: FixedColumnWidth(40),
+                1: FlexColumnWidth(140),
+                2: FixedColumnWidth(140),
+              },
+              defaultVerticalAlignment: TableCellVerticalAlignment.top,
+              children: [
+                // Table Heading
+                TableRow(
+                  children: [
+                    Container(
+                      height: 30,
+                      color: m4Color,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'No.',
+                            style: mono6TextStyle.copyWith(
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: 30,
+                      color: m4Color,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Mata Pelajaran',
+                            style: mono6TextStyle.copyWith(
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: 30,
+                      color: m4Color,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Registrasi',
+                            style: mono6TextStyle.copyWith(
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
+    }
+
     Widget tabelPeminjam() {
       return Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                'Daftar Buku',
-                style: mono1TextStyle.copyWith(
-                  fontWeight: semiBold,
-                  fontSize: 12,
-                ),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(
-                top: 10,
-                left: 26,
-                right: 27,
-                bottom: 20,
-              ),
-              child: Table(
-                border: TableBorder.all(
-                  color: mono6Color,
-                ),
-                columnWidths: const <int, TableColumnWidth>{
-                  0: FixedColumnWidth(40),
-                  1: FlexColumnWidth(140),
-                  2: FixedColumnWidth(140),
-                },
-                defaultVerticalAlignment: TableCellVerticalAlignment.top,
-                children: [
-                  // Table Heading
-                  TableRow(
-                    children: [
-                      Container(
-                        height: 30,
-                        color: m4Color,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'No.',
-                              style: mono6TextStyle.copyWith(
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: 30,
-                        color: m4Color,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Mata Pelajaran',
-                              style: mono6TextStyle.copyWith(
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: 30,
-                        color: m4Color,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Registrasi',
-                              style: mono6TextStyle.copyWith(
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  contentTable(
-                    no: 1,
-                    mataPelajaran: 'Bahasa Indonesia',
-                    registrasi: '123456',
-                  ),
-                  contentTable(
-                    no: 2,
-                    mataPelajaran: 'Fisika',
-                    registrasi: '12312',
-                  ),
-                ],
-              ),
-            ),
-          ],
+        padding: EdgeInsets.only(
+          top: 10,
+          left: 26,
+          right: 27,
+          bottom: 20,
+        ),
+        child: Table(
+          border: TableBorder.all(
+            color: mono6Color,
+          ),
+          columnWidths: const <int, TableColumnWidth>{
+            0: FixedColumnWidth(40),
+            1: FlexColumnWidth(140),
+            2: FixedColumnWidth(140),
+          },
+          defaultVerticalAlignment: TableCellVerticalAlignment.top,
+          children: provider.listKatalog.map((book) {
+            int index = 0;
+            index++;
+            return contentTable(
+              no: index,
+              mataPelajaran: book.jUDUL.toString(),
+              registrasi: book.rEGISTER.toString(),
+            );
+          }).toList(),
         ),
       );
     }
@@ -313,7 +351,8 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
             backgroundColor: m4Color,
           ),
           onPressed: () {
-            Navigator.pushNamed(context, '/staff-perpus/katalog-buku-page');
+            Navigator.pushReplacementNamed(
+                context, '/staff-perpus/katalog-buku-page');
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -427,21 +466,6 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
     }
 
     // ignore: unused_element
-    Widget emptyTable() {
-      return Container(
-        margin: EdgeInsets.only(
-          bottom: 20,
-        ),
-        child: Center(
-          child: Text(
-            'Belum ada data buku',
-            style: mono1TextStyle.copyWith(
-              fontSize: 12,
-            ),
-          ),
-        ),
-      );
-    }
 
     return Scaffold(
       backgroundColor: mono6Color,
@@ -451,8 +475,8 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              tabelPeminjam(),
-              // emptyTable(), untuk tampilan tabel kosong
+              tableHeader(),
+              provider.listKatalog.isNotEmpty ? tabelPeminjam() : emptyTable(),
               buttonAdd(),
               listKategori(),
               value1Item == 'Jangka Panjang' ? buttonfileTTD() : Text(''),
