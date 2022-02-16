@@ -1,6 +1,7 @@
 import 'package:adistetsa/models/guru_model.dart';
 import 'package:adistetsa/models/karyawan_model.dart';
 import 'package:adistetsa/models/katalogbuku_model.dart';
+import 'package:adistetsa/models/list_buku_model.dart';
 import 'package:adistetsa/models/role_model.dart';
 import 'package:adistetsa/models/siswa_model.dart';
 import 'package:adistetsa/services/service.dart';
@@ -22,10 +23,10 @@ class Providers with ChangeNotifier {
   KatalogBukuModel _katalog = KatalogBukuModel();
   KatalogBukuModel get katalog => _katalog;
 
-  List<KatalogBukuModel> _listKatalog = [];
-  List<KatalogBukuModel> get listKatalog => _listKatalog;
+  List<ListBukuModel> _listKatalog = [];
+  List<ListBukuModel> get listKatalog => _listKatalog;
 
-  set listKatalog(List<KatalogBukuModel> listKatalog) {
+  set listKatalog(List<ListBukuModel> listKatalog) {
     _listKatalog = listKatalog;
     notifyListeners();
   }
@@ -103,11 +104,9 @@ class Providers with ChangeNotifier {
   // NOTE: Untuk mendapatkan list dari katalog yang user ambil
 
   // ? mengecek apakah buku sudah dipinjam oleh user yang sama
-  bookExist(KatalogBukuModel buku) {
+  bookExist(ListBukuModel buku) {
     // -1 menandakan bahwa data sudah ada dan tidak dapat dimasukkan kembali
-    if (_listKatalog
-            .indexWhere((element) => element.rEGISTER == buku.rEGISTER) ==
-        -1) {
+    if (_listKatalog.indexWhere((element) => element.id == buku.id) == -1) {
       return false;
     } else {
       return true;
@@ -115,7 +114,7 @@ class Providers with ChangeNotifier {
   }
 
   // ? menambah buku kedalam list
-  addBooks({required KatalogBukuModel buku}) {
+  addBooks({required ListBukuModel buku}) {
     if (bookExist(buku)) {
       print('${buku.jUDUL} wes masuk');
       // _listKatalog.clear();
@@ -124,5 +123,18 @@ class Providers with ChangeNotifier {
       print(buku.jUDUL);
       _listKatalog.add(buku);
     }
+    notifyListeners();
+  }
+
+  deleteBooks({required int id}) {
+    print(id);
+    if (_listKatalog.length <= 1 && _listKatalog.isNotEmpty) {
+      _listKatalog.removeAt(0);
+      print('object');
+    } else {
+      _listKatalog.removeAt(id);
+      print('masuk');
+    }
+    notifyListeners();
   }
 }

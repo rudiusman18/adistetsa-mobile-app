@@ -9,7 +9,7 @@ class DetailKatalogBukuPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Providers provider = Provider.of<Providers>(context);
-    RolesModel rolesModel = provider.role;
+
     KatalogBukuModel katalogBukuModel = provider.katalog;
 
     PreferredSizeWidget detailKatalogHeader() {
@@ -128,36 +128,6 @@ class DetailKatalogBukuPage extends StatelessWidget {
                   name: 'Jenis Buku',
                   value: 'Buku ${katalogBukuModel.jENISBUKU}',
                 ),
-                rolesModel.name != 'Staf Perpustakaan'
-                    ? Center(
-                        child: Container(
-                          margin: EdgeInsets.only(
-                            top: 50,
-                            bottom: 30,
-                          ),
-                          width: 284,
-                          child: TextButton(
-                            onPressed: () =>
-                                provider.addBooks(buku: katalogBukuModel),
-                            style: TextButton.styleFrom(
-                              backgroundColor: m2Color,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                  8,
-                                ),
-                              ),
-                            ),
-                            child: Text(
-                              'Pinjam Buku',
-                              style: mono6TextStyle.copyWith(
-                                fontSize: 16,
-                                fontWeight: bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      )
-                    : Container(),
               ],
             ),
           )

@@ -18,6 +18,8 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
 
   @override
   Widget build(BuildContext context) {
+    int index = 0;
+    int posisi = -1;
     Providers provider = Provider.of<Providers>(context);
     PreferredSizeWidget header() {
       return AppBar(
@@ -39,9 +41,10 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
     }
 
     TableRow contentTable({
+      required int id,
       required int no,
       required String mataPelajaran,
-      required String registrasi,
+      required String register,
     }) {
       return TableRow(
         children: [
@@ -72,17 +75,23 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
               padding: EdgeInsets.symmetric(
                 horizontal: 2,
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    registrasi,
-                    style: mono1TextStyle.copyWith(
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
+              child: Text(
+                register,
+                style: mono1TextStyle.copyWith(
+                  fontSize: 12,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+          Container(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 2,
+              ),
+              child: GestureDetector(
+                onTap: () => provider.deleteBooks(id: id),
+                child: Icon(Icons.delete_outline, color: mono3Color),
               ),
             ),
           ),
@@ -137,7 +146,8 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
               columnWidths: const <int, TableColumnWidth>{
                 0: FixedColumnWidth(40),
                 1: FlexColumnWidth(140),
-                2: FixedColumnWidth(140),
+                2: FixedColumnWidth(96),
+                3: FixedColumnWidth(53),
               },
               defaultVerticalAlignment: TableCellVerticalAlignment.top,
               children: [
@@ -181,7 +191,22 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Registrasi',
+                            'Register',
+                            style: mono6TextStyle.copyWith(
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: 30,
+                      color: m4Color,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'opsi',
                             style: mono6TextStyle.copyWith(
                               fontSize: 12,
                             ),
@@ -213,16 +238,18 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
           columnWidths: const <int, TableColumnWidth>{
             0: FixedColumnWidth(40),
             1: FlexColumnWidth(140),
-            2: FixedColumnWidth(140),
+            2: FixedColumnWidth(96),
+            3: FixedColumnWidth(53),
           },
           defaultVerticalAlignment: TableCellVerticalAlignment.top,
           children: provider.listKatalog.map((book) {
-            int index = 0;
             index++;
+            posisi++;
             return contentTable(
+              id: posisi,
               no: index,
               mataPelajaran: book.jUDUL.toString(),
-              registrasi: book.rEGISTER.toString(),
+              register: book.rEGISTER.toString(),
             );
           }).toList(),
         ),
@@ -351,8 +378,8 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
             backgroundColor: m4Color,
           ),
           onPressed: () {
-            Navigator.pushReplacementNamed(
-                context, '/staff-perpus/katalog-buku-page');
+            Navigator.pushNamed(
+                context, '/user/perpustakaan/peminjaman-buku/list-buku-page');
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

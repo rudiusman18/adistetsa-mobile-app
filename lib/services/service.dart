@@ -4,6 +4,7 @@ import 'package:adistetsa/models/guru_model.dart';
 import 'package:adistetsa/models/karyawan_model.dart';
 import 'package:adistetsa/models/katalogbuku_model.dart';
 import 'package:adistetsa/models/kompetensi_model.dart';
+import 'package:adistetsa/models/list_buku_model.dart';
 import 'package:adistetsa/models/role_model.dart';
 import 'package:adistetsa/models/siswa_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -101,6 +102,22 @@ class Services extends ChangeNotifier {
       return detailKatalogBukuModel;
     } else {
       throw Exception('Gagal Mendapatkan Katalog Buku');
+    }
+  }
+
+  getListBuku({String? search}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var url = Uri.parse('$baseUrl/perpustakaan/katalog_buku_tersedia?$search');
+    var token = prefs.getString("token").toString();
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<ListBukuModel> katalogBuku =
+          data.map((item) => ListBukuModel.fromJson(item)).toList();
+      return katalogBuku;
+    } else {
+      throw Exception('Gagal Mendapatkan list Buku');
     }
   }
 }
