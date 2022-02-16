@@ -1,4 +1,6 @@
+import 'package:adistetsa/models/role_model.dart';
 import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +22,55 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
   Widget build(BuildContext context) {
     int index = 0;
     int posisi = -1;
+    bool isLoading = false;
     Providers provider = Provider.of<Providers>(context);
+    RolesModel rolesModel = provider.role;
+
+    handlePinjam() async {
+      setState(() {
+        isLoading = true;
+      });
+      if (rolesModel.name == 'Guru') {
+        if (await Services().setPengajuanBukuGuru(
+          buku: provider.idBuku,
+          tanggalPengajuan: DateTime.now().toString(),
+          jangkaPeminjaman: value1Item.toString(),
+        )) {
+          setState(() {
+            print('data berhasil masuk');
+          });
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              backgroundColor: dangerColor,
+              content: Text(
+                'Gagal Melakukan Peminjaman',
+                textAlign: TextAlign.center,
+              )));
+        }
+      } else if (rolesModel.name == 'Siswa') {
+        if (await Services().setPengajuanBukuSiswa(
+          buku: provider.idBuku,
+          tanggalPengajuan: DateTime.now().toString(),
+          jangkaPeminjaman: value1Item.toString(),
+        )) {
+          setState(() {
+            print('data berhasil masuk');
+          });
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              backgroundColor: dangerColor,
+              content: Text(
+                'Gagal Melakukan Peminjaman',
+                textAlign: TextAlign.center,
+              )));
+        }
+      }
+
+      setState(() {
+        isLoading = false;
+      });
+    }
+
     PreferredSizeWidget header() {
       return AppBar(
         centerTitle: true,
@@ -480,7 +530,10 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
             ),
             backgroundColor: m2Color,
           ),
-          onPressed: () {},
+          onPressed: () {
+            print('ini adalah pesan sementara ketika anda berhasil meminjam');
+            handlePinjam();
+          },
           child: Text(
             'Ajukan Peminjaman',
             style: mono6TextStyle.copyWith(
@@ -507,7 +560,9 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
               buttonAdd(),
               listKategori(),
               value1Item == 'Jangka Panjang' ? buttonfileTTD() : Text(''),
-              buttonSubmit(),
+              provider.listKatalog.isNotEmpty && value1Item != null
+                  ? buttonSubmit()
+                  : Container(),
             ],
           ),
         ),

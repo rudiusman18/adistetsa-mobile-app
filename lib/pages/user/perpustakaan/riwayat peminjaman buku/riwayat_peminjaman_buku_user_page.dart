@@ -186,7 +186,7 @@ class _RiwayatPeminjamanBukuUserPageState
                           color: '$status' == 'Sedang Dipinjam'
                               ? warningColor
                               : '$status' == 'Diajukan'
-                                  ? mono2Color
+                                  ? infoColor
                                   : '$status' == 'Selesai'
                                       ? successColor
                                       : '$status' == 'Tenggat'

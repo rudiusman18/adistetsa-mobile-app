@@ -26,8 +26,16 @@ class Providers with ChangeNotifier {
   List<ListBukuModel> _listKatalog = [];
   List<ListBukuModel> get listKatalog => _listKatalog;
 
+  List<int> _idBuku = [];
+  List<int> get idBuku => _idBuku;
+
   set listKatalog(List<ListBukuModel> listKatalog) {
     _listKatalog = listKatalog;
+    notifyListeners();
+  }
+
+  set idBuku(List<int> idBuku) {
+    _idBuku = idBuku;
     notifyListeners();
   }
 
@@ -122,6 +130,7 @@ class Providers with ChangeNotifier {
     } else {
       print(buku.jUDUL);
       _listKatalog.add(buku);
+      _idBuku.add(int.parse(buku.id.toString()));
     }
     notifyListeners();
   }
@@ -130,9 +139,11 @@ class Providers with ChangeNotifier {
     print(id);
     if (_listKatalog.length <= 1 && _listKatalog.isNotEmpty) {
       _listKatalog.removeAt(0);
+      _idBuku.removeAt(0);
       print('object');
     } else {
       _listKatalog.removeAt(id);
+      _idBuku.removeAt(id);
       print('masuk');
     }
     notifyListeners();

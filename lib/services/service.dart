@@ -120,4 +120,68 @@ class Services extends ChangeNotifier {
       throw Exception('Gagal Mendapatkan list Buku');
     }
   }
+
+  setPengajuanBukuGuru({
+    required List<int> buku,
+    required String tanggalPengajuan,
+    required String jangkaPeminjaman,
+    String? urlTtd,
+  }) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var url = Uri.parse('$baseUrl/perpustakaan/pengajuan_peminjaman_guru');
+    var token = prefs.getString("token").toString();
+    var headers = {"Content-type": "application/json", "Authorization": token};
+
+    var body = jsonEncode({
+      'BUKU': buku.map((e) => e).toList(),
+      'TANGGAL_PENGAJUAN': tanggalPengajuan,
+      'STATUS_PENGAJUAN': 'Pengajuan',
+      'JANGKA_PEMINJAMAN': jangkaPeminjaman,
+      'FILE_TTD_PENGAJUAN': urlTtd,
+    });
+    var response = await http.post(url, headers: headers, body: body);
+
+    print(response.statusCode);
+    print(response.body);
+    print(jsonDecode(body));
+    if (response.statusCode == 200) {
+      print(response.body);
+
+      return true;
+    } else {
+      throw Exception('Gagal Melakukan pengajuan peminjaman buku');
+    }
+  }
+
+  setPengajuanBukuSiswa({
+    required List<int> buku,
+    required String tanggalPengajuan,
+    required String jangkaPeminjaman,
+    String? urlTtd,
+  }) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var url = Uri.parse('$baseUrl/perpustakaan/pengajuan_peminjaman_siswa');
+    var token = prefs.getString("token").toString();
+    var headers = {"Content-type": "application/json", "Authorization": token};
+
+    var body = jsonEncode({
+      'BUKU': buku.map((e) => e).toList(),
+      'TANGGAL_PENGAJUAN': tanggalPengajuan,
+      'STATUS_PENGAJUAN': 'Pengajuan',
+      'JANGKA_PEMINJAMAN': jangkaPeminjaman,
+      'FILE_TTD_PENGAJUAN': urlTtd,
+    });
+    var response = await http.post(url, headers: headers, body: body);
+
+    print(response.statusCode);
+    print(response.body);
+    print(jsonDecode(body));
+    if (response.statusCode == 200) {
+      print(response.body);
+
+      return true;
+    } else {
+      throw Exception('Gagal Melakukan pengajuan peminjaman buku');
+    }
+  }
 }

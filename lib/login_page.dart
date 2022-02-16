@@ -48,8 +48,9 @@ class _LoginPageState extends State<LoginPage> {
         margin: EdgeInsets.only(
           top: 29,
         ),
-        width: 284,
+        width: MediaQuery.of(context).size.width * 0.8,
         decoration: BoxDecoration(
+          color: mono6Color,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
             color: usernameFocusNode.hasFocus || isActiveUsername == true
@@ -123,8 +124,9 @@ class _LoginPageState extends State<LoginPage> {
         margin: EdgeInsets.only(
           top: 23,
         ),
-        width: 284,
+        width: MediaQuery.of(context).size.width * 0.8,
         decoration: BoxDecoration(
+          color: mono6Color,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
             color: passwordFocusNode.hasFocus || isActivePassword == true
@@ -336,7 +338,7 @@ class _LoginPageState extends State<LoginPage> {
                           height: 12,
                         ),
                         Container(
-                          width: 284,
+                          width: MediaQuery.of(context).size.width * 0.8,
                           alignment: Alignment.centerRight,
                           child: Text(
                             'Lupa kata sandi?',
