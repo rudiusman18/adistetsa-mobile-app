@@ -144,9 +144,15 @@ class HomePage extends StatelessWidget {
               urlImg: 'sarana prasarana',
               text: 'Sarana Prasarana',
             ),
-            ItemCard(
-              urlImg: 'kesiswaan',
-              text: 'Kesiswaan',
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(
+                    context, '/siswa/kesiswaan/list-kesiswaan-page');
+              },
+              child: ItemCard(
+                urlImg: 'kesiswaan',
+                text: 'Kesiswaan',
+              ),
             ),
             ItemCard(
               urlImg: 'tata usaha',
