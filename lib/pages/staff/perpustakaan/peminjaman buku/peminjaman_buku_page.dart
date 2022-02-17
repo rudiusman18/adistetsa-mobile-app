@@ -1,7 +1,11 @@
 import 'package:adistetsa/models/pengajuanpeminjaman_model.dart';
+import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
+import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PeminjamanBukuPage extends StatefulWidget {
   @override
@@ -14,6 +18,8 @@ class _PeminjamanBukuPageState extends State<PeminjamanBukuPage> {
 
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+
     PreferredSizeWidget peminjamanBukuHeader() {
       return AppBar(
         centerTitle: true,
@@ -131,12 +137,20 @@ class _PeminjamanBukuPageState extends State<PeminjamanBukuPage> {
         required String nis,
         required String user}) {
       return GestureDetector(
-        onTap: () {
+        onTap: () async {
+          Future saveRoles() async {
+            SharedPreferences pref = await SharedPreferences.getInstance();
+            return pref.setString('user', user);
+          }
+
           setState(() {
             searchController.clear();
             isSearch = false;
+            saveRoles();
+            loading(context);
           });
-          Navigator.pushNamed(
+          await provider.getDetailPengajuanPeminjaman(id: id);
+          Navigator.pushReplacementNamed(
               context, '/staff-perpus/peminjaman-buku/detail-page');
         },
         child: Container(
@@ -232,7 +246,7 @@ class _PeminjamanBukuPageState extends State<PeminjamanBukuPage> {
                                             id: '${item.iD}',
                                             nama: '${item.nAMA}',
                                             nis: '${item.tANGGALPENGAJUAN}',
-                                            user: 'Siswa')
+                                            user: 'Admin Siswa')
                                         : SizedBox();
                                   }).toList(),
                                 );
@@ -272,7 +286,7 @@ class _PeminjamanBukuPageState extends State<PeminjamanBukuPage> {
                                             id: '${item.iD}',
                                             nama: '${item.nAMA}',
                                             nis: '${item.tANGGALPENGAJUAN}',
-                                            user: 'Guru')
+                                            user: 'Admin Guru')
                                         : SizedBox();
                                   }).toList(),
                                 );

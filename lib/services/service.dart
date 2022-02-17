@@ -147,6 +147,36 @@ class Services extends ChangeNotifier {
     }
   }
 
+  getDetailPengajuanPeminjaman({String? id}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var role = prefs.getString("role").toString();
+    var adminUser = prefs.getString("user").toString();
+    var url;
+    if (role == 'Siswa') {
+      url = Uri.parse('$baseUrl/perpustakaan/pengajuan_peminjaman_siswa/$id');
+    } else if (role == 'Guru') {
+      url = Uri.parse('$baseUrl/perpustakaan/pengajuan_peminjaman_guru/$id');
+    } else if (adminUser == 'Admin Siswa') {
+      url = Uri.parse(
+          '$baseUrl/perpustakaan/pengajuan_peminjaman_siswa_admin/$id');
+    } else if (adminUser == 'Admin Guru') {
+      url = Uri.parse(
+          '$baseUrl/perpustakaan/pengajuan_peminjaman_guru_admin/$id');
+    }
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      PengajuanPeminjamanModel pengajuanPeminjamanModel =
+          PengajuanPeminjamanModel.fromJson(data);
+      return pengajuanPeminjamanModel;
+    } else {
+      throw Exception('Gagal Mendapatkan Katalog Buku');
+    }
+  }
+
   getPengajuanPeminjamanSiswaAdmin({String? search}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -225,29 +255,6 @@ class Services extends ChangeNotifier {
     }
   }
 
-  getDetailPengajuanPeminjaman({String? id}) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString("token").toString();
-    var role = prefs.getString("role").toString();
-    var url;
-    if (role == 'Siswa') {
-      url = Uri.parse('$baseUrl/perpustakaan/pengajuan_peminjaman_siswa/$id');
-    } else if (role == 'Guru') {
-      url = Uri.parse('$baseUrl/perpustakaan/pengajuan_peminjaman_guru/$id');
-    }
-    var headers = {"Content-type": "application/json", "authorization": token};
-    var response = await http.get(url, headers: headers);
-    print(response.statusCode);
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
-      PengajuanPeminjamanModel pengajuanPeminjamanModel =
-          PengajuanPeminjamanModel.fromJson(data);
-      return pengajuanPeminjamanModel;
-    } else {
-      throw Exception('Gagal Mendapatkan Katalog Buku');
-    }
-  }
-
   setPengajuanBuku(
       {required List<String> buku,
       required String tanggalPengajuan,
@@ -293,6 +300,48 @@ class Services extends ChangeNotifier {
       } else {
         return false;
       }
+    }
+  }
+
+  terimaPengajuan({required String id, required String user}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url;
+    if (user == 'Admin Siswa') {
+      url =
+          Uri.parse('$baseUrl/perpustakaan/acc_pengajuan_peminjaman_siswa/$id');
+    } else if (user == 'Admin Guru') {
+      url =
+          Uri.parse('$baseUrl/perpustakaan/acc_pengajuan_peminjaman_guru/$id');
+    }
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      print('Tidak Masuk');
+      return false;
+    }
+  }
+
+  tolakPengajuan({required String id, required String user}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url;
+    if (user == 'Admin Siswa') {
+      url = Uri.parse(
+          '$baseUrl/perpustakaan/tolak_pengajuan_peminjaman_siswa/$id');
+    } else if (user == 'Admin Guru') {
+      url = Uri.parse(
+          '$baseUrl/perpustakaan/tolak_pengajuan_peminjaman_guru/$id');
+    }
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      print('Tidak Masuk');
+      return false;
     }
   }
 }

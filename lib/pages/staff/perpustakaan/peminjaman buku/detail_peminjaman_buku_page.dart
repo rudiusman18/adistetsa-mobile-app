@@ -1,5 +1,10 @@
+import 'package:adistetsa/models/pengajuanpeminjaman_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DetailPeminjamanBukuPage extends StatefulWidget {
   @override
@@ -10,6 +15,12 @@ class DetailPeminjamanBukuPage extends StatefulWidget {
 class _DetailPeminjamanBukuPageState extends State<DetailPeminjamanBukuPage> {
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+    PengajuanPeminjamanModel pengajuanPeminjamanModel =
+        provider.pengajuanPeminjaman;
+
+    var index = 0;
+
     PreferredSizeWidget header() {
       return AppBar(
         centerTitle: true,
@@ -23,6 +34,15 @@ class _DetailPeminjamanBukuPageState extends State<DetailPeminjamanBukuPage> {
         backgroundColor: mono6Color,
         shadowColor: mono3Color,
         elevation: 4,
+        leading: IconButton(
+          onPressed: () async {
+            SharedPreferences pref = await SharedPreferences.getInstance();
+            pref.remove('user');
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back),
+          color: mono2Color,
+        ),
         iconTheme: IconThemeData(
           color: mono1Color,
         ),
@@ -118,7 +138,15 @@ class _DetailPeminjamanBukuPageState extends State<DetailPeminjamanBukuPage> {
                         width: 120,
                         height: 46,
                         child: TextButton(
-                          onPressed: () async {},
+                          onPressed: () async {
+                            SharedPreferences pref =
+                                await SharedPreferences.getInstance();
+                            var user = pref.getString('user');
+                            Services().terimaPengajuan(
+                                id: pengajuanPeminjamanModel.iD.toString(),
+                                user: user.toString());
+                            Navigator.pop(context);
+                          },
                           style: TextButton.styleFrom(
                             backgroundColor: successColor,
                             shape: RoundedRectangleBorder(
@@ -126,7 +154,7 @@ class _DetailPeminjamanBukuPageState extends State<DetailPeminjamanBukuPage> {
                             ),
                           ),
                           child: Text(
-                            'setuju',
+                            'Setuju',
                             style: mono6TextStyle.copyWith(
                               fontWeight: semiBold,
                               fontSize: 12,
@@ -193,7 +221,7 @@ class _DetailPeminjamanBukuPageState extends State<DetailPeminjamanBukuPage> {
                     height: 12,
                   ),
                   Text(
-                    'Apakah anda yakin untuk menyetujui peminjaman?',
+                    'Apakah anda yakin untuk menolak peminjaman?',
                     style: mono1TextStyle.copyWith(
                       fontSize: 12,
                     ),
@@ -233,7 +261,15 @@ class _DetailPeminjamanBukuPageState extends State<DetailPeminjamanBukuPage> {
                         width: 120,
                         height: 46,
                         child: TextButton(
-                          onPressed: () async {},
+                          onPressed: () async {
+                            SharedPreferences pref =
+                                await SharedPreferences.getInstance();
+                            var user = pref.getString('user');
+                            Services().tolakPengajuan(
+                                id: pengajuanPeminjamanModel.iD.toString(),
+                                user: user.toString());
+                            Navigator.pop(context);
+                          },
                           style: TextButton.styleFrom(
                             backgroundColor: dangerColor,
                             shape: RoundedRectangleBorder(
@@ -325,17 +361,10 @@ class _DetailPeminjamanBukuPageState extends State<DetailPeminjamanBukuPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'uqi NGENTOD',
+              '${pengajuanPeminjamanModel.nAMA}',
               style: mono1TextStyle.copyWith(
                 fontSize: 20,
                 fontWeight: bold,
-              ),
-            ),
-            Text(
-              '123456',
-              style: mono1TextStyle.copyWith(
-                fontSize: 12,
-                fontWeight: regular,
               ),
             ),
             SizedBox(
@@ -343,23 +372,22 @@ class _DetailPeminjamanBukuPageState extends State<DetailPeminjamanBukuPage> {
             ),
             itemInfoPeminjam(
               teks: 'Tanggal Pengajuan',
-              value: 'Uqi BABI',
-            ),
-            itemInfoPeminjam(
-              teks: 'Tanggal Pengembalian',
-              value: 'Uqi BABI',
+              value: '${pengajuanPeminjamanModel.tANGGALPENGAJUAN}',
             ),
             itemInfoPeminjam(
               teks: 'Kategori',
-              value: 'Uqi BABI',
+              value: '${pengajuanPeminjamanModel.jANGKAPEMINJAMAN}',
             ),
-            itemInfoPeminjam(
-              teks: 'File Pengajuan',
-              value: 'uQI ngntd.pdf',
-            ),
+            pengajuanPeminjamanModel.jANGKAPEMINJAMAN != 'Jangka Pendek'
+                ? itemInfoPeminjam(
+                    teks: 'File Pengajuan',
+                    value:
+                        '${pengajuanPeminjamanModel.fILETTDPENGAJUAN!.split('/')[5]}',
+                  )
+                : Container(),
             itemInfoPeminjam(
               teks: 'Status Pengajuan',
-              value: 'GAK MBALIK',
+              value: '${pengajuanPeminjamanModel.sTATUSPENGAJUAN}',
             ),
           ],
         ),
@@ -517,22 +545,24 @@ class _DetailPeminjamanBukuPageState extends State<DetailPeminjamanBukuPage> {
           bottom: 20,
         ),
         child: Table(
-            border: TableBorder.all(
-              color: mono6Color,
-            ),
-            columnWidths: const <int, TableColumnWidth>{
-              0: FixedColumnWidth(40),
-              1: FlexColumnWidth(140),
-              2: FixedColumnWidth(140),
-            },
-            defaultVerticalAlignment: TableCellVerticalAlignment.top,
-            children: [
-              contentTable(
-                no: 0,
-                mataPelajaran: 'Uqi NGNTD',
-                registrasi: 'MALES COK',
-              ),
-            ]),
+          border: TableBorder.all(
+            color: mono6Color,
+          ),
+          columnWidths: const <int, TableColumnWidth>{
+            0: FixedColumnWidth(40),
+            1: FlexColumnWidth(140),
+            2: FixedColumnWidth(140),
+          },
+          defaultVerticalAlignment: TableCellVerticalAlignment.top,
+          children: pengajuanPeminjamanModel.bUKU!.map((book) {
+            index++;
+            return contentTable(
+              no: index,
+              mataPelajaran: book.split('-')[1].toString(),
+              registrasi: book.split('-')[0].toString(),
+            );
+          }).toList(),
+        ),
       );
     }
 
@@ -601,19 +631,27 @@ class _DetailPeminjamanBukuPageState extends State<DetailPeminjamanBukuPage> {
               )));
     }
 
-    return Scaffold(
-      backgroundColor: mono6Color,
-      appBar: header(),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              infoPeminjam(),
-              tableHeader(),
-              tabelPeminjam(),
-              buttonSubmit(),
-              buttonTolak(),
-            ],
+    return WillPopScope(
+      onWillPop: () async {
+        SharedPreferences pref = await SharedPreferences.getInstance();
+        pref.remove('user');
+        Navigator.pop(context);
+        return true;
+      },
+      child: Scaffold(
+        backgroundColor: mono6Color,
+        appBar: header(),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                infoPeminjam(),
+                tableHeader(),
+                tabelPeminjam(),
+                buttonSubmit(),
+                buttonTolak(),
+              ],
+            ),
           ),
         ),
       ),
