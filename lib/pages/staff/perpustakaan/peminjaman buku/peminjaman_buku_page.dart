@@ -204,17 +204,17 @@ class _PeminjamanBukuPageState extends State<PeminjamanBukuPage> {
       );
     }
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: DefaultTabController(
-        length: 2,
-        child: SafeArea(
-          child: WillPopScope(
-            onWillPop: () async {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, '/main-page/back', (route) => false);
-              return true;
-            },
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pushNamedAndRemoveUntil(
+            context, '/main-page/back', (route) => false);
+        return true;
+      },
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: DefaultTabController(
+          length: 2,
+          child: SafeArea(
             child: Scaffold(
               backgroundColor: mono6Color,
               appBar:

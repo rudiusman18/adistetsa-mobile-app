@@ -38,7 +38,8 @@ class _DetailPeminjamanBukuPageState extends State<DetailPeminjamanBukuPage> {
           onPressed: () async {
             SharedPreferences pref = await SharedPreferences.getInstance();
             pref.remove('user');
-            Navigator.pop(context);
+            Navigator.pushNamed(
+                context, '/staff-perpus/peminjaman-buku-page/back');
           },
           icon: Icon(Icons.arrow_back),
           color: mono2Color,
@@ -635,7 +636,7 @@ class _DetailPeminjamanBukuPageState extends State<DetailPeminjamanBukuPage> {
       onWillPop: () async {
         SharedPreferences pref = await SharedPreferences.getInstance();
         pref.remove('user');
-        Navigator.pop(context);
+        Navigator.pushNamed(context, '/staff-perpus/peminjaman-buku-page/back');
         return true;
       },
       child: Scaffold(

@@ -83,6 +83,11 @@ class AdiStetsa extends StatelessWidget {
                 child: PeminjamanBukuPage(),
                 type: PageTransitionType.rightToLeft,
               );
+            case '/staff-perpus/peminjaman-buku-page/back':
+              return PageTransition(
+                child: PeminjamanBukuPage(),
+                type: PageTransitionType.leftToRight,
+              );
             case '/staff-perpus/peminjaman-buku/detail-page':
               return PageTransition(
                 child: DetailPeminjamanBukuPage(),
