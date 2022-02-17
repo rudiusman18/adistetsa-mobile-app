@@ -221,91 +221,85 @@ class _PeminjamanBukuPageState extends State<PeminjamanBukuPage> {
                   isSearch == true ? searchAppbar() : peminjamanBukuHeader(),
               body: TabBarView(
                 children: [
-                  ListView(
-                    children: [
-                      SizedBox(
-                        height: 17,
-                      ),
-                      FutureBuilder(
-                        future: Services().getPengajuanPeminjamanSiswaAdmin(),
-                        builder:
-                            (BuildContext context, AsyncSnapshot snapshot) {
-                          if (snapshot.hasData) {
-                            List<PengajuanPeminjamanModel> data = snapshot.data;
-                            return data.isEmpty
-                                ? Center(
-                                    child: Text(
-                                      'Data tidak ditemukan',
-                                      style: mono1TextStyle,
-                                    ),
-                                  )
-                                : Column(
-                                    children: data.map((item) {
-                                      return item.sTATUSPENGAJUAN ==
-                                                  'Pengajuan' ||
-                                              item.sTATUSPENGAJUAN == 'Diajukan'
-                                          ? listItem(
-                                              id: '${item.iD}',
-                                              nama: '${item.nAMA}',
-                                              nis: '${item.tANGGALPENGAJUAN}',
-                                              user: 'Admin Siswa')
-                                          : SizedBox();
-                                    }).toList(),
-                                  );
-                          } else {
-                            return Center(
-                              child: CircularProgressIndicator(
-                                strokeWidth: 4,
-                                color: m1Color,
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                    ],
+                  Container(
+                    margin: EdgeInsets.only(
+                      top: 17,
+                    ),
+                    child: FutureBuilder(
+                      future: Services().getPengajuanPeminjamanSiswaAdmin(),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData) {
+                          List<PengajuanPeminjamanModel> data = snapshot.data;
+                          return data.isEmpty
+                              ? Center(
+                                  child: Text(
+                                    'data tidak ditemukan',
+                                    style: mono1TextStyle,
+                                  ),
+                                )
+                              : ListView(
+                                  children: data.map((item) {
+                                    return item.sTATUSPENGAJUAN ==
+                                                'Pengajuan' ||
+                                            item.sTATUSPENGAJUAN == 'Diajukan'
+                                        ? listItem(
+                                            id: '${item.iD}',
+                                            nama: '${item.nAMA}',
+                                            nis: '${item.tANGGALPENGAJUAN}',
+                                            user: 'Admin Siswa')
+                                        : SizedBox();
+                                  }).toList(),
+                                );
+                        } else {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 4,
+                              color: m1Color,
+                            ),
+                          );
+                        }
+                      },
+                    ),
                   ),
-                  ListView(
-                    children: [
-                      SizedBox(
-                        height: 17,
-                      ),
-                      FutureBuilder(
-                        future: Services().getPengajuanPeminjamanGuruAdmin(),
-                        builder:
-                            (BuildContext context, AsyncSnapshot snapshot) {
-                          if (snapshot.hasData) {
-                            List<PengajuanPeminjamanModel> data = snapshot.data;
-                            return data.isEmpty
-                                ? Center(
-                                    child: Text(
-                                      'Data tidak ditemukan',
-                                      style: mono1TextStyle,
-                                    ),
-                                  )
-                                : Column(
-                                    children: data.map((item) {
-                                      return item.sTATUSPENGAJUAN ==
-                                                  'Pengajuan' ||
-                                              item.sTATUSPENGAJUAN == 'Diajukan'
-                                          ? listItem(
-                                              id: '${item.iD}',
-                                              nama: '${item.nAMA}',
-                                              nis: '${item.tANGGALPENGAJUAN}',
-                                              user: 'Admin Guru')
-                                          : SizedBox();
-                                    }).toList(),
-                                  );
-                          } else {
-                            return Center(
-                              child: CircularProgressIndicator(
-                                strokeWidth: 4,
-                                color: m1Color,
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                    ],
+                  Container(
+                    margin: EdgeInsets.only(
+                      top: 17,
+                    ),
+                    child: FutureBuilder(
+                      future: Services().getPengajuanPeminjamanGuruAdmin(),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData) {
+                          List<PengajuanPeminjamanModel> data = snapshot.data;
+                          return data.isEmpty
+                              ? Center(
+                                  child: Text(
+                                    'data tidak ditemukan',
+                                    style: mono1TextStyle,
+                                  ),
+                                )
+                              : Column(
+                                  children: data.map((item) {
+                                    return item.sTATUSPENGAJUAN ==
+                                                'Pengajuan' ||
+                                            item.sTATUSPENGAJUAN == 'Diajukan'
+                                        ? listItem(
+                                            id: '${item.iD}',
+                                            nama: '${item.nAMA}',
+                                            nis: '${item.tANGGALPENGAJUAN}',
+                                            user: 'Admin Guru')
+                                        : SizedBox();
+                                  }).toList(),
+                                );
+                        } else {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 4,
+                              color: m1Color,
+                            ),
+                          );
+                        }
+                      },
+                    ),
                   ),
                 ],
               ),
