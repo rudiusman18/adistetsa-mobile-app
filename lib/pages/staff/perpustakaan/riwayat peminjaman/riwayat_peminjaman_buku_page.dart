@@ -239,119 +239,89 @@ class _RiwayatPeminjamanBukuPageState extends State<RiwayatPeminjamanBukuPage> {
                   isSearch == true ? searchAppbar() : peminjamanBukuHeader(),
               body: TabBarView(
                 children: [
-                  Column(
-                    children: [
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Expanded(
-                        child: ListView(
-                          children: [
-                            FutureBuilder(
-                              future:
-                                  Services().getRiwayatPeminjamanSiswaAdmin(),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot snapshot) {
-                                if (snapshot.hasData) {
-                                  List<RiwayatPeminjamanModel> data =
-                                      snapshot.data;
-                                  return data.isEmpty
-                                      ? Center(
-                                          child: Text(
-                                            'Data tidak ditemukan',
-                                            style: mono1TextStyle,
-                                          ),
-                                        )
-                                      : Column(
-                                          children: data.map((item) {
-                                            return item.jANGKAPEMINJAMAN ==
-                                                    'Jangka Panjang'
-                                                ? listItem(
-                                                    id: item.iD.toString(),
-                                                    status: item
-                                                        .sTATUSPEMINJAMAN
-                                                        .toString(),
-                                                    nama: '${item.nAMA}',
-                                                    nomerInduk: item.nIS != null
-                                                        ? '${item.nIS}'
-                                                        : '${item.dATAGURU}',
-                                                    dataGuru:
-                                                        '${item.dATAGURU}',
-                                                    nis: '${item.nIS}')
-                                                : SizedBox();
-                                          }).toList(),
-                                        );
-                                } else {
-                                  return Center(
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 4,
-                                      color: m1Color,
-                                    ),
-                                  );
-                                }
-                              },
+                  Container(
+                    padding: EdgeInsets.only(top: 17),
+                    child: FutureBuilder(
+                      future: Services().getRiwayatPeminjamanSiswaAdmin(),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData) {
+                          List<RiwayatPeminjamanModel> data = snapshot.data;
+                          return data.isEmpty
+                              ? Center(
+                                  child: Text(
+                                    'Data tidak ditemukan',
+                                    style: mono1TextStyle,
+                                  ),
+                                )
+                              : ListView(
+                                  children: data.map((item) {
+                                    return item.jANGKAPEMINJAMAN ==
+                                            'Jangka Panjang'
+                                        ? listItem(
+                                            id: item.iD.toString(),
+                                            status: item.sTATUSPEMINJAMAN
+                                                .toString(),
+                                            nama: '${item.nAMA}',
+                                            nomerInduk: item.nIS != null
+                                                ? '${item.nIS}'
+                                                : '${item.dATAGURU}',
+                                            dataGuru: '${item.dATAGURU}',
+                                            nis: '${item.nIS}')
+                                        : SizedBox();
+                                  }).toList(),
+                                );
+                        } else {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 4,
+                              color: m1Color,
                             ),
-                          ],
-                        ),
-                      ),
-                    ],
+                          );
+                        }
+                      },
+                    ),
                   ),
-                  Column(
-                    children: [
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Expanded(
-                        child: ListView(
-                          children: [
-                            FutureBuilder(
-                              future:
-                                  Services().getRiwayatPeminjamanSiswaAdmin(),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot snapshot) {
-                                if (snapshot.hasData) {
-                                  List<RiwayatPeminjamanModel> data =
-                                      snapshot.data;
-                                  return data.isEmpty
-                                      ? Center(
-                                          child: Text(
-                                            'Data tidak ditemukan',
-                                            style: mono1TextStyle,
-                                          ),
-                                        )
-                                      : Column(
-                                          children: data.map((item) {
-                                            return item.jANGKAPEMINJAMAN ==
-                                                    'Jangka Pendek'
-                                                ? listItem(
-                                                    id: item.iD.toString(),
-                                                    status: item
-                                                        .sTATUSPEMINJAMAN
-                                                        .toString(),
-                                                    nama: '${item.nAMA}',
-                                                    nomerInduk: item.nIS != null
-                                                        ? '${item.nIS}'
-                                                        : '${item.dATAGURU}',
-                                                    dataGuru:
-                                                        '${item.dATAGURU}',
-                                                    nis: '${item.nIS}')
-                                                : SizedBox();
-                                          }).toList(),
-                                        );
-                                } else {
-                                  return Center(
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 4,
-                                      color: m1Color,
-                                    ),
-                                  );
-                                }
-                              },
+                  Container(
+                    padding: EdgeInsets.only(top: 17),
+                    child: FutureBuilder(
+                      future: Services().getRiwayatPeminjamanSiswaAdmin(),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData) {
+                          List<RiwayatPeminjamanModel> data = snapshot.data;
+                          return data.isEmpty
+                              ? Center(
+                                  child: Text(
+                                    'Data tidak ditemukan',
+                                    style: mono1TextStyle,
+                                  ),
+                                )
+                              : ListView(
+                                  children: data.map((item) {
+                                    return item.jANGKAPEMINJAMAN ==
+                                            'Jangka Pendek'
+                                        ? listItem(
+                                            id: item.iD.toString(),
+                                            status: item.sTATUSPEMINJAMAN
+                                                .toString(),
+                                            nama: '${item.nAMA}',
+                                            nomerInduk: item.nIS != null
+                                                ? '${item.nIS}'
+                                                : '${item.dATAGURU}',
+                                            dataGuru: '${item.dATAGURU}',
+                                            nis: '${item.nIS}')
+                                        : SizedBox();
+                                  }).toList(),
+                                );
+                        } else {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 4,
+                              color: m1Color,
                             ),
-                          ],
-                        ),
-                      ),
-                    ],
+                          );
+                        }
+                      },
+                    ),
                   ),
                 ],
               ),
