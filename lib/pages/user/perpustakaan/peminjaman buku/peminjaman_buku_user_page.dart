@@ -19,7 +19,7 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
   Object? value1Item;
 
   bool flag1 = false;
-
+  bool isLoading = false;
   PlatformFile? file;
   FilePickerResult? result;
 
@@ -27,7 +27,7 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
   Widget build(BuildContext context) {
     int index = 0;
     int posisi = -1;
-    bool isLoading = false;
+
     Providers provider = Provider.of<Providers>(context);
     RolesModel rolesModel = provider.role;
 
@@ -53,8 +53,11 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
             tanggalPengajuan:
                 DateFormat('yyyy-MM-dd').format(DateTime.now()).toString(),
             jangkaPeminjaman: value1Item.toString(),
-            filepath: file != null ? file!.path : null)) {
+            filepath: file == null ? null : file!.path)) {
           setState(() {
+            provider.idBuku.clear();
+            provider.listKatalog.clear();
+            value1Item = null;
             print('data berhasil masuk');
           });
         } else {
@@ -71,8 +74,12 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
             tanggalPengajuan:
                 DateFormat('yyyy-MM-dd').format(DateTime.now()).toString(),
             jangkaPeminjaman: value1Item.toString(),
-            filepath: file != null ? file!.path : null)) {
+            filepath: file == null ? null : file!.path)) {
           setState(() {
+            value1Item = null;
+            provider.idBuku.clear();
+            provider.listKatalog.clear();
+
             print('data berhasil masuk');
           });
         } else {
@@ -552,16 +559,24 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
             backgroundColor: m2Color,
           ),
           onPressed: () {
-            print('ini adalah pesan sementara ketika anda berhasil meminjam');
             handlePinjam();
           },
-          child: Text(
-            'Ajukan Peminjaman',
-            style: mono6TextStyle.copyWith(
-              fontWeight: bold,
-              fontSize: 16,
-            ),
-          ),
+          child: isLoading == false
+              ? Text(
+                  'Ajukan Peminjaman',
+                  style: mono6TextStyle.copyWith(
+                    fontWeight: bold,
+                    fontSize: 16,
+                  ),
+                )
+              : Container(
+                  width: 14,
+                  height: 14,
+                  child: CircularProgressIndicator(
+                    color: mono6Color,
+                    strokeWidth: 4,
+                  ),
+                ),
         ),
       );
     }

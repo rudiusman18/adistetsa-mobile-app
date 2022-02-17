@@ -139,7 +139,7 @@ class Services extends ChangeNotifier {
   }
 
   setPengajuanBuku(
-      {required List<int> buku,
+      {required List<String> buku,
       required String tanggalPengajuan,
       required String jangkaPeminjaman,
       String? urlTtd,
@@ -150,7 +150,7 @@ class Services extends ChangeNotifier {
     var url;
     if (role == 'Siswa') {
       url = Uri.parse('$baseUrl/perpustakaan/pengajuan_peminjaman_siswa');
-    } else if (role == 'Guru'){
+    } else if (role == 'Guru') {
       url = Uri.parse('$baseUrl/perpustakaan/pengajuan_peminjaman_guru');
     }
     var request = http.MultipartRequest('POST', url);
