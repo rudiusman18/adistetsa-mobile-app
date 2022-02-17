@@ -4,6 +4,7 @@ import 'package:adistetsa/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class PeminjamanBukuUserPage extends StatefulWidget {
   @override
@@ -17,12 +18,12 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
   Object? value1Item;
 
   bool flag1 = false;
-
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     int index = 0;
     int posisi = -1;
-    bool isLoading = false;
+
     Providers provider = Provider.of<Providers>(context);
     RolesModel rolesModel = provider.role;
 
@@ -33,7 +34,7 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
       if (rolesModel.name == 'Guru') {
         if (await Services().setPengajuanBukuGuru(
           buku: provider.idBuku,
-          tanggalPengajuan: DateTime.now().toString(),
+          tanggalPengajuan: DateFormat("yyyy-MM-dd").format(DateTime.now()),
           jangkaPeminjaman: value1Item.toString(),
         )) {
           setState(() {
@@ -50,7 +51,7 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
       } else if (rolesModel.name == 'Siswa') {
         if (await Services().setPengajuanBukuSiswa(
           buku: provider.idBuku,
-          tanggalPengajuan: DateTime.now().toString(),
+          tanggalPengajuan: DateFormat("yyyy-MM-dd").format(DateTime.now()),
           jangkaPeminjaman: value1Item.toString(),
         )) {
           setState(() {
@@ -531,16 +532,24 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
             backgroundColor: m2Color,
           ),
           onPressed: () {
-            print('ini adalah pesan sementara ketika anda berhasil meminjam');
             handlePinjam();
           },
-          child: Text(
-            'Ajukan Peminjaman',
-            style: mono6TextStyle.copyWith(
-              fontWeight: bold,
-              fontSize: 16,
-            ),
-          ),
+          child: isLoading == false
+              ? Text(
+                  'Ajukan Peminjaman',
+                  style: mono6TextStyle.copyWith(
+                    fontWeight: bold,
+                    fontSize: 16,
+                  ),
+                )
+              : Container(
+                  width: 14,
+                  height: 14,
+                  child: CircularProgressIndicator(
+                    color: mono6Color,
+                    strokeWidth: 4,
+                  ),
+                ),
         ),
       );
     }

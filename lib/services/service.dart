@@ -122,7 +122,7 @@ class Services extends ChangeNotifier {
   }
 
   setPengajuanBukuGuru({
-    required List<int> buku,
+    required List<String> buku,
     required String tanggalPengajuan,
     required String jangkaPeminjaman,
     String? urlTtd,
@@ -154,7 +154,7 @@ class Services extends ChangeNotifier {
   }
 
   setPengajuanBukuSiswa({
-    required List<int> buku,
+    required List<String> buku,
     required String tanggalPengajuan,
     required String jangkaPeminjaman,
     String? urlTtd,
@@ -162,10 +162,19 @@ class Services extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var url = Uri.parse('$baseUrl/perpustakaan/pengajuan_peminjaman_siswa');
     var token = prefs.getString("token").toString();
-    var headers = {"Content-type": "application/json", "Authorization": token};
+    var headers = {
+      "Content-type": "application/json",
+      "Accept": "application/json",
+      "Authorization": token
+    };
 
     var body = jsonEncode({
-      'BUKU': buku.map((e) => e).toList(),
+      'BUKU': buku
+          .map((e) => e)
+          .toList()
+          .toString()
+          .replaceAll('[', '')
+          .replaceAll(']', ''),
       'TANGGAL_PENGAJUAN': tanggalPengajuan,
       'STATUS_PENGAJUAN': 'Pengajuan',
       'JANGKA_PEMINJAMAN': jangkaPeminjaman,
@@ -181,7 +190,8 @@ class Services extends ChangeNotifier {
 
       return true;
     } else {
-      throw Exception('Gagal Melakukan pengajuan peminjaman buku');
+      return false;
+      // throw Exception('Gagal Melakukan pengajuan peminjaman buku');
     }
   }
 }
