@@ -2,6 +2,8 @@ import 'package:adistetsa/models/guru_model.dart';
 import 'package:adistetsa/models/karyawan_model.dart';
 import 'package:adistetsa/models/katalogbuku_model.dart';
 import 'package:adistetsa/models/list_buku_model.dart';
+import 'package:adistetsa/models/pengajuanpeminjaman_model.dart';
+import 'package:adistetsa/models/riwayatpeminjaman_model.dart';
 import 'package:adistetsa/models/role_model.dart';
 import 'package:adistetsa/models/siswa_model.dart';
 import 'package:adistetsa/services/service.dart';
@@ -28,6 +30,12 @@ class Providers with ChangeNotifier {
 
   List<String> _idBuku = [];
   List<String> get idBuku => _idBuku;
+
+  PengajuanPeminjamanModel _pengajuanPeminjaman = PengajuanPeminjamanModel();
+  PengajuanPeminjamanModel get pengajuanPeminjaman => _pengajuanPeminjaman;
+
+  RiwayatPeminjamanModel _riwayatPeminjaman = RiwayatPeminjamanModel();
+  RiwayatPeminjamanModel get riwayatPeminjaman => _riwayatPeminjaman;
 
   set listKatalog(List<ListBukuModel> listKatalog) {
     _listKatalog = listKatalog;
@@ -61,6 +69,16 @@ class Providers with ChangeNotifier {
 
   set setKatalogBuku(KatalogBukuModel katalog) {
     _katalog = katalog;
+    notifyListeners();
+  }
+
+  set setPengajuanPeminjaman(PengajuanPeminjamanModel pengajuanPeminjaman) {
+    _pengajuanPeminjaman = pengajuanPeminjaman;
+    notifyListeners();
+  }
+
+  set setRiwayatPeminjaman(RiwayatPeminjamanModel riwayatPeminjaman){
+    _riwayatPeminjaman = riwayatPeminjaman;
     notifyListeners();
   }
 
@@ -109,6 +127,30 @@ class Providers with ChangeNotifier {
     }
   }
 
+  Future<bool> getDetailPengajuanPeminjaman({String? id}) async {
+    try {
+      PengajuanPeminjamanModel pengajuanPeminjamanModel =
+          await Services().getDetailPengajuanPeminjaman(id: id);
+      _pengajuanPeminjaman = pengajuanPeminjamanModel;
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> getDetailRiwayatPeminjama({String? id}) async {
+    try {
+      RiwayatPeminjamanModel riwayatPeminjamanModel =
+          await Services().getDetailRiwayatPeminjam(id: id);
+      _riwayatPeminjaman = riwayatPeminjamanModel;
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   // NOTE: Untuk mendapatkan list dari katalog yang user ambil
 
   // ? mengecek apakah buku sudah dipinjam oleh user yang sama
@@ -125,8 +167,6 @@ class Providers with ChangeNotifier {
   addBooks({required ListBukuModel buku}) {
     if (bookExist(buku)) {
       print('${buku.jUDUL} wes masuk');
-      // _listKatalog.clear();
-      // throw Exception('Anda telah memasukkan buku ini ke daftar pinjaman');
     } else {
       print(buku.jUDUL);
       _listKatalog.add(buku);

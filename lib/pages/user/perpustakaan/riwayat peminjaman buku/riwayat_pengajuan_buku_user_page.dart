@@ -1,7 +1,10 @@
 import 'package:adistetsa/models/pengajuanpeminjaman_model.dart';
+import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
+import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class RiwayatPengajuanBukuUserPage extends StatefulWidget {
   RiwayatPengajuanBukuUserPage({Key? key}) : super(key: key);
@@ -23,6 +26,8 @@ class _RiwayatPengajuanBukuUserPageState
   bool flag2 = false;
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+
     PreferredSizeWidget pengajuanBukuHeader() {
       return AppBar(
         centerTitle: true,
@@ -100,16 +105,19 @@ class _RiwayatPengajuanBukuUserPageState
     }
 
     Widget listItem(
-        {required String tanggalPengajuan,
+        {required String id,
+        required String tanggalPengajuan,
         required String jangkaPeminjaman,
         required String status}) {
       return GestureDetector(
-        onTap: () {
+        onTap: () async {
           setState(() {
             searchController.clear();
             isSearch = false;
+            loading(context);
           });
-          Navigator.pushNamed(
+          await provider.getDetailPengajuanPeminjaman(id: id);
+          Navigator.pushReplacementNamed(
               context, '/user/perpustakaan/riwayat-pengajuan-buku/detail-page');
         },
         child: Container(
@@ -200,13 +208,16 @@ class _RiwayatPengajuanBukuUserPageState
                             )
                           : Column(
                               children: data.map((item) {
-                                return item.sTATUSPENGAJUAN == 'Pengajuan' ? listItem(
-                                  tanggalPengajuan:
-                                      item.tANGGALPENGAJUAN.toString(),
-                                  jangkaPeminjaman:
-                                      item.jANGKAPEMINJAMAN.toString(),
-                                  status: item.sTATUSPENGAJUAN.toString(),
-                                ) : SizedBox();
+                                return item.sTATUSPENGAJUAN == 'Pengajuan' || item.sTATUSPENGAJUAN == 'Diajukan'
+                                    ? listItem(
+                                        id: item.iD.toString(),
+                                        tanggalPengajuan:
+                                            item.tANGGALPENGAJUAN.toString(),
+                                        jangkaPeminjaman:
+                                            item.jANGKAPEMINJAMAN.toString(),
+                                        status: item.sTATUSPENGAJUAN.toString(),
+                                      )
+                                    : SizedBox();
                               }).toList(),
                             );
                     } else {

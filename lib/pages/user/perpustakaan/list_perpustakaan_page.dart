@@ -77,7 +77,7 @@ class _ListPerpustakaanPageState extends State<ListPerpustakaanPage> {
               Navigator.pushNamed(context, '/staff-perpus/katalog-buku-page');
             },
             child: contentItem(
-              'katalog Buku',
+              'Katalog Buku',
             ),
           ),
           GestureDetector(

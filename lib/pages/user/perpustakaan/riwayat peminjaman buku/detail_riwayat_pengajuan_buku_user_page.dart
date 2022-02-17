@@ -1,5 +1,8 @@
+import 'package:adistetsa/models/pengajuanpeminjaman_model.dart';
+import 'package:adistetsa/providers/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class DetailRiwayatPengajuanBukuUserPage extends StatefulWidget {
   DetailRiwayatPengajuanBukuUserPage({Key? key}) : super(key: key);
@@ -14,6 +17,13 @@ class _DetailRiwayatPengajuanBukuUserPageState
   String status = 'Sedang Dipinjam';
   @override
   Widget build(BuildContext context) {
+    var index = 0;
+    Providers provider = Provider.of<Providers>(context);
+    PengajuanPeminjamanModel pengajuanPeminjamanModel =
+        provider.pengajuanPeminjaman;
+
+    print(pengajuanPeminjamanModel.bUKU);
+
     PreferredSizeWidget header() {
       return AppBar(
         centerTitle: true,
@@ -61,19 +71,25 @@ class _DetailRiwayatPengajuanBukuUserPageState
                 ),
               ),
             ),
-            Text(
-              value,
-              style: mono1TextStyle.copyWith(
-                fontSize: 12,
-                color: value == 'Sedang Dipinjam'
+            Expanded(
+              child: Text(
+                value,
+                style: mono1TextStyle.copyWith(
+                  fontSize: 12,
+                  color: value == 'Sedang Dipinjam'
                     ? warningColor
-                    : value == 'Diajukan'
+                    : value == 'Pengajuan' || value == 'Diajukan'
                         ? infoColor
-                        : value == 'Selesai'
+                        : value == 'Sudah Dikembalikan'
                             ? successColor
                             : value == 'Tenggat'
                                 ? m1Color
-                                : mono1Color,
+                                : value == 'Hilang'
+                                    ? dangerColor
+                                    : value == 'Ditolak'
+                                        ? dangerColor
+                                        : mono1Color,
+                ),
               ),
             ),
           ],
@@ -93,23 +109,21 @@ class _DetailRiwayatPengajuanBukuUserPageState
           children: [
             itemInfoPeminjam(
               teks: 'Tanggal Pengajuan',
-              value: '2022-01-22',
-            ),
-            itemInfoPeminjam(
-              teks: 'Tanggal Pengembalian',
-              value: '2023-01-28',
+              value: '${pengajuanPeminjamanModel.tANGGALPENGAJUAN}',
             ),
             itemInfoPeminjam(
               teks: 'Kategori',
-              value: 'Jangka Panjang',
+              value: '${pengajuanPeminjamanModel.jANGKAPEMINJAMAN}',
             ),
-            itemInfoPeminjam(
-              teks: 'File Pengajuan',
-              value: 'ttdku.pdf',
-            ),
+            pengajuanPeminjamanModel.fILETTDPENGAJUAN != null
+                ? itemInfoPeminjam(
+                    teks: 'File Pengajuan',
+                    value: '${pengajuanPeminjamanModel.fILETTDPENGAJUAN!.split('/')[5]}',
+                  )
+                : Container(),
             itemInfoPeminjam(
               teks: 'Status Pengajuan',
-              value: 'Diajukan',
+              value: '${pengajuanPeminjamanModel.sTATUSPENGAJUAN}',
             ),
           ],
         ),
@@ -168,7 +182,7 @@ class _DetailRiwayatPengajuanBukuUserPageState
       );
     }
 
-    Widget tabelPeminjam() {
+    Widget tableHeader() {
       return Container(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -191,7 +205,6 @@ class _DetailRiwayatPengajuanBukuUserPageState
                 top: 10,
                 left: 26,
                 right: 27,
-                bottom: 20,
               ),
               child: Table(
                 border: TableBorder.all(
@@ -254,21 +267,39 @@ class _DetailRiwayatPengajuanBukuUserPageState
                       ),
                     ],
                   ),
-                  contentTable(
-                    no: 1,
-                    mataPelajaran:
-                        'Bahasa Indonesia Bahasa Indonesia Bahasa Indonesia Bahasa Indonesia Bahasa Indonesia Bahasa Indonesia Bahasa Indonesia Bahasa Indonesia',
-                    registrasi: '123456',
-                  ),
-                  contentTable(
-                    no: 2,
-                    mataPelajaran: 'Fisika',
-                    registrasi: '12312',
-                  ),
                 ],
               ),
             ),
           ],
+        ),
+      );
+    }
+
+    Widget tabelPeminjam() {
+      return Container(
+        padding: EdgeInsets.only(
+          left: 26,
+          right: 27,
+          bottom: 20,
+        ),
+        child: Table(
+          border: TableBorder.all(
+            color: mono6Color,
+          ),
+          columnWidths: const <int, TableColumnWidth>{
+            0: FixedColumnWidth(40),
+            1: FlexColumnWidth(140),
+            2: FixedColumnWidth(140),
+          },
+          defaultVerticalAlignment: TableCellVerticalAlignment.top,
+          children: pengajuanPeminjamanModel.bUKU!.map((book) {
+            index++;
+            return contentTable(
+              no: index,
+              mataPelajaran: book.split('-')[1].toString(),
+              registrasi: book.split('-')[0].toString(),
+            );
+          }).toList(),
         ),
       );
     }
@@ -281,6 +312,7 @@ class _DetailRiwayatPengajuanBukuUserPageState
           child: Column(
             children: [
               infoPeminjam(),
+              tableHeader(),
               tabelPeminjam(),
             ],
           ),
