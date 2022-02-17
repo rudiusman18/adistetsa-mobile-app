@@ -423,9 +423,6 @@ class _DetailPeminjamanBukuPageState extends State<DetailPeminjamanBukuPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              height: 20,
-            ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Text(
