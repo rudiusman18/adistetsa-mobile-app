@@ -209,6 +209,7 @@ class _DetailRiwayatPeminjamanBukuUserPageState
                 top: 10,
                 left: 26,
                 right: 27,
+                bottom: 10,
               ),
               child: Table(
                 border: TableBorder.all(
