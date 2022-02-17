@@ -192,45 +192,42 @@ class _RiwayatPengajuanBukuUserPageState
             height: 20,
           ),
           Expanded(
-            child: ListView(
-              children: [
-                FutureBuilder(
-                  future: Services().getPengajuanPeminjaman(),
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    if (snapshot.hasData) {
-                      List<PengajuanPeminjamanModel> data = snapshot.data;
-                      return data.isEmpty
-                          ? Center(
-                              child: Text(
-                                'data tidak ditemukan',
-                                style: mono1TextStyle,
-                              ),
-                            )
-                          : Column(
-                              children: data.map((item) {
-                                return item.sTATUSPENGAJUAN == 'Pengajuan' || item.sTATUSPENGAJUAN == 'Diajukan'
-                                    ? listItem(
-                                        id: item.iD.toString(),
-                                        tanggalPengajuan:
-                                            item.tANGGALPENGAJUAN.toString(),
-                                        jangkaPeminjaman:
-                                            item.jANGKAPEMINJAMAN.toString(),
-                                        status: item.sTATUSPENGAJUAN.toString(),
-                                      )
-                                    : SizedBox();
-                              }).toList(),
-                            );
-                    } else {
-                      return Center(
-                        child: CircularProgressIndicator(
-                          strokeWidth: 4,
-                          color: m1Color,
-                        ),
-                      );
-                    }
-                  },
-                ),
-              ],
+            child: FutureBuilder(
+              future: Services().getPengajuanPeminjaman(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  List<PengajuanPeminjamanModel> data = snapshot.data;
+                  return data.isEmpty
+                      ? Center(
+                          child: Text(
+                            'data tidak ditemukan',
+                            style: mono1TextStyle,
+                          ),
+                        )
+                      : ListView(
+                          children: data.map((item) {
+                            return item.sTATUSPENGAJUAN == 'Pengajuan' ||
+                                    item.sTATUSPENGAJUAN == 'Diajukan'
+                                ? listItem(
+                                    id: item.iD.toString(),
+                                    tanggalPengajuan:
+                                        item.tANGGALPENGAJUAN.toString(),
+                                    jangkaPeminjaman:
+                                        item.jANGKAPEMINJAMAN.toString(),
+                                    status: item.sTATUSPENGAJUAN.toString(),
+                                  )
+                                : SizedBox();
+                          }).toList(),
+                        );
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 4,
+                      color: m1Color,
+                    ),
+                  );
+                }
+              },
             ),
           ),
         ],

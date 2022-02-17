@@ -232,110 +232,100 @@ class _RiwayatPeminjamanBukuUserPageState
               children: [
                 Column(
                   children: [
+                    SizedBox(
+                      height: 20,
+                    ),
                     Expanded(
-                      child: ListView(
-                        children: [
-                          SizedBox(
-                            height: 20,
-                          ),
-                          FutureBuilder(
-                            future: Services().getRiwayatPeminjaman(),
-                            builder:
-                                (BuildContext context, AsyncSnapshot snapshot) {
-                              if (snapshot.hasData) {
-                                List<RiwayatPeminjamanModel> data =
-                                    snapshot.data;
-                                return data.isEmpty
-                                    ? Center(
-                                        child: Text(
-                                          'data tidak ditemukan',
-                                          style: mono1TextStyle,
-                                        ),
-                                      )
-                                    : Column(
-                                        children: data.map((item) {
-                                          return item.jANGKAPEMINJAMAN ==
-                                                  'Jangka Panjang'
-                                              ? listItem(
-                                                  id: item.iD.toString(),
-                                                  tanggalPengajuan: item
-                                                      .tANGGALPEMINJAMAN
-                                                      .toString(),
-                                                  jangkaPeminjaman: item
-                                                      .jANGKAPEMINJAMAN
-                                                      .toString(),
-                                                  status: item.sTATUSPEMINJAMAN
-                                                      .toString(),
-                                                )
-                                              : SizedBox();
-                                        }).toList(),
-                                      );
-                              } else {
-                                return Center(
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 4,
-                                    color: m1Color,
-                                  ),
-                                );
-                              }
-                            },
-                          ),
-                        ],
+                      child: FutureBuilder(
+                        future: Services().getRiwayatPeminjaman(),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          if (snapshot.hasData) {
+                            List<RiwayatPeminjamanModel> data = snapshot.data;
+                            return data.isEmpty
+                                ? Center(
+                                    child: Text(
+                                      'data tidak ditemukan',
+                                      style: mono1TextStyle,
+                                    ),
+                                  )
+                                : ListView(
+                                    children: data.map((item) {
+                                      return item.jANGKAPEMINJAMAN ==
+                                              'Jangka Panjang'
+                                          ? listItem(
+                                              id: item.iD.toString(),
+                                              tanggalPengajuan: item
+                                                  .tANGGALPEMINJAMAN
+                                                  .toString(),
+                                              jangkaPeminjaman: item
+                                                  .jANGKAPEMINJAMAN
+                                                  .toString(),
+                                              status: item.sTATUSPEMINJAMAN
+                                                  .toString(),
+                                            )
+                                          : SizedBox();
+                                    }).toList(),
+                                  );
+                          } else {
+                            return Center(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 4,
+                                color: m1Color,
+                              ),
+                            );
+                          }
+                        },
                       ),
                     ),
                   ],
                 ),
                 Column(
                   children: [
+                    SizedBox(
+                      height: 20,
+                    ),
                     Expanded(
-                      child: ListView(
-                        children: [
-                          SizedBox(
-                            height: 20,
-                          ),
-                          FutureBuilder(
-                            future: Services().getRiwayatPeminjaman(),
-                            builder:
-                                (BuildContext context, AsyncSnapshot snapshot) {
-                              if (snapshot.hasData) {
-                                List<RiwayatPeminjamanModel> data =
-                                    snapshot.data;
-                                return data.isEmpty
-                                    ? Center(
-                                        child: Text(
-                                          'data tidak ditemukan',
-                                          style: mono1TextStyle,
-                                        ),
-                                      )
-                                    : Column(
-                                        children: data.map((item) {
-                                          return item.jANGKAPEMINJAMAN ==
-                                                  'Jangka Pendek'
-                                              ? listItem(
-                                                  id: item.iD.toString(),
-                                                  tanggalPengajuan: item
-                                                      .tANGGALPEMINJAMAN
-                                                      .toString(),
-                                                  jangkaPeminjaman: item
-                                                      .jANGKAPEMINJAMAN
-                                                      .toString(),
-                                                  status: item.sTATUSPEMINJAMAN
-                                                      .toString(),
-                                                )
-                                              : SizedBox();
-                                        }).toList(),
-                                      );
-                              } else {
-                                return Center(
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 4,
-                                    color: m1Color,
-                                  ),
-                                );
-                              }
-                            },
-                          ),
-                        ],
+                      child: FutureBuilder(
+                        future: Services().getRiwayatPeminjaman(),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          if (snapshot.hasData) {
+                            List<RiwayatPeminjamanModel> data = snapshot.data;
+                            return data.isEmpty
+                                ? Center(
+                                    child: Text(
+                                      'data tidak ditemukan',
+                                      style: mono1TextStyle,
+                                    ),
+                                  )
+                                : Column(
+                                    children: data.map((item) {
+                                      return item.jANGKAPEMINJAMAN ==
+                                              'Jangka Pendek'
+                                          ? listItem(
+                                              id: item.iD.toString(),
+                                              tanggalPengajuan: item
+                                                  .tANGGALPEMINJAMAN
+                                                  .toString(),
+                                              jangkaPeminjaman: item
+                                                  .jANGKAPEMINJAMAN
+                                                  .toString(),
+                                              status: item.sTATUSPEMINJAMAN
+                                                  .toString(),
+                                            )
+                                          : SizedBox();
+                                    }).toList(),
+                                  );
+                          } else {
+                            return Center(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 4,
+                                color: m1Color,
+                              ),
+                            );
+                          }
+                        },
                       ),
                     ),
                   ],

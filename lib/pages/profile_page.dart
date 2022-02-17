@@ -183,7 +183,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           ),
                           child: Text(
-                            'keluar',
+                            'Keluar',
                             style: mono6TextStyle.copyWith(
                               fontWeight: semiBold,
                               fontSize: 12,

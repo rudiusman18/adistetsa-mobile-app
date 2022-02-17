@@ -108,10 +108,12 @@ class _DetailRiwayatPeminjamanBukuUserPageState
               teks: 'Tanggal Pengajuan',
               value: '${riwayatPeminjamanModel.tANGGALPEMINJAMAN}',
             ),
-            riwayatPeminjamanModel.sTATUSPEMINJAMAN != 'Ditolak' ?  itemInfoPeminjam(
-              teks: 'Tanggal Pengembalian',
-              value: '${riwayatPeminjamanModel.tANGGALPENGEMBALIAN}',
-            ) : Container(),
+            riwayatPeminjamanModel.sTATUSPEMINJAMAN != 'Ditolak'
+                ? itemInfoPeminjam(
+                    teks: 'Tanggal Pengembalian',
+                    value: '${riwayatPeminjamanModel.tANGGALPENGEMBALIAN}',
+                  )
+                : Container(),
             itemInfoPeminjam(
               teks: 'Kategori',
               value: '${riwayatPeminjamanModel.jANGKAPEMINJAMAN}',
