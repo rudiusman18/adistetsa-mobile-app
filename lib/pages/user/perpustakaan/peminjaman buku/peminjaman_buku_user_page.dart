@@ -53,8 +53,11 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
             tanggalPengajuan:
                 DateFormat('yyyy-MM-dd').format(DateTime.now()).toString(),
             jangkaPeminjaman: value1Item.toString(),
-            filepath: file!.path)) {
+            filepath: file == null ? null : file!.path)) {
           setState(() {
+            provider.idBuku.clear();
+            provider.listKatalog.clear();
+            value1Item = null;
             print('data berhasil masuk');
           });
         } else {
@@ -71,8 +74,12 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
             tanggalPengajuan:
                 DateFormat('yyyy-MM-dd').format(DateTime.now()).toString(),
             jangkaPeminjaman: value1Item.toString(),
-            filepath: file!.path)) {
+            filepath: file == null ? null : file!.path)) {
           setState(() {
+            value1Item = null;
+            provider.idBuku.clear();
+            provider.listKatalog.clear();
+
             print('data berhasil masuk');
           });
         } else {

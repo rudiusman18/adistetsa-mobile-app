@@ -11,13 +11,14 @@ class DetailRiwayatPengajuanBukuUserPage extends StatefulWidget {
 
 class _DetailRiwayatPengajuanBukuUserPageState
     extends State<DetailRiwayatPengajuanBukuUserPage> {
+  String status = 'Sedang Dipinjam';
   @override
   Widget build(BuildContext context) {
     PreferredSizeWidget header() {
       return AppBar(
         centerTitle: true,
         title: Text(
-          'Detail Pengajuan',
+          'Detail Peminjaman',
           style: mono1TextStyle.copyWith(
             fontSize: 18,
             fontWeight: semiBold,
@@ -32,199 +33,138 @@ class _DetailRiwayatPengajuanBukuUserPageState
       );
     }
 
-    Widget infoPeminjam() {
+    Widget itemInfoPeminjam({required String teks, required String value}) {
       return Container(
-        margin: EdgeInsets.only(
-          top: 19,
-          left: 16,
-          right: 16,
-          bottom: 7,
+        padding: EdgeInsets.only(
+          bottom: 10,
         ),
-        child: Column(
+        margin: EdgeInsets.only(
+          bottom: 6,
+        ),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: mono3Color,
+              width: 0.5,
+            ),
+          ),
+        ),
+        child: Row(
           children: [
             Container(
-              padding: EdgeInsets.only(
-                bottom: 10,
-              ),
-              margin: EdgeInsets.only(
-                bottom: 6,
-              ),
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: mono3Color,
-                    width: 0.5,
-                  ),
+              width: 150,
+              child: Text(
+                teks,
+                style: mono1TextStyle.copyWith(
+                  fontWeight: semiBold,
+                  fontSize: 12,
                 ),
-              ),
-              child: Row(
-                children: [
-                  Text(
-                    'Tanggal Pengajuan',
-                    style: mono1TextStyle.copyWith(
-                      fontWeight: semiBold,
-                      fontSize: 12,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 54,
-                  ),
-                  Text(
-                    '2022-01-22',
-                    style: mono1TextStyle.copyWith(
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
               ),
             ),
-            Container(
-              padding: EdgeInsets.only(
-                bottom: 10,
-              ),
-              margin: EdgeInsets.only(
-                bottom: 6,
-              ),
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: mono3Color,
-                    width: 0.5,
-                  ),
-                ),
-              ),
-              child: Row(
-                children: [
-                  Text(
-                    'Tanggal Pengembalian',
-                    style: mono1TextStyle.copyWith(
-                      fontWeight: semiBold,
-                      fontSize: 12,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 37,
-                  ),
-                  Text(
-                    '2022-01-23',
-                    style: mono1TextStyle.copyWith(
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(
-                bottom: 10,
-              ),
-              margin: EdgeInsets.only(
-                bottom: 6,
-              ),
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: mono3Color,
-                    width: 0.5,
-                  ),
-                ),
-              ),
-              child: Row(
-                children: [
-                  Text(
-                    'Jangka Peminjaman',
-                    style: mono1TextStyle.copyWith(
-                      fontWeight: semiBold,
-                      fontSize: 12,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 50,
-                  ),
-                  Text(
-                    'Jangka Panjang',
-                    style: mono1TextStyle.copyWith(
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(
-                bottom: 10,
-              ),
-              margin: EdgeInsets.only(
-                bottom: 6,
-              ),
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: mono3Color,
-                    width: 0.5,
-                  ),
-                ),
-              ),
-              child: Row(
-                children: [
-                  Text(
-                    'File Pengajuan',
-                    style: mono1TextStyle.copyWith(
-                      fontWeight: semiBold,
-                      fontSize: 12,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 74,
-                  ),
-                  Text(
-                    'ttdku.pdf',
-                    style: mono1TextStyle.copyWith(
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(
-                bottom: 10,
-              ),
-              margin: EdgeInsets.only(
-                bottom: 6,
-              ),
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: mono3Color,
-                    width: 0.5,
-                  ),
-                ),
-              ),
-              child: Row(
-                children: [
-                  Text(
-                    'Status peminjaman',
-                    style: mono1TextStyle.copyWith(
-                      fontWeight: semiBold,
-                      fontSize: 12,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 51,
-                  ),
-                  Text(
-                    'Diajukan',
-                    style: mono1TextStyle.copyWith(
-                      fontSize: 12,
-                      color: infoColor,
-                    ),
-                  ),
-                ],
+            Text(
+              value,
+              style: mono1TextStyle.copyWith(
+                fontSize: 12,
+                color: value == 'Sedang Dipinjam'
+                    ? warningColor
+                    : value == 'Diajukan'
+                        ? infoColor
+                        : value == 'Selesai'
+                            ? successColor
+                            : value == 'Tenggat'
+                                ? m1Color
+                                : mono1Color,
               ),
             ),
           ],
         ),
+      );
+    }
+
+    Widget infoPeminjam() {
+      return Container(
+        margin: EdgeInsets.only(
+          top: 20,
+          left: 20,
+          right: 20,
+          bottom: 27,
+        ),
+        child: Column(
+          children: [
+            itemInfoPeminjam(
+              teks: 'Tanggal Pengajuan',
+              value: '2022-01-22',
+            ),
+            itemInfoPeminjam(
+              teks: 'Tanggal Pengembalian',
+              value: '2023-01-28',
+            ),
+            itemInfoPeminjam(
+              teks: 'Kategori',
+              value: 'Jangka Panjang',
+            ),
+            itemInfoPeminjam(
+              teks: 'File Pengajuan',
+              value: 'ttdku.pdf',
+            ),
+            itemInfoPeminjam(
+              teks: 'Status Pengajuan',
+              value: 'Diajukan',
+            ),
+          ],
+        ),
+      );
+    }
+
+    TableRow contentTable({
+      required int no,
+      required String mataPelajaran,
+      required String registrasi,
+    }) {
+      return TableRow(
+        children: [
+          Container(
+            child: Text(
+              no.toString(),
+              style: mono1TextStyle.copyWith(
+                fontSize: 12,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Container(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 2,
+              ),
+              child: Text(
+                mataPelajaran,
+                style: mono1TextStyle.copyWith(
+                  fontSize: 12,
+                ),
+              ),
+            ),
+          ),
+          Container(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 2,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    registrasi,
+                    style: mono1TextStyle.copyWith(
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       );
     }
 
@@ -233,10 +173,11 @@ class _DetailRiwayatPengajuanBukuUserPageState
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SizedBox(
+              height: 20,
+            ),
             Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 20,
-              ),
+              padding: EdgeInsets.symmetric(horizontal: 20),
               child: Text(
                 'Daftar Buku',
                 style: mono1TextStyle.copyWith(
@@ -248,9 +189,9 @@ class _DetailRiwayatPengajuanBukuUserPageState
             Container(
               padding: EdgeInsets.only(
                 top: 10,
-                left: 20,
-                right: 33,
-                bottom: 61,
+                left: 26,
+                right: 27,
+                bottom: 20,
               ),
               child: Table(
                 border: TableBorder.all(
@@ -261,14 +202,14 @@ class _DetailRiwayatPengajuanBukuUserPageState
                   1: FlexColumnWidth(140),
                   2: FixedColumnWidth(140),
                 },
-                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                defaultVerticalAlignment: TableCellVerticalAlignment.top,
                 children: [
                   // Table Heading
                   TableRow(
                     children: [
                       Container(
                         height: 30,
-                        color: m5Color,
+                        color: m4Color,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -283,7 +224,7 @@ class _DetailRiwayatPengajuanBukuUserPageState
                       ),
                       Container(
                         height: 30,
-                        color: m5Color,
+                        color: m4Color,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -298,7 +239,7 @@ class _DetailRiwayatPengajuanBukuUserPageState
                       ),
                       Container(
                         height: 30,
-                        color: m5Color,
+                        color: m4Color,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -313,186 +254,16 @@ class _DetailRiwayatPengajuanBukuUserPageState
                       ),
                     ],
                   ),
-                  // Table Content
-                  TableRow(
-                    children: [
-                      Container(
-                        height: 30,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              '1',
-                              style: mono1TextStyle.copyWith(
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: 30,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 2,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'MatematikaMatematikaMatematikaMatematikaMatematika',
-                                style: mono1TextStyle.copyWith(
-                                  fontSize: 12,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 30,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 2,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                '6666666666',
-                                style: mono1TextStyle.copyWith(
-                                  fontSize: 12,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                  contentTable(
+                    no: 1,
+                    mataPelajaran:
+                        'Bahasa Indonesia Bahasa Indonesia Bahasa Indonesia Bahasa Indonesia Bahasa Indonesia Bahasa Indonesia Bahasa Indonesia Bahasa Indonesia',
+                    registrasi: '123456',
                   ),
-                  TableRow(
-                    children: [
-                      Container(
-                        height: 30,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              '1',
-                              style: mono1TextStyle.copyWith(
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: 30,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 2,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'MatematikaMatematikaMatematikaMatematikaMatematika',
-                                style: mono1TextStyle.copyWith(
-                                  fontSize: 12,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 30,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 2,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                '6666666666',
-                                style: mono1TextStyle.copyWith(
-                                  fontSize: 12,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  TableRow(
-                    children: [
-                      Container(
-                        height: 30,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              '1',
-                              style: mono1TextStyle.copyWith(
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: 30,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 2,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'MatematikaMatematikaMatematikaMatematikaMatematika',
-                                style: mono1TextStyle.copyWith(
-                                  fontSize: 12,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 30,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 2,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                '6666666666',
-                                style: mono1TextStyle.copyWith(
-                                  fontSize: 12,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                  contentTable(
+                    no: 2,
+                    mataPelajaran: 'Fisika',
+                    registrasi: '12312',
                   ),
                 ],
               ),
