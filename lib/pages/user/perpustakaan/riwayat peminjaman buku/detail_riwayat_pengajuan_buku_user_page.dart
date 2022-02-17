@@ -18,7 +18,7 @@ class _DetailRiwayatPengajuanBukuUserPageState
       return AppBar(
         centerTitle: true,
         title: Text(
-          'Detail Peminjaman',
+          'Detail Pengajuan',
           style: mono1TextStyle.copyWith(
             fontSize: 18,
             fontWeight: semiBold,

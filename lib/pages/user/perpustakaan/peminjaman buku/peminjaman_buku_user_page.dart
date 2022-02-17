@@ -34,7 +34,7 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
     _selectFolder() async {
       result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
-        allowedExtensions: ['pdf', 'doc', 'docx'],
+        allowedExtensions: ['pdf'],
       );
       if (result != null) {
         setState(() {
@@ -58,7 +58,13 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
             provider.idBuku.clear();
             provider.listKatalog.clear();
             value1Item = null;
-            print('data berhasil masuk');
+            file = null;
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                backgroundColor: successColor,
+                content: Text(
+                  'Berhasil melakukan peminjaman',
+                  textAlign: TextAlign.center,
+                )));
           });
         } else {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -76,11 +82,16 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
             jangkaPeminjaman: value1Item.toString(),
             filepath: file == null ? null : file!.path)) {
           setState(() {
-            value1Item = null;
             provider.idBuku.clear();
             provider.listKatalog.clear();
-
-            print('data berhasil masuk');
+            value1Item = null;
+            file = null;
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                backgroundColor: successColor,
+                content: Text(
+                  'Berhasil melakukan peminjaman',
+                  textAlign: TextAlign.center,
+                )));
           });
         } else {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -338,7 +349,7 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
           width: double.infinity,
           decoration: BoxDecoration(
             border: Border.all(
-              color: flag1 == true ? p1Color : mono3Color,
+              color: flag1 == true && value1Item != null ? p1Color : mono3Color,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
@@ -356,12 +367,16 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
               child: DropdownButton(
                 icon: Icon(
                   Icons.keyboard_arrow_down_outlined,
-                  color: flag1 == true ? p1Color : mono3Color,
+                  color: flag1 == true && value1Item != null
+                      ? p1Color
+                      : mono3Color,
                 ),
                 hint: Text(
                   hint,
                   style: mono3TextStyle.copyWith(
-                    color: flag1 == true ? p1Color : mono3Color,
+                    color: flag1 == true && value1Item != null
+                        ? p1Color
+                        : mono3Color,
                     fontSize: 12,
                   ),
                 ),
@@ -386,6 +401,7 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
                 onChanged: (value) {
                   setState(() {
                     print(value);
+                    file = null;
                     flag1 = true;
                     value1Item = value;
                   });
@@ -559,7 +575,14 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
             backgroundColor: m2Color,
           ),
           onPressed: () {
-            handlePinjam();
+            file!.extension == 'pdf'
+                ? handlePinjam()
+                : ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: dangerColor,
+                    content: Text(
+                      'Format File Tidak Didukung',
+                      textAlign: TextAlign.center,
+                    )));
           },
           child: isLoading == false
               ? Text(
@@ -596,7 +619,11 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
               buttonAdd(),
               listKategori(),
               value1Item == 'Jangka Panjang' ? buttonfileTTD() : Text(''),
-              provider.listKatalog.isNotEmpty && value1Item != null
+              provider.listKatalog.isNotEmpty &&
+                      value1Item != null &&
+                      (value1Item == 'Jangka Panjang'
+                          ? file != null
+                          : file == null)
                   ? buttonSubmit()
                   : Container(),
             ],
