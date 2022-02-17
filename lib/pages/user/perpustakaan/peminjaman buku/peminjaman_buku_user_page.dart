@@ -53,7 +53,7 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
             tanggalPengajuan:
                 DateFormat('yyyy-MM-dd').format(DateTime.now()).toString(),
             jangkaPeminjaman: value1Item.toString(),
-            filepath: file!.path)) {
+            filepath: file != null ? file!.path : null)) {
           setState(() {
             print('data berhasil masuk');
           });
@@ -71,7 +71,7 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
             tanggalPengajuan:
                 DateFormat('yyyy-MM-dd').format(DateTime.now()).toString(),
             jangkaPeminjaman: value1Item.toString(),
-            filepath: file!.path)) {
+            filepath: file != null ? file!.path : null)) {
           setState(() {
             print('data berhasil masuk');
           });

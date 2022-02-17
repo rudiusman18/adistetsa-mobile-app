@@ -5,6 +5,7 @@ import 'package:adistetsa/models/karyawan_model.dart';
 import 'package:adistetsa/models/katalogbuku_model.dart';
 import 'package:adistetsa/models/kompetensi_model.dart';
 import 'package:adistetsa/models/list_buku_model.dart';
+import 'package:adistetsa/models/pengajuanpeminjaman_model.dart';
 import 'package:adistetsa/models/role_model.dart';
 import 'package:adistetsa/models/siswa_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -121,37 +122,21 @@ class Services extends ChangeNotifier {
     }
   }
 
-  // setPengajuanBukuGuru({
-  //   required List<int> buku,
-  //   required String tanggalPengajuan,
-  //   required String jangkaPeminjaman,
-  //   String? urlTtd,
-  // }) async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   var url = Uri.parse('$baseUrl/perpustakaan/pengajuan_peminjaman_guru');
-  //   var token = prefs.getString("token").toString();
-  //   var headers = {"Content-type": "application/json", "Authorization": token};
-
-  //   var body = jsonEncode({
-  //     'BUKU': buku.map((e) => e).toList(),
-  //     'TANGGAL_PENGAJUAN': tanggalPengajuan,
-  //     'STATUS_PENGAJUAN': 'Pengajuan',
-  //     'JANGKA_PEMINJAMAN': jangkaPeminjaman,
-  //     'FILE_TTD_PENGAJUAN': urlTtd,
-  //   });
-  //   var response = await http.post(url, headers: headers, body: body);
-
-  //   print(response.statusCode);
-  //   print(response.body);
-  //   print(jsonDecode(body));
-  //   if (response.statusCode == 200) {
-  //     print(response.body);
-
-  //     return true;
-  //   } else {
-  //     throw Exception('Gagal Melakukan pengajuan peminjaman buku');
-  //   }
-  // }
+  getPengajuanPeminjaman({String? search}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var url = Uri.parse('$baseUrl/perpustakaan/pengajuan_peminjaman_siswa');
+    var token = prefs.getString("token").toString();
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<PengajuanPeminjamanModel> pengajuaPeminjaman =
+          data.map((item) => PengajuanPeminjamanModel.fromJson(item)).toList();
+      return pengajuaPeminjaman;
+    } else {
+      throw Exception('Gagal Mendapatkan list Buku');
+    }
+  }
 
   setPengajuanBuku(
       {required List<int> buku,
