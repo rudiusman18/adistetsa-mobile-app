@@ -320,7 +320,6 @@ class _DetailRiwayatPeminjamanBukuPageState
           top: 20,
           left: 20,
           right: 20,
-          bottom: 27,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
