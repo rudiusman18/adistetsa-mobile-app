@@ -1,6 +1,7 @@
 import 'package:adistetsa/models/role_model.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,9 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
 
   bool flag1 = false;
   bool isLoading = false;
+  PlatformFile? file;
+  FilePickerResult? result;
+
   @override
   Widget build(BuildContext context) {
     int index = 0;
@@ -27,16 +31,29 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
     Providers provider = Provider.of<Providers>(context);
     RolesModel rolesModel = provider.role;
 
+    _selectFolder() async {
+      result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf', 'doc', 'docx'],
+      );
+      if (result != null) {
+        setState(() {
+          file = result!.files.first;
+        });
+      } else {}
+    }
+
     handlePinjam() async {
       setState(() {
         isLoading = true;
       });
       if (rolesModel.name == 'Guru') {
-        if (await Services().setPengajuanBukuGuru(
-          buku: provider.idBuku,
-          tanggalPengajuan: DateFormat("yyyy-MM-dd").format(DateTime.now()),
-          jangkaPeminjaman: value1Item.toString(),
-        )) {
+        if (await Services().setPengajuanBuku(
+            buku: provider.idBuku,
+            tanggalPengajuan:
+                DateFormat('yyyy-MM-dd').format(DateTime.now()).toString(),
+            jangkaPeminjaman: value1Item.toString(),
+            filepath: file!.path)) {
           setState(() {
             print('data berhasil masuk');
           });
@@ -49,11 +66,12 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
               )));
         }
       } else if (rolesModel.name == 'Siswa') {
-        if (await Services().setPengajuanBukuSiswa(
-          buku: provider.idBuku,
-          tanggalPengajuan: DateFormat("yyyy-MM-dd").format(DateTime.now()),
-          jangkaPeminjaman: value1Item.toString(),
-        )) {
+        if (await Services().setPengajuanBuku(
+            buku: provider.idBuku,
+            tanggalPengajuan:
+                DateFormat('yyyy-MM-dd').format(DateTime.now()).toString(),
+            jangkaPeminjaman: value1Item.toString(),
+            filepath: file!.path)) {
           setState(() {
             print('data berhasil masuk');
           });
@@ -483,7 +501,9 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
                     ),
                     backgroundColor: m5Color,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    _selectFolder();
+                  },
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -496,7 +516,7 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
                         width: 12,
                       ),
                       Text(
-                        'Pilih File',
+                        (file == null) ? 'Pilih File' : file!.name.toString(),
                         style: mono6TextStyle.copyWith(
                           fontSize: 12,
                         ),

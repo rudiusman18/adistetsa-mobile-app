@@ -10,9 +10,9 @@ class MainPage extends StatefulWidget {
   _MainPageState createState() => _MainPageState();
 }
 
-int currentIndex = 0;
 
 class _MainPageState extends State<MainPage> {
+int currentIndex = 0;
   Widget customBottomNavbar() {
     return Container(
       decoration: BoxDecoration(

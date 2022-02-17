@@ -121,77 +121,52 @@ class Services extends ChangeNotifier {
     }
   }
 
-  setPengajuanBukuGuru({
-    required List<String> buku,
-    required String tanggalPengajuan,
-    required String jangkaPeminjaman,
-    String? urlTtd,
-  }) async {
+  setPengajuanBuku(
+      {required List<int> buku,
+      required String tanggalPengajuan,
+      required String jangkaPeminjaman,
+      String? urlTtd,
+      filepath}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var url = Uri.parse('$baseUrl/perpustakaan/pengajuan_peminjaman_guru');
+    var role = prefs.getString('role').toString();
     var token = prefs.getString("token").toString();
-    var headers = {"Content-type": "application/json", "Authorization": token};
-
-    var body = jsonEncode({
-      'BUKU': buku.map((e) => e).toList(),
-      'TANGGAL_PENGAJUAN': tanggalPengajuan,
-      'STATUS_PENGAJUAN': 'Pengajuan',
-      'JANGKA_PEMINJAMAN': jangkaPeminjaman,
-      'FILE_TTD_PENGAJUAN': urlTtd,
-    });
-    var response = await http.post(url, headers: headers, body: body);
-
-    print(response.statusCode);
-    print(response.body);
-    print(jsonDecode(body));
-    if (response.statusCode == 200) {
-      print(response.body);
-
-      return true;
-    } else {
-      throw Exception('Gagal Melakukan pengajuan peminjaman buku');
+    var url;
+    if (role == 'Siswa') {
+      url = Uri.parse('$baseUrl/perpustakaan/pengajuan_peminjaman_siswa');
+    } else if (role == 'Guru') {
+      url = Uri.parse('$baseUrl/perpustakaan/pengajuan_peminjaman_guru');
     }
-  }
-
-  setPengajuanBukuSiswa({
-    required List<String> buku,
-    required String tanggalPengajuan,
-    required String jangkaPeminjaman,
-    String? urlTtd,
-  }) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var url = Uri.parse('$baseUrl/perpustakaan/pengajuan_peminjaman_siswa');
-    var token = prefs.getString("token").toString();
-    var headers = {
-      "Content-type": "application/json",
-      "Accept": "application/json",
-      "Authorization": token
-    };
-
-    var body = jsonEncode({
-      'BUKU': buku
-          .map((e) => e)
-          .toList()
-          .toString()
-          .replaceAll('[', '')
-          .replaceAll(']', ''),
-      'TANGGAL_PENGAJUAN': tanggalPengajuan,
-      'STATUS_PENGAJUAN': 'Pengajuan',
-      'JANGKA_PEMINJAMAN': jangkaPeminjaman,
-      'FILE_TTD_PENGAJUAN': urlTtd,
-    });
-    var response = await http.post(url, headers: headers, body: body);
-
-    print(response.statusCode);
-    print(response.body);
-    print(jsonDecode(body));
-    if (response.statusCode == 200) {
-      print(response.body);
-
-      return true;
+    var request = http.MultipartRequest('POST', url);
+    request.headers['Authorization'] = token;
+    request.fields['BUKU'] = buku
+        .map((e) => e)
+        .toList()
+        .toString()
+        .replaceAll('[', '')
+        .replaceAll(']', '');
+    request.fields['TANGGAL_PENGAJUAN'] = tanggalPengajuan.toString();
+    request.fields['JANGKA_PEMINJAMAN'] = jangkaPeminjaman.toString();
+    // request.fields['FILE_TTD_PENGAJUAN'] = urlTtd.toString();
+    if (filepath != null) {
+      request.files.add(
+          await http.MultipartFile.fromPath('FILE_TTD_PENGAJUAN', filepath));
+      var response = await request.send();
+      final res = await http.Response.fromStream(response);
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        return true;
+      } else {
+        return false;
+      }
     } else {
-      return false;
-      // throw Exception('Gagal Melakukan pengajuan peminjaman buku');
+      var response = await request.send();
+      final res = await http.Response.fromStream(response);
+      print(res.statusCode);
+      print(res.body);
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 }
