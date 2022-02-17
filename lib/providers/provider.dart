@@ -26,15 +26,15 @@ class Providers with ChangeNotifier {
   List<ListBukuModel> _listKatalog = [];
   List<ListBukuModel> get listKatalog => _listKatalog;
 
-  List<String> _idBuku = [];
-  List<String> get idBuku => _idBuku;
+  List<int> _idBuku = [];
+  List<int> get idBuku => _idBuku;
 
   set listKatalog(List<ListBukuModel> listKatalog) {
     _listKatalog = listKatalog;
     notifyListeners();
   }
 
-  set idBuku(List<String> idBuku) {
+  set idBuku(List<int> idBuku) {
     _idBuku = idBuku;
     notifyListeners();
   }
@@ -130,7 +130,7 @@ class Providers with ChangeNotifier {
     } else {
       print(buku.jUDUL);
       _listKatalog.add(buku);
-      _idBuku.add(buku.id.toString());
+      _idBuku.add(int.parse(buku.id.toString()));
     }
     notifyListeners();
   }
