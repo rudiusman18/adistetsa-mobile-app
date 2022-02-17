@@ -77,18 +77,18 @@ class _DetailRiwayatPengajuanBukuUserPageState
                 style: mono1TextStyle.copyWith(
                   fontSize: 12,
                   color: value == 'Sedang Dipinjam'
-                    ? warningColor
-                    : value == 'Pengajuan' || value == 'Diajukan'
-                        ? infoColor
-                        : value == 'Sudah Dikembalikan'
-                            ? successColor
-                            : value == 'Tenggat'
-                                ? m1Color
-                                : value == 'Hilang'
-                                    ? dangerColor
-                                    : value == 'Ditolak'
-                                        ? dangerColor
-                                        : mono1Color,
+                      ? warningColor
+                      : value == 'Pengajuan' || value == 'Diajukan'
+                          ? infoColor
+                          : value == 'Sudah Dikembalikan'
+                              ? successColor
+                              : value == 'Tenggat'
+                                  ? m1Color
+                                  : value == 'Hilang'
+                                      ? dangerColor
+                                      : value == 'Ditolak'
+                                          ? dangerColor
+                                          : mono1Color,
                 ),
               ),
             ),
@@ -118,7 +118,8 @@ class _DetailRiwayatPengajuanBukuUserPageState
             pengajuanPeminjamanModel.fILETTDPENGAJUAN != null
                 ? itemInfoPeminjam(
                     teks: 'File Pengajuan',
-                    value: '${pengajuanPeminjamanModel.fILETTDPENGAJUAN!.split('/')[5]}',
+                    value:
+                        '${pengajuanPeminjamanModel.fILETTDPENGAJUAN!.split('/')[5]}',
                   )
                 : Container(),
             itemInfoPeminjam(
