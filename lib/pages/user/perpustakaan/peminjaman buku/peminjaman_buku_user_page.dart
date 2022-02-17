@@ -575,14 +575,16 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
             backgroundColor: m2Color,
           ),
           onPressed: () {
-            file!.extension == 'pdf'
+            file == null
                 ? handlePinjam()
-                : ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    backgroundColor: dangerColor,
-                    content: Text(
-                      'Format File Tidak Didukung',
-                      textAlign: TextAlign.center,
-                    )));
+                : file!.extension == 'pdf'
+                    ? handlePinjam()
+                    : ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        backgroundColor: dangerColor,
+                        content: Text(
+                          'Format File Tidak Didukung',
+                          textAlign: TextAlign.center,
+                        )));
           },
           child: isLoading == false
               ? Text(
