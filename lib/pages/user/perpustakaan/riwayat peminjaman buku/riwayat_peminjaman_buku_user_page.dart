@@ -1,5 +1,10 @@
+import 'package:adistetsa/models/riwayatpeminjaman_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
+import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class RiwayatPeminjamanBukuUserPage extends StatefulWidget {
   RiwayatPeminjamanBukuUserPage({Key? key}) : super(key: key);
@@ -16,6 +21,8 @@ class _RiwayatPeminjamanBukuUserPageState
 
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+
     PreferredSizeWidget peminjamanBukuHeader() {
       return AppBar(
         centerTitle: true,
@@ -127,14 +134,19 @@ class _RiwayatPeminjamanBukuUserPageState
     }
 
     Widget listItem(
-        {required String nama, required String nis, required String status}) {
+        {required String id,
+        required String tanggalPengajuan,
+        required String jangkaPeminjaman,
+        required String status}) {
       return GestureDetector(
-        onTap: () {
+        onTap: () async {
           setState(() {
             searchController.clear();
             isSearch = false;
+            loading(context);
           });
-          Navigator.pushNamed(context,
+          await provider.getDetailRiwayatPeminjama(id: id);
+          Navigator.pushReplacementNamed(context,
               '/user/perpustakaan/riwayat-peminjaman-buku/detail-page');
         },
         child: Container(
@@ -166,13 +178,13 @@ class _RiwayatPeminjamanBukuUserPageState
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '$nama',
+                            '$tanggalPengajuan',
                             style: mono1TextStyle.copyWith(
                               fontSize: 14,
                             ),
                           ),
                           Text(
-                            '$nis',
+                            '$jangkaPeminjaman',
                             style: mono2TextStyle.copyWith(
                               fontSize: 10,
                             ),
@@ -185,9 +197,9 @@ class _RiwayatPeminjamanBukuUserPageState
                           fontSize: 10,
                           color: '$status' == 'Sedang Dipinjam'
                               ? warningColor
-                              : '$status' == 'Diajukan'
+                              : '$status' == 'Pengajuan'
                                   ? infoColor
-                                  : '$status' == 'Selesai'
+                                  : '$status' == 'Sudah Dikembalikan'
                                       ? successColor
                                       : '$status' == 'Tenggat'
                                           ? m1Color
@@ -226,46 +238,48 @@ class _RiwayatPeminjamanBukuUserPageState
                           SizedBox(
                             height: 20,
                           ),
-                          listItem(
-                              nama: '2022-01-28',
-                              nis: 'Jumlah 69',
-                              status: 'Diajukan'),
-                          listItem(
-                              nama: '2022-01-28',
-                              nis: 'Jumlah 69',
-                              status: 'Sedang Dipinjam'),
-                          listItem(
-                              nama: '2022-01-28',
-                              nis: 'Jumlah 69',
-                              status: 'Tenggat'),
-                          listItem(
-                              nama: '2022-01-28',
-                              nis: 'Jumlah 69',
-                              status: 'Sedang Dipinjam'),
-                          listItem(
-                              nama: '2022-01-28',
-                              nis: 'Jumlah 69',
-                              status: 'Ditolak'),
-                          listItem(
-                              nama: '2022-01-28',
-                              nis: 'Jumlah 69',
-                              status: 'Selesai'),
-                          listItem(
-                              nama: '2022-01-28',
-                              nis: 'Jumlah 69',
-                              status: 'Sedang Dipinjam'),
-                          listItem(
-                              nama: '2022-01-28',
-                              nis: 'Jumlah 69',
-                              status: 'Sedang Dipinjam'),
-                          listItem(
-                              nama: '2022-01-28',
-                              nis: 'Jumlah 69',
-                              status: 'Sedang Dipinjam'),
-                          listItem(
-                              nama: '2022-01-28',
-                              nis: 'Jumlah 69',
-                              status: 'Sedang Dipinjam'),
+                          FutureBuilder(
+                            future: Services().getRiwayatPeminjaman(),
+                            builder:
+                                (BuildContext context, AsyncSnapshot snapshot) {
+                              if (snapshot.hasData) {
+                                List<RiwayatPeminjamanModel> data =
+                                    snapshot.data;
+                                return data.isEmpty
+                                    ? Center(
+                                        child: Text(
+                                          'data tidak ditemukan',
+                                          style: mono1TextStyle,
+                                        ),
+                                      )
+                                    : Column(
+                                        children: data.map((item) {
+                                          return item.jANGKAPEMINJAMAN ==
+                                                  'Jangka Panjang'
+                                              ? listItem(
+                                                  id: item.iD.toString(),
+                                                  tanggalPengajuan: item
+                                                      .tANGGALPEMINJAMAN
+                                                      .toString(),
+                                                  jangkaPeminjaman: item
+                                                      .jANGKAPEMINJAMAN
+                                                      .toString(),
+                                                  status: item.sTATUSPEMINJAMAN
+                                                      .toString(),
+                                                )
+                                              : SizedBox();
+                                        }).toList(),
+                                      );
+                              } else {
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 4,
+                                    color: m1Color,
+                                  ),
+                                );
+                              }
+                            },
+                          ),
                         ],
                       ),
                     ),
@@ -279,46 +293,48 @@ class _RiwayatPeminjamanBukuUserPageState
                           SizedBox(
                             height: 20,
                           ),
-                          listItem(
-                              nama: '2022-01-28',
-                              nis: 'Jumlah 69',
-                              status: 'Sedang Dipinjam'),
-                          listItem(
-                              nama: '2022-01-28',
-                              nis: 'Jumlah 69',
-                              status: 'Sedang Dipinjam'),
-                          listItem(
-                              nama: '2022-01-28',
-                              nis: 'Jumlah 69',
-                              status: 'Tenggat'),
-                          listItem(
-                              nama: '2022-01-28',
-                              nis: 'Jumlah 69',
-                              status: 'Sedang Dipinjam'),
-                          listItem(
-                              nama: '2022-01-28',
-                              nis: 'Jumlah 69',
-                              status: 'Sedang Dipinjam'),
-                          listItem(
-                              nama: '2022-01-28',
-                              nis: 'Jumlah 69',
-                              status: 'Selesai'),
-                          listItem(
-                              nama: '2022-01-28',
-                              nis: 'Jumlah 69',
-                              status: 'Sedang Dipinjam'),
-                          listItem(
-                              nama: '2022-01-28',
-                              nis: 'Jumlah 69',
-                              status: 'Sedang Dipinjam'),
-                          listItem(
-                              nama: '2022-01-28',
-                              nis: 'Jumlah 69',
-                              status: 'Sedang Dipinjam'),
-                          listItem(
-                              nama: '2022-01-28',
-                              nis: 'Jumlah 69',
-                              status: 'Sedang Dipinjam'),
+                          FutureBuilder(
+                            future: Services().getRiwayatPeminjaman(),
+                            builder:
+                                (BuildContext context, AsyncSnapshot snapshot) {
+                              if (snapshot.hasData) {
+                                List<RiwayatPeminjamanModel> data =
+                                    snapshot.data;
+                                return data.isEmpty
+                                    ? Center(
+                                        child: Text(
+                                          'data tidak ditemukan',
+                                          style: mono1TextStyle,
+                                        ),
+                                      )
+                                    : Column(
+                                        children: data.map((item) {
+                                          return item.jANGKAPEMINJAMAN ==
+                                                  'Jangka Pendek'
+                                              ? listItem(
+                                                  id: item.iD.toString(),
+                                                  tanggalPengajuan: item
+                                                      .tANGGALPEMINJAMAN
+                                                      .toString(),
+                                                  jangkaPeminjaman: item
+                                                      .jANGKAPEMINJAMAN
+                                                      .toString(),
+                                                  status: item.sTATUSPEMINJAMAN
+                                                      .toString(),
+                                                )
+                                              : SizedBox();
+                                        }).toList(),
+                                      );
+                              } else {
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 4,
+                                    color: m1Color,
+                                  ),
+                                );
+                              }
+                            },
+                          ),
                         ],
                       ),
                     ),

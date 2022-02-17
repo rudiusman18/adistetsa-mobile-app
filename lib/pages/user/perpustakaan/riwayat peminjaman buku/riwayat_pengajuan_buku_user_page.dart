@@ -1,5 +1,10 @@
+import 'package:adistetsa/models/pengajuanpeminjaman_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
+import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class RiwayatPengajuanBukuUserPage extends StatefulWidget {
   RiwayatPengajuanBukuUserPage({Key? key}) : super(key: key);
@@ -21,6 +26,8 @@ class _RiwayatPengajuanBukuUserPageState
   bool flag2 = false;
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+
     PreferredSizeWidget pengajuanBukuHeader() {
       return AppBar(
         centerTitle: true,
@@ -98,14 +105,19 @@ class _RiwayatPengajuanBukuUserPageState
     }
 
     Widget listItem(
-        {required String nama, required String nis, required String status}) {
+        {required String id,
+        required String tanggalPengajuan,
+        required String jangkaPeminjaman,
+        required String status}) {
       return GestureDetector(
-        onTap: () {
+        onTap: () async {
           setState(() {
             searchController.clear();
             isSearch = false;
+            loading(context);
           });
-          Navigator.pushNamed(
+          await provider.getDetailPengajuanPeminjaman(id: id);
+          Navigator.pushReplacementNamed(
               context, '/user/perpustakaan/riwayat-pengajuan-buku/detail-page');
         },
         child: Container(
@@ -137,13 +149,13 @@ class _RiwayatPengajuanBukuUserPageState
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '$nama',
+                            '$tanggalPengajuan',
                             style: mono1TextStyle.copyWith(
                               fontSize: 14,
                             ),
                           ),
                           Text(
-                            '$nis',
+                            '$jangkaPeminjaman',
                             style: mono2TextStyle.copyWith(
                               fontSize: 10,
                             ),
@@ -182,35 +194,41 @@ class _RiwayatPengajuanBukuUserPageState
           Expanded(
             child: ListView(
               children: [
-                listItem(
-                  nama: '2022-01-28',
-                  nis: 'Jangka Pendek',
-                  status: 'Diajukan',
-                ),
-                listItem(
-                  nama: '2022-01-28',
-                  nis: 'Jangka Pendek',
-                  status: 'Diajukan',
-                ),
-                listItem(
-                  nama: '2022-01-28',
-                  nis: 'Jangka Pendek',
-                  status: 'Diajukan',
-                ),
-                listItem(
-                  nama: '2022-01-28',
-                  nis: 'Jangka Pendek',
-                  status: 'Diajukan',
-                ),
-                listItem(
-                  nama: '2022-01-28',
-                  nis: 'Jangka Pendek',
-                  status: 'Diajukan',
-                ),
-                listItem(
-                  nama: '2022-01-28',
-                  nis: 'Jangka Pendek',
-                  status: 'Diajukan',
+                FutureBuilder(
+                  future: Services().getPengajuanPeminjaman(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData) {
+                      List<PengajuanPeminjamanModel> data = snapshot.data;
+                      return data.isEmpty
+                          ? Center(
+                              child: Text(
+                                'data tidak ditemukan',
+                                style: mono1TextStyle,
+                              ),
+                            )
+                          : Column(
+                              children: data.map((item) {
+                                return item.sTATUSPENGAJUAN == 'Pengajuan' || item.sTATUSPENGAJUAN == 'Diajukan'
+                                    ? listItem(
+                                        id: item.iD.toString(),
+                                        tanggalPengajuan:
+                                            item.tANGGALPENGAJUAN.toString(),
+                                        jangkaPeminjaman:
+                                            item.jANGKAPEMINJAMAN.toString(),
+                                        status: item.sTATUSPENGAJUAN.toString(),
+                                      )
+                                    : SizedBox();
+                              }).toList(),
+                            );
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 4,
+                          color: m1Color,
+                        ),
+                      );
+                    }
+                  },
                 ),
               ],
             ),
