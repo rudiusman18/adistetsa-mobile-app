@@ -133,7 +133,43 @@ class Services extends ChangeNotifier {
       url = Uri.parse('$baseUrl/perpustakaan/pengajuan_peminjaman_siswa');
     } else if (role == 'Guru') {
       url = Uri.parse('$baseUrl/perpustakaan/pengajuan_peminjaman_guru');
+    } else if (role == 'Staf Perpustakaan') {
+      url = Uri.parse('$baseUrl/perpustakaan/pengajuan_peminjaman_guru_admin');
     }
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<PengajuanPeminjamanModel> pengajuaPeminjaman =
+          data.map((item) => PengajuanPeminjamanModel.fromJson(item)).toList();
+      return pengajuaPeminjaman;
+    } else {
+      throw Exception('Gagal Mendapatkan list Buku');
+    }
+  }
+
+  getPengajuanPeminjamanSiswaAdmin({String? search}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url =
+        Uri.parse('$baseUrl/perpustakaan/pengajuan_peminjaman_siswa_admin');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<PengajuanPeminjamanModel> pengajuaPeminjaman =
+          data.map((item) => PengajuanPeminjamanModel.fromJson(item)).toList();
+      return pengajuaPeminjaman;
+    } else {
+      throw Exception('Gagal Mendapatkan list Buku');
+    }
+  }
+
+  getPengajuanPeminjamanGuruAdmin({String? search}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url =
+        Uri.parse('$baseUrl/perpustakaan/pengajuan_peminjaman_guru_admin');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {

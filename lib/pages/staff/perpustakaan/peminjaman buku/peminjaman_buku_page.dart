@@ -1,3 +1,5 @@
+import 'package:adistetsa/models/pengajuanpeminjaman_model.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 
@@ -123,7 +125,11 @@ class _PeminjamanBukuPageState extends State<PeminjamanBukuPage> {
       );
     }
 
-    Widget listItem({required String nama, required String nis}) {
+    Widget listItem(
+        {required String id,
+        required String nama,
+        required String nis,
+        required String user}) {
       return GestureDetector(
         onTap: () {
           setState(() {
@@ -206,16 +212,42 @@ class _PeminjamanBukuPageState extends State<PeminjamanBukuPage> {
                       SizedBox(
                         height: 17,
                       ),
-                      listItem(nama: 'Agung', nis: '6969696969'),
-                      listItem(nama: 'Bagus', nis: '6969696969'),
-                      listItem(nama: 'Chandra', nis: '6969696969'),
-                      listItem(nama: 'Diska', nis: '6969696969'),
-                      listItem(nama: 'Emma', nis: '6969696969'),
-                      listItem(nama: 'Fuad', nis: '6969696969'),
-                      listItem(nama: 'Ibol', nis: '6969696969'),
-                      listItem(nama: 'Ibal', nis: '6969696969'),
-                      listItem(nama: 'Badbol', nis: '6969696969'),
-                      listItem(nama: 'Goodbol', nis: '6969696969'),
+                      FutureBuilder(
+                        future: Services().getPengajuanPeminjamanSiswaAdmin(),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          if (snapshot.hasData) {
+                            List<PengajuanPeminjamanModel> data = snapshot.data;
+                            return data.isEmpty
+                                ? Center(
+                                    child: Text(
+                                      'data tidak ditemukan',
+                                      style: mono1TextStyle,
+                                    ),
+                                  )
+                                : Column(
+                                    children: data.map((item) {
+                                      return item.sTATUSPENGAJUAN ==
+                                                  'Pengajuan' ||
+                                              item.sTATUSPENGAJUAN == 'Diajukan'
+                                          ? listItem(
+                                              id: '${item.iD}',
+                                              nama: '${item.nAMA}',
+                                              nis: '${item.tANGGALPENGAJUAN}',
+                                              user: 'Siswa')
+                                          : SizedBox();
+                                    }).toList(),
+                                  );
+                          } else {
+                            return Center(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 4,
+                                color: m1Color,
+                              ),
+                            );
+                          }
+                        },
+                      ),
                     ],
                   ),
                   ListView(
@@ -223,16 +255,42 @@ class _PeminjamanBukuPageState extends State<PeminjamanBukuPage> {
                       SizedBox(
                         height: 17,
                       ),
-                      listItem(nama: 'Agung', nis: '6969696969'),
-                      listItem(nama: 'Bagus', nis: '6969696969'),
-                      listItem(nama: 'Chandra', nis: '6969696969'),
-                      listItem(nama: 'Diska', nis: '6969696969'),
-                      listItem(nama: 'Emma', nis: '6969696969'),
-                      listItem(nama: 'Fuad', nis: '6969696969'),
-                      listItem(nama: 'Ibol', nis: '6969696969'),
-                      listItem(nama: 'Ibal', nis: '6969696969'),
-                      listItem(nama: 'Badbol', nis: '6969696969'),
-                      listItem(nama: 'Goodbol', nis: '6969696969'),
+                      FutureBuilder(
+                        future: Services().getPengajuanPeminjamanGuruAdmin(),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          if (snapshot.hasData) {
+                            List<PengajuanPeminjamanModel> data = snapshot.data;
+                            return data.isEmpty
+                                ? Center(
+                                    child: Text(
+                                      'data tidak ditemukan',
+                                      style: mono1TextStyle,
+                                    ),
+                                  )
+                                : Column(
+                                    children: data.map((item) {
+                                      return item.sTATUSPENGAJUAN ==
+                                                  'Pengajuan' ||
+                                              item.sTATUSPENGAJUAN == 'Diajukan'
+                                          ? listItem(
+                                              id: '${item.iD}',
+                                              nama: '${item.nAMA}',
+                                              nis: '${item.tANGGALPENGAJUAN}',
+                                              user: 'Guru')
+                                          : SizedBox();
+                                    }).toList(),
+                                  );
+                          } else {
+                            return Center(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 4,
+                                color: m1Color,
+                              ),
+                            );
+                          }
+                        },
+                      ),
                     ],
                   ),
                 ],
