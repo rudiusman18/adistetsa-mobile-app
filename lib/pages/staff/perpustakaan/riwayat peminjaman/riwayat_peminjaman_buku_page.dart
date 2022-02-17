@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:adistetsa/models/riwayatpeminjaman_model.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 
@@ -21,6 +25,7 @@ class _RiwayatPeminjamanBukuPageState extends State<RiwayatPeminjamanBukuPage> {
 
   @override
   Widget build(BuildContext context) {
+    Services().getRiwayatPeminjamanSiswaAdmin();
     PreferredSizeWidget peminjamanBukuHeader() {
       return AppBar(
         centerTitle: true,
@@ -133,7 +138,12 @@ class _RiwayatPeminjamanBukuPageState extends State<RiwayatPeminjamanBukuPage> {
     }
 
     Widget listItem(
-        {required String nama, required String nis, required String status}) {
+        {required String id,
+        required String nama,
+        required String nomerInduk,
+        required String status,
+        required String dataGuru,
+        required String nis}) {
       return GestureDetector(
         onTap: () {
           setState(() {
@@ -178,7 +188,7 @@ class _RiwayatPeminjamanBukuPageState extends State<RiwayatPeminjamanBukuPage> {
                             ),
                           ),
                           Text(
-                            '$nis',
+                            '$nomerInduk',
                             style: mono2TextStyle.copyWith(
                               fontSize: 10,
                             ),
@@ -230,46 +240,50 @@ class _RiwayatPeminjamanBukuPageState extends State<RiwayatPeminjamanBukuPage> {
                       Expanded(
                         child: ListView(
                           children: [
-                            listItem(
-                                nama: 'Agung',
-                                nis: '6969696969',
-                                status: 'Sedang Dipinjam'),
-                            listItem(
-                                nama: 'Bagus',
-                                nis: '6969696969',
-                                status: 'Sedang Dipinjam'),
-                            listItem(
-                                nama: 'Chandra',
-                                nis: '6969696969',
-                                status: 'Tenggat'),
-                            listItem(
-                                nama: 'Diska',
-                                nis: '6969696969',
-                                status: 'Sedang Dipinjam'),
-                            listItem(
-                                nama: 'Emma',
-                                nis: '6969696969',
-                                status: 'Sedang Dipinjam'),
-                            listItem(
-                                nama: 'Fuad',
-                                nis: '6969696969',
-                                status: 'Selesai'),
-                            listItem(
-                                nama: 'Ibol',
-                                nis: '6969696969',
-                                status: 'Sedang Dipinjam'),
-                            listItem(
-                                nama: 'Ibal',
-                                nis: '6969696969',
-                                status: 'Sedang Dipinjam'),
-                            listItem(
-                                nama: 'Badbol',
-                                nis: '6969696969',
-                                status: 'Sedang Dipinjam'),
-                            listItem(
-                                nama: 'Goodbol',
-                                nis: '6969696969',
-                                status: 'Sedang Dipinjam'),
+                            FutureBuilder(
+                              future:
+                                  Services().getRiwayatPeminjamanSiswaAdmin(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot snapshot) {
+                                if (snapshot.hasData) {
+                                  List<RiwayatPeminjamanModel> data =
+                                      snapshot.data;
+                                  return data.isEmpty
+                                      ? Center(
+                                          child: Text(
+                                            'Data tidak ditemukan',
+                                            style: mono1TextStyle,
+                                          ),
+                                        )
+                                      : Column(
+                                          children: data.map((item) {
+                                            return item.jANGKAPEMINJAMAN ==
+                                                    'Jangka Panjang'
+                                                ? listItem(
+                                                    id: item.iD.toString(),
+                                                    status: item
+                                                        .sTATUSPEMINJAMAN
+                                                        .toString(),
+                                                    nama: '${item.nAMA}',
+                                                    nomerInduk: item.nIS != null
+                                                        ? '${item.nIS}'
+                                                        : '${item.dATAGURU}',
+                                                    dataGuru:
+                                                        '${item.dATAGURU}',
+                                                    nis: '${item.nIS}')
+                                                : SizedBox();
+                                          }).toList(),
+                                        );
+                                } else {
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 4,
+                                      color: m1Color,
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
                           ],
                         ),
                       ),
@@ -283,46 +297,50 @@ class _RiwayatPeminjamanBukuPageState extends State<RiwayatPeminjamanBukuPage> {
                       Expanded(
                         child: ListView(
                           children: [
-                            listItem(
-                                nama: 'Agung',
-                                nis: '6969696969',
-                                status: 'Sedang Dipinjam'),
-                            listItem(
-                                nama: 'Bagus',
-                                nis: '6969696969',
-                                status: 'Sedang Dipinjam'),
-                            listItem(
-                                nama: 'Chandra',
-                                nis: '6969696969',
-                                status: 'Tenggat'),
-                            listItem(
-                                nama: 'Diska',
-                                nis: '6969696969',
-                                status: 'Sedang Dipinjam'),
-                            listItem(
-                                nama: 'Emma',
-                                nis: '6969696969',
-                                status: 'Sedang Dipinjam'),
-                            listItem(
-                                nama: 'Fuad',
-                                nis: '6969696969',
-                                status: 'Selesai'),
-                            listItem(
-                                nama: 'Ibol',
-                                nis: '6969696969',
-                                status: 'Sedang Dipinjam'),
-                            listItem(
-                                nama: 'Ibal',
-                                nis: '6969696969',
-                                status: 'Sedang Dipinjam'),
-                            listItem(
-                                nama: 'Badbol',
-                                nis: '6969696969',
-                                status: 'Sedang Dipinjam'),
-                            listItem(
-                                nama: 'Goodbol',
-                                nis: '6969696969',
-                                status: 'Sedang Dipinjam'),
+                            FutureBuilder(
+                              future:
+                                  Services().getRiwayatPeminjamanSiswaAdmin(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot snapshot) {
+                                if (snapshot.hasData) {
+                                  List<RiwayatPeminjamanModel> data =
+                                      snapshot.data;
+                                  return data.isEmpty
+                                      ? Center(
+                                          child: Text(
+                                            'Data tidak ditemukan',
+                                            style: mono1TextStyle,
+                                          ),
+                                        )
+                                      : Column(
+                                          children: data.map((item) {
+                                            return item.jANGKAPEMINJAMAN ==
+                                                    'Jangka Pendek'
+                                                ? listItem(
+                                                    id: item.iD.toString(),
+                                                    status: item
+                                                        .sTATUSPEMINJAMAN
+                                                        .toString(),
+                                                    nama: '${item.nAMA}',
+                                                    nomerInduk: item.nIS != null
+                                                        ? '${item.nIS}'
+                                                        : '${item.dATAGURU}',
+                                                    dataGuru:
+                                                        '${item.dATAGURU}',
+                                                    nis: '${item.nIS}')
+                                                : SizedBox();
+                                          }).toList(),
+                                        );
+                                } else {
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 4,
+                                      color: m1Color,
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
                           ],
                         ),
                       ),

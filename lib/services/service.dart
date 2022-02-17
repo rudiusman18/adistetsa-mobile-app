@@ -234,6 +234,31 @@ class Services extends ChangeNotifier {
     }
   }
 
+  Future<List<RiwayatPeminjamanModel>> getRiwayatPeminjamanSiswaAdmin({String? search}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url1 =
+        Uri.parse('$baseUrl/perpustakaan/riwayat_peminjaman_siswa_admin');
+    var url2 = Uri.parse('$baseUrl/perpustakaan/riwayat_peminjaman_guru_admin');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var responses = await Future.wait([
+      http.get(url1, headers: headers),
+      http.get(url2, headers: headers),
+    ]);
+    return <RiwayatPeminjamanModel>[
+      ..._getRiwayat(responses[0]),
+      ..._getRiwayat(responses[1]),
+    ];
+  }
+
+  List<RiwayatPeminjamanModel> _getRiwayat(http.Response response) {
+    return [
+      if (response.statusCode == 200)
+        for (var i in json.decode(response.body)['results'])
+          RiwayatPeminjamanModel.fromJson(i),
+    ];
+  }
+
   getDetailRiwayatPeminjam({String? id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
