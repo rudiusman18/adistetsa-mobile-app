@@ -1,9 +1,10 @@
-import 'dart:io';
-
 import 'package:adistetsa/models/riwayatpeminjaman_model.dart';
+import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
+import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class RiwayatPeminjamanBukuPage extends StatefulWidget {
   RiwayatPeminjamanBukuPage({Key? key}) : super(key: key);
@@ -25,7 +26,8 @@ class _RiwayatPeminjamanBukuPageState extends State<RiwayatPeminjamanBukuPage> {
 
   @override
   Widget build(BuildContext context) {
-    Services().getRiwayatPeminjamanSiswaAdmin();
+    Providers provider = Provider.of<Providers>(context);
+
     PreferredSizeWidget peminjamanBukuHeader() {
       return AppBar(
         centerTitle: true,
@@ -145,12 +147,17 @@ class _RiwayatPeminjamanBukuPageState extends State<RiwayatPeminjamanBukuPage> {
         required String dataGuru,
         required String nis}) {
       return GestureDetector(
-        onTap: () {
+        onTap: () async {
           setState(() {
             searchController.clear();
             isSearch = false;
+            loading(context);
           });
-          Navigator.pushNamed(
+
+          await provider.getDetailRiwayatPeminjamanAdmin(
+              dataGuru: dataGuru, nis: nis, id: id);
+
+          Navigator.pushReplacementNamed(
               context, '/staff-perpus/riwayat-peminjaman-buku/detail-page');
         },
         child: Container(

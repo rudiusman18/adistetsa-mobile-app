@@ -1,5 +1,8 @@
+import 'package:adistetsa/models/riwayatpeminjaman_model.dart';
+import 'package:adistetsa/providers/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class DetailRiwayatPeminjamanBukuPage extends StatefulWidget {
   @override
@@ -11,11 +14,15 @@ class _DetailRiwayatPeminjamanBukuPageState
     extends State<DetailRiwayatPeminjamanBukuPage> {
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+    RiwayatPeminjamanModel riwayatPeminjamanModel = provider.riwayatPeminjaman;
+
+    var index = 0;
     PreferredSizeWidget header() {
       return AppBar(
         centerTitle: true,
         title: Text(
-          'Detail Peminjaman',
+          'Detail Riwayat Peminjaman',
           style: mono1TextStyle.copyWith(
             fontSize: 18,
             fontWeight: semiBold,
@@ -27,236 +34,6 @@ class _DetailRiwayatPeminjamanBukuPageState
         iconTheme: IconThemeData(
           color: mono1Color,
         ),
-      );
-    }
-
-    confirmAccept() async {
-      return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Dialog(
-            backgroundColor: mono6Color,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                vertical: 12,
-                horizontal: 20,
-              ),
-              width: 305,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Stack(
-                    children: [
-                      Center(
-                        child: Text(
-                          'Konfirmasi',
-                          style: mono1TextStyle.copyWith(
-                            fontWeight: semiBold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Image.asset(
-                            'assets/cancel_button.png',
-                            width: 14,
-                            height: 14,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 12,
-                  ),
-                  Text(
-                    'Apakah anda yakin untuk menyetujui peminjaman?',
-                    style: mono1TextStyle.copyWith(
-                      fontSize: 12,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 120,
-                        height: 46,
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          style: TextButton.styleFrom(
-                            backgroundColor: mono3Color,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          child: Text(
-                            'Batal',
-                            style: mono6TextStyle.copyWith(
-                              fontWeight: semiBold,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Container(
-                        width: 120,
-                        height: 46,
-                        child: TextButton(
-                          onPressed: () async {},
-                          style: TextButton.styleFrom(
-                            backgroundColor: successColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          child: Text(
-                            'setuju',
-                            style: mono6TextStyle.copyWith(
-                              fontWeight: semiBold,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      );
-    }
-
-    confirmDecline() async {
-      return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Dialog(
-            backgroundColor: mono6Color,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                vertical: 12,
-                horizontal: 20,
-              ),
-              width: 305,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Stack(
-                    children: [
-                      Center(
-                        child: Text(
-                          'Konfirmasi',
-                          style: mono1TextStyle.copyWith(
-                            fontWeight: semiBold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Image.asset(
-                            'assets/cancel_button.png',
-                            width: 14,
-                            height: 14,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 12,
-                  ),
-                  Text(
-                    'Apakah anda yakin untuk menyetujui peminjaman?',
-                    style: mono1TextStyle.copyWith(
-                      fontSize: 12,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 120,
-                        height: 46,
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          style: TextButton.styleFrom(
-                            backgroundColor: mono3Color,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          child: Text(
-                            'Batal',
-                            style: mono6TextStyle.copyWith(
-                              fontWeight: semiBold,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Container(
-                        width: 120,
-                        height: 46,
-                        child: TextButton(
-                          onPressed: () async {},
-                          style: TextButton.styleFrom(
-                            backgroundColor: dangerColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          child: Text(
-                            'Tolak',
-                            style: mono6TextStyle.copyWith(
-                              fontWeight: semiBold,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
       );
     }
 
@@ -325,14 +102,16 @@ class _DetailRiwayatPeminjamanBukuPageState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'uqi NGENTOD',
+              '${riwayatPeminjamanModel.nAMA}',
               style: mono1TextStyle.copyWith(
                 fontSize: 20,
                 fontWeight: bold,
               ),
             ),
             Text(
-              '123456',
+              riwayatPeminjamanModel.nIS != null
+                  ? '${riwayatPeminjamanModel.nIS}'
+                  : '${riwayatPeminjamanModel.dATAGURU}',
               style: mono1TextStyle.copyWith(
                 fontSize: 12,
                 fontWeight: regular,
@@ -343,23 +122,26 @@ class _DetailRiwayatPeminjamanBukuPageState
             ),
             itemInfoPeminjam(
               teks: 'Tanggal Pengajuan',
-              value: 'Uqi BABI',
+              value: '${riwayatPeminjamanModel.tANGGALPEMINJAMAN}',
             ),
-            itemInfoPeminjam(
-              teks: 'Tanggal Pengembalian',
-              value: 'Uqi BABI',
-            ),
+            riwayatPeminjamanModel.sTATUSPEMINJAMAN != 'Ditolak'
+                ? itemInfoPeminjam(
+                    teks: 'Tanggal Pengembalian',
+                    value: '${riwayatPeminjamanModel.tANGGALPENGEMBALIAN}',
+                  )
+                : Container(),
             itemInfoPeminjam(
               teks: 'Kategori',
-              value: 'Uqi BABI',
+              value: '${riwayatPeminjamanModel.jANGKAPEMINJAMAN}',
             ),
-            itemInfoPeminjam(
+            riwayatPeminjamanModel.fILETTDPENGAJUAN != null ?itemInfoPeminjam(
               teks: 'File Pengajuan',
-              value: 'uQI ngntd.pdf',
-            ),
+              value:
+                  '${riwayatPeminjamanModel.fILETTDPENGAJUAN!.split('/')[5]}',
+            ) : Container(),
             itemInfoPeminjam(
               teks: 'Status Pengajuan',
-              value: 'GAK MBALIK',
+              value: '${riwayatPeminjamanModel.sTATUSPEMINJAMAN}',
             ),
           ],
         ),
@@ -520,88 +302,25 @@ class _DetailRiwayatPeminjamanBukuPageState
           bottom: 20,
         ),
         child: Table(
-            border: TableBorder.all(
-              color: mono6Color,
-            ),
-            columnWidths: const <int, TableColumnWidth>{
-              0: FixedColumnWidth(40),
-              1: FlexColumnWidth(140),
-              2: FixedColumnWidth(140),
-            },
-            defaultVerticalAlignment: TableCellVerticalAlignment.top,
-            children: [
-              contentTable(
-                no: 0,
-                mataPelajaran: 'Uqi NGNTD',
-                registrasi: 'MALES COK',
-              ),
-            ]),
-      );
-    }
-
-    Widget buttonSubmit() {
-      return Container(
-        margin: EdgeInsets.only(
-          left: 45,
-          right: 46,
-          bottom: 20,
-        ),
-        height: 46,
-        width: double.infinity,
-        child: TextButton(
-          style: TextButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            side: BorderSide(
-              color: h1Color,
-              width: 2,
-            ),
-            backgroundColor: h1Color,
+          border: TableBorder.all(
+            color: mono6Color,
           ),
-          onPressed: () {
-            confirmAccept();
+          columnWidths: const <int, TableColumnWidth>{
+            0: FixedColumnWidth(40),
+            1: FlexColumnWidth(140),
+            2: FixedColumnWidth(140),
           },
-          child: Text(
-            'Setuju',
-            style: mono6TextStyle.copyWith(
-              fontWeight: bold,
-              fontSize: 16,
-            ),
-          ),
+          defaultVerticalAlignment: TableCellVerticalAlignment.top,
+          children: riwayatPeminjamanModel.bUKU!.map((book) {
+            index++;
+            return contentTable(
+              no: index,
+              mataPelajaran: book.split('-')[1].toString(),
+              registrasi: book.split('-')[0].toString(),
+            );
+          }).toList(),
         ),
       );
-    }
-
-    Widget buttonTolak() {
-      return Container(
-          margin: EdgeInsets.only(
-            left: 45,
-            right: 46,
-            bottom: 20,
-          ),
-          height: 46,
-          width: double.infinity,
-          child: OutlinedButton(
-              style: OutlinedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                side: BorderSide(
-                  width: 2,
-                  color: dangerColor,
-                ),
-              ),
-              onPressed: () {
-                confirmDecline();
-              },
-              child: Text(
-                'Tolak',
-                style: dangerTextStyle.copyWith(
-                  fontWeight: bold,
-                  fontSize: 16,
-                ),
-              )));
     }
 
     return Scaffold(
@@ -614,8 +333,6 @@ class _DetailRiwayatPeminjamanBukuPageState
               infoPeminjam(),
               tableHeader(),
               tabelPeminjam(),
-              buttonSubmit(),
-              buttonTolak(),
             ],
           ),
         ),

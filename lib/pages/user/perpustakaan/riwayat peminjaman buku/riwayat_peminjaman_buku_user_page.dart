@@ -145,7 +145,7 @@ class _RiwayatPeminjamanBukuUserPageState
             isSearch = false;
             loading(context);
           });
-          await provider.getDetailRiwayatPeminjama(id: id);
+          await provider.getDetailRiwayatPeminjaman(id: id);
           Navigator.pushReplacementNamed(context,
               '/user/perpustakaan/riwayat-peminjaman-buku/detail-page');
         },

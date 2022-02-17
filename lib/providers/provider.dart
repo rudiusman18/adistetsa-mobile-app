@@ -77,7 +77,7 @@ class Providers with ChangeNotifier {
     notifyListeners();
   }
 
-  set setRiwayatPeminjaman(RiwayatPeminjamanModel riwayatPeminjaman){
+  set setRiwayatPeminjaman(RiwayatPeminjamanModel riwayatPeminjaman) {
     _riwayatPeminjaman = riwayatPeminjaman;
     notifyListeners();
   }
@@ -139,10 +139,26 @@ class Providers with ChangeNotifier {
     }
   }
 
-  Future<bool> getDetailRiwayatPeminjama({String? id}) async {
+  Future<bool> getDetailRiwayatPeminjaman({String? id}) async {
     try {
       RiwayatPeminjamanModel riwayatPeminjamanModel =
           await Services().getDetailRiwayatPeminjam(id: id);
+      _riwayatPeminjaman = riwayatPeminjamanModel;
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> getDetailRiwayatPeminjamanAdmin(
+      {String? dataGuru, String? nis, String? id}) async {
+    try {
+      print(nis);
+      print(dataGuru);
+      RiwayatPeminjamanModel riwayatPeminjamanModel = await Services()
+          .getDetailRiwayatPeminjamanAdmin(
+              dataGuru: dataGuru, nis: nis, id: id);
       _riwayatPeminjaman = riwayatPeminjamanModel;
       return true;
     } catch (e) {

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:adistetsa/models/guru_model.dart';
 import 'package:adistetsa/models/karyawan_model.dart';
@@ -234,7 +235,8 @@ class Services extends ChangeNotifier {
     }
   }
 
-  Future<List<RiwayatPeminjamanModel>> getRiwayatPeminjamanSiswaAdmin({String? search}) async {
+  Future<List<RiwayatPeminjamanModel>> getRiwayatPeminjamanSiswaAdmin(
+      {String? search}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
     var url1 =
@@ -370,4 +372,75 @@ class Services extends ChangeNotifier {
       return false;
     }
   }
+
+  getDetailRiwayatPeminjamAdmin(
+      {String? nis, String? dataGuru, String? id}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url;
+    print(nis);
+    print(dataGuru);
+    if (dataGuru != null) {
+      url =
+          Uri.parse('$baseUrl/perpustakaan/riwayat_peminjaman_guru_admin/$id');
+    } else if (nis != null) {
+      url =
+          Uri.parse('$baseUrl/perpustakaan/riwayat_peminjaman_siswa_admin/$id');
+    }
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      RiwayatPeminjamanModel riwayatPeminjamanModel =
+          RiwayatPeminjamanModel.fromJson(data);
+      return riwayatPeminjamanModel;
+    } else {
+      throw Exception('Gagal Mendapatkan Katalog Buku');
+    }
+  }
+
+  getDetailRiwayatPeminjamanAdmin(
+      {String? nis, String? dataGuru, String? id}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url;
+    print(id);
+    inspect(dataGuru);
+    dataGuru != 'null'
+        ? url =
+            Uri.parse('$baseUrl/perpustakaan/riwayat_peminjaman_guru_admin/$id')
+        : url = Uri.parse(
+            '$baseUrl/perpustakaan/riwayat_peminjaman_siswa_admin/$id');
+
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    print(response.body);
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      print(data);
+      RiwayatPeminjamanModel riwayatPeminjamanModel =
+          RiwayatPeminjamanModel.fromJson(data);
+      return riwayatPeminjamanModel;
+    } else {
+      throw Exception('Gagal Mendapatkan Katalog Buku');
+    }
+  }
+
+  // getDetailRiwayatPeminjamGuruAdmin({String? id}) async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   var token = prefs.getString("token").toString();
+  //   var url =
+  //       Uri.parse('$baseUrl/perpustakaan/riwayat_peminjaman_guru_admin/$id');
+  //   var headers = {"Content-type": "application/json", "authorization": token};
+  //   var response = await http.get(url, headers: headers);
+  //   if (response.statusCode == 200) {
+  //     var data = jsonDecode(response.body);
+  //     RiwayatPeminjamanModel riwayatPeminjamanModel =
+  //         RiwayatPeminjamanModel.fromJson(data);
+  //     return riwayatPeminjamanModel;
+  //   } else {
+  //     throw Exception('Gagal Mendapatkan Katalog Buku');
+  //   }
+  // }
 }
