@@ -446,7 +446,6 @@ class Services extends ChangeNotifier {
     } else {
       print('Data tidak masuk');
       return false;
-      // throw Exception('Gagal mendapatkan list siswa');
     }
   }
 }
