@@ -31,11 +31,19 @@ class Providers with ChangeNotifier {
   List<String> _idBuku = [];
   List<String> get idBuku => _idBuku;
 
+  SiswaModel _listSiswa = SiswaModel();
+  SiswaModel get listSiswa => _listSiswa;
+
   PengajuanPeminjamanModel _pengajuanPeminjaman = PengajuanPeminjamanModel();
   PengajuanPeminjamanModel get pengajuanPeminjaman => _pengajuanPeminjaman;
 
   RiwayatPeminjamanModel _riwayatPeminjaman = RiwayatPeminjamanModel();
   RiwayatPeminjamanModel get riwayatPeminjaman => _riwayatPeminjaman;
+
+  set listSiswa(SiswaModel siswa) {
+    _listSiswa = siswa;
+    notifyListeners();
+  }
 
   set listKatalog(List<ListBukuModel> listKatalog) {
     _listKatalog = listKatalog;

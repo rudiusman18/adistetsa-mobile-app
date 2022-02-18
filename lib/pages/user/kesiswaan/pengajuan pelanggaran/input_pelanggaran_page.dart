@@ -1,11 +1,13 @@
-import 'package:adistetsa/services/service.dart';
-import 'package:adistetsa/widget/loading.dart';
+import 'package:adistetsa/models/siswa_model.dart';
+import 'package:adistetsa/providers/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class InputPelanggaranPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
     PreferredSizeWidget inputPelanggaranHeader() {
       return AppBar(
         centerTitle: true,
@@ -22,6 +24,7 @@ class InputPelanggaranPage extends StatelessWidget {
         elevation: 4,
         leading: IconButton(
           onPressed: () {
+            provider.listSiswa = SiswaModel();
             Navigator.pop(context);
           },
           icon: Icon(Icons.arrow_back),
@@ -30,7 +33,7 @@ class InputPelanggaranPage extends StatelessWidget {
       );
     }
 
-    Widget inputItem({required String name}) {
+    Widget inputItem({required String name, required String value}) {
       return Container(
         margin: EdgeInsets.only(
           top: 20,
@@ -75,7 +78,7 @@ class InputPelanggaranPage extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 12),
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    name,
+                    value,
                     style: mono3TextStyle.copyWith(
                       fontSize: 12,
                     ),
@@ -170,9 +173,16 @@ class InputPelanggaranPage extends StatelessWidget {
           children: [
             inputItem(
               name: 'Nama Siswa Pelanggar',
+              value: provider.listSiswa.nAMA == null
+                  ? 'Nama Siswa Pelanggar'
+                  : provider.listSiswa.nIS.toString() +
+                      ' - ' +
+                      provider.listSiswa.nAMA
+                          .toString(), //'Nama Siswa Pelanggar',
             ),
             inputItem(
               name: 'Jenis Pelanggaran',
+              value: 'Jenis Pelanggaran',
             ),
             buktiPelanggaran(),
             buttonSubmit(),

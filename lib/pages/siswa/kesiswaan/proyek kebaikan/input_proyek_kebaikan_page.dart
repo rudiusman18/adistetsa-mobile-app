@@ -102,41 +102,39 @@ class _InputProyekKebaikanPageState extends State<InputProyekKebaikanPage> {
             SizedBox(
               height: 7,
             ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextButton(
-                    onPressed: () {},
-                    style: TextButton.styleFrom(
-                      backgroundColor: m5Color,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          8,
+            TextButton(
+                onPressed: () {},
+                style: TextButton.styleFrom(
+                  backgroundColor: m5Color,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                      8,
+                    ),
+                  ),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(2),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.cloud_upload_outlined,
+                        color: mono6Color,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Flexible(
+                        child: Text(
+                          'Pilih File',
+                          style: mono6TextStyle.copyWith(
+                            fontSize: 12,
+                          ),
                         ),
                       ),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(2),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.cloud_upload_outlined,
-                            color: mono6Color,
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            'Pilih File',
-                            style: mono6TextStyle.copyWith(
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )),
-              ],
-            ),
+                    ],
+                  ),
+                )),
           ],
         ),
       );

@@ -373,33 +373,6 @@ class Services extends ChangeNotifier {
     }
   }
 
-  getDetailRiwayatPeminjamAdmin(
-      {String? nis, String? dataGuru, String? id}) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString("token").toString();
-    var url;
-    print(nis);
-    print(dataGuru);
-    if (dataGuru != null) {
-      url =
-          Uri.parse('$baseUrl/perpustakaan/riwayat_peminjaman_guru_admin/$id');
-    } else if (nis != null) {
-      url =
-          Uri.parse('$baseUrl/perpustakaan/riwayat_peminjaman_siswa_admin/$id');
-    }
-    var headers = {"Content-type": "application/json", "authorization": token};
-    var response = await http.get(url, headers: headers);
-    print(response.statusCode);
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
-      RiwayatPeminjamanModel riwayatPeminjamanModel =
-          RiwayatPeminjamanModel.fromJson(data);
-      return riwayatPeminjamanModel;
-    } else {
-      throw Exception('Gagal Mendapatkan Katalog Buku');
-    }
-  }
-
   getDetailRiwayatPeminjamanAdmin(
       {String? nis, String? dataGuru, String? id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -424,6 +397,23 @@ class Services extends ChangeNotifier {
       return riwayatPeminjamanModel;
     } else {
       throw Exception('Gagal Mendapatkan Katalog Buku');
+    }
+  }
+
+  Future<List<SiswaModel>> getListSiswa() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var url = Uri.parse('$baseUrl/kesiswaan/daftar_siswa');
+    var token = prefs.getString("token").toString();
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<SiswaModel> siswa =
+          data.map((item) => SiswaModel.fromJson(item)).toList();
+      return siswa;
+    } else {
+      throw Exception('Gagal Mendapatkan list Siswa');
     }
   }
 }
