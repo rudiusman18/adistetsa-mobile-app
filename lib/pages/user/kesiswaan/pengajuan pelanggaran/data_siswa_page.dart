@@ -1,5 +1,4 @@
 import 'package:adistetsa/providers/provider.dart';
-import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,8 +17,6 @@ class _DataSiswaPageState extends State<DataSiswaPage> {
 
   @override
   Widget build(BuildContext context) {
-    Providers provider = Provider.of<Providers>(context);
-    Services().getListSiswa();
     PreferredSizeWidget dataSiswaHeader() {
       return AppBar(
         centerTitle: true,

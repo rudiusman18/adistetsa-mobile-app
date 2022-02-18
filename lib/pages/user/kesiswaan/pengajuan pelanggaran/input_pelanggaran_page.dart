@@ -1,3 +1,5 @@
+import 'package:adistetsa/services/service.dart';
+import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 
@@ -51,14 +53,16 @@ class InputPelanggaranPage extends StatelessWidget {
               width: double.infinity,
               height: 40,
               child: TextButton(
-                onPressed: () {
-                  name == 'Nama Siswa Pelanggar'
-                      ? Navigator.pushNamed(
-                          context, '/user/kesiswaan/data-siswa-page')
-                      : name == 'Jenis Pelanggaran'
-                          ? Navigator.pushNamed(
-                              context, '/user/kesiswaan/data-pelanggaran-page')
-                          : SizedBox();
+                onPressed: () async {
+                  if (name == 'Nama Siswa Pelanggar') {
+                    Navigator.pushNamed(
+                        context, '/user/kesiswaan/data-siswa-page');
+                  } else if (name == 'Jenis Pelanggaran') {
+                    Navigator.pushNamed(
+                        context, '/user/kesiswaan/data-pelanggaran-page');
+                  } else {
+                    SizedBox();
+                  }
                 },
                 style: TextButton.styleFrom(
                   backgroundColor: mono6Color,

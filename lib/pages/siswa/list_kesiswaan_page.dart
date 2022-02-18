@@ -123,7 +123,7 @@ class _ListKesiswaanPageState extends State<ListKesiswaanPage> {
                       GestureDetector(
                         onTap: () {
                           Navigator.pushNamed(context,
-                              '/user/perpustakaan/riwayat-pengajuan-buku-page');
+                              '/siswa/kesiswaan/riwayat/riwayat-pelanggaran-page');
                         },
                         child: Text(
                           'Pelanggaran',
@@ -136,7 +136,10 @@ class _ListKesiswaanPageState extends State<ListKesiswaanPage> {
                         height: 36,
                       ),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pushNamed(context,
+                              '/siswa/kesiswaan/riwayat/riwayat-proyek-kebaikan-page');
+                        },
                         child: Text(
                           'Proyek Kebaikan',
                           style: mono1TextStyle.copyWith(

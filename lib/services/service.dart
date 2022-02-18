@@ -6,7 +6,6 @@ import 'package:adistetsa/models/karyawan_model.dart';
 import 'package:adistetsa/models/katalogbuku_model.dart';
 import 'package:adistetsa/models/kompetensi_model.dart';
 import 'package:adistetsa/models/list_buku_model.dart';
-import 'package:adistetsa/models/list_siswa_model.dart';
 import 'package:adistetsa/models/pengajuanpeminjaman_model.dart';
 import 'package:adistetsa/models/riwayatpeminjaman_model.dart';
 import 'package:adistetsa/models/role_model.dart';
@@ -425,27 +424,6 @@ class Services extends ChangeNotifier {
       return riwayatPeminjamanModel;
     } else {
       throw Exception('Gagal Mendapatkan Katalog Buku');
-    }
-  }
-
-  // get data siswa
-  getListSiswa({String? search}) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var url = Uri.parse('$baseUrl/data_siswa?$search');
-    var token = prefs.getString("token").toString();
-    var headers = {"Content-type": "application/json", "authorization": token};
-    var response = await http.get(url, headers: headers);
-    print(response.statusCode);
-    print(response.body);
-    if (response.statusCode == 200) {
-      List data = jsonDecode(response.body)['results'];
-      List<ListSiswaModel> siswa =
-          data.map((item) => ListSiswaModel.fromjson(item)).toList();
-
-      return siswa;
-    } else {
-      print('Data tidak masuk');
-      return false;
     }
   }
 }
