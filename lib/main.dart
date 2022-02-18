@@ -2,6 +2,8 @@ import 'package:adistetsa/login_page.dart';
 import 'package:adistetsa/pages/detail%20profile/update_password_page.dart';
 import 'package:adistetsa/pages/main_page.dart';
 import 'package:adistetsa/pages/siswa/kesiswaan/proyek%20kebaikan/input_proyek_kebaikan_page.dart';
+import 'package:adistetsa/pages/siswa/kesiswaan/riwayat/riwayat_pelanggaran_page.dart';
+import 'package:adistetsa/pages/siswa/kesiswaan/riwayat/riwayat_proyek_kebaikan_page.dart';
 import 'package:adistetsa/pages/siswa/list_kesiswaan_page.dart';
 import 'package:adistetsa/pages/staff/perpustakaan/katalog%20buku/detail_katalog_buku_page.dart';
 import 'package:adistetsa/pages/staff/perpustakaan/katalog%20buku/katalog_buku_page.dart';
@@ -166,6 +168,16 @@ class AdiStetsa extends StatelessWidget {
             case '/siswa/kesiswaan/input-proyek-kebaikan-page':
               return PageTransition(
                 child: InputProyekKebaikanPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/siswa/kesiswaan/riwayat/riwayat-pelanggaran-page':
+              return PageTransition(
+                child: RiwayatPelanggaranPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/siswa/kesiswaan/riwayat/riwayat-proyek-kebaikan-page':
+              return PageTransition(
+                child: RiwayatProyekKebaikanPage(),
                 type: PageTransitionType.rightToLeft,
               );
             case '/main-page/back':
