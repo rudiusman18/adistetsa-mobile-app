@@ -1,7 +1,5 @@
-import 'package:adistetsa/providers/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
-import 'package:provider/provider.dart';
 
 class RiwayatPelanggaranPage extends StatefulWidget {
   @override

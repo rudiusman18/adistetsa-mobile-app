@@ -79,9 +79,15 @@ class HomePage extends StatelessWidget {
               urlImg: 'bimbingan konseling',
               text: 'Bimbingan Konseling',
             ),
-            ItemCard(
-              urlImg: 'kesiswaan',
-              text: 'Kesiswaan',
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(
+                    context, '/user/kesiswaan/input-pelanggaran-page');
+              },
+              child: ItemCard(
+                urlImg: 'kesiswaan',
+                text: 'Kesiswaan',
+              ),
             ),
             ItemCard(
               urlImg: 'kurikulum',
@@ -232,6 +238,16 @@ class HomePage extends StatelessWidget {
             ItemCard(
               urlImg: 'adiwiyata',
               text: 'Adiwiyata',
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(
+                    context, '/user/kesiswaan/input-pelanggaran-page');
+              },
+              child: ItemCard(
+                urlImg: 'kesiswaan',
+                text: 'Kesiswaan',
+              ),
             ),
           ],
         ),
