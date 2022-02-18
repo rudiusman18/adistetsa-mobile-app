@@ -206,6 +206,19 @@ class _RiwayatPeminjamanBukuPageState extends State<RiwayatPeminjamanBukuPage> {
                         '$status',
                         style: mono2TextStyle.copyWith(
                           fontSize: 10,
+                          color: status == 'Sedang Dipinjam'
+                              ? warningColor
+                              : status == 'Pengajuan' || status == 'Diajukan'
+                                  ? infoColor
+                                  : status == 'Sudah Dikembalikan'
+                                      ? successColor
+                                      : status == 'Tenggat'
+                                          ? m1Color
+                                          : status == 'Hilang'
+                                              ? dangerColor
+                                              : status == 'Ditolak'
+                                                  ? dangerColor
+                                                  : mono1Color,
                         ),
                       ),
                     ],
