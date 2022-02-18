@@ -1,4 +1,5 @@
 import 'package:adistetsa/models/guru_model.dart';
+import 'package:adistetsa/models/jenispelanggaran_model.dart';
 import 'package:adistetsa/models/karyawan_model.dart';
 import 'package:adistetsa/models/katalogbuku_model.dart';
 import 'package:adistetsa/models/list_buku_model.dart';
@@ -40,10 +41,13 @@ class Providers with ChangeNotifier {
   RiwayatPeminjamanModel _riwayatPeminjaman = RiwayatPeminjamanModel();
   RiwayatPeminjamanModel get riwayatPeminjaman => _riwayatPeminjaman;
 
-  set listSiswa(SiswaModel siswa) {
-    _listSiswa = siswa;
-    notifyListeners();
-  }
+  SiswaModel _dataSiswa = SiswaModel();
+  SiswaModel get dataSiswa => _dataSiswa;
+
+  JenisPelanggaranModel _jenisPelanggaran = JenisPelanggaranModel();
+  JenisPelanggaranModel get jenisPelanggaran => _jenisPelanggaran;
+
+  List listJenisProgramKebaikan = [];
 
   set listKatalog(List<ListBukuModel> listKatalog) {
     _listKatalog = listKatalog;
@@ -88,6 +92,30 @@ class Providers with ChangeNotifier {
   set setRiwayatPeminjaman(RiwayatPeminjamanModel riwayatPeminjaman) {
     _riwayatPeminjaman = riwayatPeminjaman;
     notifyListeners();
+  }
+
+  set setDataSiswa(SiswaModel dataSiswaKesiswaan) {
+    _dataSiswa = dataSiswaKesiswaan;
+    notifyListeners();
+  }
+
+  set setJenisPelanggaran(JenisPelanggaranModel jenisPelanggaran) {
+    _jenisPelanggaran = jenisPelanggaran;
+    notifyListeners();
+  }
+
+  clearDataSiswa() {
+    _dataSiswa = SiswaModel();
+  }
+
+  Future<bool> getJenisProgramKebaikan() async {
+    try {
+      listJenisProgramKebaikan = await Services().getJenisProgramKebaikan();
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 
   Future<bool> getGuruProfile() async {

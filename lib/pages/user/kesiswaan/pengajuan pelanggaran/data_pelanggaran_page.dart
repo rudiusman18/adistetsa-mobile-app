@@ -1,5 +1,9 @@
+import 'package:adistetsa/models/jenispelanggaran_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DataPelanggaranPage extends StatefulWidget {
   @override
@@ -13,8 +17,12 @@ class _DataPelanggaranPageState extends State<DataPelanggaranPage> {
   TextEditingController searchController = TextEditingController();
   int currentIndex = 0;
 
+  JenisPelanggaranModel jenisPelanggaranModel = JenisPelanggaranModel();
+
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+
     PreferredSizeWidget dataSiswaHeader() {
       return AppBar(
         centerTitle: true,
@@ -98,10 +106,12 @@ class _DataPelanggaranPageState extends State<DataPelanggaranPage> {
     Widget dataSiswa({
       required int index,
       required String pelanggaran,
+      required JenisPelanggaranModel jenisPelanggaran,
     }) {
       return GestureDetector(
         onTap: () {
           setState(() {
+            jenisPelanggaranModel = jenisPelanggaran;
             currentIndex = index;
             print(currentIndex);
           });
@@ -170,7 +180,12 @@ class _DataPelanggaranPageState extends State<DataPelanggaranPage> {
               ),
               backgroundColor: m2Color,
             ),
-            onPressed: () {},
+            onPressed: () {
+              setState(() {
+                provider.setJenisPelanggaran = jenisPelanggaranModel;
+              });
+              Navigator.pop(context);
+            },
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 40),
               child: Text(
@@ -191,14 +206,47 @@ class _DataPelanggaranPageState extends State<DataPelanggaranPage> {
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 20),
-            child: ListView(
-              children: [
-                for (var i = 0; i < 20; i++)
-                  dataSiswa(
-                    index: i + 1,
-                    pelanggaran: 'Cipokan',
-                  ),
-              ],
+            child:
+                // ListView(
+                //   children: [
+                //     for (var i = 0; i < 20; i++)
+                //       dataSiswa(
+                //         index: i + 1,
+                //         pelanggaran: 'Cipokan',
+                //       ),
+                //   ],
+                // ),
+                FutureBuilder(
+              future: Services().getJenisPelanggaran(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  var index = 0;
+                  List<JenisPelanggaranModel> data = snapshot.data;
+                  return data.isEmpty
+                      ? Center(
+                          child: Text(
+                            'Data tidak ditemukan',
+                            style: mono1TextStyle,
+                          ),
+                        )
+                      : ListView(
+                          children: data.map((item) {
+                            index++;
+                            return dataSiswa(
+                                index: index,
+                                pelanggaran: '${item.kETERANGAN}',
+                                jenisPelanggaran: item);
+                          }).toList(),
+                        );
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 4,
+                      color: m1Color,
+                    ),
+                  );
+                }
+              },
             ),
           ),
           currentIndex != 0

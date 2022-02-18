@@ -200,8 +200,7 @@ class _DataSiswaPageState extends State<DataSiswaPage> {
               backgroundColor: m2Color,
             ),
             onPressed: () {
-              print(siswaModel.nAMA);
-              provider.listSiswa = siswaModel;
+              provider.setDataSiswa = siswaModel;
               Navigator.pop(context);
             },
             child: Padding(
@@ -225,15 +224,15 @@ class _DataSiswaPageState extends State<DataSiswaPage> {
           Padding(
             padding: const EdgeInsets.only(top: 20),
             child: FutureBuilder(
-              future: Services().getListSiswa(),
+              future: Services().getDataSiswaKesiswaan(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
+                  var index = 0;
                   List<SiswaModel> data = snapshot.data;
-                  int index = 0;
                   return data.isEmpty
                       ? Center(
                           child: Text(
-                            'data tidak ditemukan',
+                            'Data tidak ditemukan',
                             style: mono1TextStyle,
                           ),
                         )
@@ -242,9 +241,9 @@ class _DataSiswaPageState extends State<DataSiswaPage> {
                             index++;
                             return dataSiswa(
                               index: index,
-                              name: item.nAMA.toString(),
-                              nis: item.nIS.toString(),
-                              kelas: 'tidak ada data',
+                              name: '${item.nAMA}',
+                              nis: '${item.nIS}',
+                              kelas: 'Tidak Ada Kelas',
                               dataSiswa: item,
                             );
                           }).toList(),
