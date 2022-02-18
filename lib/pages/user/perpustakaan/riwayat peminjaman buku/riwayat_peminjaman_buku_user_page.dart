@@ -299,7 +299,7 @@ class _RiwayatPeminjamanBukuUserPageState
                                       style: mono1TextStyle,
                                     ),
                                   )
-                                : Column(
+                                : ListView(
                                     children: data.map((item) {
                                       return item.jANGKAPEMINJAMAN ==
                                               'Jangka Pendek'

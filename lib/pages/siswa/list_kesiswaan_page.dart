@@ -1,4 +1,6 @@
+import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
 
@@ -82,9 +84,11 @@ class _ListKesiswaanPageState extends State<ListKesiswaanPage> {
             ),
           ),
           GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(
-                  context, '/user/perpustakaan/peminjaman-buku-page');
+            onTap: () async {
+              loading(context);
+              await Services().getProfile();
+              Navigator.pushReplacementNamed(
+                  context, '/siswa/kesiswaan/input-proyek-kebaikan-page');
             },
             child: contentItem(
               'Proyek Kebaikan',
@@ -132,10 +136,7 @@ class _ListKesiswaanPageState extends State<ListKesiswaanPage> {
                         height: 36,
                       ),
                       GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(context,
-                              '/user/perpustakaan/riwayat-peminjaman-buku-page');
-                        },
+                        onTap: () {},
                         child: Text(
                           'Proyek Kebaikan',
                           style: mono1TextStyle.copyWith(

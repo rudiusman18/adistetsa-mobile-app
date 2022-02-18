@@ -1,15 +1,12 @@
-import 'package:adistetsa/providers/provider.dart';
-import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-class DataSiswaPage extends StatefulWidget {
+class DataPelanggaranPage extends StatefulWidget {
   @override
-  _DataSiswaPageState createState() => _DataSiswaPageState();
+  _DataPelanggaranPageState createState() => _DataPelanggaranPageState();
 }
 
-class _DataSiswaPageState extends State<DataSiswaPage> {
+class _DataPelanggaranPageState extends State<DataPelanggaranPage> {
   bool isSearch = false;
   String urlSearch = '';
   bool isLoading = false;
@@ -18,13 +15,11 @@ class _DataSiswaPageState extends State<DataSiswaPage> {
 
   @override
   Widget build(BuildContext context) {
-    Providers provider = Provider.of<Providers>(context);
-    Services().getListSiswa();
     PreferredSizeWidget dataSiswaHeader() {
       return AppBar(
         centerTitle: true,
         title: Text(
-          'Data Siswa',
+          'Data Pelanggaran',
           style: mono1TextStyle.copyWith(
             fontWeight: semiBold,
             fontSize: 18,
@@ -102,9 +97,7 @@ class _DataSiswaPageState extends State<DataSiswaPage> {
 
     Widget dataSiswa({
       required int index,
-      required String name,
-      required String nis,
-      required String kelas,
+      required String pelanggaran,
     }) {
       return GestureDetector(
         onTap: () {
@@ -137,28 +130,9 @@ class _DataSiswaPageState extends State<DataSiswaPage> {
                     SizedBox(
                       width: 10,
                     ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            name,
-                            style: mono1TextStyle,
-                          ),
-                          Text(
-                            nis,
-                            style: mono1TextStyle.copyWith(
-                              fontSize: 10,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
                     Text(
-                      kelas,
-                      style: mono1TextStyle.copyWith(
-                        fontSize: 10,
-                      ),
+                      pelanggaran,
+                      style: mono1TextStyle,
                     ),
                   ],
                 ),
@@ -176,7 +150,7 @@ class _DataSiswaPageState extends State<DataSiswaPage> {
       );
     }
 
-    Widget simpanButton() {
+    Widget submitButton() {
       return Container(
         margin: EdgeInsets.only(
           top: 20,
@@ -200,7 +174,7 @@ class _DataSiswaPageState extends State<DataSiswaPage> {
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 40),
               child: Text(
-                'Pilih Siswa',
+                'Pilih Pelanggaran',
                 style: mono6TextStyle.copyWith(
                   fontWeight: bold,
                   fontSize: 16,
@@ -222,17 +196,17 @@ class _DataSiswaPageState extends State<DataSiswaPage> {
                 for (var i = 0; i < 20; i++)
                   dataSiswa(
                     index: i + 1,
-                    name: 'Uqi Babi',
-                    nis: 'Gak Duwe Cok',
-                    kelas: 'Gelandangan',
+                    pelanggaran: 'Cipokan',
                   ),
               ],
             ),
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: currentIndex != 0 ? simpanButton() : SizedBox(),
-          ),
+          currentIndex != 0
+              ? Align(
+                  alignment: Alignment.bottomCenter,
+                  child: submitButton(),
+                )
+              : SizedBox(),
         ],
       ),
     );

@@ -2,12 +2,14 @@ import 'package:adistetsa/login_page.dart';
 import 'package:adistetsa/pages/detail%20profile/update_password_page.dart';
 import 'package:adistetsa/pages/main_page.dart';
 import 'package:adistetsa/pages/siswa/list_kesiswaan_page.dart';
+import 'package:adistetsa/pages/siswa/proyek%20kebaikan/input_proyek_kebaikan_page.dart';
 import 'package:adistetsa/pages/staff/perpustakaan/katalog%20buku/detail_katalog_buku_page.dart';
 import 'package:adistetsa/pages/staff/perpustakaan/katalog%20buku/katalog_buku_page.dart';
 import 'package:adistetsa/pages/staff/perpustakaan/peminjaman%20buku/detail_peminjaman_buku_page.dart';
 import 'package:adistetsa/pages/staff/perpustakaan/peminjaman%20buku/peminjaman_buku_page.dart';
 import 'package:adistetsa/pages/staff/perpustakaan/riwayat%20peminjaman/detail_riwayat_peminjaman_buku_page.dart';
 import 'package:adistetsa/pages/staff/perpustakaan/riwayat%20peminjaman/riwayat_peminjaman_buku_page.dart';
+import 'package:adistetsa/pages/user/kesiswaan/pengajuan%20pelanggaran/data_pelanggaran_page.dart';
 import 'package:adistetsa/pages/user/kesiswaan/pengajuan%20pelanggaran/data_siswa_page.dart';
 import 'package:adistetsa/pages/user/kesiswaan/pengajuan%20pelanggaran/input_pelanggaran_page.dart';
 import 'package:adistetsa/pages/user/perpustakaan/list_perpustakaan_page.dart';
@@ -154,6 +156,16 @@ class AdiStetsa extends StatelessWidget {
             case '/user/kesiswaan/data-siswa-page':
               return PageTransition(
                 child: DataSiswaPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/user/kesiswaan/data-pelanggaran-page':
+              return PageTransition(
+                child: DataPelanggaranPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/siswa/kesiswaan/input-proyek-kebaikan-page':
+              return PageTransition(
+                child: InputProyekKebaikanPage(),
                 type: PageTransitionType.rightToLeft,
               );
             case '/main-page/back':

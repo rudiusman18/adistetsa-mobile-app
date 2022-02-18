@@ -55,7 +55,10 @@ class InputPelanggaranPage extends StatelessWidget {
                   name == 'Nama Siswa Pelanggar'
                       ? Navigator.pushNamed(
                           context, '/user/kesiswaan/data-siswa-page')
-                      : SizedBox();
+                      : name == 'Jenis Pelanggaran'
+                          ? Navigator.pushNamed(
+                              context, '/user/kesiswaan/data-pelanggaran-page')
+                          : SizedBox();
                 },
                 style: TextButton.styleFrom(
                   backgroundColor: mono6Color,
