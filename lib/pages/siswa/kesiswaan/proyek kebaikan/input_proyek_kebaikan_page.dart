@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
 import 'package:file_picker/file_picker.dart';
