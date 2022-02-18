@@ -1,8 +1,10 @@
+import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
+import 'package:provider/provider.dart';
 
 class ListKesiswaanPage extends StatefulWidget {
   @override
@@ -12,6 +14,7 @@ class ListKesiswaanPage extends StatefulWidget {
 class _ListKesiswaanPageState extends State<ListKesiswaanPage> {
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
     PreferredSizeWidget perpustakaanAppbar() {
       return AppBar(
         centerTitle: true,
@@ -86,6 +89,7 @@ class _ListKesiswaanPageState extends State<ListKesiswaanPage> {
           GestureDetector(
             onTap: () async {
               loading(context);
+              await provider.getJenisProgramKebaikan();
               await Services().getProfile();
               Navigator.pushReplacementNamed(
                   context, '/siswa/kesiswaan/input-proyek-kebaikan-page');

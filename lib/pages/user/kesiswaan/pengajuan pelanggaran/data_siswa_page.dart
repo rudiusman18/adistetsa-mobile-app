@@ -1,4 +1,6 @@
+import 'package:adistetsa/models/siswa_model.dart';
 import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,8 +17,11 @@ class _DataSiswaPageState extends State<DataSiswaPage> {
   TextEditingController searchController = TextEditingController();
   int currentIndex = 0;
 
+  SiswaModel siswaModel = SiswaModel();
+
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
     PreferredSizeWidget dataSiswaHeader() {
       return AppBar(
         centerTitle: true,
@@ -102,10 +107,12 @@ class _DataSiswaPageState extends State<DataSiswaPage> {
       required String name,
       required String nis,
       required String kelas,
+      required SiswaModel dataSiswa,
     }) {
       return GestureDetector(
         onTap: () {
           setState(() {
+            siswaModel = dataSiswa;
             currentIndex = index;
             print(currentIndex);
           });
@@ -193,7 +200,10 @@ class _DataSiswaPageState extends State<DataSiswaPage> {
               ),
               backgroundColor: m2Color,
             ),
-            onPressed: () {},
+            onPressed: () {
+              provider.setDataSiswa = siswaModel;
+              Navigator.pop(context);
+            },
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 40),
               child: Text(
@@ -214,16 +224,40 @@ class _DataSiswaPageState extends State<DataSiswaPage> {
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 20),
-            child: ListView(
-              children: [
-                for (var i = 0; i < 20; i++)
-                  dataSiswa(
-                    index: i + 1,
-                    name: 'Uqi Babi',
-                    nis: 'Gak Duwe Cok',
-                    kelas: 'Gelandangan',
-                  ),
-              ],
+            child: FutureBuilder(
+              future: Services().getDataSiswaKesiswaan(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  var index = 0;
+                  List<SiswaModel> data = snapshot.data;
+                  return data.isEmpty
+                      ? Center(
+                          child: Text(
+                            'Data tidak ditemukan',
+                            style: mono1TextStyle,
+                          ),
+                        )
+                      : ListView(
+                          children: data.map((item) {
+                            index++;
+                            return dataSiswa(
+                              index: index,
+                              name: '${item.nAMA}',
+                              nis: '${item.nIS}',
+                              kelas: 'Tidak Ada Kelas',
+                              dataSiswa: item,
+                            );
+                          }).toList(),
+                        );
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 4,
+                      color: m1Color,
+                    ),
+                  );
+                }
+              },
             ),
           ),
           Align(

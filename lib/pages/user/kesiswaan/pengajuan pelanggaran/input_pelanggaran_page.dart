@@ -1,11 +1,39 @@
+import 'package:adistetsa/models/jenispelanggaran_model.dart';
+import 'package:adistetsa/models/siswa_model.dart';
+import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/widget/loading.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
-class InputPelanggaranPage extends StatelessWidget {
+class InputPelanggaranPage extends StatefulWidget {
+  @override
+  _InputPelanggaranPageState createState() => _InputPelanggaranPageState();
+}
+
+PlatformFile? file;
+FilePickerResult? result;
+
+class _InputPelanggaranPageState extends State<InputPelanggaranPage> {
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+    SiswaModel siswaModel = provider.dataSiswa;
+    JenisPelanggaranModel jenisPelanggaranModel = provider.jenisPelanggaran;
+
+    _selectFolder() async {
+      result = await FilePicker.platform.pickFiles(
+        type: FileType.image,
+      );
+      if (result != null) {
+        setState(() {
+          file = result!.files.first;
+        });
+      } else {}
+    }
+
     PreferredSizeWidget inputPelanggaranHeader() {
       return AppBar(
         centerTitle: true,
@@ -22,6 +50,9 @@ class InputPelanggaranPage extends StatelessWidget {
         elevation: 4,
         leading: IconButton(
           onPressed: () {
+            provider.clearDataSiswa();
+            jenisPelanggaranModel = JenisPelanggaranModel();
+            file = null;
             Navigator.pop(context);
           },
           icon: Icon(Icons.arrow_back),
@@ -30,7 +61,7 @@ class InputPelanggaranPage extends StatelessWidget {
       );
     }
 
-    Widget inputItem({required String name}) {
+    Widget inputItem({required String name, required String value}) {
       return Container(
         margin: EdgeInsets.only(
           top: 20,
@@ -75,7 +106,7 @@ class InputPelanggaranPage extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 12),
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    name,
+                    value,
                     style: mono3TextStyle.copyWith(
                       fontSize: 12,
                     ),
@@ -89,15 +120,28 @@ class InputPelanggaranPage extends StatelessWidget {
     }
 
     Widget buktiPelanggaran() {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            margin: EdgeInsets.all(
-              20,
+      return Container(
+        margin: EdgeInsets.only(
+          top: 20,
+          left: 20,
+          right: 20,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Bukti Laporan',
+              style: mono2TextStyle.copyWith(
+                fontSize: 10,
+              ),
             ),
-            child: TextButton(
-                onPressed: () {},
+            SizedBox(
+              height: 7,
+            ),
+            TextButton(
+                onPressed: () {
+                  _selectFolder();
+                },
                 style: TextButton.styleFrom(
                   backgroundColor: m5Color,
                   shape: RoundedRectangleBorder(
@@ -109,6 +153,7 @@ class InputPelanggaranPage extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.all(2),
                   child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
                         Icons.cloud_upload_outlined,
@@ -117,17 +162,19 @@ class InputPelanggaranPage extends StatelessWidget {
                       SizedBox(
                         width: 10,
                       ),
-                      Text(
-                        'Pilih File',
-                        style: mono6TextStyle.copyWith(
-                          fontSize: 12,
+                      Flexible(
+                        child: Text(
+                          (file == null) ? 'Pilih File' : file!.name.toString(),
+                          style: mono6TextStyle.copyWith(
+                            fontSize: 12,
+                          ),
                         ),
                       ),
                     ],
                   ),
                 )),
-          ),
-        ],
+          ],
+        ),
       );
     }
 
@@ -152,7 +199,32 @@ class InputPelanggaranPage extends StatelessWidget {
               ),
               backgroundColor: m2Color,
             ),
-            onPressed: () {},
+            onPressed: () async {
+              if (await Services().laporanPelanggaran(
+                dataSiswa: siswaModel.nIS.toString(),
+                jenisPelanggaran: jenisPelanggaranModel.iD.toString(),
+                filepath: file != null ? file!.path : null,
+              )) {
+                setState(() {
+                  provider.setDataSiswa = SiswaModel();
+                  provider.setJenisPelanggaran = JenisPelanggaranModel();
+                  file = null;
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      backgroundColor: successColor,
+                      content: Text(
+                        'Berhasil mengajukan laporan',
+                        textAlign: TextAlign.center,
+                      )));
+                });
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: dangerColor,
+                    content: Text(
+                      'Gagal mengajukan laporan',
+                      textAlign: TextAlign.center,
+                    )));
+              }
+            },
             child: Text(
               'Simpan',
               style: mono6TextStyle.copyWith(
@@ -169,11 +241,15 @@ class InputPelanggaranPage extends StatelessWidget {
         body: ListView(
           children: [
             inputItem(
-              name: 'Nama Siswa Pelanggar',
-            ),
+                name: 'Nama Siswa Pelanggar',
+                value: siswaModel.nAMA != null
+                    ? '${siswaModel.nIS} - ${siswaModel.nAMA}'
+                    : 'Nama Siswa Pelanggar'),
             inputItem(
-              name: 'Jenis Pelanggaran',
-            ),
+                name: 'Jenis Pelanggaran',
+                value: jenisPelanggaranModel.kETERANGAN != null
+                    ? '${jenisPelanggaranModel.kETERANGAN}'
+                    : 'Jenis Pelanggaran'),
             buktiPelanggaran(),
             buttonSubmit(),
           ],

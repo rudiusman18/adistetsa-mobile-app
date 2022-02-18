@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:adistetsa/models/guru_model.dart';
+import 'package:adistetsa/models/jenispelanggaran_model.dart';
 import 'package:adistetsa/models/karyawan_model.dart';
 import 'package:adistetsa/models/katalogbuku_model.dart';
 import 'package:adistetsa/models/kompetensi_model.dart';
@@ -11,6 +12,7 @@ import 'package:adistetsa/models/riwayatpeminjaman_model.dart';
 import 'package:adistetsa/models/role_model.dart';
 import 'package:adistetsa/models/siswa_model.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -373,33 +375,6 @@ class Services extends ChangeNotifier {
     }
   }
 
-  getDetailRiwayatPeminjamAdmin(
-      {String? nis, String? dataGuru, String? id}) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString("token").toString();
-    var url;
-    print(nis);
-    print(dataGuru);
-    if (dataGuru != null) {
-      url =
-          Uri.parse('$baseUrl/perpustakaan/riwayat_peminjaman_guru_admin/$id');
-    } else if (nis != null) {
-      url =
-          Uri.parse('$baseUrl/perpustakaan/riwayat_peminjaman_siswa_admin/$id');
-    }
-    var headers = {"Content-type": "application/json", "authorization": token};
-    var response = await http.get(url, headers: headers);
-    print(response.statusCode);
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
-      RiwayatPeminjamanModel riwayatPeminjamanModel =
-          RiwayatPeminjamanModel.fromJson(data);
-      return riwayatPeminjamanModel;
-    } else {
-      throw Exception('Gagal Mendapatkan Katalog Buku');
-    }
-  }
-
   getDetailRiwayatPeminjamanAdmin(
       {String? nis, String? dataGuru, String? id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -424,6 +399,118 @@ class Services extends ChangeNotifier {
       return riwayatPeminjamanModel;
     } else {
       throw Exception('Gagal Mendapatkan Katalog Buku');
+    }
+  }
+
+  getDataSiswaKesiswaan() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/kesiswaan/daftar_siswa');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    print(response.body);
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<SiswaModel> dataSiswaKesiswaan =
+          data.map((item) => SiswaModel.fromJson(item)).toList();
+      return dataSiswaKesiswaan;
+    } else {
+      throw Exception('Gagal Mendapatkan Data Siswa');
+    }
+  }
+
+  getJenisPelanggaran() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/kesiswaan/data_pelanggaran');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    print(response.body);
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<JenisPelanggaranModel> jenisPelanggaranModel =
+          data.map((item) => JenisPelanggaranModel.fromJson(item)).toList();
+      return jenisPelanggaranModel;
+    } else {
+      throw Exception('Gagal Mendapatkan Data Siswa');
+    }
+  }
+
+  laporanPelanggaran(
+      {required String dataSiswa,
+      required String jenisPelanggaran,
+      filepath}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/kesiswaan/pengajuan_laporan_pelanggaran');
+    var request = http.MultipartRequest('POST', url);
+    request.headers['Authorization'] = token;
+    request.fields['DATA_SISWA'] = dataSiswa;
+    request.fields['JENIS_PELANGGARAN'] = jenisPelanggaran;
+    if (filepath != null) {
+      print('object');
+      request.files.add(
+          await http.MultipartFile.fromPath('BUKTI_PELANGGARAN', filepath));
+      var response = await request.send();
+      final res = await http.Response.fromStream(response);
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      print('object1');
+      var response = await request.send();
+      final res = await http.Response.fromStream(response);
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  getJenisProgramKebaikan() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/kesiswaan/data_kebaikan');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode == 200) {
+      var jenisProgramKebaikan = jsonDecode(response.body);
+      return jenisProgramKebaikan['results'];
+    } else {
+      print('GAGAL');
+    }
+  }
+
+  programKebaikan({required String jenisProgramKebaikan, filepath}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/kesiswaan/pengajuan_program_kebaikan');
+    var request = http.MultipartRequest('POST', url);
+    request.headers['Authorization'] = token;
+    request.fields['JENIS_PROGRAM_KEBAIKAN'] = jenisProgramKebaikan;
+    if (filepath != null) {
+      request.files.add(await http.MultipartFile.fromPath(
+          'BUKTI_PROGRAM_KEBAIKAN', filepath));
+      var response = await request.send();
+      final res = await http.Response.fromStream(response);
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      var response = await request.send();
+      final res = await http.Response.fromStream(response);
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 }
