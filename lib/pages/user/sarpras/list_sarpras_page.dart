@@ -168,7 +168,7 @@ class _ListSarprasPageState extends State<ListSarprasPage> {
                         GestureDetector(
                           onTap: () {
                             Navigator.pushNamed(context,
-                                '/user/perpustakaan/riwayat-pengajuan-buku-page');
+                                '/user/sarpras/peminjaman-barang-page');
                           },
                           child: Text(
                             'Barang',

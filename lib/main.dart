@@ -30,6 +30,7 @@ import 'package:adistetsa/pages/user/perpustakaan/riwayat%20peminjaman%20buku/ri
 import 'package:adistetsa/pages/user/sarpras/katalog/katalog_barang_page.dart';
 import 'package:adistetsa/pages/user/sarpras/katalog/katalog_ruang_page.dart';
 import 'package:adistetsa/pages/user/sarpras/list_sarpras_page.dart';
+import 'package:adistetsa/pages/user/sarpras/peminjaman/peminjaman_barang_page.dart';
 import 'package:adistetsa/providers/auth_provider.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/roles_page.dart';
@@ -233,6 +234,11 @@ class AdiStetsa extends StatelessWidget {
             case '/user/sarpras/katalog-ruang-page':
               return PageTransition(
                 child: KatalogRuangPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/user/sarpras/peminjaman-barang-page':
+              return PageTransition(
+                child: PeminjamanBarangPage(),
                 type: PageTransitionType.rightToLeft,
               );
             case '/main-page/back':
