@@ -22,8 +22,6 @@ class _DetailRiwayatPengajuanBukuUserPageState
     PengajuanPeminjamanModel pengajuanPeminjamanModel =
         provider.pengajuanPeminjaman;
 
-    print(pengajuanPeminjamanModel.bUKU);
-
     PreferredSizeWidget header() {
       return AppBar(
         centerTitle: true,

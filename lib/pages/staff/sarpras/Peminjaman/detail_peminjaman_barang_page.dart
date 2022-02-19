@@ -1,5 +1,10 @@
+import 'package:adistetsa/models/barang_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
+import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class DetailPeminjamanBarangPage extends StatefulWidget {
   @override
@@ -8,11 +13,18 @@ class DetailPeminjamanBarangPage extends StatefulWidget {
 }
 
 bool isAnswer = false;
+var valueAcc = '';
+bool isLoading = false;
 
 class _DetailPeminjamanBarangPageState
     extends State<DetailPeminjamanBarangPage> {
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+    BarangModel barangModel = provider.barang;
+
+    var index = 0;
+
     PreferredSizeWidget header() {
       return AppBar(
         centerTitle: true,
@@ -28,6 +40,7 @@ class _DetailPeminjamanBarangPageState
         elevation: 4,
         leading: IconButton(
           onPressed: () async {
+            valueAcc = '';
             Navigator.pop(context);
           },
           icon: Icon(Icons.arrow_back),
@@ -42,7 +55,7 @@ class _DetailPeminjamanBarangPageState
     confirmAccept() async {
       return showDialog(
         context: context,
-        builder: (BuildContext context) {
+        builder: (BuildContext modalAcceptContext) {
           return Dialog(
             backgroundColor: mono6Color,
             shape: RoundedRectangleBorder(
@@ -97,60 +110,95 @@ class _DetailPeminjamanBarangPageState
                   SizedBox(
                     height: 20,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 120,
-                        height: 46,
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          style: TextButton.styleFrom(
-                            backgroundColor: mono3Color,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                  isLoading == false
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 120,
+                              height: 46,
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                style: TextButton.styleFrom(
+                                  backgroundColor: mono3Color,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Batal',
+                                  style: mono6TextStyle.copyWith(
+                                    fontWeight: semiBold,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                          child: Text(
-                            'Batal',
-                            style: mono6TextStyle.copyWith(
-                              fontWeight: semiBold,
+                            SizedBox(
+                              width: 20,
                             ),
+                            Container(
+                              width: 120,
+                              height: 46,
+                              child: TextButton(
+                                onPressed: () async {
+                                  Navigator.pop(modalAcceptContext);
+                                  confirmAccept();
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                  if (await Services()
+                                      .terimaPengajuanBarangSarpas(
+                                          id: '${barangModel.iD}')) {
+                                    setState(() {
+                                      valueAcc = 'Diterima';
+                                      isAnswer = true;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      isAnswer = false;
+                                    });
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                            backgroundColor: dangerColor,
+                                            content: Text(
+                                              'Gagal Setuju Peminjaman Barang',
+                                              textAlign: TextAlign.center,
+                                            )));
+                                  }
+                                  setState(() {
+                                    isLoading = false;
+                                    print(isLoading);
+                                  });
+                                  Navigator.pop(context);
+                                },
+                                style: TextButton.styleFrom(
+                                  backgroundColor: successColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Setuju',
+                                  style: mono6TextStyle.copyWith(
+                                    fontWeight: semiBold,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      : Container(
+                          alignment: Alignment.center,
+                          width: 25,
+                          height: 25,
+                          child: CircularProgressIndicator(
+                            color: m1Color,
+                            strokeWidth: 2,
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Container(
-                        width: 120,
-                        height: 46,
-                        child: TextButton(
-                          onPressed: () async {
-                            setState(() {
-                              isAnswer = true;
-                            });
-                            Navigator.pop(context);
-                          },
-                          style: TextButton.styleFrom(
-                            backgroundColor: successColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          child: Text(
-                            'Setuju',
-                            style: mono6TextStyle.copyWith(
-                              fontWeight: semiBold,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ),
@@ -162,7 +210,7 @@ class _DetailPeminjamanBarangPageState
     confirmDecline() async {
       return showDialog(
         context: context,
-        builder: (BuildContext context) {
+        builder: (BuildContext modalContext) {
           return Dialog(
             backgroundColor: mono6Color,
             shape: RoundedRectangleBorder(
@@ -217,60 +265,93 @@ class _DetailPeminjamanBarangPageState
                   SizedBox(
                     height: 20,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 120,
-                        height: 46,
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          style: TextButton.styleFrom(
-                            backgroundColor: mono3Color,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                  isLoading == false
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 120,
+                              height: 46,
+                              child: TextButton(
+                                onPressed: () async {
+                                  Navigator.pop(context);
+                                },
+                                style: TextButton.styleFrom(
+                                  backgroundColor: mono3Color,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Batal',
+                                  style: mono6TextStyle.copyWith(
+                                    fontWeight: semiBold,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                          child: Text(
-                            'Batal',
-                            style: mono6TextStyle.copyWith(
-                              fontWeight: semiBold,
+                            SizedBox(
+                              width: 20,
                             ),
+                            Container(
+                                width: 120,
+                                height: 46,
+                                child: TextButton(
+                                    onPressed: () async {
+                                      Navigator.pop(modalContext);
+                                      confirmDecline();
+                                      setState(() {
+                                        isLoading = true;
+                                      });
+                                      if (await Services()
+                                          .tolakPengajuanBarangSarpas(
+                                              id: '${barangModel.iD}')) {
+                                        setState(() {
+                                          valueAcc = 'Ditolak';
+                                          isAnswer = true;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          isAnswer = false;
+                                        });
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                backgroundColor: dangerColor,
+                                                content: Text(
+                                                  'Gagal Melakukan Tolak Peminjaman Barang',
+                                                  textAlign: TextAlign.center,
+                                                )));
+                                      }
+                                      setState(() {
+                                        isLoading = false;
+                                        print(isLoading);
+                                      });
+                                      Navigator.pop(context);
+                                    },
+                                    style: TextButton.styleFrom(
+                                      backgroundColor: dangerColor,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      'Tolak',
+                                      style: mono6TextStyle.copyWith(
+                                        fontWeight: semiBold,
+                                        fontSize: 12,
+                                      ),
+                                    )))
+                          ],
+                        )
+                      : Container(
+                          alignment: Alignment.center,
+                          width: 25,
+                          height: 25,
+                          child: CircularProgressIndicator(
+                            color: m1Color,
+                            strokeWidth: 2,
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Container(
-                        width: 120,
-                        height: 46,
-                        child: TextButton(
-                          onPressed: () async {
-                            setState(() {
-                              isAnswer = true;
-                            });
-                            Navigator.pop(context);
-                          },
-                          style: TextButton.styleFrom(
-                            backgroundColor: dangerColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          child: Text(
-                            'Tolak',
-                            style: mono6TextStyle.copyWith(
-                              fontWeight: semiBold,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ),
@@ -316,7 +397,7 @@ class _DetailPeminjamanBarangPageState
                       ? warningColor
                       : value == 'Pengajuan' || value == 'Diajukan'
                           ? infoColor
-                          : value == 'Sudah Dikembalikan'
+                          : value == 'Sudah Dikembalikan' || value == 'Diterima'
                               ? successColor
                               : value == 'Tenggat'
                                   ? m1Color
@@ -345,7 +426,7 @@ class _DetailPeminjamanBarangPageState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Uqi Babi',
+              '${barangModel.nAMAPEMINJAM}',
               style: mono1TextStyle.copyWith(
                 fontSize: 20,
                 fontWeight: bold,
@@ -355,32 +436,39 @@ class _DetailPeminjamanBarangPageState
               height: 16,
             ),
             itemInfoPeminjam(
-              teks: 'kegiatan',
-              value: 'Praktik Biologi - reproduksi',
+              teks: 'Kegiatan',
+              value: '${barangModel.kEGIATAN}',
             ),
             itemInfoPeminjam(
               teks: 'Tanggal Pengajuan',
-              value: '30-30-3030',
+              value: '${barangModel.tANGGALPENGAJUAN}',
             ),
             itemInfoPeminjam(
               teks: 'Tanggal Penggunaan',
-              value: '31-31-3031',
+              value: '${barangModel.tANGGALPENGGUNAAN}',
+            ),
+            itemInfoPeminjam(
+              teks: 'Tanggal Pengembalian',
+              value: '${barangModel.tANGGALPENGEMBALIAN}',
             ),
             itemInfoPeminjam(
               teks: 'No HP',
-              value: '0921244124124',
+              value: '${barangModel.nOTELEPON}',
             ),
             itemInfoPeminjam(
               teks: 'Keterangan',
-              value: 'Biologi',
+              value: '${barangModel.kETERANGAN}',
             ),
-            itemInfoPeminjam(
-              teks: 'File TTD Pengajuan',
-              value: 'kakehan njaluk.pdf',
-            ),
+            barangModel.tANDATANGAN != null
+                ? itemInfoPeminjam(
+                    teks: 'File TTD Pengajuan',
+                    value: '${barangModel.tANDATANGAN!.split('/')[5]}',
+                  )
+                : Container(),
             itemInfoPeminjam(
               teks: 'Status Pengajuan',
-              value: 'Diajukan',
+              value:
+                  valueAcc == '' ? '${barangModel.sTATUSPENGAJUAN}' : valueAcc,
             ),
           ],
         ),
@@ -538,23 +626,24 @@ class _DetailPeminjamanBarangPageState
           bottom: 20,
         ),
         child: Table(
-            border: TableBorder.all(
-              color: mono6Color,
-            ),
-            columnWidths: const <int, TableColumnWidth>{
-              0: FixedColumnWidth(40),
-              1: FlexColumnWidth(140),
-              2: FixedColumnWidth(140),
-            },
-            defaultVerticalAlignment: TableCellVerticalAlignment.top,
-            children: [
-              for (var i = 0; i < 5; i++)
-                contentTable(
-                  no: i + 1,
-                  namaBarang: 'Bahasa Alien',
-                  kodeBarang: '12345678',
-                ),
-            ]),
+          border: TableBorder.all(
+            color: mono6Color,
+          ),
+          columnWidths: const <int, TableColumnWidth>{
+            0: FixedColumnWidth(40),
+            1: FlexColumnWidth(140),
+            2: FixedColumnWidth(140),
+          },
+          defaultVerticalAlignment: TableCellVerticalAlignment.top,
+          children: barangModel.aLAT!.map((book) {
+            index++;
+            return contentTable(
+              no: index,
+              namaBarang: '${barangModel.aLAT![index - 1].nAMA}',
+              kodeBarang: '${barangModel.aLAT![index - 1].iD}',
+            );
+          }).toList(),
+        ),
       );
     }
 
@@ -580,6 +669,7 @@ class _DetailPeminjamanBarangPageState
           ),
           onPressed: () {
             setState(() {
+              valueAcc = '';
               isAnswer = false;
             });
             Navigator.pop(context);

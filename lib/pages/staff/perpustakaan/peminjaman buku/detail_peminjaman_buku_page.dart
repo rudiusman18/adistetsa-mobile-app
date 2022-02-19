@@ -143,7 +143,7 @@ class _DetailPeminjamanBukuPageState extends State<DetailPeminjamanBukuPage> {
                             SharedPreferences pref =
                                 await SharedPreferences.getInstance();
                             var user = pref.getString('user');
-                            Services().terimaPengajuan(
+                            Services().terimaPengajuanPerpustakaan(
                                 id: pengajuanPeminjamanModel.iD.toString(),
                                 user: user.toString());
                             Navigator.pop(context);
@@ -266,7 +266,7 @@ class _DetailPeminjamanBukuPageState extends State<DetailPeminjamanBukuPage> {
                             SharedPreferences pref =
                                 await SharedPreferences.getInstance();
                             var user = pref.getString('user');
-                            Services().tolakPengajuan(
+                            Services().tolakPengajuanPerpustakaan(
                                 id: pengajuanPeminjamanModel.iD.toString(),
                                 user: user.toString());
                             Navigator.pop(context);

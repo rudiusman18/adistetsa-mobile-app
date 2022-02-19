@@ -1,3 +1,4 @@
+import 'package:adistetsa/models/katalogruangan_model.dart';
 import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:flutter/material.dart';
@@ -152,11 +153,15 @@ class _ListKatalogRuangPageState extends State<ListKatalogRuangPage> {
                   '$status',
                   style: mono2TextStyle.copyWith(
                     fontSize: 10,
-                    color: status == 'Digunakan'
+                    color: '$status' == 'Sedang Dipinjam'
                         ? warningColor
-                        : status == 'Tersedia'
-                            ? successColor
-                            : successColor,
+                        : '$status' == 'Pengajuan'
+                            ? infoColor
+                            : '$status' == 'Sudah Dikembalikan'
+                                ? successColor
+                                : '$status' == 'Tenggat'
+                                    ? m1Color
+                                    : dangerColor,
                   ),
                 ),
               ],
@@ -167,21 +172,43 @@ class _ListKatalogRuangPageState extends State<ListKatalogRuangPage> {
     }
 
     return Scaffold(
-        appBar: isSearch == true ? searchAppbar() : katalogBarangHeader(),
-        backgroundColor: mono6Color,
-        body: ListView(
-          children: [
-            for (var i = 0; i < 20; i++)
-              Container(
-                padding: EdgeInsets.only(top: 20),
-                child: listItem(
-                  id: i.toString(),
-                  namaAlat: 'Kamar Mandi',
-                  namaRuang: 'tidak ada ruang',
-                  status: 'JOMBLO NGENES',
-                ),
+      appBar: isSearch == true ? searchAppbar() : katalogBarangHeader(),
+      backgroundColor: mono6Color,
+      body: FutureBuilder(
+        future: Services().getKatalogRuangan(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            List<KatalogRuanganModel> data = snapshot.data;
+            return data.isEmpty
+                ? Center(
+                    child: Text(
+                      'Data tidak ditemukan',
+                      style: mono1TextStyle,
+                    ),
+                  )
+                : ListView(
+                    children: data.map((item) {
+                      return Container(
+                        padding: EdgeInsets.only(top: 20),
+                        child: listItem(
+                          id: '${item.iD}',
+                          namaAlat: '${item.nAMA}',
+                          namaRuang: '${item.iD} - ${item.jENIS}',
+                          status: '${item.sTATUS}',
+                        ),
+                      );
+                    }).toList(),
+                  );
+          } else {
+            return Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 4,
+                color: m1Color,
               ),
-          ],
-        ));
+            );
+          }
+        },
+      ),
+    );
   }
 }

@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:adistetsa/models/barang_model.dart';
 import 'package:adistetsa/models/guru_model.dart';
 import 'package:adistetsa/models/jenispelanggaran_model.dart';
 import 'package:adistetsa/models/karyawan_model.dart';
+import 'package:adistetsa/models/katalogbarang_model.dart';
 import 'package:adistetsa/models/katalogbuku_model.dart';
+import 'package:adistetsa/models/katalogruangan_model.dart';
 import 'package:adistetsa/models/kompetensi_model.dart';
 import 'package:adistetsa/models/laporankebaikan_model.dart';
 import 'package:adistetsa/models/list_buku_model.dart';
@@ -12,6 +15,7 @@ import 'package:adistetsa/models/pelangaran_model.dart';
 import 'package:adistetsa/models/pengajuanpeminjaman_model.dart';
 import 'package:adistetsa/models/riwayatpeminjaman_model.dart';
 import 'package:adistetsa/models/role_model.dart';
+import 'package:adistetsa/models/ruangan_model.dart';
 import 'package:adistetsa/models/siswa_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -328,8 +332,6 @@ class Services extends ChangeNotifier {
     } else {
       var response = await request.send();
       final res = await http.Response.fromStream(response);
-      print(res.statusCode);
-      print(res.body);
       if (res.statusCode == 200 || res.statusCode == 201) {
         return true;
       } else {
@@ -338,7 +340,8 @@ class Services extends ChangeNotifier {
     }
   }
 
-  terimaPengajuan({required String id, required String user}) async {
+  terimaPengajuanPerpustakaan(
+      {required String id, required String user}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
     var url;
@@ -359,7 +362,7 @@ class Services extends ChangeNotifier {
     }
   }
 
-  tolakPengajuan({required String id, required String user}) async {
+  tolakPengajuanPerpustakaan({required String id, required String user}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
     var url;
@@ -385,8 +388,6 @@ class Services extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
     var url;
-    print(id);
-    inspect(dataGuru);
     dataGuru != 'null'
         ? url =
             Uri.parse('$baseUrl/perpustakaan/riwayat_peminjaman_guru_admin/$id')
@@ -395,10 +396,8 @@ class Services extends ChangeNotifier {
 
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
-    print(response.body);
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
-      print(data);
       RiwayatPeminjamanModel riwayatPeminjamanModel =
           RiwayatPeminjamanModel.fromJson(data);
       return riwayatPeminjamanModel;
@@ -453,7 +452,6 @@ class Services extends ChangeNotifier {
     request.fields['DATA_SISWA'] = dataSiswa;
     request.fields['JENIS_PELANGGARAN'] = jenisPelanggaran;
     if (filepath != null) {
-      print('object');
       request.files.add(
           await http.MultipartFile.fromPath('BUKTI_PELANGGARAN', filepath));
       var response = await request.send();
@@ -464,7 +462,6 @@ class Services extends ChangeNotifier {
         return false;
       }
     } else {
-      print('object1');
       var response = await request.send();
       final res = await http.Response.fromStream(response);
       if (res.statusCode == 200 || res.statusCode == 201) {
@@ -481,8 +478,6 @@ class Services extends ChangeNotifier {
     var url = Uri.parse('$baseUrl/kesiswaan/data_kebaikan');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
-    print(response.statusCode);
-    print(response.body);
     if (response.statusCode == 200) {
       var jenisProgramKebaikan = jsonDecode(response.body);
       return jenisProgramKebaikan['results'];
@@ -525,7 +520,6 @@ class Services extends ChangeNotifier {
     var url = Uri.parse('$baseUrl/kesiswaan/pelanggaran_saya');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
-    print(response.body);
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body)['results'];
       List<PelanggaranModel> pelanggaranModel =
@@ -542,14 +536,174 @@ class Services extends ChangeNotifier {
     var url = Uri.parse('$baseUrl/kesiswaan/pengajuan_program_kebaikan');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
-    print(response.body);
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body)['results'];
       List<LaporanKebaikanModel> laporanKebaikan =
           data.map((item) => LaporanKebaikanModel.fromJson(item)).toList();
       return laporanKebaikan;
     } else {
-      throw Exception('Gagal Mendapatkan Pelanggaran');
+      throw Exception('Gagal Mendapatkan Laporan Kebaikan');
+    }
+  }
+
+  getKatalogBarang() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/sarpras/katalog_sarana');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    print(response.body);
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<KatalogBarangModel> katalogBarang =
+          data.map((item) => KatalogBarangModel.fromJson(item)).toList();
+      return katalogBarang;
+    } else {
+      throw Exception('Gagal Mendapatkan Katalog Barang');
+    }
+  }
+
+  getKatalogRuangan() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/sarpras/katalog_ruangan');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<KatalogRuanganModel> katalogRuangan =
+          data.map((item) => KatalogRuanganModel.fromJson(item)).toList();
+      return katalogRuangan;
+    } else {
+      throw Exception('Gagal Mendapatkan Katalog Ruangan');
+    }
+  }
+
+  getRuanganAdmin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/sarpras/pengajuan_peminjaman_ruangan_admin');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<RuanganModel> ruangan =
+          data.map((item) => RuanganModel.fromJson(item)).toList();
+      return ruangan;
+    } else {
+      throw Exception('Gagal Mendapatkan Ruangan Admin');
+    }
+  }
+
+  getDetailRuanganAdmin({required String id}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url =
+        Uri.parse('$baseUrl/sarpras/pengajuan_peminjaman_ruangan_admin/$id');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      RuanganModel ruangan = RuanganModel.fromJson(data);
+      return ruangan;
+    } else {
+      throw Exception('Gagal Mendapatkan Ruangan Admin');
+    }
+  }
+
+  terimaPengajuanRuanganSarpas({required String id}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url =
+        Uri.parse('$baseUrl/sarpras/acc_pengajuan_peminjaman_ruangan/$id');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      print('Tidak Masuk');
+      return false;
+    }
+  }
+
+  tolakPengajuanRuanganSarpas({required String id}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url =
+        Uri.parse('$baseUrl/sarpras/tolak_pengajuan_peminjaman_ruangan/$id');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      print('Tidak Masuk');
+      return false;
+    }
+  }
+
+  getBarangAdmin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/sarpras/pengajuan_peminjaman_barang_admin');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<BarangModel> barang =
+          data.map((item) => BarangModel.fromJson(item)).toList();
+      return barang;
+    } else {
+      throw Exception('Gagal Mendapatkan Barang Admin');
+    }
+  }
+
+  getDetailBarangAdmin({required String id}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url =
+        Uri.parse('$baseUrl/sarpras/pengajuan_peminjaman_barang_admin/$id');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      BarangModel ruangan = BarangModel.fromJson(data);
+      return ruangan;
+    } else {
+      throw Exception('Gagal Mendapatkan Barang Admin');
+    }
+  }
+
+  terimaPengajuanBarangSarpas({required String id}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url =
+        Uri.parse('$baseUrl/sarpras/acc_pengajuan_peminjaman_barang/$id');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      print('Tidak Masuk');
+      return false;
+    }
+  }
+
+  tolakPengajuanBarangSarpas({required String id}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url =
+        Uri.parse('$baseUrl/sarpras/tolak_pengajuan_peminjaman_barang/$id');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      print('Tidak Masuk');
+      return false;
     }
   }
 }

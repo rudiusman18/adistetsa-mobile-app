@@ -1,3 +1,4 @@
+import 'package:adistetsa/models/barang_model.dart';
 import 'package:adistetsa/models/guru_model.dart';
 import 'package:adistetsa/models/jenispelanggaran_model.dart';
 import 'package:adistetsa/models/karyawan_model.dart';
@@ -6,6 +7,7 @@ import 'package:adistetsa/models/list_buku_model.dart';
 import 'package:adistetsa/models/pengajuanpeminjaman_model.dart';
 import 'package:adistetsa/models/riwayatpeminjaman_model.dart';
 import 'package:adistetsa/models/role_model.dart';
+import 'package:adistetsa/models/ruangan_model.dart';
 import 'package:adistetsa/models/siswa_model.dart';
 import 'package:adistetsa/services/service.dart';
 import 'package:flutter/cupertino.dart';
@@ -46,6 +48,12 @@ class Providers with ChangeNotifier {
 
   JenisPelanggaranModel _jenisPelanggaran = JenisPelanggaranModel();
   JenisPelanggaranModel get jenisPelanggaran => _jenisPelanggaran;
+
+  RuanganModel _ruangan = RuanganModel();
+  RuanganModel get ruangan => _ruangan;
+
+  BarangModel _barang = BarangModel();
+  BarangModel get barang => _barang;
 
   List listJenisProgramKebaikan = [];
 
@@ -101,6 +109,16 @@ class Providers with ChangeNotifier {
 
   set setJenisPelanggaran(JenisPelanggaranModel jenisPelanggaran) {
     _jenisPelanggaran = jenisPelanggaran;
+    notifyListeners();
+  }
+
+  set setRuangan(RuanganModel ruangan) {
+    _ruangan = ruangan;
+    notifyListeners();
+  }
+
+  set setBarang(BarangModel barang) {
+    _barang = barang;
     notifyListeners();
   }
 
@@ -203,6 +221,29 @@ class Providers with ChangeNotifier {
     }
   }
 
+  Future<bool> getDetailRuanganAdmin({String? id}) async {
+    try {
+      RuanganModel ruanganModel =
+          await Services().getDetailRuanganAdmin(id: '$id');
+      _ruangan = ruanganModel;
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> getDetailBarangAdmin({String? id}) async {
+    try {
+      BarangModel barangModel =
+          await Services().getDetailBarangAdmin(id: '$id');
+      _barang = barangModel;
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
   // NOTE: Untuk mendapatkan list dari katalog yang user ambil
 
   // ? mengecek apakah buku sudah dipinjam oleh user yang sama
