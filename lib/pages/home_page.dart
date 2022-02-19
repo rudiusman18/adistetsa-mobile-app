@@ -254,6 +254,41 @@ class HomePage extends StatelessWidget {
       );
     }
 
+    Widget itemsStafSarpras() {
+      return Container(
+        alignment: Alignment.center,
+        child: Wrap(
+          spacing: 25,
+          children: [
+            ItemCard(
+              urlImg: 'sarana dan prasarana',
+              text: 'Katalog Barang',
+            ),
+            ItemCard(
+              urlImg: 'sarana dan prasarana',
+              text: 'Katalog Ruang',
+            ),
+            ItemCard(
+              urlImg: 'sarana dan prasarana',
+              text: 'Peminjaman Barang',
+            ),
+            ItemCard(
+              urlImg: 'sarana dan prasarana',
+              text: 'Peminjaman Ruang',
+            ),
+            ItemCard(
+              urlImg: 'sarana dan prasarana',
+              text: 'Riwayat Barang',
+            ),
+            ItemCard(
+              urlImg: 'sarana dan prasarana',
+              text: 'Riwayat Ruang',
+            ),
+          ],
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: mono6Color,
       body: SafeArea(
@@ -318,7 +353,9 @@ class HomePage extends StatelessWidget {
                               ? itemsSiswa()
                               : role == 'Karyawan'
                                   ? itemsKaryawan()
-                                  : SizedBox(),
+                                  : role == 'Staf Sarpras'
+                                      ? itemsStafSarpras()
+                                      : SizedBox(),
                 ),
               ],
             ),
