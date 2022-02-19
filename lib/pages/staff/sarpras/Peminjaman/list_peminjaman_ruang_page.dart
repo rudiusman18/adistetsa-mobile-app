@@ -118,7 +118,18 @@ class _ListPeminjamanRuangPageState extends State<ListPeminjamanRuangPage> {
           });
           await provider.getDetailRuanganAdmin(id: id);
           Navigator.pushReplacementNamed(
-              context, '/staf/sarpras/list-peminjaman-ruang/detail-page');
+                  context, '/staf/sarpras/list-peminjaman-ruang/detail-page')
+              .then((_) async {
+            setState(() {
+              isLoading = true;
+              print(isLoading);
+            });
+            await Services().getRuanganAdmin();
+            setState(() {
+              isLoading = false;
+              print(isLoading);
+            });
+          });
         },
         child: Container(
           decoration: BoxDecoration(

@@ -118,7 +118,18 @@ class _ListPeminjamanBarangPageState extends State<ListPeminjamanBarangPage> {
           });
           await provider.getDetailBarangAdmin(id: id);
           Navigator.pushReplacementNamed(
-              context, '/staf/sarpras/list-peminjaman-barang/detail-page');
+                  context, '/staf/sarpras/list-peminjaman-barang/detail-page')
+              .then((_) async {
+            setState(() {
+              isLoading = true;
+              print(isLoading);
+            });
+            await Services().getBarangAdmin();
+            setState(() {
+              isLoading = false;
+              print(isLoading);
+            });
+          });
         },
         child: Container(
           decoration: BoxDecoration(
@@ -169,40 +180,42 @@ class _ListPeminjamanBarangPageState extends State<ListPeminjamanBarangPage> {
     return Scaffold(
       appBar: isSearch == true ? searchAppbar() : katalogBarangHeader(),
       backgroundColor: mono6Color,
-      body: FutureBuilder(
-        future: Services().getBarangAdmin(),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData) {
-            List<BarangModel> data = snapshot.data;
-            return data.isEmpty
-                ? Center(
-                    child: Text(
-                      'Data tidak ditemukan',
-                      style: mono1TextStyle,
+      body: isLoading == false
+          ? FutureBuilder(
+              future: Services().getBarangAdmin(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  List<BarangModel> data = snapshot.data;
+                  return data.isEmpty
+                      ? Center(
+                          child: Text(
+                            'Data tidak ditemukan',
+                            style: mono1TextStyle,
+                          ),
+                        )
+                      : ListView(
+                          children: data.map((item) {
+                            return Container(
+                              padding: EdgeInsets.only(top: 20),
+                              child: listItem(
+                                id: '${item.iD}',
+                                nama: '${item.nAMAPEMINJAM}',
+                                tanggalPengajuan: '${item.tANGGALPENGAJUAN}',
+                              ),
+                            );
+                          }).toList(),
+                        );
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 4,
+                      color: m1Color,
                     ),
-                  )
-                : ListView(
-                    children: data.map((item) {
-                      return Container(
-                        padding: EdgeInsets.only(top: 20),
-                        child: listItem(
-                          id: '${item.iD}',
-                          nama: '${item.nAMAPEMINJAM}',
-                          tanggalPengajuan: '${item.tANGGALPENGAJUAN}',
-                        ),
-                      );
-                    }).toList(),
                   );
-          } else {
-            return Center(
-              child: CircularProgressIndicator(
-                strokeWidth: 4,
-                color: m1Color,
-              ),
-            );
-          }
-        },
-      ),
+                }
+              },
+            )
+          : Container(),
     );
   }
 }
