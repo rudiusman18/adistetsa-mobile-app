@@ -11,6 +11,16 @@ import 'package:adistetsa/pages/staff/perpustakaan/peminjaman%20buku/detail_pemi
 import 'package:adistetsa/pages/staff/perpustakaan/peminjaman%20buku/peminjaman_buku_page.dart';
 import 'package:adistetsa/pages/staff/perpustakaan/riwayat%20peminjaman/detail_riwayat_peminjaman_buku_page.dart';
 import 'package:adistetsa/pages/staff/perpustakaan/riwayat%20peminjaman/riwayat_peminjaman_buku_page.dart';
+import 'package:adistetsa/pages/staff/sarpras/Peminjaman/detail_peminjaman_barang_page.dart';
+import 'package:adistetsa/pages/staff/sarpras/Peminjaman/detail_peminjaman_ruang_page.dart';
+import 'package:adistetsa/pages/staff/sarpras/Peminjaman/list_peminjaman_barang_page.dart';
+import 'package:adistetsa/pages/staff/sarpras/Peminjaman/list_peminjaman_ruang_page.dart';
+import 'package:adistetsa/pages/staff/sarpras/katalog%20barang/list_katalog_barang_page.dart';
+import 'package:adistetsa/pages/staff/sarpras/katalog%20barang/list_katalog_ruang_page.dart';
+import 'package:adistetsa/pages/staff/sarpras/riwayat/detail_riwayat_barang_page.dart';
+import 'package:adistetsa/pages/staff/sarpras/riwayat/detail_riwayat_ruang_page.dart';
+import 'package:adistetsa/pages/staff/sarpras/riwayat/riwayat_barang_page.dart';
+import 'package:adistetsa/pages/staff/sarpras/riwayat/riwayat_ruang_page.dart';
 import 'package:adistetsa/pages/user/kesiswaan/pengajuan%20pelanggaran/data_pelanggaran_page.dart';
 import 'package:adistetsa/pages/user/kesiswaan/pengajuan%20pelanggaran/data_siswa_page.dart';
 import 'package:adistetsa/pages/user/kesiswaan/pengajuan%20pelanggaran/input_pelanggaran_page.dart';
@@ -178,6 +188,56 @@ class AdiStetsa extends StatelessWidget {
             case '/siswa/kesiswaan/riwayat/riwayat-proyek-kebaikan-page':
               return PageTransition(
                 child: RiwayatProyekKebaikanPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/staf/sarpras/list-katalog-barang-page':
+              return PageTransition(
+                child: ListKatalogBarangPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/staf/sarpras/list-katalog-ruang-page':
+              return PageTransition(
+                child: ListKatalogRuangPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/staf/sarpras/list-peminjaman-barang-page':
+              return PageTransition(
+                child: ListPeminjamanBarangPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/staf/sarpras/list-peminjaman-barang/detail-page':
+              return PageTransition(
+                child: DetailPeminjamanBarangPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/staf/sarpras/list-peminjaman-ruang':
+              return PageTransition(
+                child: ListPeminjamanRuangPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/staf/sarpras/list-peminjaman-ruang/detail-page':
+              return PageTransition(
+                child: DetailPeminjamanRuangPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/staf/sarpras/riwayat-barang-page':
+              return PageTransition(
+                child: RiwayatBarangPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/staf/sarpras/riwayat-barang/detail-page':
+              return PageTransition(
+                child: DetailRiwayatBarangPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/staf/sarpras/riwayat-ruang-page':
+              return PageTransition(
+                child: RiwayatRuangPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/staf/sarpras/riwayat-ruang/detail-page':
+              return PageTransition(
+                child: DetailRiwayatRuangPage(),
                 type: PageTransitionType.rightToLeft,
               );
             case '/main-page/back':

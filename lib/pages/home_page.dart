@@ -260,29 +260,65 @@ class HomePage extends StatelessWidget {
         child: Wrap(
           spacing: 25,
           children: [
-            ItemCard(
-              urlImg: 'sarana dan prasarana',
-              text: 'Katalog Barang',
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(
+                    context, '/staf/sarpras/list-katalog-barang-page');
+              },
+              child: ItemCard(
+                urlImg: 'sarana dan prasarana',
+                text: 'Katalog Barang',
+              ),
             ),
-            ItemCard(
-              urlImg: 'sarana dan prasarana',
-              text: 'Katalog Ruang',
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(
+                    context, '/staf/sarpras/list-katalog-ruang-page');
+              },
+              child: ItemCard(
+                urlImg: 'sarana dan prasarana',
+                text: 'Katalog Ruang',
+              ),
             ),
-            ItemCard(
-              urlImg: 'sarana dan prasarana',
-              text: 'Peminjaman Barang',
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(
+                    context, '/staf/sarpras/list-peminjaman-barang-page');
+              },
+              child: ItemCard(
+                urlImg: 'sarana dan prasarana',
+                text: 'Peminjaman Barang',
+              ),
             ),
-            ItemCard(
-              urlImg: 'sarana dan prasarana',
-              text: 'Peminjaman Ruang',
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(
+                    context, '/staf/sarpras/list-peminjaman-ruang');
+              },
+              child: ItemCard(
+                urlImg: 'sarana dan prasarana',
+                text: 'Peminjaman Ruang',
+              ),
             ),
-            ItemCard(
-              urlImg: 'sarana dan prasarana',
-              text: 'Riwayat Barang',
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(
+                    context, '/staf/sarpras/riwayat-barang-page');
+              },
+              child: ItemCard(
+                urlImg: 'sarana dan prasarana',
+                text: 'Riwayat Barang',
+              ),
             ),
-            ItemCard(
-              urlImg: 'sarana dan prasarana',
-              text: 'Riwayat Ruang',
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(
+                    context, '/staf/sarpras/riwayat-ruang-page');
+              },
+              child: ItemCard(
+                urlImg: 'sarana dan prasarana',
+                text: 'Riwayat Ruang',
+              ),
             ),
           ],
         ),
