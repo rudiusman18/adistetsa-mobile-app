@@ -1,5 +1,8 @@
+import 'package:adistetsa/models/pelangaran_model.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class RiwayatPelanggaranPage extends StatefulWidget {
   @override
@@ -12,6 +15,12 @@ bool flag1 = false;
 class _RiwayatPelanggaranPageState extends State<RiwayatPelanggaranPage> {
   @override
   Widget build(BuildContext context) {
+    // launchUrl({required String url}) async {
+    //   launch(
+    //     url,
+    //   );
+    // }
+
     PreferredSizeWidget riwayatPelanggaranHeader() {
       return AppBar(
         centerTitle: true,
@@ -41,7 +50,10 @@ class _RiwayatPelanggaranPageState extends State<RiwayatPelanggaranPage> {
         mainAxisSize: MainAxisSize.min,
         children: [
           TextButton(
-              onPressed: () {},
+              onPressed: () async {
+                print(url);
+                await launch(url);
+              },
               style: TextButton.styleFrom(
                 backgroundColor: m5Color,
                 shape: RoundedRectangleBorder(
@@ -131,15 +143,36 @@ class _RiwayatPelanggaranPageState extends State<RiwayatPelanggaranPage> {
           padding: const EdgeInsets.only(
             top: 20,
           ),
-          child: ListView(
-            children: [
-              for (var i = 0; i < 20; i++)
-                dataPelanggaran(
-                  name: 'Uqi Babi eek di celana',
-                  date: '2020-21-21',
-                  urlDownload: 'asw',
-                )
-            ],
+          child: FutureBuilder(
+            future: Services().getPelanggaran(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                List<PelanggaranModel> data = snapshot.data;
+                return data.isEmpty
+                    ? Center(
+                        child: Text(
+                          'Data tidak ditemukan',
+                          style: mono1TextStyle,
+                        ),
+                      )
+                    : ListView(
+                        children: data.map((item) {
+                          return dataPelanggaran(
+                            name: '${item.dATASISWA}',
+                            date: '${item.tANGGALPENGAJUAN!.split('T')[0]}',
+                            urlDownload: '${item.bUKTIPELANGGARAN}',
+                          );
+                        }).toList(),
+                      );
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 4,
+                    color: m1Color,
+                  ),
+                );
+              }
+            },
           ),
         ));
   }

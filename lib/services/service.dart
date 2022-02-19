@@ -6,7 +6,9 @@ import 'package:adistetsa/models/jenispelanggaran_model.dart';
 import 'package:adistetsa/models/karyawan_model.dart';
 import 'package:adistetsa/models/katalogbuku_model.dart';
 import 'package:adistetsa/models/kompetensi_model.dart';
+import 'package:adistetsa/models/laporankebaikan_model.dart';
 import 'package:adistetsa/models/list_buku_model.dart';
+import 'package:adistetsa/models/pelangaran_model.dart';
 import 'package:adistetsa/models/pengajuanpeminjaman_model.dart';
 import 'package:adistetsa/models/riwayatpeminjaman_model.dart';
 import 'package:adistetsa/models/role_model.dart';
@@ -514,6 +516,40 @@ class Services extends ChangeNotifier {
       } else {
         return false;
       }
+    }
+  }
+
+  getPelanggaran() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/kesiswaan/pelanggaran_saya');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    print(response.body);
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<PelanggaranModel> pelanggaranModel =
+          data.map((item) => PelanggaranModel.fromJson(item)).toList();
+      return pelanggaranModel;
+    } else {
+      throw Exception('Gagal Mendapatkan Pelanggaran');
+    }
+  }
+
+  getLaporaKebaikan() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/kesiswaan/pengajuan_program_kebaikan');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    print(response.body);
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<LaporanKebaikanModel> laporanKebaikan =
+          data.map((item) => LaporanKebaikanModel.fromJson(item)).toList();
+      return laporanKebaikan;
+    } else {
+      throw Exception('Gagal Mendapatkan Pelanggaran');
     }
   }
 }
