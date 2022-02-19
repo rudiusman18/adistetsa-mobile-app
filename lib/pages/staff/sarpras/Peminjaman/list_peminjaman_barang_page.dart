@@ -1,6 +1,10 @@
+import 'package:adistetsa/models/barang_model.dart';
+import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ListPeminjamanBarangPage extends StatefulWidget {
   @override
@@ -16,6 +20,8 @@ class _ListPeminjamanBarangPageState extends State<ListPeminjamanBarangPage> {
 
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+
     PreferredSizeWidget katalogBarangHeader() {
       return AppBar(
         centerTitle: true,
@@ -101,16 +107,29 @@ class _ListPeminjamanBarangPageState extends State<ListPeminjamanBarangPage> {
     Widget listItem({
       required String id,
       required String nama,
-      required String nis,
+      required String tanggalPengajuan,
     }) {
       return GestureDetector(
         onTap: () async {
           setState(() {
             searchController.clear();
             isSearch = false;
+            loading(context);
           });
-          Navigator.pushNamed(
-              context, '/staf/sarpras/list-peminjaman-barang/detail-page');
+          await provider.getDetailBarangAdmin(id: id);
+          Navigator.pushReplacementNamed(
+                  context, '/staf/sarpras/list-peminjaman-barang/detail-page')
+              .then((_) async {
+            setState(() {
+              isLoading = true;
+              print(isLoading);
+            });
+            await Services().getBarangAdmin();
+            setState(() {
+              isLoading = false;
+              print(isLoading);
+            });
+          });
         },
         child: Container(
           decoration: BoxDecoration(
@@ -143,7 +162,7 @@ class _ListPeminjamanBarangPageState extends State<ListPeminjamanBarangPage> {
                       ),
                     ),
                     Text(
-                      '$nis',
+                      '$tanggalPengajuan',
                       style: mono2TextStyle.copyWith(
                         fontSize: 10,
                       ),
@@ -159,20 +178,44 @@ class _ListPeminjamanBarangPageState extends State<ListPeminjamanBarangPage> {
     }
 
     return Scaffold(
-        appBar: isSearch == true ? searchAppbar() : katalogBarangHeader(),
-        backgroundColor: mono6Color,
-        body: ListView(
-          children: [
-            for (var i = 0; i < 20; i++)
-              Container(
-                padding: EdgeInsets.only(top: 20),
-                child: listItem(
-                  id: i.toString(),
-                  nama: 'Uqi Babi',
-                  nis: 'tidak duwe NIS',
-                ),
-              ),
-          ],
-        ));
+      appBar: isSearch == true ? searchAppbar() : katalogBarangHeader(),
+      backgroundColor: mono6Color,
+      body: isLoading == false
+          ? FutureBuilder(
+              future: Services().getBarangAdmin(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  List<BarangModel> data = snapshot.data;
+                  return data.isEmpty
+                      ? Center(
+                          child: Text(
+                            'Data tidak ditemukan',
+                            style: mono1TextStyle,
+                          ),
+                        )
+                      : ListView(
+                          children: data.map((item) {
+                            return Container(
+                              padding: EdgeInsets.only(top: 20),
+                              child: listItem(
+                                id: '${item.iD}',
+                                nama: '${item.nAMAPEMINJAM}',
+                                tanggalPengajuan: '${item.tANGGALPENGAJUAN}',
+                              ),
+                            );
+                          }).toList(),
+                        );
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 4,
+                      color: m1Color,
+                    ),
+                  );
+                }
+              },
+            )
+          : Container(),
+    );
   }
 }

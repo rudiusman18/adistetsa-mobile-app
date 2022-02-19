@@ -1,6 +1,10 @@
+import 'package:adistetsa/models/ruangan_model.dart';
+import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ListPeminjamanRuangPage extends StatefulWidget {
   @override
@@ -16,6 +20,8 @@ class _ListPeminjamanRuangPageState extends State<ListPeminjamanRuangPage> {
 
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+
     PreferredSizeWidget katalogBarangHeader() {
       return AppBar(
         centerTitle: true,
@@ -101,16 +107,29 @@ class _ListPeminjamanRuangPageState extends State<ListPeminjamanRuangPage> {
     Widget listItem({
       required String id,
       required String nama,
-      required String nis,
+      required String tanggalPeminjaman,
     }) {
       return GestureDetector(
         onTap: () async {
           setState(() {
             searchController.clear();
             isSearch = false;
+            loading(context);
           });
-          Navigator.pushNamed(
-              context, '/staf/sarpras/list-peminjaman-ruang/detail-page');
+          await provider.getDetailRuanganAdmin(id: id);
+          Navigator.pushReplacementNamed(
+                  context, '/staf/sarpras/list-peminjaman-ruang/detail-page')
+              .then((_) async {
+            setState(() {
+              isLoading = true;
+              print(isLoading);
+            });
+            await Services().getRuanganAdmin();
+            setState(() {
+              isLoading = false;
+              print(isLoading);
+            });
+          });
         },
         child: Container(
           decoration: BoxDecoration(
@@ -143,7 +162,7 @@ class _ListPeminjamanRuangPageState extends State<ListPeminjamanRuangPage> {
                       ),
                     ),
                     Text(
-                      '$nis',
+                      '$tanggalPeminjaman',
                       style: mono2TextStyle.copyWith(
                         fontSize: 10,
                       ),
@@ -159,20 +178,42 @@ class _ListPeminjamanRuangPageState extends State<ListPeminjamanRuangPage> {
     }
 
     return Scaffold(
-        appBar: isSearch == true ? searchAppbar() : katalogBarangHeader(),
-        backgroundColor: mono6Color,
-        body: ListView(
-          children: [
-            for (var i = 0; i < 20; i++)
-              Container(
-                padding: EdgeInsets.only(top: 20),
-                child: listItem(
-                  id: i.toString(),
-                  nama: 'Uqi Babi',
-                  nis: 'tidak duwe NIS',
-                ),
+      appBar: isSearch == true ? searchAppbar() : katalogBarangHeader(),
+      backgroundColor: mono6Color,
+      body: FutureBuilder(
+        future: Services().getRuanganAdmin(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            List<RuanganModel> data = snapshot.data;
+            return data.isEmpty
+                ? Center(
+                    child: Text(
+                      'Data tidak ditemukan',
+                      style: mono1TextStyle,
+                    ),
+                  )
+                : ListView(
+                    children: data.map((item) {
+                      return Container(
+                        padding: EdgeInsets.only(top: 20),
+                        child: listItem(
+                          id: '${item.iD}',
+                          nama: '${item.rUANGAN}',
+                          tanggalPeminjaman: '${item.tANGGALPENGAJUAN}',
+                        ),
+                      );
+                    }).toList(),
+                  );
+          } else {
+            return Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 4,
+                color: m1Color,
               ),
-          ],
-        ));
+            );
+          }
+        },
+      ),
+    );
   }
 }

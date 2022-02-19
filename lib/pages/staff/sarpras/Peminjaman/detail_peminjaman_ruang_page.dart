@@ -1,5 +1,9 @@
+import 'package:adistetsa/models/ruangan_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class DetailPeminjamanRuangPage extends StatefulWidget {
   @override
@@ -8,10 +12,15 @@ class DetailPeminjamanRuangPage extends StatefulWidget {
 }
 
 bool isAnswer = false;
+String valueAcc = '';
+bool isLoading = false;
 
 class _DetailPeminjamanRuangPageState extends State<DetailPeminjamanRuangPage> {
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+    RuanganModel ruanganModel = provider.ruangan;
+
     PreferredSizeWidget header() {
       return AppBar(
         centerTitle: true,
@@ -27,6 +36,10 @@ class _DetailPeminjamanRuangPageState extends State<DetailPeminjamanRuangPage> {
         elevation: 4,
         leading: IconButton(
           onPressed: () async {
+            setState(() {
+              valueAcc = '';
+              isAnswer = false;
+            });
             Navigator.pop(context);
           },
           icon: Icon(Icons.arrow_back),
@@ -41,7 +54,7 @@ class _DetailPeminjamanRuangPageState extends State<DetailPeminjamanRuangPage> {
     confirmAccept() async {
       return showDialog(
         context: context,
-        builder: (BuildContext context) {
+        builder: (BuildContext modalAcceptContext) {
           return Dialog(
             backgroundColor: mono6Color,
             shape: RoundedRectangleBorder(
@@ -96,60 +109,95 @@ class _DetailPeminjamanRuangPageState extends State<DetailPeminjamanRuangPage> {
                   SizedBox(
                     height: 20,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 120,
-                        height: 46,
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          style: TextButton.styleFrom(
-                            backgroundColor: mono3Color,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                  isLoading == false
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 120,
+                              height: 46,
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                style: TextButton.styleFrom(
+                                  backgroundColor: mono3Color,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Batal',
+                                  style: mono6TextStyle.copyWith(
+                                    fontWeight: semiBold,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                          child: Text(
-                            'Batal',
-                            style: mono6TextStyle.copyWith(
-                              fontWeight: semiBold,
+                            SizedBox(
+                              width: 20,
                             ),
+                            Container(
+                              width: 120,
+                              height: 46,
+                              child: TextButton(
+                                onPressed: () async {
+                                  Navigator.pop(modalAcceptContext);
+                                  confirmAccept();
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                  if (await Services()
+                                      .terimaPengajuanRuanganSarpas(
+                                          id: '${ruanganModel.iD}')) {
+                                    setState(() {
+                                      valueAcc = 'Diterima';
+                                      isAnswer = true;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      isAnswer = false;
+                                    });
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                            backgroundColor: dangerColor,
+                                            content: Text(
+                                              'Gagal Setuju Peminjaman Barang',
+                                              textAlign: TextAlign.center,
+                                            )));
+                                  }
+                                  setState(() {
+                                    isLoading = false;
+                                    print(isLoading);
+                                  });
+                                  Navigator.pop(context);
+                                },
+                                style: TextButton.styleFrom(
+                                  backgroundColor: successColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Setuju',
+                                  style: mono6TextStyle.copyWith(
+                                    fontWeight: semiBold,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      : Container(
+                          alignment: Alignment.center,
+                          width: 25,
+                          height: 25,
+                          child: CircularProgressIndicator(
+                            color: m1Color,
+                            strokeWidth: 2,
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Container(
-                        width: 120,
-                        height: 46,
-                        child: TextButton(
-                          onPressed: () async {
-                            setState(() {
-                              isAnswer = true;
-                            });
-                            Navigator.pop(context);
-                          },
-                          style: TextButton.styleFrom(
-                            backgroundColor: successColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          child: Text(
-                            'Setuju',
-                            style: mono6TextStyle.copyWith(
-                              fontWeight: semiBold,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ),
@@ -161,7 +209,7 @@ class _DetailPeminjamanRuangPageState extends State<DetailPeminjamanRuangPage> {
     confirmDecline() async {
       return showDialog(
         context: context,
-        builder: (BuildContext context) {
+        builder: (BuildContext modalDeclineContext) {
           return Dialog(
             backgroundColor: mono6Color,
             shape: RoundedRectangleBorder(
@@ -216,60 +264,95 @@ class _DetailPeminjamanRuangPageState extends State<DetailPeminjamanRuangPage> {
                   SizedBox(
                     height: 20,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 120,
-                        height: 46,
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          style: TextButton.styleFrom(
-                            backgroundColor: mono3Color,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                  isLoading == false
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 120,
+                              height: 46,
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                style: TextButton.styleFrom(
+                                  backgroundColor: mono3Color,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Batal',
+                                  style: mono6TextStyle.copyWith(
+                                    fontWeight: semiBold,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                          child: Text(
-                            'Batal',
-                            style: mono6TextStyle.copyWith(
-                              fontWeight: semiBold,
+                            SizedBox(
+                              width: 20,
                             ),
+                            Container(
+                              width: 120,
+                              height: 46,
+                              child: TextButton(
+                                onPressed: () async {
+                                  Navigator.pop(modalDeclineContext);
+                                  confirmDecline();
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                  if (await Services()
+                                      .tolakPengajuanRuanganSarpas(
+                                          id: '${ruanganModel.iD}')) {
+                                    setState(() {
+                                      valueAcc = 'Ditolak';
+                                      isAnswer = true;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      isAnswer = false;
+                                    });
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                            backgroundColor: dangerColor,
+                                            content: Text(
+                                              'Gagal Setuju Peminjaman Barang',
+                                              textAlign: TextAlign.center,
+                                            )));
+                                  }
+                                  setState(() {
+                                    isLoading = false;
+                                    print(isLoading);
+                                  });
+                                  Navigator.pop(context);
+                                },
+                                style: TextButton.styleFrom(
+                                  backgroundColor: dangerColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Tolak',
+                                  style: mono6TextStyle.copyWith(
+                                    fontWeight: semiBold,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      : Container(
+                          alignment: Alignment.center,
+                          width: 25,
+                          height: 25,
+                          child: CircularProgressIndicator(
+                            color: m1Color,
+                            strokeWidth: 2,
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Container(
-                        width: 120,
-                        height: 46,
-                        child: TextButton(
-                          onPressed: () async {
-                            setState(() {
-                              isAnswer = true;
-                            });
-                            Navigator.pop(context);
-                          },
-                          style: TextButton.styleFrom(
-                            backgroundColor: dangerColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          child: Text(
-                            'Tolak',
-                            style: mono6TextStyle.copyWith(
-                              fontWeight: semiBold,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ),
@@ -315,7 +398,8 @@ class _DetailPeminjamanRuangPageState extends State<DetailPeminjamanRuangPage> {
                       ? warningColor
                       : value == 'Pengajuan' || value == 'Diajukan'
                           ? infoColor
-                          : value == 'Sudah Dikembalikan'
+                          : value == 'Sudah Dikembalikan' ||
+                                  value == 'Disetujui'
                               ? successColor
                               : value == 'Tenggat'
                                   ? m1Color
@@ -344,7 +428,7 @@ class _DetailPeminjamanRuangPageState extends State<DetailPeminjamanRuangPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Uqi Babi',
+              '${ruanganModel.pENGGUNA}',
               style: mono1TextStyle.copyWith(
                 fontSize: 20,
                 fontWeight: bold,
@@ -354,32 +438,42 @@ class _DetailPeminjamanRuangPageState extends State<DetailPeminjamanRuangPage> {
               height: 16,
             ),
             itemInfoPeminjam(
-              teks: 'kegiatan',
-              value: 'Praktik Biologi - reproduksi',
+              teks: 'Kegiatan',
+              value: '${ruanganModel.kEGIATAN}',
             ),
             itemInfoPeminjam(
               teks: 'Tanggal Pengajuan',
-              value: '30-30-3030',
+              value: '${ruanganModel.tANGGALPENGAJUAN}',
             ),
             itemInfoPeminjam(
               teks: 'Tanggal Penggunaan',
-              value: '31-31-3031',
+              value: '${ruanganModel.tANGGALPEMAKAIAN}',
+            ),
+            itemInfoPeminjam(
+              teks: 'Jam Pemakaian',
+              value: '${ruanganModel.jAMPENGGUNAAN}',
+            ),
+            itemInfoPeminjam(
+              teks: 'Jam Berakhir',
+              value: '${ruanganModel.jAMBERAKHIR}',
             ),
             itemInfoPeminjam(
               teks: 'No HP',
-              value: '0921244124124',
+              value: '${ruanganModel.nOHP}',
             ),
             itemInfoPeminjam(
               teks: 'Keterangan',
-              value: 'Biologi',
+              value: '${ruanganModel.kETERANGAN}',
             ),
-            itemInfoPeminjam(
-              teks: 'File TTD Pengajuan',
-              value: 'kakehan njaluk.pdf',
-            ),
+            ruanganModel.tANDATANGAN != null
+                ? itemInfoPeminjam(
+                    teks: 'File TTD Pengajuan',
+                    value: '${ruanganModel.tANDATANGAN!.split('/')[5]}',
+                  )
+                : Container(),
             itemInfoPeminjam(
               teks: 'Status Pengajuan',
-              value: 'Diajukan',
+              value: valueAcc == '' ? '${ruanganModel.sTATUS}' : valueAcc,
             ),
           ],
         ),
@@ -389,7 +483,6 @@ class _DetailPeminjamanRuangPageState extends State<DetailPeminjamanRuangPage> {
     TableRow contentTable({
       required int no,
       required String namaBarang,
-      required String kodeBarang,
     }) {
       return TableRow(
         children: [
@@ -406,31 +499,13 @@ class _DetailPeminjamanRuangPageState extends State<DetailPeminjamanRuangPage> {
             child: Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: 2,
+                vertical: 2,
               ),
               child: Text(
                 namaBarang,
                 style: mono1TextStyle.copyWith(
                   fontSize: 12,
                 ),
-              ),
-            ),
-          ),
-          Container(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 2,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    kodeBarang,
-                    style: mono1TextStyle.copyWith(
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
               ),
             ),
           ),
@@ -446,7 +521,7 @@ class _DetailPeminjamanRuangPageState extends State<DetailPeminjamanRuangPage> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Text(
-                'Barang',
+                'Ruangan',
                 style: mono1TextStyle.copyWith(
                   fontWeight: semiBold,
                   fontSize: 12,
@@ -496,22 +571,7 @@ class _DetailPeminjamanRuangPageState extends State<DetailPeminjamanRuangPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Nama Barang',
-                              style: mono6TextStyle.copyWith(
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: 30,
-                        color: m4Color,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Kode Barang',
+                              'Nama Ruangan',
                               style: mono6TextStyle.copyWith(
                                 fontSize: 12,
                               ),
@@ -547,12 +607,10 @@ class _DetailPeminjamanRuangPageState extends State<DetailPeminjamanRuangPage> {
             },
             defaultVerticalAlignment: TableCellVerticalAlignment.top,
             children: [
-              for (var i = 0; i < 5; i++)
-                contentTable(
-                  no: i + 1,
-                  namaBarang: 'Kamar Mandi',
-                  kodeBarang: '12345678',
-                ),
+              contentTable(
+                no: 1,
+                namaBarang: '${ruanganModel.rUANGAN}',
+              ),
             ]),
       );
     }
@@ -579,6 +637,7 @@ class _DetailPeminjamanRuangPageState extends State<DetailPeminjamanRuangPage> {
           ),
           onPressed: () {
             setState(() {
+              valueAcc = '';
               isAnswer = false;
             });
             Navigator.pop(context);
@@ -659,19 +718,29 @@ class _DetailPeminjamanRuangPageState extends State<DetailPeminjamanRuangPage> {
               )));
     }
 
-    return Scaffold(
-      backgroundColor: mono6Color,
-      appBar: header(),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              infoPeminjam(),
-              tableHeader(),
-              tabelPeminjam(),
-              isAnswer == false ? buttonSubmit() : buttonKembali(),
-              isAnswer == false ? buttonTolak() : SizedBox(),
-            ],
+    return WillPopScope(
+      onWillPop: () async {
+        setState(() {
+          valueAcc = '';
+          isAnswer = false;
+        });
+        Navigator.pop(context);
+        return true;
+      },
+      child: Scaffold(
+        backgroundColor: mono6Color,
+        appBar: header(),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                infoPeminjam(),
+                tableHeader(),
+                tabelPeminjam(),
+                isAnswer == false ? buttonSubmit() : buttonKembali(),
+                isAnswer == false ? buttonTolak() : SizedBox(),
+              ],
+            ),
           ),
         ),
       ),
