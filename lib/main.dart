@@ -17,10 +17,6 @@ import 'package:adistetsa/pages/staff/sarpras/Peminjaman/list_peminjaman_barang_
 import 'package:adistetsa/pages/staff/sarpras/Peminjaman/list_peminjaman_ruang_page.dart';
 import 'package:adistetsa/pages/staff/sarpras/katalog%20barang/list_katalog_barang_page.dart';
 import 'package:adistetsa/pages/staff/sarpras/katalog%20barang/list_katalog_ruang_page.dart';
-import 'package:adistetsa/pages/staff/sarpras/riwayat/detail_riwayat_barang_page.dart';
-import 'package:adistetsa/pages/staff/sarpras/riwayat/detail_riwayat_ruang_page.dart';
-import 'package:adistetsa/pages/staff/sarpras/riwayat/riwayat_barang_page.dart';
-import 'package:adistetsa/pages/staff/sarpras/riwayat/riwayat_ruang_page.dart';
 import 'package:adistetsa/pages/user/kesiswaan/pengajuan%20pelanggaran/data_pelanggaran_page.dart';
 import 'package:adistetsa/pages/user/kesiswaan/pengajuan%20pelanggaran/data_siswa_page.dart';
 import 'package:adistetsa/pages/user/kesiswaan/pengajuan%20pelanggaran/input_pelanggaran_page.dart';
@@ -31,6 +27,9 @@ import 'package:adistetsa/pages/user/perpustakaan/riwayat%20peminjaman%20buku/de
 import 'package:adistetsa/pages/user/perpustakaan/riwayat%20peminjaman%20buku/detail_riwayat_pengajuan_buku_user_page.dart';
 import 'package:adistetsa/pages/user/perpustakaan/riwayat%20peminjaman%20buku/riwayat_peminjaman_buku_user_page.dart';
 import 'package:adistetsa/pages/user/perpustakaan/riwayat%20peminjaman%20buku/riwayat_pengajuan_buku_user_page.dart';
+import 'package:adistetsa/pages/user/sarpras/katalog/katalog_barang_page.dart';
+import 'package:adistetsa/pages/user/sarpras/katalog/katalog_ruang_page.dart';
+import 'package:adistetsa/pages/user/sarpras/list_sarpras_page.dart';
 import 'package:adistetsa/providers/auth_provider.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/roles_page.dart';
@@ -220,24 +219,20 @@ class AdiStetsa extends StatelessWidget {
                 child: DetailPeminjamanRuangPage(),
                 type: PageTransitionType.rightToLeft,
               );
-            case '/staf/sarpras/riwayat-barang-page':
+
+            case '/user/sarpras':
               return PageTransition(
-                child: RiwayatBarangPage(),
+                child: ListSarprasPage(),
                 type: PageTransitionType.rightToLeft,
               );
-            case '/staf/sarpras/riwayat-barang/detail-page':
+            case '/user/sarpras/katalog-barang-page':
               return PageTransition(
-                child: DetailRiwayatBarangPage(),
+                child: KatalogBarangPage(),
                 type: PageTransitionType.rightToLeft,
               );
-            case '/staf/sarpras/riwayat-ruang-page':
+            case '/user/sarpras/katalog-ruang-page':
               return PageTransition(
-                child: RiwayatRuangPage(),
-                type: PageTransitionType.rightToLeft,
-              );
-            case '/staf/sarpras/riwayat-ruang/detail-page':
-              return PageTransition(
-                child: DetailRiwayatRuangPage(),
+                child: KatalogRuangPage(),
                 type: PageTransitionType.rightToLeft,
               );
             case '/main-page/back':
