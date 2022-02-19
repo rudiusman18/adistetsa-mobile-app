@@ -17,8 +17,6 @@ import 'package:adistetsa/pages/staff/sarpras/Peminjaman/list_peminjaman_barang_
 import 'package:adistetsa/pages/staff/sarpras/Peminjaman/list_peminjaman_ruang_page.dart';
 import 'package:adistetsa/pages/staff/sarpras/katalog%20barang/list_katalog_barang_page.dart';
 import 'package:adistetsa/pages/staff/sarpras/katalog%20barang/list_katalog_ruang_page.dart';
-import 'package:adistetsa/pages/staff/sarpras/riwayat/detail_riwayat_barang_page.dart';
-import 'package:adistetsa/pages/staff/sarpras/riwayat/detail_riwayat_ruang_page.dart';
 import 'package:adistetsa/pages/user/kesiswaan/pengajuan%20pelanggaran/data_pelanggaran_page.dart';
 import 'package:adistetsa/pages/user/kesiswaan/pengajuan%20pelanggaran/data_siswa_page.dart';
 import 'package:adistetsa/pages/user/kesiswaan/pengajuan%20pelanggaran/input_pelanggaran_page.dart';
@@ -222,17 +220,6 @@ class AdiStetsa extends StatelessWidget {
                 type: PageTransitionType.rightToLeft,
               );
 
-            case '/staf/sarpras/riwayat-barang/detail-page':
-              return PageTransition(
-                child: DetailRiwayatBarangPage(),
-                type: PageTransitionType.rightToLeft,
-              );
-
-            case '/staf/sarpras/riwayat-ruang/detail-page':
-              return PageTransition(
-                child: DetailRiwayatRuangPage(),
-                type: PageTransitionType.rightToLeft,
-              );
             case '/user/sarpras':
               return PageTransition(
                 child: ListSarprasPage(),
