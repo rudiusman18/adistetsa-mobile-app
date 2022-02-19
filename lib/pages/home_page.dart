@@ -305,26 +305,6 @@ class HomePage extends StatelessWidget {
                 text: 'Peminjaman Ruang',
               ),
             ),
-            GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(
-                    context, '/staf/sarpras/riwayat-barang-page');
-              },
-              child: ItemCard(
-                urlImg: 'riwayat barang',
-                text: 'Riwayat Barang',
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(
-                    context, '/staf/sarpras/riwayat-ruang-page');
-              },
-              child: ItemCard(
-                urlImg: 'riwayat ruang',
-                text: 'Riwayat Ruang',
-              ),
-            ),
           ],
         ),
       );
