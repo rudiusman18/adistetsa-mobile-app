@@ -14,6 +14,7 @@ class InputPelanggaranPage extends StatefulWidget {
 
 PlatformFile? file;
 FilePickerResult? result;
+bool isLoading = false;
 
 class _InputPelanggaranPageState extends State<InputPelanggaranPage> {
   @override
@@ -188,49 +189,65 @@ class _InputPelanggaranPageState extends State<InputPelanggaranPage> {
         height: 46,
         width: double.infinity,
         child: TextButton(
-            style: TextButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              side: BorderSide(
-                color: m2Color,
-                width: 2,
-              ),
-              backgroundColor: m2Color,
+          style: TextButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
             ),
-            onPressed: () async {
-              if (await Services().laporanPelanggaran(
-                dataSiswa: siswaModel.nIS.toString(),
-                jenisPelanggaran: jenisPelanggaranModel.iD.toString(),
-                filepath: file != null ? file!.path : null,
-              )) {
-                setState(() {
-                  provider.setDataSiswa = SiswaModel();
-                  provider.setJenisPelanggaran = JenisPelanggaranModel();
-                  file = null;
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      backgroundColor: successColor,
-                      content: Text(
-                        'Berhasil mengajukan laporan',
-                        textAlign: TextAlign.center,
-                      )));
-                });
-              } else {
+            side: BorderSide(
+              color: m2Color,
+              width: 2,
+            ),
+            backgroundColor: m2Color,
+          ),
+          onPressed: () async {
+            setState(() {
+              isLoading = true;
+            });
+            if (await Services().laporanPelanggaran(
+              dataSiswa: siswaModel.nIS.toString(),
+              jenisPelanggaran: jenisPelanggaranModel.iD.toString(),
+              filepath: file != null ? file!.path : null,
+            )) {
+              setState(() {
+                provider.setDataSiswa = SiswaModel();
+                provider.setJenisPelanggaran = JenisPelanggaranModel();
+                file = null;
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    backgroundColor: dangerColor,
+                    backgroundColor: successColor,
                     content: Text(
-                      'Gagal mengajukan laporan',
+                      'Berhasil mengajukan laporan',
                       textAlign: TextAlign.center,
                     )));
-              }
-            },
-            child: Text(
-              'Simpan',
-              style: mono6TextStyle.copyWith(
-                fontWeight: bold,
-                fontSize: 16,
-              ),
-            )),
+              });
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  backgroundColor: dangerColor,
+                  content: Text(
+                    'Gagal mengajukan laporan',
+                    textAlign: TextAlign.center,
+                  )));
+            }
+            setState(() {
+              isLoading = false;
+            });
+          },
+          child: isLoading == false
+              ? Text(
+                  'Simpan',
+                  style: mono6TextStyle.copyWith(
+                    fontWeight: bold,
+                    fontSize: 16,
+                  ),
+                )
+              : Container(
+                  width: 14,
+                  height: 14,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 4,
+                    color: mono6Color,
+                  ),
+                ),
+        ),
       );
     }
 

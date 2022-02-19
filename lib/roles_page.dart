@@ -45,6 +45,11 @@ class _RolesPageState extends State<RolesPage> {
           currentIndex = -1;
           Navigator.pushNamedAndRemoveUntil(
               context, '/main-page', (route) => false);
+        } else if (role == 'Staf Sarpras') {
+          await provider.getGuruProfile();
+          currentIndex = -1;
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/main-page', (route) => false);
         } else if (role == 'Karyawan') {
           await provider.getKaryawan();
           currentIndex = -1;

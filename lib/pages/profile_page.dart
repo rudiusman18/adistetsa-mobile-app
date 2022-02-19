@@ -26,7 +26,7 @@ class _ProfilePageState extends State<ProfilePage> {
     var role = rolesModel.name;
     var _nama = role == 'Guru'
         ? '${guruModel.nAMALENGKAP}'
-        : role == 'Staf Perpustakaan'
+        : role == 'Staf Perpustakaan' || role == 'Staf Sarpras'
             ? '${guruModel.nAMALENGKAP}'
             : role == 'Karyawan'
                 ? '${karyawanModel.nAMALENGKAP}'
@@ -35,7 +35,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     : '';
     var _noInduk = role == 'Guru'
         ? 'NIP ${guruModel.nIP}'
-        : role == 'Staf Perpustakaan'
+        : role == 'Staf Perpustakaan' || role == 'Staf Sarpras'
             ? 'NIP ${guruModel.nIP}'
             : role == 'Karyawan'
                 ? 'NIP ${karyawanModel.nIP}'
@@ -44,7 +44,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     : '';
     var _email = role == 'Guru'
         ? '${guruModel.eMAIL}'
-        : role == 'Staf Perpustakaan'
+        : role == 'Staf Perpustakaan' || role == 'Staf Sarpras'
             ? '${guruModel.eMAIL}'
             : role == 'Karyawan'
                 ? '${karyawanModel.eMAIL}'
@@ -53,7 +53,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     : '';
     var _noHp = role == 'Guru'
         ? '${guruModel.hP}'
-        : role == 'Staf Perpustakaan'
+        : role == 'Staf Perpustakaan' || role == 'Staf Sarpras'
             ? '${guruModel.hP}'
             : role == 'Karyawan'
                 ? '${karyawanModel.hP}'

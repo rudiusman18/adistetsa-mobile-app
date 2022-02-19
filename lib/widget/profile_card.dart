@@ -21,7 +21,7 @@ class ProfileCard extends StatelessWidget {
     var role = rolesModel.name;
     var _nama = role == 'Guru'
         ? '${guruModel.nAMALENGKAP}'
-        : role == 'Staf Perpustakaan'
+        : role == 'Staf Perpustakaan' || role == 'Staf Sarpras'
             ? '${guruModel.nAMALENGKAP}'
             : role == 'Karyawan'
                 ? '${karyawanModel.nAMALENGKAP}'
@@ -30,7 +30,7 @@ class ProfileCard extends StatelessWidget {
                     : '';
     var _noInduk = role == 'Guru'
         ? 'NIP ${guruModel.nIP}'
-        : role == 'Staf Perpustakaan'
+        : role == 'Staf Perpustakaan' || role == 'Staf Sarpras'
             ? 'NIP ${guruModel.nIP}'
             : role == 'Karyawan'
                 ? 'NIP ${karyawanModel.nIP}'
@@ -39,7 +39,7 @@ class ProfileCard extends StatelessWidget {
                     : '';
     var _spesialisParameter = role == 'Guru'
         ? 'Kompetensi'
-        : role == 'Staf Perpustakaan'
+        : role == 'Staf Perpustakaan' || role == 'Staf Sarpras'
             ? 'Bidang'
             : role == 'Karyawan'
                 ? 'Jenis PTK'
@@ -48,11 +48,13 @@ class ProfileCard extends StatelessWidget {
                     : '';
     var _parameter = role == 'Staf Perpustakaan'
         ? 'Perpustakaan'
-        : role == 'Karyawan'
-            ? '${karyawanModel.jENISPTK}'
-            : role == 'Siswa'
-                ? 'Kelas'
-                : '';
+        : role == 'Staf Sarpras'
+            ? 'Sarana Prasarana'
+            : role == 'Karyawan'
+                ? '${karyawanModel.jENISPTK}'
+                : role == 'Siswa'
+                    ? 'Kelas'
+                    : '';
     return Container(
       decoration: BoxDecoration(
           color: m2Color,
@@ -95,7 +97,9 @@ class ProfileCard extends StatelessWidget {
                   width: 146.57,
                 ),
                 Text(
-                  role == 'Staf Perpustakaan' ? 'Staf' : '$role',
+                  role == 'Staf Perpustakaan' || role == 'Staf Sarpras'
+                      ? 'Staf'
+                      : '$role',
                   style: mono6TextStyle.copyWith(
                     fontWeight: semiBold,
                     fontSize: 16,
@@ -143,16 +147,24 @@ class ProfileCard extends StatelessWidget {
                                 (BuildContext context, AsyncSnapshot snapshot) {
                               if (snapshot.hasData) {
                                 List<KompetensiModel> data = snapshot.data;
-                                return Column(
-                                    children: data.map((item) {
-                                  return Text(
-                                    item.bIDANGSTUDI.toString(),
-                                    style: mono6TextStyle.copyWith(
-                                      fontWeight: semiBold,
-                                      color: mono5Color,
-                                    ),
-                                  );
-                                }).toList());
+                                return data.isEmpty
+                                    ? Text(
+                                        'Tidak ada data',
+                                        style: mono6TextStyle.copyWith(
+                                          fontWeight: semiBold,
+                                          color: mono5Color,
+                                        ),
+                                      )
+                                    : Column(
+                                        children: data.map((item) {
+                                        return Text(
+                                          item.bIDANGSTUDI.toString(),
+                                          style: mono6TextStyle.copyWith(
+                                            fontWeight: semiBold,
+                                            color: mono5Color,
+                                          ),
+                                        );
+                                      }).toList());
                               } else {
                                 return Column(
                                   children: [

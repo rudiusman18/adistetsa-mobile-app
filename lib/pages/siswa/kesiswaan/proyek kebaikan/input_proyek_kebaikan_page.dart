@@ -15,6 +15,7 @@ Object? value1Item;
 bool flag1 = false;
 PlatformFile? file;
 FilePickerResult? result;
+bool isLoading = false;
 
 class _InputProyekKebaikanPageState extends State<InputProyekKebaikanPage> {
   @override
@@ -229,8 +230,9 @@ class _InputProyekKebaikanPageState extends State<InputProyekKebaikanPage> {
                             child: Text(
                               value['KETERANGAN'],
                               style: mono3TextStyle.copyWith(
-                                color:
-                                    value1Item == value ? p1Color : mono1Color,
+                                color: value1Item == value['ID']
+                                    ? p1Color
+                                    : mono1Color,
                                 fontWeight: regular,
                                 fontSize: 12,
                               ),
@@ -265,46 +267,63 @@ class _InputProyekKebaikanPageState extends State<InputProyekKebaikanPage> {
         height: 46,
         width: double.infinity,
         child: TextButton(
-            style: TextButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              side: BorderSide(
-                color: m2Color,
-                width: 2,
-              ),
-              backgroundColor: m2Color,
+          style: TextButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
             ),
-            onPressed: () async {
-              if (await Services().programKebaikan(
-                  jenisProgramKebaikan: value1Item.toString(),
-                  filepath: file != null ? file!.path : null)) {
-                setState(() {
-                  value1Item = null;
-                  file = null;
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      backgroundColor: successColor,
-                      content: Text(
-                        'Berhasil mengajukan program kebaikan',
-                        textAlign: TextAlign.center,
-                      )));
-                });
-              } else {
+            side: BorderSide(
+              color: m2Color,
+              width: 2,
+            ),
+            backgroundColor: m2Color,
+          ),
+          onPressed: () async {
+            setState(() {
+              isLoading = true;
+            });
+            if (await Services().programKebaikan(
+                jenisProgramKebaikan: value1Item.toString(),
+                filepath: file != null ? file!.path : null)) {
+              setState(() {
+                value1Item = null;
+                file = null;
+
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    backgroundColor: dangerColor,
+                    backgroundColor: successColor,
                     content: Text(
-                      'Gagal mengajukan program kebaikan',
+                      'Berhasil mengajukan program kebaikan',
                       textAlign: TextAlign.center,
                     )));
-              }
-            },
-            child: Text(
-              'Simpan',
-              style: mono6TextStyle.copyWith(
-                fontWeight: bold,
-                fontSize: 16,
-              ),
-            )),
+              });
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  backgroundColor: dangerColor,
+                  content: Text(
+                    'Gagal mengajukan program kebaikan',
+                    textAlign: TextAlign.center,
+                  )));
+            }
+            setState(() {
+              isLoading = false;
+            });
+          },
+          child: isLoading == false
+              ? Text(
+                  'Simpan',
+                  style: mono6TextStyle.copyWith(
+                    fontWeight: bold,
+                    fontSize: 16,
+                  ),
+                )
+              : Container(
+                  width: 14,
+                  height: 14,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 4,
+                    color: mono6Color,
+                  ),
+                ),
+        ),
       );
     }
 

@@ -50,6 +50,9 @@ class Services extends ChangeNotifier {
       } else if (role == 'Staf Perpustakaan') {
         GuruModel stafPerpustakaan = GuruModel.fromJson(data);
         return stafPerpustakaan;
+      } else if (role == 'Staf Sarpras') {
+        GuruModel stafSarpras = GuruModel.fromJson(data);
+        return stafSarpras;
       } else if (role == 'Karyawan') {
         KaryawanModel karyawanModel = KaryawanModel.fromJson(data);
         return karyawanModel;
