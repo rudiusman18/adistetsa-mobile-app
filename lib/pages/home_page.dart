@@ -28,10 +28,10 @@ class HomePage extends StatelessWidget {
                 text: 'Katalog Buku',
               ),
             ),
-            ItemCard(
-              urlImg: 'anggota perpustakaan',
-              text: 'Anggota Perpustakaan',
-            ),
+            // ItemCard(
+            //   urlImg: 'anggota perpustakaan',
+            //   text: 'Anggota Perpustakaan',
+            // ),
             GestureDetector(
               onTap: () {
                 Navigator.pushNamed(
@@ -52,18 +52,18 @@ class HomePage extends StatelessWidget {
                 text: 'Riwayat Peminjaman',
               ),
             ),
-            ItemCard(
-              urlImg: 'laporan jumlah anggota',
-              text: 'Laporan Jumlah Anggota',
-            ),
-            ItemCard(
-              urlImg: 'laporan sirkulasi peminjaman',
-              text: 'Laporan Sirkulasi Peminjaman',
-            ),
-            ItemCard(
-              urlImg: 'laporan koleksi buku',
-              text: 'Laporan Koleksi Buku',
-            ),
+            // ItemCard(
+            //   urlImg: 'laporan jumlah anggota',
+            //   text: 'Laporan Jumlah Anggota',
+            // ),
+            // ItemCard(
+            //   urlImg: 'laporan sirkulasi peminjaman',
+            //   text: 'Laporan Sirkulasi Peminjaman',
+            // ),
+            // ItemCard(
+            //   urlImg: 'laporan koleksi buku',
+            //   text: 'Laporan Koleksi Buku',
+            // ),
           ],
         ),
       );
@@ -266,7 +266,7 @@ class HomePage extends StatelessWidget {
                     context, '/staf/sarpras/list-katalog-barang-page');
               },
               child: ItemCard(
-                urlImg: 'sarana dan prasarana',
+                urlImg: 'katalog barang',
                 text: 'Katalog Barang',
               ),
             ),
@@ -276,7 +276,7 @@ class HomePage extends StatelessWidget {
                     context, '/staf/sarpras/list-katalog-ruang-page');
               },
               child: ItemCard(
-                urlImg: 'sarana dan prasarana',
+                urlImg: 'katalog ruang',
                 text: 'Katalog Ruang',
               ),
             ),
@@ -286,7 +286,7 @@ class HomePage extends StatelessWidget {
                     context, '/staf/sarpras/list-peminjaman-barang-page');
               },
               child: ItemCard(
-                urlImg: 'sarana dan prasarana',
+                urlImg: 'peminjaman barang',
                 text: 'Peminjaman Barang',
               ),
             ),
@@ -296,7 +296,7 @@ class HomePage extends StatelessWidget {
                     context, '/staf/sarpras/list-peminjaman-ruang');
               },
               child: ItemCard(
-                urlImg: 'sarana dan prasarana',
+                urlImg: 'peminjaman ruang',
                 text: 'Peminjaman Ruang',
               ),
             ),
@@ -306,7 +306,7 @@ class HomePage extends StatelessWidget {
                     context, '/staf/sarpras/riwayat-barang-page');
               },
               child: ItemCard(
-                urlImg: 'sarana dan prasarana',
+                urlImg: 'riwayat barang',
                 text: 'Riwayat Barang',
               ),
             ),
@@ -316,7 +316,7 @@ class HomePage extends StatelessWidget {
                     context, '/staf/sarpras/riwayat-ruang-page');
               },
               child: ItemCard(
-                urlImg: 'sarana dan prasarana',
+                urlImg: 'riwayat ruang',
                 text: 'Riwayat Ruang',
               ),
             ),
