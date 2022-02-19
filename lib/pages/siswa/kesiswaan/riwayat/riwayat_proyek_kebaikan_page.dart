@@ -1,5 +1,8 @@
+import 'package:adistetsa/models/laporankebaikan_model.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class RiwayatProyekKebaikanPage extends StatefulWidget {
   @override
@@ -42,7 +45,9 @@ class _RiwayatProyekKebaikanPageState extends State<RiwayatProyekKebaikanPage> {
         mainAxisSize: MainAxisSize.min,
         children: [
           TextButton(
-              onPressed: () {},
+              onPressed: () async {
+                await launch(url);
+              },
               style: TextButton.styleFrom(
                 backgroundColor: m5Color,
                 shape: RoundedRectangleBorder(
@@ -132,16 +137,36 @@ class _RiwayatProyekKebaikanPageState extends State<RiwayatProyekKebaikanPage> {
           padding: const EdgeInsets.only(
             top: 20,
           ),
-          child: ListView(
-            children: [
-              for (var i = 0; i < 20; i++)
-                dataPelanggaran(
-                  name:
-                      'Uqi Babi memberi makan fakir miskin yang sedang kesusahan',
-                  date: '2020-21-21',
-                  urlDownload: 'asw',
-                )
-            ],
+          child: FutureBuilder(
+            future: Services().getLaporaKebaikan(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                List<LaporanKebaikanModel> data = snapshot.data;
+                return data.isEmpty
+                    ? Center(
+                        child: Text(
+                          'Data tidak ditemukan',
+                          style: mono1TextStyle,
+                        ),
+                      )
+                    : ListView(
+                        children: data.map((item) {
+                          return dataPelanggaran(
+                            name: '${item.dATASISWA}',
+                            date: '${item.tANGGALPENGAJUAN!.split('T')[0]}',
+                            urlDownload: '${item.bUKTIPROGRAMKEBAIKAN}',
+                          );
+                        }).toList(),
+                      );
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 4,
+                    color: m1Color,
+                  ),
+                );
+              }
+            },
           ),
         ));
   }
