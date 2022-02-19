@@ -75,10 +75,10 @@ class HomePage extends StatelessWidget {
         child: Wrap(
           spacing: 25,
           children: [
-            ItemCard(
-              urlImg: 'bimbingan konseling',
-              text: 'Bimbingan Konseling',
-            ),
+            // ItemCard(
+            //   urlImg: 'bimbingan konseling',
+            //   text: 'Bimbingan Konseling',
+            // ),
             GestureDetector(
               onTap: () {
                 Navigator.pushNamed(
@@ -89,18 +89,18 @@ class HomePage extends StatelessWidget {
                 text: 'Kesiswaan',
               ),
             ),
-            ItemCard(
-              urlImg: 'kurikulum',
-              text: 'Kurikulum',
-            ),
-            ItemCard(
-              urlImg: 'tata usaha',
-              text: 'Tata Usaha',
-            ),
-            ItemCard(
-              urlImg: 'unit penjamin mutu',
-              text: 'Unit Penjamin Mutu',
-            ),
+            // ItemCard(
+            //   urlImg: 'kurikulum',
+            //   text: 'Kurikulum',
+            // ),
+            // ItemCard(
+            //   urlImg: 'tata usaha',
+            //   text: 'Tata Usaha',
+            // ),
+            // ItemCard(
+            //   urlImg: 'unit penjamin mutu',
+            //   text: 'Unit Penjamin Mutu',
+            // ),
             GestureDetector(
               onTap: () {
                 Navigator.pushNamed(context, '/user/perpustakaan');
@@ -110,13 +110,18 @@ class HomePage extends StatelessWidget {
                 text: 'Perpustakaan',
               ),
             ),
-            ItemCard(
-              urlImg: 'adiwiyata',
-              text: 'Adiwiyata',
-            ),
-            ItemCard(
-              urlImg: 'sarana dan prasarana',
-              text: 'Sarana dan Prasarana',
+            // ItemCard(
+            //   urlImg: 'adiwiyata',
+            //   text: 'Adiwiyata',
+            // ),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/user/sarpras');
+              },
+              child: ItemCard(
+                urlImg: 'sarana dan prasarana',
+                text: 'Sarana dan Prasarana',
+              ),
             ),
           ],
         ),
