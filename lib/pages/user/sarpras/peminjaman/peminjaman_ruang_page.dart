@@ -1,17 +1,22 @@
 import 'package:adistetsa/theme.dart';
+import 'package:day_night_time_picker/lib/constants.dart';
+import 'package:day_night_time_picker/lib/daynight_timepicker.dart';
 import 'package:flutter/material.dart';
 
-class PeminjamanBarangPage extends StatefulWidget {
+class PeminjamanRuangPage extends StatefulWidget {
   @override
-  _PeminjamanBarangPageState createState() => _PeminjamanBarangPageState();
+  _PeminjamanRuangPageState createState() => _PeminjamanRuangPageState();
 }
 
-class _PeminjamanBarangPageState extends State<PeminjamanBarangPage> {
+class _PeminjamanRuangPageState extends State<PeminjamanRuangPage> {
   TextEditingController nameInput = TextEditingController(text: '');
   TextEditingController phoneInput = TextEditingController(text: '');
   TextEditingController activityInput = TextEditingController(text: '');
   TextEditingController keteranganInput = TextEditingController(text: '');
+  String jamAwal = '';
+  String jamAkhir = '';
 
+// Note: get date
   DateTime? selectedDate;
   _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -37,13 +42,34 @@ class _PeminjamanBarangPageState extends State<PeminjamanBarangPage> {
       });
   }
 
+// Note: get time
+  TimeOfDay _timeAwal = TimeOfDay.now();
+  void onTimeChangedAwal(TimeOfDay newTime) {
+    setState(() {
+      _timeAwal = newTime;
+      jamAwal =
+          _timeAwal.toString().replaceAll('TimeOfDay(', '').replaceAll(')', '');
+    });
+  }
+
+  TimeOfDay _timeAkhir = TimeOfDay.now();
+  void onTimeChangedAkhir(TimeOfDay newTime) {
+    setState(() {
+      _timeAkhir = newTime;
+      jamAkhir = _timeAkhir
+          .toString()
+          .replaceAll('TimeOfDay(', '')
+          .replaceAll(')', '');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     PreferredSizeWidget header() {
       return AppBar(
         centerTitle: true,
         title: Text(
-          'Peminjaman Barang',
+          'Peminjaman Ruang',
           style: mono1TextStyle.copyWith(
             fontWeight: semiBold,
             fontSize: 18,
@@ -66,8 +92,8 @@ class _PeminjamanBarangPageState extends State<PeminjamanBarangPage> {
     TableRow contentTable({
       required int id,
       required int no,
-      required String namaBarang,
-      required String kodeBarang,
+      required String namaRuang,
+      required String kodeRuang,
     }) {
       return TableRow(
         children: [
@@ -86,7 +112,7 @@ class _PeminjamanBarangPageState extends State<PeminjamanBarangPage> {
                 horizontal: 2,
               ),
               child: Text(
-                namaBarang,
+                namaRuang,
                 style: mono1TextStyle.copyWith(
                   fontSize: 12,
                 ),
@@ -99,7 +125,7 @@ class _PeminjamanBarangPageState extends State<PeminjamanBarangPage> {
                 horizontal: 2,
               ),
               child: Text(
-                kodeBarang,
+                kodeRuang,
                 style: mono1TextStyle.copyWith(
                   fontSize: 12,
                 ),
@@ -131,7 +157,7 @@ class _PeminjamanBarangPageState extends State<PeminjamanBarangPage> {
         ),
         child: Center(
           child: Text(
-            'Belum ada data barang',
+            'Belum ada data ruang',
             style: mono1TextStyle.copyWith(
               fontSize: 12,
             ),
@@ -150,7 +176,7 @@ class _PeminjamanBarangPageState extends State<PeminjamanBarangPage> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: Text(
-              'Barang',
+              'Ruang',
               style: mono1TextStyle.copyWith(
                 fontWeight: semiBold,
                 fontSize: 12,
@@ -200,7 +226,7 @@ class _PeminjamanBarangPageState extends State<PeminjamanBarangPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Nama Barang',
+                            'Nama Ruang',
                             style: mono6TextStyle.copyWith(
                               fontSize: 12,
                             ),
@@ -215,7 +241,7 @@ class _PeminjamanBarangPageState extends State<PeminjamanBarangPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Kode Barang',
+                            'Kode Ruang',
                             style: mono6TextStyle.copyWith(
                               fontSize: 12,
                             ),
@@ -271,8 +297,8 @@ class _PeminjamanBarangPageState extends State<PeminjamanBarangPage> {
               contentTable(
                 id: 0,
                 no: i + 1,
-                namaBarang: 'Kondom',
-                kodeBarang: '12345',
+                namaRuang: 'Kamar Mandi',
+                kodeRuang: '12345',
               ),
           ],
         ),
@@ -300,7 +326,7 @@ class _PeminjamanBarangPageState extends State<PeminjamanBarangPage> {
             backgroundColor: m4Color,
           ),
           onPressed: () {
-            Navigator.pushNamed(context, '/user/sarpras/katalog-barang-page');
+            Navigator.pushNamed(context, '/user/sarpras/katalog-ruang-page');
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -314,7 +340,7 @@ class _PeminjamanBarangPageState extends State<PeminjamanBarangPage> {
                 width: 12,
               ),
               Text(
-                'Tambah Barang',
+                'Tambah Ruang',
                 style: mono6TextStyle.copyWith(
                   fontSize: 12,
                 ),
@@ -528,6 +554,127 @@ class _PeminjamanBarangPageState extends State<PeminjamanBarangPage> {
       );
     }
 
+    Widget inputJam() {
+      return Container(
+        margin: EdgeInsets.only(
+          left: 20,
+          right: 20,
+          bottom: 20,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Jam',
+              style: mono1TextStyle.copyWith(
+                fontWeight: semiBold,
+                fontSize: 12,
+              ),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        showPicker(
+                          accentColor: p2Color,
+                          unselectedColor: mono3Color,
+                          cancelStyle: p1TextStyle,
+                          okStyle: p1TextStyle,
+                          context: context,
+                          value: _timeAwal,
+                          onChange: onTimeChangedAwal,
+                          minuteInterval: MinuteInterval.FIVE,
+                          // Optional onChange to receive value as DateTime
+                          onChangeDateTime: (DateTime dateTime) {
+                            print(dateTime);
+                          },
+                        ),
+                      );
+                    },
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 12,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      side: BorderSide(color: p1Color),
+                    ),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        jamAwal == '' ? 'Jam Awal' : jamAwal,
+                        style: p1TextStyle.copyWith(
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    '-',
+                    style: mono1TextStyle.copyWith(
+                      fontWeight: semiBold,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        showPicker(
+                          accentColor: p2Color,
+                          unselectedColor: mono3Color,
+                          cancelStyle: p1TextStyle,
+                          okStyle: p1TextStyle,
+                          context: context,
+                          value: _timeAkhir,
+                          onChange: onTimeChangedAkhir,
+                          minuteInterval: MinuteInterval.FIVE,
+                          // Optional onChange to receive value as DateTime
+                          onChangeDateTime: (DateTime dateTime) {
+                            print(dateTime);
+                          },
+                        ),
+                      );
+                    },
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 12,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      side: BorderSide(color: p1Color),
+                    ),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        jamAkhir == '' ? 'Jam Akhir' : jamAkhir,
+                        style: p1TextStyle.copyWith(
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    }
+
     Widget inputKeterangan() {
       return Container(
         margin: EdgeInsets.only(
@@ -673,6 +820,7 @@ class _PeminjamanBarangPageState extends State<PeminjamanBarangPage> {
             inputNoHp(),
             inputKegiatan(),
             inputTanggal(),
+            inputJam(),
             inputKeterangan(),
             buttonfileTTD(),
             buttonSubmit(),

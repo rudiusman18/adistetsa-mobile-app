@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:adistetsa/models/barang_model.dart';
 import 'package:adistetsa/models/guru_model.dart';
@@ -678,8 +677,7 @@ class Services extends ChangeNotifier {
   terimaPengajuanBarangSarpas({required String id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url =
-        Uri.parse('$baseUrl/sarpras/acc_pengajuan_peminjaman_barang/$id');
+    var url = Uri.parse('$baseUrl/sarpras/acc_pengajuan_peminjaman_barang/$id');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
     print(response.statusCode);

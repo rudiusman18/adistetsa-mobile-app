@@ -86,73 +86,6 @@ class _ListSarprasPageState extends State<ListSarprasPage> {
                       tapBodyToCollapse: true,
                     ),
                     header: Text(
-                      'Katalog',
-                      style: mono1TextStyle.copyWith(
-                        fontSize: 16,
-                      ),
-                    ),
-                    collapsed: Container(),
-                    expanded: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 30,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(
-                                context, '/user/sarpras/katalog-barang-page');
-                          },
-                          child: Text(
-                            'Barang',
-                            style: mono1TextStyle.copyWith(
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 36,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(
-                                context, '/user/sarpras/katalog-ruang-page');
-                          },
-                          child: Text(
-                            'Ruang',
-                            style: mono1TextStyle.copyWith(
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 17,
-                  ),
-                  Divider(
-                    thickness: 0.5,
-                    color: mono3Color,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          ExpandableNotifier(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                left: 20,
-                right: 20,
-              ),
-              child: Column(
-                children: [
-                  ExpandablePanel(
-                    theme: const ExpandableThemeData(
-                      headerAlignment: ExpandablePanelHeaderAlignment.center,
-                      tapBodyToCollapse: true,
-                    ),
-                    header: Text(
                       'Peminjaman',
                       style: mono1TextStyle.copyWith(
                         fontSize: 16,
@@ -182,8 +115,8 @@ class _ListSarprasPageState extends State<ListSarprasPage> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.pushNamed(context,
-                                '/user/perpustakaan/riwayat-peminjaman-buku-page');
+                            Navigator.pushNamed(
+                                context, '/user/sarpras/peminjaman-ruang-page');
                           },
                           child: Text(
                             'Ruang',
@@ -209,7 +142,7 @@ class _ListSarprasPageState extends State<ListSarprasPage> {
           GestureDetector(
             onTap: () {
               Navigator.pushNamed(
-                  context, '/user/perpustakaan/peminjaman-buku-page');
+                  context, '/user/sarpras/pengajuan-peminjaman-page');
             },
             child: contentItem(
               'Pengajuan Peminjaman',
@@ -218,7 +151,7 @@ class _ListSarprasPageState extends State<ListSarprasPage> {
           GestureDetector(
             onTap: () {
               Navigator.pushNamed(
-                  context, '/user/perpustakaan/peminjaman-buku-page');
+                  context, '/user/sarpras/riwayat-peminjaman-page');
             },
             child: contentItem(
               'Riwayat Peminjaman',

@@ -27,10 +27,15 @@ import 'package:adistetsa/pages/user/perpustakaan/riwayat%20peminjaman%20buku/de
 import 'package:adistetsa/pages/user/perpustakaan/riwayat%20peminjaman%20buku/detail_riwayat_pengajuan_buku_user_page.dart';
 import 'package:adistetsa/pages/user/perpustakaan/riwayat%20peminjaman%20buku/riwayat_peminjaman_buku_user_page.dart';
 import 'package:adistetsa/pages/user/perpustakaan/riwayat%20peminjaman%20buku/riwayat_pengajuan_buku_user_page.dart';
-import 'package:adistetsa/pages/user/sarpras/katalog/katalog_barang_page.dart';
-import 'package:adistetsa/pages/user/sarpras/katalog/katalog_ruang_page.dart';
 import 'package:adistetsa/pages/user/sarpras/list_sarpras_page.dart';
+import 'package:adistetsa/pages/user/sarpras/peminjaman/katalog/katalog_barang_page.dart';
+import 'package:adistetsa/pages/user/sarpras/peminjaman/katalog/katalog_ruang_page.dart';
 import 'package:adistetsa/pages/user/sarpras/peminjaman/peminjaman_barang_page.dart';
+import 'package:adistetsa/pages/user/sarpras/peminjaman/peminjaman_ruang_page.dart';
+import 'package:adistetsa/pages/user/sarpras/pengajuan%20peminjaman/detail_pengajuan_peminjaman_page.dart';
+import 'package:adistetsa/pages/user/sarpras/pengajuan%20peminjaman/pengajuan_peminjaman_page.dart';
+import 'package:adistetsa/pages/user/sarpras/riwayat/detail_riwayat_peminjaman_page.dart';
+import 'package:adistetsa/pages/user/sarpras/riwayat/riwayat_peminjaman_page.dart';
 import 'package:adistetsa/providers/auth_provider.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/roles_page.dart';
@@ -239,6 +244,31 @@ class AdiStetsa extends StatelessWidget {
             case '/user/sarpras/peminjaman-barang-page':
               return PageTransition(
                 child: PeminjamanBarangPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/user/sarpras/peminjaman-ruang-page':
+              return PageTransition(
+                child: PeminjamanRuangPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/user/sarpras/pengajuan-peminjaman-page':
+              return PageTransition(
+                child: PengajuanPeminjamanPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/user/sarpras/pengajuan-peminjaman/detail-page':
+              return PageTransition(
+                child: DetailPengajuanPeminjamanPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/user/sarpras/riwayat-peminjaman-page':
+              return PageTransition(
+                child: RiwayatPeminjamanPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/user/sarpras/riwayat-peminjaman/detail-page':
+              return PageTransition(
+                child: DetailRiwayatPeminjamanPage(),
                 type: PageTransitionType.rightToLeft,
               );
             case '/main-page/back':
