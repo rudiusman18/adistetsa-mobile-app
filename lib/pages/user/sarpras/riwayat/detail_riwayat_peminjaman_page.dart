@@ -208,6 +208,9 @@ class _DetailRiwayatPeminjamanPageState
                 style: mono1TextStyle.copyWith(
                   fontSize: 12,
                 ),
+                textAlign: detailRuangan != 'Barang'
+                    ? TextAlign.center
+                    : TextAlign.left,
               ),
             ),
           ),
@@ -265,11 +268,16 @@ class _DetailRiwayatPeminjamanPageState
                 border: TableBorder.all(
                   color: mono6Color,
                 ),
-                columnWidths: const <int, TableColumnWidth>{
-                  0: FixedColumnWidth(40),
-                  1: FlexColumnWidth(140),
-                  2: FixedColumnWidth(140),
-                },
+                columnWidths: detailRuangan == 'Barang'
+                    ? <int, TableColumnWidth>{
+                        0: FixedColumnWidth(40),
+                        1: FlexColumnWidth(140),
+                        2: FixedColumnWidth(140),
+                      }
+                    : <int, TableColumnWidth>{
+                        0: FixedColumnWidth(40),
+                        1: FlexColumnWidth(140),
+                      },
                 defaultVerticalAlignment: TableCellVerticalAlignment.top,
                 children: [
                   // Table Heading
@@ -321,7 +329,7 @@ class _DetailRiwayatPeminjamanPageState
                                 ],
                               ),
                             )
-                          : SizedBox(),
+                          : Container(),
                     ],
                   ),
                 ],
@@ -343,11 +351,16 @@ class _DetailRiwayatPeminjamanPageState
             border: TableBorder.all(
               color: mono6Color,
             ),
-            columnWidths: const <int, TableColumnWidth>{
-              0: FixedColumnWidth(40),
-              1: FlexColumnWidth(140),
-              2: FixedColumnWidth(140),
-            },
+            columnWidths: detailRuangan == 'Barang'
+                ? const <int, TableColumnWidth>{
+                    0: FixedColumnWidth(40),
+                    1: FlexColumnWidth(140),
+                    2: FixedColumnWidth(140),
+                  }
+                : const <int, TableColumnWidth>{
+                    0: FixedColumnWidth(40),
+                    1: FlexColumnWidth(140),
+                  },
             defaultVerticalAlignment: TableCellVerticalAlignment.top,
             children: detailRuangan == 'Barang'
                 ? riwayatBarangModel.aLAT!.map((book) {
@@ -366,8 +379,7 @@ class _DetailRiwayatPeminjamanPageState
                       nama: '${riwayatRuanganModel.rUANGAN}',
                       kode: '0',
                     )
-                  ]
-                  ),
+                  ]),
       );
     }
 

@@ -205,7 +205,7 @@ class _PengajuanPeminjamanPageState extends State<PengajuanPeminjamanPage> {
                           fontSize: 10,
                           color: '$status' == 'Sedang Dipinjam'
                               ? warningColor
-                              : '$status' == 'Diajukan'
+                              : '$status' == 'Diajukan' || status == 'Pengajuan'
                                   ? infoColor
                                   : '$status' == 'Sudah Dikembalikan'
                                       ? successColor

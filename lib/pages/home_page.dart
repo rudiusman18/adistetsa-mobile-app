@@ -151,9 +151,14 @@ class HomePage extends StatelessWidget {
               urlImg: 'bimbingan konseling',
               text: 'Bimbingan Konseling',
             ),
-            ItemCard(
-              urlImg: 'sarana prasarana',
-              text: 'Sarana Prasarana',
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/user/sarpras');
+              },
+              child: ItemCard(
+                urlImg: 'sarana prasarana',
+                text: 'Sarana dan Prasarana',
+              ),
             ),
             GestureDetector(
               onTap: () {
@@ -224,9 +229,14 @@ class HomePage extends StatelessWidget {
               urlImg: 'tata usaha',
               text: 'Tata Usaha',
             ),
-            ItemCard(
-              urlImg: 'sarana prasarana',
-              text: 'Sarana Prasarana',
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/user/sarpras');
+              },
+              child: ItemCard(
+                urlImg: 'sarana prasarana',
+                text: 'Sarana dan Prasarana',
+              ),
             ),
             ItemCard(
               urlImg: 'presensi',
