@@ -1,4 +1,4 @@
-class RuanganModel {
+class PeminjamRuanganModel {
   int? iD;
   String? rUANGAN;
   String? pENGGUNA;
@@ -14,7 +14,7 @@ class RuanganModel {
   String? kETERANGAN;
   String? tANDATANGAN;
 
-  RuanganModel(
+  PeminjamRuanganModel(
       {this.iD,
       this.rUANGAN,
       this.pENGGUNA,
@@ -30,7 +30,7 @@ class RuanganModel {
       this.kETERANGAN,
       this.tANDATANGAN});
 
-  RuanganModel.fromJson(Map<String, dynamic> json) {
+  PeminjamRuanganModel.fromJson(Map<String, dynamic> json) {
     iD = json['ID'];
     rUANGAN = json['RUANGAN'];
     pENGGUNA = json['PENGGUNA'];

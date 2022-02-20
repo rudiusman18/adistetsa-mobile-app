@@ -1,4 +1,4 @@
-import 'package:adistetsa/models/barang_model.dart';
+import 'package:adistetsa/models/peminjambarang_model.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +20,7 @@ class _DetailPeminjamanBarangPageState
   @override
   Widget build(BuildContext context) {
     Providers provider = Provider.of<Providers>(context);
-    BarangModel barangModel = provider.barang;
+    PeminjamBarangModel barangModel = provider.barang;
 
     var index = 0;
 

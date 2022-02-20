@@ -1,10 +1,22 @@
+import 'package:adistetsa/models/guru_model.dart';
+import 'package:adistetsa/models/karyawan_model.dart';
+import 'package:adistetsa/models/role_model.dart';
+import 'package:adistetsa/models/siswa_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class PeminjamanBarangPage extends StatefulWidget {
   @override
   _PeminjamanBarangPageState createState() => _PeminjamanBarangPageState();
 }
+
+PlatformFile? file;
+FilePickerResult? result;
+bool isLoading = false;
 
 class _PeminjamanBarangPageState extends State<PeminjamanBarangPage> {
   TextEditingController nameInput = TextEditingController(text: '');
@@ -37,8 +49,103 @@ class _PeminjamanBarangPageState extends State<PeminjamanBarangPage> {
       });
   }
 
+  _selectFolder() async {
+    result = await FilePicker.platform.pickFiles();
+    if (result != null) {
+      setState(() {
+        file = result!.files.first;
+      });
+    } else {}
+  }
+
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+    RolesModel rolesModel = provider.role;
+    GuruModel guruModel = provider.guru;
+    KaryawanModel karyawanModel = provider.karyawan;
+    SiswaModel siswaModel = provider.siswa;
+
+    var role = rolesModel.name;
+    var _nama = role == 'Guru'
+        ? '${guruModel.nAMALENGKAP}'
+        : role == 'Staf Perpustakaan' || role == 'Staf Sarpras'
+            ? '${guruModel.nAMALENGKAP}'
+            : role == 'Karyawan'
+                ? '${karyawanModel.nAMALENGKAP}'
+                : role == 'Siswa'
+                    ? '${siswaModel.nAMA}'
+                    : '';
+    var _noHp = role == 'Guru'
+        ? '${guruModel.hP}'
+        : role == 'Staf Perpustakaan' || role == 'Staf Sarpras'
+            ? '${guruModel.hP}'
+            : role == 'Karyawan'
+                ? '${karyawanModel.hP}'
+                : role == 'Siswa'
+                    ? '${siswaModel.hP}'
+                    : '';
+    var index = 0;
+    setState(() {
+      nameInput.text = _nama;
+      phoneInput.text = _noHp;
+    });
+
+    handlePeminjamanBarang() async {
+      if (nameInput.text == '' ||
+          phoneInput.text == '' ||
+          activityInput.text == '' ||
+          selectedDate == null ||
+          keteranganInput.text == '' ||
+          file == null) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: dangerColor,
+            content: Text(
+              'Anda belum melengkapi form yang tersedia',
+              textAlign: TextAlign.center,
+            )));
+      } else {
+        setState(() {
+          isLoading = true;
+        });
+        if (await Services().pengajuanPeminjamanBarang(
+            nama: nameInput.text,
+            noTelp: phoneInput.text,
+            barang: provider.idBarang,
+            kegiatan: activityInput.text,
+            tanggal: selectedDate.toString().split(' ')[0],
+            keterangan: keteranganInput.text,
+            filepath: file != null ? file!.path : null)) {
+          setState(() {
+            nameInput.text = '';
+            phoneInput.text = '';
+            activityInput.text = '';
+            selectedDate = null;
+            keteranganInput.text = '';
+            file = null;
+            provider.barangChart = [];
+            provider.idBarang = [];
+          });
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              backgroundColor: successColor,
+              content: Text(
+                'Anda berhasil meminjam barang',
+                textAlign: TextAlign.center,
+              )));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              backgroundColor: dangerColor,
+              content: Text(
+                'Anda gagal meminjam barang',
+                textAlign: TextAlign.center,
+              )));
+        }
+      }
+      setState(() {
+        isLoading = false;
+      });
+    }
+
     PreferredSizeWidget header() {
       return AppBar(
         centerTitle: true,
@@ -55,6 +162,14 @@ class _PeminjamanBarangPageState extends State<PeminjamanBarangPage> {
         elevation: 4,
         leading: IconButton(
           onPressed: () {
+            setState(() {
+              nameInput.text = '';
+              phoneInput.text = '';
+              activityInput.text = '';
+              selectedDate = null;
+              keteranganInput.text = '';
+              file = null;
+            });
             Navigator.pop(context);
           },
           icon: Icon(Icons.arrow_back),
@@ -64,7 +179,7 @@ class _PeminjamanBarangPageState extends State<PeminjamanBarangPage> {
     }
 
     TableRow contentTable({
-      required int id,
+      required String id,
       required int no,
       required String namaBarang,
       required String kodeBarang,
@@ -113,7 +228,9 @@ class _PeminjamanBarangPageState extends State<PeminjamanBarangPage> {
                 horizontal: 2,
               ),
               child: GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  provider.deleteBarang(id: int.parse(id));
+                },
                 child: Icon(Icons.delete_outline, color: mono3Color),
               ),
             ),
@@ -266,15 +383,15 @@ class _PeminjamanBarangPageState extends State<PeminjamanBarangPage> {
             3: FixedColumnWidth(53),
           },
           defaultVerticalAlignment: TableCellVerticalAlignment.top,
-          children: [
-            for (var i = 0; i < 10; i++)
-              contentTable(
-                id: 0,
-                no: i + 1,
-                namaBarang: 'Kondom',
-                kodeBarang: '12345',
-              ),
-          ],
+          children: provider.barangChart.map((item) {
+            index++;
+            return contentTable(
+              id: '${item.iD}',
+              no: index,
+              namaBarang: '${item.nAMA}',
+              kodeBarang: '${item.iD}',
+            );
+          }).toList(),
         ),
       );
     }
@@ -357,6 +474,7 @@ class _PeminjamanBarangPageState extends State<PeminjamanBarangPage> {
                 ),
               ),
               child: TextFormField(
+                enabled: false,
                 controller: nameInput,
                 decoration: InputDecoration.collapsed(
                   hintText: 'Nama',
@@ -406,6 +524,7 @@ class _PeminjamanBarangPageState extends State<PeminjamanBarangPage> {
                 ),
               ),
               child: TextFormField(
+                enabled: false,
                 controller: phoneInput,
                 keyboardType: TextInputType.phone,
                 decoration: InputDecoration.collapsed(
@@ -457,7 +576,6 @@ class _PeminjamanBarangPageState extends State<PeminjamanBarangPage> {
               ),
               child: TextFormField(
                 controller: activityInput,
-                keyboardType: TextInputType.phone,
                 decoration: InputDecoration.collapsed(
                   hintText: 'Kegiatan',
                   hintStyle: p1TextStyle.copyWith(
@@ -603,7 +721,9 @@ class _PeminjamanBarangPageState extends State<PeminjamanBarangPage> {
                 ),
                 backgroundColor: m5Color,
               ),
-              onPressed: () {},
+              onPressed: () {
+                _selectFolder();
+              },
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -615,10 +735,12 @@ class _PeminjamanBarangPageState extends State<PeminjamanBarangPage> {
                   SizedBox(
                     width: 12,
                   ),
-                  Text(
-                    'Pilih File',
-                    style: mono6TextStyle.copyWith(
-                      fontSize: 12,
+                  Flexible(
+                    child: Text(
+                      (file == null) ? 'Pilih File' : file!.name.toString(),
+                      style: mono6TextStyle.copyWith(
+                        fontSize: 12,
+                      ),
                     ),
                   ),
                 ],
@@ -649,34 +771,52 @@ class _PeminjamanBarangPageState extends State<PeminjamanBarangPage> {
               ),
               backgroundColor: m2Color,
             ),
-            onPressed: () {},
-            child: Text(
-              'Ajukan Peminjaman',
-              style: mono6TextStyle.copyWith(
-                fontWeight: bold,
-                fontSize: 16,
-              ),
-            )),
+            onPressed: () async {
+              handlePeminjamanBarang();
+            },
+            child: isLoading == false
+                ? Text(
+                    'Ajukan Peminjaman',
+                    style: mono6TextStyle.copyWith(
+                      fontWeight: bold,
+                      fontSize: 16,
+                    ),
+                  )
+                : Container(
+                    width: 14,
+                    height: 14,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: mono6Color,
+                    ),
+                  )),
       );
     }
 
-    return Scaffold(
-        backgroundColor: mono6Color,
-        appBar: header(),
-        body: ListView(
-          children: [
-            tableHeader(),
-            tabelPeminjam(),
-            // emptyTable(),
-            buttonAdd(),
-            inputNama(),
-            inputNoHp(),
-            inputKegiatan(),
-            inputTanggal(),
-            inputKeterangan(),
-            buttonfileTTD(),
-            buttonSubmit(),
-          ],
-        ));
+    return WillPopScope(
+      onWillPop: () async {
+        setState(() {
+          file = null;
+        });
+        return true;
+      },
+      child: Scaffold(
+          backgroundColor: mono6Color,
+          appBar: header(),
+          body: ListView(
+            children: [
+              tableHeader(),
+              provider.barangChart.isNotEmpty ? tabelPeminjam() : emptyTable(),
+              buttonAdd(),
+              inputNama(),
+              inputNoHp(),
+              inputKegiatan(),
+              inputTanggal(),
+              inputKeterangan(),
+              buttonfileTTD(),
+              buttonSubmit(),
+            ],
+          )),
+    );
   }
 }

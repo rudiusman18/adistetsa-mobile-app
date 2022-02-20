@@ -1,14 +1,19 @@
-import 'package:adistetsa/models/barang_model.dart';
+import 'package:adistetsa/models/katalogbarang_model.dart';
+import 'package:adistetsa/models/katalogruangan_model.dart';
+import 'package:adistetsa/models/peminjambarang_model.dart';
 import 'package:adistetsa/models/guru_model.dart';
 import 'package:adistetsa/models/jenispelanggaran_model.dart';
 import 'package:adistetsa/models/karyawan_model.dart';
 import 'package:adistetsa/models/katalogbuku_model.dart';
 import 'package:adistetsa/models/list_buku_model.dart';
 import 'package:adistetsa/models/pengajuanpeminjaman_model.dart';
+import 'package:adistetsa/models/riwayatbarang_model.dart';
 import 'package:adistetsa/models/riwayatpeminjaman_model.dart';
+import 'package:adistetsa/models/riwayatruangan_model.dart';
 import 'package:adistetsa/models/role_model.dart';
-import 'package:adistetsa/models/ruangan_model.dart';
+import 'package:adistetsa/models/peminjamruangan_model.dart';
 import 'package:adistetsa/models/siswa_model.dart';
+import 'package:adistetsa/pages/user/sarpras/peminjaman/katalog/katalog_ruang_page.dart';
 import 'package:adistetsa/services/service.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -49,13 +54,39 @@ class Providers with ChangeNotifier {
   JenisPelanggaranModel _jenisPelanggaran = JenisPelanggaranModel();
   JenisPelanggaranModel get jenisPelanggaran => _jenisPelanggaran;
 
-  RuanganModel _ruangan = RuanganModel();
-  RuanganModel get ruangan => _ruangan;
+  PeminjamRuanganModel _ruangan = PeminjamRuanganModel();
+  PeminjamRuanganModel get ruangan => _ruangan;
 
-  BarangModel _barang = BarangModel();
-  BarangModel get barang => _barang;
+  PeminjamBarangModel _barang = PeminjamBarangModel();
+  PeminjamBarangModel get barang => _barang;
+
+  List<KatalogBarangModel> _barangChart = [];
+  List<KatalogBarangModel> get barangChart => _barangChart;
+
+  List<String> _idBarang = [];
+  List<String> get idBarang => _idBarang;
+
+  KatalogRuanganModel? _ruangChart;
+  KatalogRuanganModel? get ruangChart => _ruangChart;
+
+  String _idRuang = '';
+  String get idRuang => _idRuang;
+
+  RiwayatBarangModel _riwayatBarang = RiwayatBarangModel();
+  RiwayatBarangModel get riwayatBarang => _riwayatBarang;
+
+  RiwayatRuanganModel _riwayatRuangan = RiwayatRuanganModel();
+  RiwayatRuanganModel get riwayatRuang => _riwayatRuangan;
+
+  PeminjamRuanganModel _peminjamanRuangan = PeminjamRuanganModel();
+  PeminjamRuanganModel get peminjamanRuangan => _peminjamanRuangan;
+
+  PeminjamBarangModel _peminjamanBarang = PeminjamBarangModel();
+  PeminjamBarangModel get peminjamanBarang => _peminjamanBarang;
 
   List listJenisProgramKebaikan = [];
+
+  String detailRuang = '';
 
   set listKatalog(List<ListBukuModel> listKatalog) {
     _listKatalog = listKatalog;
@@ -64,6 +95,26 @@ class Providers with ChangeNotifier {
 
   set idBuku(List<String> idBuku) {
     _idBuku = idBuku;
+    notifyListeners();
+  }
+
+  set barangChart(List<KatalogBarangModel> barang) {
+    _barangChart = barang;
+    notifyListeners();
+  }
+
+  set idBarang(List<String> idBarang) {
+    _idBarang = idBarang;
+    notifyListeners();
+  }
+
+  set ruangChart(KatalogRuanganModel? ruang) {
+    _ruangChart = ruang;
+    notifyListeners();
+  }
+
+  set idRuang(String idRuang) {
+    _idRuang = idRuang;
     notifyListeners();
   }
 
@@ -112,13 +163,38 @@ class Providers with ChangeNotifier {
     notifyListeners();
   }
 
-  set setRuangan(RuanganModel ruangan) {
+  set setRuangan(PeminjamRuanganModel ruangan) {
     _ruangan = ruangan;
     notifyListeners();
   }
 
-  set setBarang(BarangModel barang) {
+  set setBarang(PeminjamBarangModel barang) {
     _barang = barang;
+    notifyListeners();
+  }
+
+  set setRiwayatBarang(RiwayatBarangModel riwayatBarang) {
+    _riwayatBarang = riwayatBarang;
+    notifyListeners();
+  }
+
+  set setRiwayatRuangan(RiwayatRuanganModel ruang) {
+    _riwayatRuangan = riwayatRuang;
+    notifyListeners();
+  }
+
+  setDetailRuangan({required String detail}) {
+    detailRuang = detail;
+    notifyListeners();
+  }
+
+  set setPeminjamanRuangan(PeminjamRuanganModel peminjamanRuangan) {
+    _peminjamanRuangan = peminjamanRuangan;
+    notifyListeners();
+  }
+
+  set setPeminjamanBarang(PeminjamBarangModel peminjamanBarang) {
+    _peminjamanBarang = peminjamanBarang;
     notifyListeners();
   }
 
@@ -223,7 +299,7 @@ class Providers with ChangeNotifier {
 
   Future<bool> getDetailRuanganAdmin({String? id}) async {
     try {
-      RuanganModel ruanganModel =
+      PeminjamRuanganModel ruanganModel =
           await Services().getDetailRuanganAdmin(id: '$id');
       _ruangan = ruanganModel;
       return true;
@@ -235,7 +311,7 @@ class Providers with ChangeNotifier {
 
   Future<bool> getDetailBarangAdmin({String? id}) async {
     try {
-      BarangModel barangModel =
+      PeminjamBarangModel barangModel =
           await Services().getDetailBarangAdmin(id: '$id');
       _barang = barangModel;
       return true;
@@ -244,6 +320,55 @@ class Providers with ChangeNotifier {
       return false;
     }
   }
+
+  Future<bool> getDetailRiwayatBarang({String? id}) async {
+    try {
+      RiwayatBarangModel riwayatBarangModel =
+          await Services().getDetailRiwayatBarang(id: '$id');
+      _riwayatBarang = riwayatBarangModel;
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> getDetailRiwayatRuangan({String? id}) async {
+    try {
+      RiwayatRuanganModel riwayatRuanganModel =
+          await Services().getDetailRiwayatRuangan(id: '$id');
+      _riwayatRuangan = riwayatRuanganModel;
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> getDetailPeminjamanBarang({String? id}) async {
+    try {
+      PeminjamBarangModel peminjamanBarangModel =
+          await Services().getDetailPeminjamanBarang(id: '$id');
+      _peminjamanBarang = peminjamanBarangModel;
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> getDetailPeminjamanRuangan({String? id}) async {
+    try {
+      PeminjamRuanganModel peminjamanRuanganModel =
+          await Services().getDetailPeminjamanRuangan(id: '$id');
+      _peminjamanRuangan = peminjamanRuanganModel;
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   // NOTE: Untuk mendapatkan list dari katalog yang user ambil
 
   // ? mengecek apakah buku sudah dipinjam oleh user yang sama
@@ -256,7 +381,7 @@ class Providers with ChangeNotifier {
     }
   }
 
-  // ? menambah buku kedalam list
+  // ? menambah barang kedalam list
   addBooks({required ListBukuModel buku}) {
     if (bookExist(buku)) {
       print('${buku.jUDUL} wes masuk');
@@ -279,6 +404,74 @@ class Providers with ChangeNotifier {
       _idBuku.removeAt(id);
       print('masuk');
     }
+    notifyListeners();
+  }
+
+  // ? mengecek apakah buku sudah dipinjam oleh user yang sama
+  barangExist(KatalogBarangModel barang) {
+    // -1 menandakan bahwa data sudah ada dan tidak dapat dimasukkan kembali
+    if (_barangChart.indexWhere((element) => element.iD == barang.iD) == -1) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  // ? menambah buku kedalam list
+  addBarang({required KatalogBarangModel barang}) {
+    if (barangExist(barang)) {
+      print('${barang.nAMA} wes masuk');
+    } else {
+      print(barang.nAMA);
+      _barangChart.add(barang);
+      _idBarang.add(barang.iD.toString());
+    }
+    notifyListeners();
+  }
+
+  deleteBarang({required int id}) {
+    print(id);
+    if (_barangChart.length <= 1 && _barangChart.isNotEmpty) {
+      _barangChart.removeAt(0);
+      _idBarang.removeAt(0);
+      print('object');
+    } else {
+      _barangChart.removeAt(id);
+      _idBarang.removeAt(id);
+      print('masuk');
+    }
+    notifyListeners();
+  }
+
+  // ? mengecek apakah buku sudah dipinjam oleh user yang sama
+  ruangExist(KatalogRuanganModel? ruang) {
+    // -1 menandakan bahwa data sudah ada dan tidak dapat dimasukkan kembali
+    if (_idRuang == ruang!.iD.toString()) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  // ? menambah buku kedalam list
+  addRuang({required KatalogRuanganModel? ruang}) {
+    if (ruangExist(ruang)) {
+      print('${ruang!.nAMA} wes masuk');
+      _ruangChart = ruang;
+      _idRuang = ruang.iD.toString();
+    } else {
+      print(ruang!.nAMA);
+      _ruangChart = ruang;
+      _idRuang = ruang.iD.toString();
+    }
+    notifyListeners();
+  }
+
+  deleteRuang({required int id}) {
+    print(id);
+    _ruangChart = null;
+    _idRuang = '';
+    print('masuk');
     notifyListeners();
   }
 }

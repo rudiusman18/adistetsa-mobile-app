@@ -1,4 +1,4 @@
-import 'package:adistetsa/models/barang_model.dart';
+import 'package:adistetsa/models/peminjambarang_model.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
@@ -185,7 +185,7 @@ class _ListPeminjamanBarangPageState extends State<ListPeminjamanBarangPage> {
               future: Services().getBarangAdmin(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
-                  List<BarangModel> data = snapshot.data;
+                  List<PeminjamBarangModel> data = snapshot.data;
                   return data.isEmpty
                       ? Center(
                           child: Text(

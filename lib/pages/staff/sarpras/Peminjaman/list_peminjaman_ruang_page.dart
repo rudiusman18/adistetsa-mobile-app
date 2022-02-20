@@ -1,4 +1,4 @@
-import 'package:adistetsa/models/ruangan_model.dart';
+import 'package:adistetsa/models/peminjamruangan_model.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
@@ -180,11 +180,11 @@ class _ListPeminjamanRuangPageState extends State<ListPeminjamanRuangPage> {
     return Scaffold(
       appBar: isSearch == true ? searchAppbar() : katalogBarangHeader(),
       backgroundColor: mono6Color,
-      body: FutureBuilder(
+      body: isLoading == false ? FutureBuilder(
         future: Services().getRuanganAdmin(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
-            List<RuanganModel> data = snapshot.data;
+            List<PeminjamRuanganModel> data = snapshot.data;
             return data.isEmpty
                 ? Center(
                     child: Text(
@@ -213,7 +213,7 @@ class _ListPeminjamanRuangPageState extends State<ListPeminjamanRuangPage> {
             );
           }
         },
-      ),
+      ) : Container(),
     );
   }
 }

@@ -1,12 +1,25 @@
+import 'package:adistetsa/models/guru_model.dart';
+import 'package:adistetsa/models/karyawan_model.dart';
+import 'package:adistetsa/models/role_model.dart';
+import 'package:adistetsa/models/siswa_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:day_night_time_picker/lib/constants.dart';
 import 'package:day_night_time_picker/lib/daynight_timepicker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class PeminjamanRuangPage extends StatefulWidget {
   @override
   _PeminjamanRuangPageState createState() => _PeminjamanRuangPageState();
 }
+
+Object? value1Item;
+PlatformFile? file;
+FilePickerResult? result;
+bool isLoading = false;
 
 class _PeminjamanRuangPageState extends State<PeminjamanRuangPage> {
   TextEditingController nameInput = TextEditingController(text: '');
@@ -42,6 +55,32 @@ class _PeminjamanRuangPageState extends State<PeminjamanRuangPage> {
       });
   }
 
+  // Note: get date
+  DateTime? selectedDatePengembalian;
+  _selectDatePengembalian(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData().copyWith(
+            colorScheme: ColorScheme.light(
+              primary: p2Color,
+            ),
+          ),
+          child: child!,
+        );
+      },
+      context: context,
+      initialDate: DateTime.now(), // Refer step 1
+      firstDate: DateTime(2000),
+      lastDate: DateTime(3000),
+    );
+    if (picked != null && picked != selectedDatePengembalian)
+      setState(() {
+        selectedDatePengembalian = picked;
+        print(selectedDatePengembalian);
+      });
+  }
+
 // Note: get time
   TimeOfDay _timeAwal = TimeOfDay.now();
   void onTimeChangedAwal(TimeOfDay newTime) {
@@ -63,8 +102,122 @@ class _PeminjamanRuangPageState extends State<PeminjamanRuangPage> {
     });
   }
 
+  _selectFolder() async {
+    result = await FilePicker.platform.pickFiles();
+    if (result != null) {
+      setState(() {
+        file = result!.files.first;
+      });
+    } else {}
+  }
+
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+    RolesModel rolesModel = provider.role;
+    GuruModel guruModel = provider.guru;
+    KaryawanModel karyawanModel = provider.karyawan;
+    SiswaModel siswaModel = provider.siswa;
+
+    var role = rolesModel.name;
+    var _nama = role == 'Guru'
+        ? '${guruModel.nAMALENGKAP}'
+        : role == 'Staf Perpustakaan' || role == 'Staf Sarpras'
+            ? '${guruModel.nAMALENGKAP}'
+            : role == 'Karyawan'
+                ? '${karyawanModel.nAMALENGKAP}'
+                : role == 'Siswa'
+                    ? '${siswaModel.nAMA}'
+                    : '';
+    var _noHp = role == 'Guru'
+        ? '${guruModel.hP}'
+        : role == 'Staf Perpustakaan' || role == 'Staf Sarpras'
+            ? '${guruModel.hP}'
+            : role == 'Karyawan'
+                ? '${karyawanModel.hP}'
+                : role == 'Siswa'
+                    ? '${siswaModel.hP}'
+                    : '';
+    setState(() {
+      nameInput.text = _nama;
+      phoneInput.text = _noHp;
+    });
+
+    handlePeminjamanRuang() async {
+      if (nameInput.text == '' ||
+          phoneInput.text == '' ||
+          activityInput.text == '' ||
+          selectedDate == null ||
+          jamAwal == '' ||
+          jamAkhir == '' ||
+          keteranganInput.text == '' ||
+          file == null ||
+          value1Item == null) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: dangerColor,
+            content: Text(
+              'Anda belum melengkapi form yang tersedia',
+              textAlign: TextAlign.center,
+            )));
+      } else if(jamAwal == jamAkhir){
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: dangerColor,
+            content: Text(
+              'Jam awal dan jam berakhir pinjaman tidak bisa sama',
+              textAlign: TextAlign.center,
+            )));
+      } 
+      else {
+        setState(() {
+          isLoading = true;
+        });
+        if (await Services().pengajuanPeminjamanRuang(
+            nama: nameInput.text,
+            noTelp: phoneInput.text,
+            ruang: provider.ruangChart!.iD.toString(),
+            kegiatan: activityInput.text,
+            tanggalPenggunaan: selectedDate.toString().split(' ')[0],
+            tanggalPengembalian:
+                selectedDatePengembalian.toString().split(' ')[0],
+            jamPenggunaan: jamAwal,
+            jamBerakhir: jamAkhir,
+            kategori: value1Item.toString(),
+            keterangan: keteranganInput.text,
+            filepath: file != null ? file!.path : null)) {
+          setState(() {
+            nameInput.text = '';
+            phoneInput.text = '';
+            provider.ruangChart = null;
+            provider.idRuang = '';
+            activityInput.text = '';
+            selectedDate = null;
+            selectedDatePengembalian = null;
+            jamAwal = '';
+            jamAkhir = '';
+            value1Item = null;
+            keteranganInput.text = '';
+            file = null;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              backgroundColor: successColor,
+              content: Text(
+                'Anda berhasil meminjam ruangan',
+                textAlign: TextAlign.center,
+              )));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              backgroundColor: dangerColor,
+              content: Text(
+                'Anda gagal meminjam ruangan',
+                textAlign: TextAlign.center,
+              )));
+        }
+      }
+      setState(() {
+        isLoading = false;
+      });
+    }
+
     PreferredSizeWidget header() {
       return AppBar(
         centerTitle: true,
@@ -81,6 +234,18 @@ class _PeminjamanRuangPageState extends State<PeminjamanRuangPage> {
         elevation: 4,
         leading: IconButton(
           onPressed: () {
+            setState(() {
+              nameInput.text = '';
+              phoneInput.text = '';
+              activityInput.text = '';
+              selectedDate = null;
+              selectedDatePengembalian = null;
+              jamAwal = '';
+              jamAkhir = '';
+              value1Item = null;
+              keteranganInput.text = '';
+              file = null;
+            });
             Navigator.pop(context);
           },
           icon: Icon(Icons.arrow_back),
@@ -90,10 +255,9 @@ class _PeminjamanRuangPageState extends State<PeminjamanRuangPage> {
     }
 
     TableRow contentTable({
-      required int id,
+      required String id,
       required int no,
       required String namaRuang,
-      required String kodeRuang,
     }) {
       return TableRow(
         children: [
@@ -124,22 +288,10 @@ class _PeminjamanRuangPageState extends State<PeminjamanRuangPage> {
               padding: EdgeInsets.symmetric(
                 horizontal: 2,
               ),
-              child: Text(
-                kodeRuang,
-                style: mono1TextStyle.copyWith(
-                  fontSize: 12,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          Container(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 2,
-              ),
               child: GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  provider.deleteRuang(id: int.parse(id));
+                },
                 child: Icon(Icons.delete_outline, color: mono3Color),
               ),
             ),
@@ -241,21 +393,6 @@ class _PeminjamanRuangPageState extends State<PeminjamanRuangPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Kode Ruang',
-                            style: mono6TextStyle.copyWith(
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      height: 30,
-                      color: m4Color,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
                             'opsi',
                             style: mono6TextStyle.copyWith(
                               fontSize: 12,
@@ -282,26 +419,23 @@ class _PeminjamanRuangPageState extends State<PeminjamanRuangPage> {
           bottom: 20,
         ),
         child: Table(
-          border: TableBorder.all(
-            color: mono6Color,
-          ),
-          columnWidths: const <int, TableColumnWidth>{
-            0: FixedColumnWidth(40),
-            1: FlexColumnWidth(140),
-            2: FixedColumnWidth(96),
-            3: FixedColumnWidth(53),
-          },
-          defaultVerticalAlignment: TableCellVerticalAlignment.top,
-          children: [
-            for (var i = 0; i < 10; i++)
+            border: TableBorder.all(
+              color: mono6Color,
+            ),
+            columnWidths: const <int, TableColumnWidth>{
+              0: FixedColumnWidth(40),
+              1: FlexColumnWidth(140),
+              2: FixedColumnWidth(96),
+              3: FixedColumnWidth(53),
+            },
+            defaultVerticalAlignment: TableCellVerticalAlignment.top,
+            children: [
               contentTable(
-                id: 0,
-                no: i + 1,
-                namaRuang: 'Kamar Mandi',
-                kodeRuang: '12345',
-              ),
-          ],
-        ),
+                id: '${provider.ruangChart!.iD}',
+                no: 1,
+                namaRuang: '${provider.ruangChart!.nAMA}',
+              )
+            ]),
       );
     }
 
@@ -383,6 +517,7 @@ class _PeminjamanRuangPageState extends State<PeminjamanRuangPage> {
                 ),
               ),
               child: TextFormField(
+                enabled: false,
                 controller: nameInput,
                 decoration: InputDecoration.collapsed(
                   hintText: 'Nama',
@@ -432,6 +567,7 @@ class _PeminjamanRuangPageState extends State<PeminjamanRuangPage> {
                 ),
               ),
               child: TextFormField(
+                enabled: false,
                 controller: phoneInput,
                 keyboardType: TextInputType.phone,
                 decoration: InputDecoration.collapsed(
@@ -483,7 +619,6 @@ class _PeminjamanRuangPageState extends State<PeminjamanRuangPage> {
               ),
               child: TextFormField(
                 controller: activityInput,
-                keyboardType: TextInputType.phone,
                 decoration: InputDecoration.collapsed(
                   hintText: 'Kegiatan',
                   hintStyle: p1TextStyle.copyWith(
@@ -537,6 +672,60 @@ class _PeminjamanRuangPageState extends State<PeminjamanRuangPage> {
                       selectedDate == null
                           ? 'Tanggal'
                           : selectedDate!.toString().split(' ')[0],
+                      style: p1TextStyle.copyWith(
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                  Icon(
+                    Icons.calendar_today_rounded,
+                    color: p1Color,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    Widget inputPengembalian() {
+      return Container(
+        margin: EdgeInsets.only(
+          left: 20,
+          right: 20,
+          bottom: 20,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Tanggal Pengembalian',
+              style: mono1TextStyle.copyWith(
+                fontWeight: semiBold,
+                fontSize: 12,
+              ),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            TextButton(
+              onPressed: () {
+                _selectDatePengembalian(context);
+              },
+              style: TextButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                side: BorderSide(color: p1Color),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      selectedDatePengembalian == null
+                          ? 'Tanggal'
+                          : selectedDatePengembalian!.toString().split(' ')[0],
                       style: p1TextStyle.copyWith(
                         fontSize: 12,
                       ),
@@ -675,6 +864,102 @@ class _PeminjamanRuangPageState extends State<PeminjamanRuangPage> {
       );
     }
 
+    Widget dropdownList1({required String hint, required List item}) {
+      return Container(
+          height: 40,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: p1Color,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          padding: EdgeInsets.symmetric(
+            horizontal: 12,
+          ),
+          child: DropdownButtonHideUnderline(
+            child: GestureDetector(
+              onLongPress: () {
+                setState(() {
+                  value1Item = null;
+                });
+              },
+              child: DropdownButton(
+                icon: Icon(
+                  Icons.keyboard_arrow_down_outlined,
+                  color: p1Color,
+                ),
+                hint: Text(
+                  hint,
+                  style: mono3TextStyle.copyWith(
+                    color: p1Color,
+                    fontSize: 12,
+                  ),
+                ),
+                dropdownColor: mono6Color,
+                elevation: 2,
+                value: value1Item,
+                items: item.map(
+                  (value) {
+                    return DropdownMenuItem(
+                      value: value,
+                      child: Text(
+                        value,
+                        style: mono3TextStyle.copyWith(
+                          color: value1Item == value ? p1Color : mono1Color,
+                          fontWeight: regular,
+                          fontSize: 12,
+                        ),
+                      ),
+                    );
+                  },
+                ).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    print(value);
+                    value1Item = value;
+                  });
+                },
+              ),
+            ),
+          ));
+    }
+
+    Widget listKategori() {
+      return Container(
+        width: double.infinity,
+        margin: EdgeInsets.only(bottom: 20),
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Kategori',
+                  style: mono1TextStyle.copyWith(
+                    fontWeight: semiBold,
+                    fontSize: 12,
+                  ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                dropdownList1(
+                  hint: 'Kategori',
+                  item: [
+                    'Jangka Pendek',
+                    'Jangka Panjang',
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    }
+
     Widget inputKeterangan() {
       return Container(
         margin: EdgeInsets.only(
@@ -750,7 +1035,9 @@ class _PeminjamanRuangPageState extends State<PeminjamanRuangPage> {
                 ),
                 backgroundColor: m5Color,
               ),
-              onPressed: () {},
+              onPressed: () {
+                _selectFolder();
+              },
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -762,10 +1049,12 @@ class _PeminjamanRuangPageState extends State<PeminjamanRuangPage> {
                   SizedBox(
                     width: 12,
                   ),
-                  Text(
-                    'Pilih File',
-                    style: mono6TextStyle.copyWith(
-                      fontSize: 12,
+                  Flexible(
+                    child: Text(
+                      (file == null) ? 'Pilih File' : file!.name.toString(),
+                      style: mono6TextStyle.copyWith(
+                        fontSize: 12,
+                      ),
                     ),
                   ),
                 ],
@@ -796,35 +1085,66 @@ class _PeminjamanRuangPageState extends State<PeminjamanRuangPage> {
               ),
               backgroundColor: m2Color,
             ),
-            onPressed: () {},
-            child: Text(
-              'Ajukan Peminjaman',
-              style: mono6TextStyle.copyWith(
-                fontWeight: bold,
-                fontSize: 16,
-              ),
-            )),
+            onPressed: () {
+              handlePeminjamanRuang();
+            },
+            child: isLoading == false
+                ? Text(
+                    'Ajukan Peminjaman',
+                    style: mono6TextStyle.copyWith(
+                      fontWeight: bold,
+                      fontSize: 16,
+                    ),
+                  )
+                : Container(
+                    width: 14,
+                    height: 14,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: mono6Color,
+                    ),
+                  )),
       );
     }
 
-    return Scaffold(
-        backgroundColor: mono6Color,
-        appBar: header(),
-        body: ListView(
-          children: [
-            tableHeader(),
-            tabelPeminjam(),
-            // emptyTable(),
-            buttonAdd(),
-            inputNama(),
-            inputNoHp(),
-            inputKegiatan(),
-            inputTanggal(),
-            inputJam(),
-            inputKeterangan(),
-            buttonfileTTD(),
-            buttonSubmit(),
-          ],
-        ));
+    return WillPopScope(
+      onWillPop: () async {
+        setState(() {
+          nameInput.text = '';
+          phoneInput.text = '';
+          activityInput.text = '';
+          selectedDate = null;
+          selectedDatePengembalian = null;
+          jamAwal = '';
+          jamAkhir = '';
+          value1Item = null;
+          keteranganInput.text = '';
+          file = null;
+        });
+        return true;
+      },
+      child: Scaffold(
+          backgroundColor: mono6Color,
+          appBar: header(),
+          body: ListView(
+            children: [
+              tableHeader(),
+              provider.ruangChart != null ? tabelPeminjam() : emptyTable(),
+              buttonAdd(),
+              inputNama(),
+              inputNoHp(),
+              listKategori(),
+              inputKegiatan(),
+              inputTanggal(),
+              value1Item == 'Jangka Panjang'
+                  ? inputPengembalian()
+                  : Container(),
+              inputJam(),
+              inputKeterangan(),
+              buttonfileTTD(),
+              buttonSubmit(),
+            ],
+          )),
+    );
   }
 }

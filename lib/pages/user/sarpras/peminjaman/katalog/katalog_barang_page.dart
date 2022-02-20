@@ -1,6 +1,10 @@
+import 'package:adistetsa/models/katalogbarang_model.dart';
+import 'package:adistetsa/models/peminjambarang_model.dart';
+import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class KatalogBarangPage extends StatefulWidget {
   @override
@@ -15,6 +19,8 @@ class _KatalogBarangPageState extends State<KatalogBarangPage> {
 
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+
     PreferredSizeWidget katalogBarangHeader() {
       return AppBar(
         centerTitle: true,
@@ -50,7 +56,8 @@ class _KatalogBarangPageState extends State<KatalogBarangPage> {
       );
     }
 
-    confirmPinjam({required String name}) async {
+    confirmPinjam(
+        {required String name, required KatalogBarangModel barang}) async {
       return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -156,6 +163,7 @@ class _KatalogBarangPageState extends State<KatalogBarangPage> {
                         height: 46,
                         child: TextButton(
                           onPressed: () async {
+                            provider.addBarang(barang: barang);
                             Navigator.pop(context);
                           },
                           style: TextButton.styleFrom(
@@ -219,7 +227,6 @@ class _KatalogBarangPageState extends State<KatalogBarangPage> {
               urlSearch = 'search=${searchController.text}';
               isLoading = true;
             });
-            await Services().getKatalogBuku(search: urlSearch);
             setState(() {
               isLoading = false;
             });
@@ -234,6 +241,7 @@ class _KatalogBarangPageState extends State<KatalogBarangPage> {
       required String nama,
       required String tipe,
       required String register,
+      required KatalogBarangModel barang,
     }) {
       return GestureDetector(
         onTap: () async {
@@ -274,7 +282,7 @@ class _KatalogBarangPageState extends State<KatalogBarangPage> {
                         ),
                       ),
                       Text(
-                        'Buku $tipe',
+                        '$tipe',
                         style: mono2TextStyle.copyWith(
                           fontSize: 10,
                         ),
@@ -284,7 +292,7 @@ class _KatalogBarangPageState extends State<KatalogBarangPage> {
                 ),
                 TextButton(
                   onPressed: () {
-                    confirmPinjam(name: nama);
+                    confirmPinjam(name: nama, barang: barang);
                   },
                   style: TextButton.styleFrom(
                       backgroundColor: m5Color,
@@ -307,21 +315,55 @@ class _KatalogBarangPageState extends State<KatalogBarangPage> {
     }
 
     return Scaffold(
-      appBar: isSearch == true ? searchAppbar() : katalogBarangHeader(),
-      backgroundColor: mono6Color,
-      body: Container(
-        padding: EdgeInsets.only(top: 20),
-        child: ListView(
-          children: [
-            for (var i = 0; i < 30; i++)
-              listItem(
-                nama: 'Kondom',
-                tipe: '12345 = Inventaris',
-                register: 'register',
-              ),
-          ],
-        ),
-      ),
-    );
+        appBar: isSearch == true ? searchAppbar() : katalogBarangHeader(),
+        backgroundColor: mono6Color,
+        body: Container(
+          padding: EdgeInsets.only(top: 20),
+          child: isLoading == true
+              ? Container()
+              : FutureBuilder(
+                  future: Services().getKatalogBarang(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData) {
+                      List<KatalogBarangModel> data = snapshot.data;
+                      return data.isEmpty
+                          ? Center(
+                              child: Text(
+                                'Data tidak ditemukan',
+                                style: mono1TextStyle,
+                              ),
+                            )
+                          : provider.barangChart.length == data.length
+                              ? Center(
+                                  child: Text(
+                                    'Data tidak ditemukan',
+                                    style: mono1TextStyle,
+                                  ),
+                                )
+                              : ListView(
+                                  children: data.map((item) {
+                                    if (provider.barangExist(item)) {
+                                      return Container();
+                                    } else {
+                                      return listItem(
+                                        nama: '${item.nAMA}',
+                                        tipe: '${item.iD} - ${item.jENIS}',
+                                        register: '${item.iD}',
+                                        barang: item,
+                                      );
+                                    }
+                                  }).toList(),
+                                );
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 4,
+                          color: m1Color,
+                        ),
+                      );
+                    }
+                  },
+                ),
+        ));
   }
 }

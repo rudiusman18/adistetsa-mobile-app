@@ -1,4 +1,4 @@
-import 'package:adistetsa/models/ruangan_model.dart';
+import 'package:adistetsa/models/peminjamruangan_model.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,7 @@ class _DetailPeminjamanRuangPageState extends State<DetailPeminjamanRuangPage> {
   @override
   Widget build(BuildContext context) {
     Providers provider = Provider.of<Providers>(context);
-    RuanganModel ruanganModel = provider.ruangan;
+    PeminjamRuanganModel ruanganModel = provider.ruangan;
 
     PreferredSizeWidget header() {
       return AppBar(

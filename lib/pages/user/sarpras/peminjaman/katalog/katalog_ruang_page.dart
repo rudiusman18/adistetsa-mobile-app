@@ -1,6 +1,9 @@
+import 'package:adistetsa/models/katalogruangan_model.dart';
+import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class KatalogRuangPage extends StatefulWidget {
   @override
@@ -15,6 +18,7 @@ class _KatalogRuangPageState extends State<KatalogRuangPage> {
 
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
     PreferredSizeWidget katalogBarangHeader() {
       return AppBar(
         centerTitle: true,
@@ -50,7 +54,8 @@ class _KatalogRuangPageState extends State<KatalogRuangPage> {
       );
     }
 
-    confirmPinjam({required String name}) async {
+    confirmPinjam(
+        {required String name, required KatalogRuanganModel ruang}) async {
       return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -156,6 +161,7 @@ class _KatalogRuangPageState extends State<KatalogRuangPage> {
                         height: 46,
                         child: TextButton(
                           onPressed: () async {
+                            provider.addRuang(ruang: ruang);
                             Navigator.pop(context);
                           },
                           style: TextButton.styleFrom(
@@ -234,6 +240,7 @@ class _KatalogRuangPageState extends State<KatalogRuangPage> {
       required String nama,
       required String tipe,
       required String register,
+      required KatalogRuanganModel ruangan,
     }) {
       return GestureDetector(
         onTap: () async {
@@ -284,7 +291,7 @@ class _KatalogRuangPageState extends State<KatalogRuangPage> {
                 ),
                 TextButton(
                   onPressed: () {
-                    confirmPinjam(name: nama);
+                    confirmPinjam(name: nama, ruang: ruangan);
                   },
                   style: TextButton.styleFrom(
                       backgroundColor: m5Color,
@@ -307,21 +314,55 @@ class _KatalogRuangPageState extends State<KatalogRuangPage> {
     }
 
     return Scaffold(
-      appBar: isSearch == true ? searchAppbar() : katalogBarangHeader(),
-      backgroundColor: mono6Color,
-      body: Container(
-        padding: EdgeInsets.only(top: 20),
-        child: ListView(
-          children: [
-            for (var i = 0; i < 30; i++)
-              listItem(
-                nama: 'Kamar Mandi',
-                tipe: '12345 = Inventaris',
-                register: 'register',
-              ),
-          ],
-        ),
-      ),
-    );
+        appBar: isSearch == true ? searchAppbar() : katalogBarangHeader(),
+        backgroundColor: mono6Color,
+        body: Container(
+          padding: EdgeInsets.only(top: 20),
+          child: isLoading == true
+              ? Container()
+              : FutureBuilder(
+                  future: Services().getKatalogRuangan(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData) {
+                      List<KatalogRuanganModel> data = snapshot.data;
+                      return data.isEmpty
+                          ? Center(
+                              child: Text(
+                                'Data tidak ditemukan',
+                                style: mono1TextStyle,
+                              ),
+                            )
+                          : provider.ruangChart != null && data.length <= 1
+                              ? Center(
+                                  child: Text(
+                                    'Data tidak ditemukan',
+                                    style: mono1TextStyle,
+                                  ),
+                                )
+                              : ListView(
+                                  children: data.map((item) {
+                                    if (provider.ruangExist(item)) {
+                                      return listItem(
+                                        nama: '${item.nAMA}',
+                                        tipe: '${item.iD} - ${item.jENIS}',
+                                        register: '${item.iD}',
+                                        ruangan: item,
+                                      );
+                                    } else {
+                                      return Container();
+                                    }
+                                  }).toList(),
+                                );
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 4,
+                          color: m1Color,
+                        ),
+                      );
+                    }
+                  },
+                ),
+        ));
   }
 }

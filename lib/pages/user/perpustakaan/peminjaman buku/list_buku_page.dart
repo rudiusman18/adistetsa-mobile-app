@@ -212,6 +212,7 @@ class _ListBukuPageState extends State<ListBukuPage> {
                     }
                   },
                 ),
-        ));
+        )
+        );
   }
 }

@@ -1,32 +1,30 @@
-class BarangModel {
+class RiwayatBarangModel {
   int? iD;
   List<ALAT>? aLAT;
+  String? sTATUS;
   String? nAMAPEMINJAM;
   String? nOTELEPON;
   String? kEGIATAN;
-  String? tANGGALPENGAJUAN;
   String? tANGGALPENGGUNAAN;
   String? tANGGALPENGEMBALIAN;
   String? kETERANGAN;
-  String? sTATUSPENGAJUAN;
   String? tANDATANGAN;
   int? uSER;
 
-  BarangModel(
+  RiwayatBarangModel(
       {this.iD,
       this.aLAT,
+      this.sTATUS,
       this.nAMAPEMINJAM,
       this.nOTELEPON,
       this.kEGIATAN,
-      this.tANGGALPENGAJUAN,
       this.tANGGALPENGGUNAAN,
       this.tANGGALPENGEMBALIAN,
       this.kETERANGAN,
-      this.sTATUSPENGAJUAN,
       this.tANDATANGAN,
       this.uSER});
 
-  BarangModel.fromJson(Map<String, dynamic> json) {
+  RiwayatBarangModel.fromJson(Map<String, dynamic> json) {
     iD = json['ID'];
     if (json['ALAT'] != null) {
       aLAT = <ALAT>[];
@@ -34,14 +32,13 @@ class BarangModel {
         aLAT!.add(new ALAT.fromJson(v));
       });
     }
+    sTATUS = json['STATUS'];
     nAMAPEMINJAM = json['NAMA_PEMINJAM'];
     nOTELEPON = json['NO_TELEPON'];
     kEGIATAN = json['KEGIATAN'];
-    tANGGALPENGAJUAN = json['TANGGAL_PENGAJUAN'];
     tANGGALPENGGUNAAN = json['TANGGAL_PENGGUNAAN'];
     tANGGALPENGEMBALIAN = json['TANGGAL_PENGEMBALIAN'];
     kETERANGAN = json['KETERANGAN'];
-    sTATUSPENGAJUAN = json['STATUS_PENGAJUAN'];
     tANDATANGAN = json['TANDA_TANGAN'];
     uSER = json['USER'];
   }
@@ -52,14 +49,13 @@ class BarangModel {
     if (this.aLAT != null) {
       data['ALAT'] = this.aLAT!.map((v) => v.toJson()).toList();
     }
+    data['STATUS'] = this.sTATUS;
     data['NAMA_PEMINJAM'] = this.nAMAPEMINJAM;
     data['NO_TELEPON'] = this.nOTELEPON;
     data['KEGIATAN'] = this.kEGIATAN;
-    data['TANGGAL_PENGAJUAN'] = this.tANGGALPENGAJUAN;
     data['TANGGAL_PENGGUNAAN'] = this.tANGGALPENGGUNAAN;
     data['TANGGAL_PENGEMBALIAN'] = this.tANGGALPENGEMBALIAN;
     data['KETERANGAN'] = this.kETERANGAN;
-    data['STATUS_PENGAJUAN'] = this.sTATUSPENGAJUAN;
     data['TANDA_TANGAN'] = this.tANDATANGAN;
     data['USER'] = this.uSER;
     return data;

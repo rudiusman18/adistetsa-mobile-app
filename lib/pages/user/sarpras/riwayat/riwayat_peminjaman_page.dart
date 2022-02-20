@@ -1,5 +1,11 @@
+import 'package:adistetsa/models/riwayatbarang_model.dart';
+import 'package:adistetsa/models/riwayatruangan_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
+import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class RiwayatPeminjamanPage extends StatefulWidget {
   RiwayatPeminjamanPage({Key? key}) : super(key: key);
@@ -14,6 +20,8 @@ class _RiwayatPeminjamanPageState extends State<RiwayatPeminjamanPage> {
 
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+
     PreferredSizeWidget peminjamanBukuHeader() {
       return AppBar(
         centerTitle: true,
@@ -126,17 +134,25 @@ class _RiwayatPeminjamanPageState extends State<RiwayatPeminjamanPage> {
 
     Widget listItem({
       required String id,
+      required String nama,
       required String tanggalPengajuan,
-      required String jangkaPeminjaman,
       required String status,
+      required String detail,
     }) {
       return GestureDetector(
         onTap: () async {
           setState(() {
             searchController.clear();
             isSearch = false;
+            loading(context);
           });
-          Navigator.pushNamed(
+          if (detail == 'Barang') {
+            await provider.getDetailRiwayatBarang(id: id);
+          } else {
+            await provider.getDetailRiwayatRuangan(id: id);
+          }
+          provider.setDetailRuangan(detail: detail);
+          Navigator.pushReplacementNamed(
               context, '/user/sarpras/riwayat-peminjaman/detail-page');
         },
         child: Container(
@@ -168,13 +184,13 @@ class _RiwayatPeminjamanPageState extends State<RiwayatPeminjamanPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '$tanggalPengajuan',
+                            '$nama',
                             style: mono1TextStyle.copyWith(
                               fontSize: 14,
                             ),
                           ),
                           Text(
-                            '$jangkaPeminjaman',
+                            '$tanggalPengajuan',
                             style: mono2TextStyle.copyWith(
                               fontSize: 10,
                             ),
@@ -220,33 +236,79 @@ class _RiwayatPeminjamanPageState extends State<RiwayatPeminjamanPage> {
             appBar: isSearch == true ? searchAppbar() : peminjamanBukuHeader(),
             body: TabBarView(
               children: [
-                ListView(
-                  children: [
-                    SizedBox(
-                      height: 20,
-                    ),
-                    for (var i = 0; i < 10; i++)
-                      listItem(
-                        id: (i + 1).toString(),
-                        tanggalPengajuan: 'tanggalPengajuan',
-                        jangkaPeminjaman: 'jangkaPeminjaman',
-                        status: 'Diajukan',
-                      ),
-                  ],
+                Container(
+                  padding: EdgeInsets.only(top: 20),
+                  child: FutureBuilder(
+                    future: Services().getRiwayatBarang(),
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (snapshot.hasData) {
+                        List<RiwayatBarangModel> data = snapshot.data;
+                        return data.isEmpty
+                            ? Center(
+                                child: Text(
+                                  'Data tidak ditemukan',
+                                  style: mono1TextStyle,
+                                ),
+                              )
+                            : ListView(
+                                children: data.map((item) {
+                                  return listItem(
+                                    id: '${item.iD}',
+                                    nama: '${item.aLAT![0].nAMA}',
+                                    tanggalPengajuan:
+                                        '${item.tANGGALPENGGUNAAN}',
+                                    status: '${item.sTATUS}',
+                                    detail: 'Barang',
+                                  );
+                                }).toList(),
+                              );
+                      } else {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 4,
+                            color: m1Color,
+                          ),
+                        );
+                      }
+                    },
+                  ),
                 ),
-                ListView(
-                  children: [
-                    SizedBox(
-                      height: 20,
-                    ),
-                    for (var i = 0; i < 5; i++)
-                      listItem(
-                        id: 'id',
-                        tanggalPengajuan: 'tanggalPengajuan',
-                        jangkaPeminjaman: 'jangkaPeminjaman',
-                        status: 'Diajukan',
-                      )
-                  ],
+                Container(
+                  padding: EdgeInsets.only(top: 20),
+                  child: FutureBuilder(
+                    future: Services().getRiwayatRuangan(),
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (snapshot.hasData) {
+                        List<RiwayatRuanganModel> data = snapshot.data;
+                        return data.isEmpty
+                            ? Center(
+                                child: Text(
+                                  'Data tidak ditemukan',
+                                  style: mono1TextStyle,
+                                ),
+                              )
+                            : ListView(
+                                children: data.map((item) {
+                                  return listItem(
+                                    id: '${item.iD}',
+                                    nama: '${item.rUANGAN}',
+                                    tanggalPengajuan:
+                                        '${item.tANGGALPENGAJUAN}',
+                                    status: '${item.sTATUS}',
+                                    detail: 'Ruang',
+                                  );
+                                }).toList(),
+                              );
+                      } else {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 4,
+                            color: m1Color,
+                          ),
+                        );
+                      }
+                    },
+                  ),
                 ),
               ],
             ),

@@ -1,5 +1,9 @@
+import 'package:adistetsa/models/riwayatbarang_model.dart';
+import 'package:adistetsa/models/riwayatruangan_model.dart';
+import 'package:adistetsa/providers/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class DetailRiwayatPeminjamanPage extends StatefulWidget {
   DetailRiwayatPeminjamanPage({Key? key}) : super(key: key);
@@ -13,6 +17,11 @@ class _DetailRiwayatPeminjamanPageState
     extends State<DetailRiwayatPeminjamanPage> {
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+    RiwayatBarangModel riwayatBarangModel = provider.riwayatBarang;
+    RiwayatRuanganModel riwayatRuanganModel = provider.riwayatRuang;
+
+    String detailRuangan = provider.detailRuang;
     var index = 0;
 
     PreferredSizeWidget header() {
@@ -100,7 +109,9 @@ class _DetailRiwayatPeminjamanPageState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Syauqi Babi',
+              detailRuangan == 'Ruang'
+                  ? '${riwayatRuanganModel.pENGGUNA}'
+                  : '${riwayatBarangModel.nAMAPEMINJAM}',
               style: mono1TextStyle.copyWith(
                 fontSize: 20,
                 fontWeight: bold,
@@ -110,24 +121,61 @@ class _DetailRiwayatPeminjamanPageState
               height: 15,
             ),
             itemInfoPeminjam(
-              teks: 'Tanggal Pengajuan',
-              value: '2121',
+              teks: 'No HP',
+              value: detailRuangan == 'Ruang'
+                  ? '${riwayatRuanganModel.nOHP}'
+                  : '${riwayatBarangModel.nOTELEPON}',
             ),
+            itemInfoPeminjam(
+              teks: 'Tanggal Pengajuan',
+              value: detailRuangan == 'Ruang'
+                  ? '${riwayatRuanganModel.tANGGALPENGAJUAN}'
+                  : '${riwayatBarangModel.tANGGALPENGGUNAAN}',
+            ),
+            detailRuangan == 'Ruang'
+                ? itemInfoPeminjam(
+                    teks: 'Tanggal Pemakaian',
+                    value: '${riwayatRuanganModel.tANGGALPEMAKAIAN}',
+                  )
+                : Container(),
+            detailRuangan == 'Ruang'
+                ? itemInfoPeminjam(
+                    teks: 'Jam Pemakaian',
+                    value: '${riwayatRuanganModel.jAMPENGGUNAAN}',
+                  )
+                : Container(),
+            detailRuangan == 'Ruang'
+                ? itemInfoPeminjam(
+                    teks: 'Jam Berakhir',
+                    value: '${riwayatRuanganModel.jAMBERAKHIR}',
+                  )
+                : Container(),
             itemInfoPeminjam(
               teks: 'Tanggal Pengembalian',
-              value: '21-21-21',
+              value: detailRuangan == 'Ruang'
+                  ? '${riwayatRuanganModel.tANGGALBERAKHIR}'
+                  : '${riwayatBarangModel.tANGGALPENGEMBALIAN}',
             ),
+            detailRuangan == 'Ruang'
+                ? itemInfoPeminjam(
+                    teks: 'File Pengajuan',
+                    value: '${riwayatRuanganModel.tANDATANGAN!.split('/')[5]}')
+                : Container(),
             itemInfoPeminjam(
-              teks: 'Kategori',
-              value: 'asd',
-            ),
-            itemInfoPeminjam(
-              teks: 'File Pengajuan',
-              value: 'sdasd',
-            ),
+                teks: 'Keterangan',
+                value: detailRuangan == 'Ruang'
+                    ? '${riwayatRuanganModel.kETERANGAN}'
+                    : '${riwayatBarangModel.kETERANGAN}'),
+            detailRuangan == 'Ruang'
+                ? itemInfoPeminjam(
+                    teks: 'Jenis Peminjaman',
+                    value: '${riwayatRuanganModel.jENISPEMINJAMAN}')
+                : Container(),
             itemInfoPeminjam(
               teks: 'Status Pengajuan',
-              value: 'asd',
+              value: detailRuangan == 'Ruang'
+                  ? '${riwayatRuanganModel.sTATUS}'
+                  : '${riwayatBarangModel.sTATUS}',
             ),
           ],
         ),
@@ -136,8 +184,8 @@ class _DetailRiwayatPeminjamanPageState
 
     TableRow contentTable({
       required int no,
-      required String mataPelajaran,
-      required String registrasi,
+      required String nama,
+      required String kode,
     }) {
       return TableRow(
         children: [
@@ -156,32 +204,34 @@ class _DetailRiwayatPeminjamanPageState
                 horizontal: 2,
               ),
               child: Text(
-                mataPelajaran,
+                nama,
                 style: mono1TextStyle.copyWith(
                   fontSize: 12,
                 ),
               ),
             ),
           ),
-          Container(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 2,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    registrasi,
-                    style: mono1TextStyle.copyWith(
-                      fontSize: 12,
+          detailRuangan == 'Barang'
+              ? Container(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 2,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          kode,
+                          style: mono1TextStyle.copyWith(
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ),
-          ),
+                )
+              : SizedBox(),
         ],
       );
     }
@@ -247,7 +297,7 @@ class _DetailRiwayatPeminjamanPageState
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Mata Pelajaran',
+                              'Barang',
                               style: mono6TextStyle.copyWith(
                                 fontSize: 12,
                               ),
@@ -255,21 +305,23 @@ class _DetailRiwayatPeminjamanPageState
                           ],
                         ),
                       ),
-                      Container(
-                        height: 30,
-                        color: m4Color,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Registrasi',
-                              style: mono6TextStyle.copyWith(
-                                fontSize: 12,
+                      detailRuangan == 'Barang'
+                          ? Container(
+                              height: 30,
+                              color: m4Color,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Kode Barang',
+                                    style: mono6TextStyle.copyWith(
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
+                            )
+                          : SizedBox(),
                     ],
                   ),
                 ],
@@ -297,13 +349,25 @@ class _DetailRiwayatPeminjamanPageState
               2: FixedColumnWidth(140),
             },
             defaultVerticalAlignment: TableCellVerticalAlignment.top,
-            children: [
-              contentTable(
-                no: index,
-                mataPelajaran: 'sadsdadsd',
-                registrasi: 'sdfsdf',
-              ),
-            ]),
+            children: detailRuangan == 'Barang'
+                ? riwayatBarangModel.aLAT!.map((book) {
+                    index++;
+                    return contentTable(
+                      no: index,
+                      nama:
+                          '${riwayatBarangModel.aLAT![index - 1].nAMA!.split('-')[0]}',
+                      kode:
+                          '${riwayatBarangModel.aLAT![index - 1].iD} - ${riwayatBarangModel.aLAT![index - 1].nAMA!.split('-')[1]}',
+                    );
+                  }).toList()
+                : [
+                    contentTable(
+                      no: 1,
+                      nama: '${riwayatRuanganModel.rUANGAN}',
+                      kode: '0',
+                    )
+                  ]
+                  ),
       );
     }
 

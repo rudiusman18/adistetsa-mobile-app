@@ -1,5 +1,11 @@
+import 'package:adistetsa/models/peminjambarang_model.dart';
+import 'package:adistetsa/models/peminjamruangan_model.dart';
+import 'package:adistetsa/models/riwayatbarang_model.dart';
+import 'package:adistetsa/models/riwayatruangan_model.dart';
+import 'package:adistetsa/providers/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class DetailPengajuanPeminjamanPage extends StatefulWidget {
   DetailPengajuanPeminjamanPage({Key? key}) : super(key: key);
@@ -13,6 +19,11 @@ class _DetailPengajuanPeminjamanPageState
     extends State<DetailPengajuanPeminjamanPage> {
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+    PeminjamBarangModel peminjamBarangModel = provider.peminjamanBarang;
+    PeminjamRuanganModel peminjamRuanganModel = provider.peminjamanRuangan;
+
+    String detailRuangan = provider.detailRuang;
     var index = 0;
 
     PreferredSizeWidget header() {
@@ -100,7 +111,9 @@ class _DetailPengajuanPeminjamanPageState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Syauqi Babi',
+              detailRuangan == 'Ruang'
+                  ? '${peminjamRuanganModel.pENGGUNA}'
+                  : '${peminjamBarangModel.nAMAPEMINJAM}',
               style: mono1TextStyle.copyWith(
                 fontSize: 20,
                 fontWeight: bold,
@@ -110,24 +123,61 @@ class _DetailPengajuanPeminjamanPageState
               height: 15,
             ),
             itemInfoPeminjam(
-              teks: 'Tanggal Pengajuan',
-              value: '2121',
+              teks: 'No HP',
+              value: detailRuangan == 'Ruang'
+                  ? '${peminjamRuanganModel.nOHP}'
+                  : '${peminjamBarangModel.nOTELEPON}',
             ),
+            itemInfoPeminjam(
+              teks: 'Tanggal Pengajuan',
+              value: detailRuangan == 'Ruang'
+                  ? '${peminjamRuanganModel.tANGGALPENGAJUAN}'
+                  : '${peminjamBarangModel.tANGGALPENGGUNAAN}',
+            ),
+            detailRuangan == 'Ruang'
+                ? itemInfoPeminjam(
+                    teks: 'Tanggal Pemakaian',
+                    value: '${peminjamRuanganModel.tANGGALPEMAKAIAN}',
+                  )
+                : Container(),
+            detailRuangan == 'Ruang'
+                ? itemInfoPeminjam(
+                    teks: 'Jam Pemakaian',
+                    value: '${peminjamRuanganModel.jAMPENGGUNAAN}',
+                  )
+                : Container(),
+            detailRuangan == 'Ruang'
+                ? itemInfoPeminjam(
+                    teks: 'Jam Berakhir',
+                    value: '${peminjamRuanganModel.jAMBERAKHIR}',
+                  )
+                : Container(),
             itemInfoPeminjam(
               teks: 'Tanggal Pengembalian',
-              value: '21-21-21',
+              value: detailRuangan == 'Ruang'
+                  ? '${peminjamRuanganModel.tANGGALBERAKHIR}'
+                  : '${peminjamBarangModel.tANGGALPENGEMBALIAN}',
             ),
+            detailRuangan == 'Ruang'
+                ? itemInfoPeminjam(
+                    teks: 'File Pengajuan',
+                    value: '${peminjamRuanganModel.tANDATANGAN!.split('/')[5]}')
+                : Container(),
             itemInfoPeminjam(
-              teks: 'Kategori',
-              value: 'asd',
-            ),
-            itemInfoPeminjam(
-              teks: 'File Pengajuan',
-              value: 'sdasd',
-            ),
+                teks: 'Keterangan',
+                value: detailRuangan == 'Ruang'
+                    ? '${peminjamRuanganModel.kETERANGAN}'
+                    : '${peminjamBarangModel.kETERANGAN}'),
+            detailRuangan == 'Ruang'
+                ? itemInfoPeminjam(
+                    teks: 'Jenis Peminjaman',
+                    value: '${peminjamRuanganModel.jENISPEMINJAMAN}')
+                : Container(),
             itemInfoPeminjam(
               teks: 'Status Pengajuan',
-              value: 'asd',
+              value: detailRuangan == 'Ruang'
+                  ? '${peminjamRuanganModel.sTATUS}'
+                  : '${peminjamBarangModel.sTATUSPENGAJUAN}',
             ),
           ],
         ),
@@ -136,8 +186,8 @@ class _DetailPengajuanPeminjamanPageState
 
     TableRow contentTable({
       required int no,
-      required String mataPelajaran,
-      required String registrasi,
+      required String nama,
+      required String kode,
     }) {
       return TableRow(
         children: [
@@ -156,14 +206,15 @@ class _DetailPengajuanPeminjamanPageState
                 horizontal: 2,
               ),
               child: Text(
-                mataPelajaran,
+                nama,
                 style: mono1TextStyle.copyWith(
                   fontSize: 12,
                 ),
               ),
             ),
           ),
-          Container(
+           detailRuangan == 'Barang'
+                          ?Container(
             child: Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: 2,
@@ -173,7 +224,7 @@ class _DetailPengajuanPeminjamanPageState
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    registrasi,
+                    kode,
                     style: mono1TextStyle.copyWith(
                       fontSize: 12,
                     ),
@@ -181,7 +232,7 @@ class _DetailPengajuanPeminjamanPageState
                 ],
               ),
             ),
-          ),
+          ) : Container(),
         ],
       );
     }
@@ -247,7 +298,7 @@ class _DetailPengajuanPeminjamanPageState
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Mata Pelajaran',
+                              'Barang',
                               style: mono6TextStyle.copyWith(
                                 fontSize: 12,
                               ),
@@ -255,21 +306,23 @@ class _DetailPengajuanPeminjamanPageState
                           ],
                         ),
                       ),
-                      Container(
-                        height: 30,
-                        color: m4Color,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Registrasi',
-                              style: mono6TextStyle.copyWith(
-                                fontSize: 12,
+                      detailRuangan == 'Barang'
+                          ? Container(
+                              height: 30,
+                              color: m4Color,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Kode Barang',
+                                    style: mono6TextStyle.copyWith(
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
+                            )
+                          : Container(),
                     ],
                   ),
                 ],
@@ -297,13 +350,24 @@ class _DetailPengajuanPeminjamanPageState
               2: FixedColumnWidth(140),
             },
             defaultVerticalAlignment: TableCellVerticalAlignment.top,
-            children: [
-              contentTable(
-                no: index,
-                mataPelajaran: 'sadsdadsd',
-                registrasi: 'sdfsdf',
-              ),
-            ]),
+            children: detailRuangan == 'Barang'
+                ? peminjamBarangModel.aLAT!.map((book) {
+                    index++;
+                    return contentTable(
+                      no: index,
+                      nama:
+                          '${peminjamBarangModel.aLAT![index - 1].nAMA!.split('-')[0]}',
+                      kode:
+                          '${peminjamBarangModel.aLAT![index - 1].iD} - ${peminjamBarangModel.aLAT![index - 1].nAMA!.split('-')[1]}',
+                    );
+                  }).toList()
+                : [
+                    contentTable(
+                      no: 1,
+                      nama: '${peminjamRuanganModel.rUANGAN}',
+                      kode: '0',
+                    )
+                  ]),
       );
     }
 
