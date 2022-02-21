@@ -89,10 +89,10 @@ class HomePage extends StatelessWidget {
                 text: 'Kesiswaan',
               ),
             ),
-            // ItemCard(
-            //   urlImg: 'kurikulum',
-            //   text: 'Kurikulum',
-            // ),
+            ItemCard(
+              urlImg: 'kurikulum',
+              text: 'Kurikulum',
+            ),
             // ItemCard(
             //   urlImg: 'tata usaha',
             //   text: 'Tata Usaha',

@@ -1,7 +1,5 @@
 import 'package:adistetsa/models/peminjambarang_model.dart';
 import 'package:adistetsa/models/peminjamruangan_model.dart';
-import 'package:adistetsa/models/riwayatbarang_model.dart';
-import 'package:adistetsa/models/riwayatruangan_model.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
