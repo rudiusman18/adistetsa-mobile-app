@@ -89,9 +89,14 @@ class HomePage extends StatelessWidget {
                 text: 'Kesiswaan',
               ),
             ),
-            ItemCard(
-              urlImg: 'kurikulum',
-              text: 'Kurikulum',
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/guru/kurikulum-page');
+              },
+              child: ItemCard(
+                urlImg: 'kurikulum',
+                text: 'Kurikulum',
+              ),
             ),
             // ItemCard(
             //   urlImg: 'tata usaha',

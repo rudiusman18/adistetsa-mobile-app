@@ -1,5 +1,12 @@
 import 'package:adistetsa/login_page.dart';
 import 'package:adistetsa/pages/detail%20profile/update_password_page.dart';
+import 'package:adistetsa/pages/guru/kurikulum/jadwal%20mengajar/jadwal_mengajar_page.dart';
+import 'package:adistetsa/pages/guru/kurikulum/jurnal%20belajar/daftar_pertemuan_page.dart';
+import 'package:adistetsa/pages/guru/kurikulum/jurnal%20belajar/edit_presensi_page.dart';
+import 'package:adistetsa/pages/guru/kurikulum/jurnal%20belajar/isi_jurnal_page.dart';
+import 'package:adistetsa/pages/guru/kurikulum/jurnal%20belajar/list_jurnal_belajar_page.dart';
+import 'package:adistetsa/pages/guru/kurikulum/jurnal%20belajar/presensi_siswa_page.dart';
+import 'package:adistetsa/pages/guru/kurikulum/list_kurikulum_page.dart';
 import 'package:adistetsa/pages/main_page.dart';
 import 'package:adistetsa/pages/siswa/kesiswaan/proyek%20kebaikan/input_proyek_kebaikan_page.dart';
 import 'package:adistetsa/pages/siswa/kesiswaan/riwayat/riwayat_pelanggaran_page.dart';
@@ -269,6 +276,41 @@ class AdiStetsa extends StatelessWidget {
             case '/user/sarpras/riwayat-peminjaman/detail-page':
               return PageTransition(
                 child: DetailRiwayatPeminjamanPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/guru/kurikulum-page':
+              return PageTransition(
+                child: ListKurikulumPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/guru/kurikulum/jadwal-mengajar-page':
+              return PageTransition(
+                child: JadwalMengajarPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/guru/kurikulum/list-jurnal-belajar':
+              return PageTransition(
+                child: ListJurnalBelajarPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/guru/kurikulum/list-jurnal-belajar/lihat-jadwal-page':
+              return PageTransition(
+                child: DaftarPertemuanPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/guru/kurikulum/list-jurnal-belajar/isi-jurnal-page':
+              return PageTransition(
+                child: IsiJurnalPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/guru/kurikulum/list-jurnal-belajar/lihat-jadwal/presensi-page':
+              return PageTransition(
+                child: PresensiSiswaPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/guru/kurikulum/list-jurnal-belajar/lihat-jadwal/presensi/edit-page':
+              return PageTransition(
+                child: EditPresensiPage(),
                 type: PageTransitionType.rightToLeft,
               );
             case '/main-page/back':
