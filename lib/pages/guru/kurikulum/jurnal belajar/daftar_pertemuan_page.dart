@@ -20,7 +20,8 @@ class _DaftarPertemuanPageState extends State<DaftarPertemuanPage> {
   @override
   Widget build(BuildContext context) {
     Providers provider = Provider.of<Providers>(context);
-    DetailJurnalMengajarGuruModel detailJurnalMengajarGuruModel = provider.detailJurnalMengajar;
+    DetailJurnalMengajarGuruModel detailJurnalMengajarGuruModel =
+        provider.detailJurnalMengajar;
     PreferredSizeWidget daftarPertemuanHeader() {
       return AppBar(
         centerTitle: true,
@@ -315,7 +316,7 @@ class _DaftarPertemuanPageState extends State<DaftarPertemuanPage> {
                                 header: 'Pertemuan ke ' + (index).toString(),
                                 content:
                                     'Materi tentang bahasa indonesia menjelaskan pribahasa hiperbola dan membuat majas.',
-                                id: 0,
+                                id: item.iD,
                               );
                             }).toList(),
                           );
