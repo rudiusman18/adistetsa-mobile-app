@@ -17,9 +17,14 @@ class _ListKurikulumPageState extends State<ListKurikulumPage> {
       return AppBar(
         backgroundColor: mono6Color,
         automaticallyImplyLeading: false,
-        leading: Icon(
-          Icons.arrow_back,
-          color: mono1Color,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Icon(
+            Icons.arrow_back,
+            color: mono1Color,
+          ),
         ),
         title: Text(
           'Kurikulum',
