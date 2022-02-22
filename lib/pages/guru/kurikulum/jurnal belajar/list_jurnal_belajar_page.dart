@@ -428,6 +428,7 @@ class _ListJurnalBelajarPageState extends State<ListJurnalBelajarPage> {
                           });
                           await provider.setIdJurnalBelajar(
                               getIdJurnalBelajar: '$id');
+                          await provider.getJurnalBelajarMengajarGuru();
                           Navigator.pushReplacementNamed(context,
                               '/guru/kurikulum/list-jurnal-belajar/lihat-jadwal-page');
                         },

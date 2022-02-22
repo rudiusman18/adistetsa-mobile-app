@@ -10,6 +10,7 @@ class EditPresensiPage extends StatefulWidget {
 }
 
 class _EditPresensiPageState extends State<EditPresensiPage> {
+  bool isLoading = false;
   int selectedIndex = -1;
   String keterangan = '';
   @override
@@ -18,16 +19,14 @@ class _EditPresensiPageState extends State<EditPresensiPage> {
     PresensiSiswaModel presensiSiswaModel = provider.detailPresensiSiswa;
 
     handleSimpanPresensi() async {
+      setState(() {
+        isLoading = true;
+      });
       if (await provider.presensiSiswa(
           id: presensiSiswaModel.iD.toString(),
           keterangan: keterangan,
           nis: presensiSiswaModel.nIS.toString())) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            backgroundColor: successColor,
-            content: Text(
-              '${provider.errorMessage}',
-              textAlign: TextAlign.center,
-            )));
+        Navigator.pop(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             backgroundColor: dangerColor,
@@ -36,6 +35,9 @@ class _EditPresensiPageState extends State<EditPresensiPage> {
               textAlign: TextAlign.center,
             )));
       }
+      setState(() {
+        isLoading = false;
+      });
     }
 
     PreferredSizeWidget header() {
@@ -155,13 +157,22 @@ class _EditPresensiPageState extends State<EditPresensiPage> {
               onPressed: () {
                 handleSimpanPresensi();
               },
-              child: Text(
-                'Simpan',
-                style: mono6TextStyle.copyWith(
-                  fontSize: 16,
-                  fontWeight: bold,
-                ),
-              ),
+              child: isLoading == true
+                  ? Container(
+                      width: 14,
+                      height: 14,
+                      child: CircularProgressIndicator(
+                        color: mono6Color,
+                        strokeWidth: 4,
+                      ),
+                    )
+                  : Text(
+                      'Simpan',
+                      style: mono6TextStyle.copyWith(
+                        fontSize: 16,
+                        fontWeight: bold,
+                      ),
+                    ),
             ),
           ),
         ],

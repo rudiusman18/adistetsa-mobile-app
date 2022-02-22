@@ -21,8 +21,7 @@ class _DaftarPertemuanPageState extends State<DaftarPertemuanPage> {
   @override
   Widget build(BuildContext context) {
     Providers provider = Provider.of<Providers>(context);
-    DetailJurnalMengajarGuruModel detailJurnalMengajarGuruModel =
-        provider.detailJurnalMengajar;
+
     PreferredSizeWidget daftarPertemuanHeader() {
       return AppBar(
         centerTitle: true,
@@ -310,10 +309,11 @@ class _DaftarPertemuanPageState extends State<DaftarPertemuanPage> {
         body: Column(
           children: [
             nameCard(
-              name: 'Syauqi',
-              mataPelajaran: 'Penyusup',
-              kelas: 'XII IPA A - 2021/2022',
-              semester: 'Semester 12',
+              name: '${provider.getJadwalMengajarGuru.first.gURU}',
+              mataPelajaran:
+                  '${provider.getJadwalMengajarGuru.first.mATAPELAJARAN}',
+              kelas: '${provider.getJadwalMengajarGuru.first.kELAS}',
+              semester: '${provider.getJadwalMengajarGuru.first.sEMESTER}',
             ),
             Expanded(
               child: FutureBuilder(

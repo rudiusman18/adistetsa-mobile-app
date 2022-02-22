@@ -1,4 +1,5 @@
 import 'package:adistetsa/models/detailjurnalmengajarguru_model.dart';
+import 'package:adistetsa/models/jadwalmengajarguru_model.dart';
 import 'package:adistetsa/models/katalogbarang_model.dart';
 import 'package:adistetsa/models/katalogruangan_model.dart';
 import 'package:adistetsa/models/peminjambarang_model.dart';
@@ -93,6 +94,10 @@ class Providers with ChangeNotifier {
   PresensiSiswaModel _detailPresensiSiswa = PresensiSiswaModel();
   PresensiSiswaModel get detailPresensiSiswa => _detailPresensiSiswa;
 
+  List<JadwalMengajarGuruModel> _getJadwalMengajarGuru = [];
+  List<JadwalMengajarGuruModel> get getJadwalMengajarGuru =>
+      _getJadwalMengajarGuru;
+
   List listJenisProgramKebaikan = [];
 
   String detailRuang = '';
@@ -100,6 +105,11 @@ class Providers with ChangeNotifier {
   String idJurnalMengajar = '';
 
   String errorMessage = '';
+
+  set jadwalMengajarGuru(List<JadwalMengajarGuruModel> jadwalMengajarGuru) {
+    _getJadwalMengajarGuru = jadwalMengajarGuru;
+    notifyListeners();
+  }
 
   set listKatalog(List<ListBukuModel> listKatalog) {
     _listKatalog = listKatalog;
@@ -454,6 +464,17 @@ class Providers with ChangeNotifier {
       print(e);
       errorMessage = e.toString();
       notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> getJurnalBelajarMengajarGuru() async {
+    try {
+      _getJadwalMengajarGuru = await Services().getJurnalBelajarMengajarGuru();
+
+      return true;
+    } catch (e) {
+      print(e);
       return false;
     }
   }

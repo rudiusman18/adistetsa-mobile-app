@@ -943,6 +943,7 @@ class Services extends ChangeNotifier {
     var url = Uri.parse('$baseUrl/kurikulum/jurnal_belajar_mengajar');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
+
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body)['results'];
       List<JadwalMengajarGuruModel> jadwalMengajarGuru =
@@ -1041,9 +1042,9 @@ class Services extends ChangeNotifier {
     var headers = {"Accept": "application/json", "authorization": token};
     var body = {'KETERANGAN': keterangan, 'NIS': nis};
     var response = await http.patch(url, headers: headers, body: body);
-    print('COk');
+    print(response.statusCode);
     if (response.statusCode == 200) {
-      throw Exception(response.body);
+      return true;
     } else {
       throw Exception(response.body);
     }

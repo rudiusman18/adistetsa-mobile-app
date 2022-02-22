@@ -148,11 +148,18 @@ class _PresensiSiswaPageState extends State<PresensiSiswaPage> {
                       await provider.getDetailPresensiSiswa(id: id);
                       Navigator.pushReplacementNamed(context,
                               '/guru/kurikulum/list-jurnal-belajar/lihat-jadwal/presensi/edit-page')
-                          .then(
-                        (_) => setState(
-                          () {},
-                        ),
-                      );
+                          .then((_) async {
+                        setState(
+                          () {
+                            isLoading = true;
+                          },
+                        );
+                        await Services()
+                            .getPresensiSiswa(id: provider.idJurnalMengajar);
+                        setState(() {
+                          isLoading = false;
+                        });
+                      });
                     },
                     child: Icon(
                       Icons.edit,
@@ -181,38 +188,41 @@ class _PresensiSiswaPageState extends State<PresensiSiswaPage> {
         padding: const EdgeInsets.only(
           top: 20,
         ),
-        child: FutureBuilder(
-          future: Services().getPresensiSiswa(id: provider.idJurnalMengajar),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.hasData) {
-              List<PresensiSiswaModel> data = snapshot.data;
-              return data.isEmpty
-                  ? Center(
-                      child: Text(
-                        'Data tidak ditemukan',
-                        style: mono1TextStyle,
+        child: isLoading == true
+            ? Container()
+            : FutureBuilder(
+                future:
+                    Services().getPresensiSiswa(id: provider.idJurnalMengajar),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    List<PresensiSiswaModel> data = snapshot.data;
+                    return data.isEmpty
+                        ? Center(
+                            child: Text(
+                              'Data tidak ditemukan',
+                              style: mono1TextStyle,
+                            ),
+                          )
+                        : ListView(
+                            children: data.map((item) {
+                              return listSiswa(
+                                id: '${item.iD}',
+                                nama: '${item.nAMA}',
+                                nis: '${item.nIS}',
+                                status: '${item.kETERANGAN}',
+                              );
+                            }).toList(),
+                          );
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 4,
+                        color: m1Color,
                       ),
-                    )
-                  : ListView(
-                      children: data.map((item) {
-                        return listSiswa(
-                          id: '${item.iD}',
-                          nama: '${item.nAMA}',
-                          nis: '${item.nIS}',
-                          status: '${item.kETERANGAN}',
-                        );
-                      }).toList(),
                     );
-            } else {
-              return Center(
-                child: CircularProgressIndicator(
-                  strokeWidth: 4,
-                  color: m1Color,
-                ),
-              );
-            }
-          },
-        ),
+                  }
+                },
+              ),
         // ListView(
         //   children: [
         //     for (var i = 0; i < 20; i++)
