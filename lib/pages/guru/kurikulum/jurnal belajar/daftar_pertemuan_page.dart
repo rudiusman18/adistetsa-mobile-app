@@ -1,6 +1,11 @@
+import 'package:adistetsa/models/detailjurnalmengajarguru_model.dart';
+import 'package:adistetsa/models/jadwalmengajarguru_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DaftarPertemuanPage extends StatefulWidget {
   @override
@@ -14,6 +19,8 @@ class _DaftarPertemuanPageState extends State<DaftarPertemuanPage> {
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+    DetailJurnalMengajarGuruModel detailJurnalMengajarGuruModel = provider.detailJurnalMengajar;
     PreferredSizeWidget daftarPertemuanHeader() {
       return AppBar(
         centerTitle: true,
@@ -288,17 +295,51 @@ class _DaftarPertemuanPageState extends State<DaftarPertemuanPage> {
               semester: 'Semester 12',
             ),
             Expanded(
-              child: ListView(
-                children: [
-                  for (var i = 0; i < 20; i++)
-                    expandList(
-                      header: 'Pertemuan ke ' + (i + 1).toString(),
-                      content:
-                          'Materi tentang bahasa indonesia menjelaskan pribahasa hiperbola dan membuat majas.',
-                      id: 0,
-                    ),
-                ],
+              child: FutureBuilder(
+                future: Services().getJadwalMengajarGuru(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    List<JadwalMengajarGuruModel> data = snapshot.data;
+                    var index = 0;
+                    return data.isEmpty
+                        ? Center(
+                            child: Text(
+                              'Data tidak ditemukan',
+                              style: mono1TextStyle,
+                            ),
+                          )
+                        : ListView(
+                            children: data.map((item) {
+                              index++;
+                              return expandList(
+                                header: 'Pertemuan ke ' + (index).toString(),
+                                content:
+                                    'Materi tentang bahasa indonesia menjelaskan pribahasa hiperbola dan membuat majas.',
+                                id: 0,
+                              );
+                            }).toList(),
+                          );
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 4,
+                        color: m1Color,
+                      ),
+                    );
+                  }
+                },
               ),
+              // ListView(
+              //   children: [
+              //     for (var i = 0; i < 20; i++)
+              // expandList(
+              //   header: 'Pertemuan ke ' + (i + 1).toString(),
+              //   content:
+              //       'Materi tentang bahasa indonesia menjelaskan pribahasa hiperbola dan membuat majas.',
+              //   id: 0,
+              // ),
+              //   ],
+              // ),
             ),
           ],
         ));
