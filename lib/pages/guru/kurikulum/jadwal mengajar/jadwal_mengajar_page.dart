@@ -149,7 +149,8 @@ class _JadwalMengajarPageState extends State<JadwalMengajarPage> {
                       child: Text(
                         value['tahun_ajaran'],
                         style: mono2TextStyle.copyWith(
-                          color: value1Item == value ? p1Color : mono2Color,
+                          color:
+                              value1Item == value['ID'] ? p1Color : mono2Color,
                           fontWeight: regular,
                           fontSize: 10,
                         ),
@@ -413,44 +414,47 @@ class _JadwalMengajarPageState extends State<JadwalMengajarPage> {
         children: [
           filter(),
           Expanded(
-            child: isLoading == false? FutureBuilder(
-              future: Services().getJadwalMengajarGuru(filterTahunAjaran: url),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.hasData) {
-                  List<JadwalMengajarGuruModel> data = snapshot.data;
-                  return data.isEmpty
-                      ? Center(
-                          child: Text(
-                            'Data tidak ditemukan',
-                            style: mono1TextStyle,
+            child: isLoading == false
+                ? FutureBuilder(
+                    future: Services()
+                        .getJadwalMengajarGuru(filterTahunAjaran: url),
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (snapshot.hasData) {
+                        List<JadwalMengajarGuruModel> data = snapshot.data;
+                        return data.isEmpty
+                            ? Center(
+                                child: Text(
+                                  'Data tidak ditemukan',
+                                  style: mono1TextStyle,
+                                ),
+                              )
+                            : ListView(
+                                children: data.map((item) {
+                                  return expandList(
+                                    header: '${item.kELAS!.split('-')[0]}' +
+                                        ' - ' +
+                                        '${item.kELAS!.split('-')[1]}',
+                                    subtitle:
+                                        '${item.mATAPELAJARAN!.split(' - ')[1]}',
+                                    content: '${item.wAKTUPELAJARAN}'
+                                        .replaceAll('[', '')
+                                        .replaceAll(']', ''),
+                                    subtitleContent: '${item.sEMESTER}',
+                                    id: '${item.iD}',
+                                  );
+                                }).toList(),
+                              );
+                      } else {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 4,
+                            color: m1Color,
                           ),
-                        )
-                      : ListView(
-                          children: data.map((item) {
-                            return expandList(
-                              header: '${item.kELAS!.split('-')[0]}' +
-                                  ' - ' +
-                                  '${item.kELAS!.split('-')[1]}',
-                              subtitle:
-                                  '${item.mATAPELAJARAN!.split(' - ')[1]}',
-                              content: '${item.wAKTUPELAJARAN}'
-                                  .replaceAll('[', '')
-                                  .replaceAll(']', ''),
-                              subtitleContent: '${item.sEMESTER}',
-                              id: '${item.iD}',
-                            );
-                          }).toList(),
                         );
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      strokeWidth: 4,
-                      color: m1Color,
-                    ),
-                  );
-                }
-              },
-            ) : Container(),
+                      }
+                    },
+                  )
+                : Container(),
           ),
         ],
       ),

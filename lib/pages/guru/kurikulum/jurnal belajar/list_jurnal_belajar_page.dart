@@ -150,7 +150,8 @@ class _ListJurnalBelajarPageState extends State<ListJurnalBelajarPage> {
                       child: Text(
                         value['tahun_ajaran'],
                         style: mono2TextStyle.copyWith(
-                          color: value1Item == value ? p1Color : mono2Color,
+                          color:
+                              value1Item == value['ID'] ? p1Color : mono2Color,
                           fontWeight: regular,
                           fontSize: 10,
                         ),
