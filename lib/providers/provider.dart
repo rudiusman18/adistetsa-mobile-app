@@ -8,6 +8,7 @@ import 'package:adistetsa/models/karyawan_model.dart';
 import 'package:adistetsa/models/katalogbuku_model.dart';
 import 'package:adistetsa/models/list_buku_model.dart';
 import 'package:adistetsa/models/pengajuanpeminjaman_model.dart';
+import 'package:adistetsa/models/presensisiswa_model.dart';
 import 'package:adistetsa/models/riwayatbarang_model.dart';
 import 'package:adistetsa/models/riwayatpeminjaman_model.dart';
 import 'package:adistetsa/models/riwayatruangan_model.dart';
@@ -89,9 +90,16 @@ class Providers with ChangeNotifier {
   DetailJurnalMengajarGuruModel get detailJurnalMengajar =>
       _detailJurnalMengajar;
 
+  PresensiSiswaModel _detailPresensiSiswa = PresensiSiswaModel();
+  PresensiSiswaModel get detailPresensiSiswa => _detailPresensiSiswa;
+
   List listJenisProgramKebaikan = [];
 
   String detailRuang = '';
+
+  String idJurnalMengajar = '';
+
+  String errorMessage = '';
 
   set listKatalog(List<ListBukuModel> listKatalog) {
     _listKatalog = listKatalog;
@@ -193,6 +201,11 @@ class Providers with ChangeNotifier {
     notifyListeners();
   }
 
+  setIdJurnalBelajar({required String getIdJurnalBelajar}) {
+    idJurnalMengajar = getIdJurnalBelajar;
+    notifyListeners();
+  }
+
   set setPeminjamanRuangan(PeminjamRuanganModel peminjamanRuangan) {
     _peminjamanRuangan = peminjamanRuangan;
     notifyListeners();
@@ -205,6 +218,11 @@ class Providers with ChangeNotifier {
 
   set setJurnalMengajar(DetailJurnalMengajarGuruModel detailJurnal) {
     _detailJurnalMengajar = detailJurnal;
+    notifyListeners();
+  }
+
+  set setDetailPresensiSiswa(PresensiSiswaModel presensi) {
+    _detailPresensiSiswa = presensi;
     notifyListeners();
   }
 
@@ -387,6 +405,55 @@ class Providers with ChangeNotifier {
       return true;
     } catch (e) {
       print(e);
+      return false;
+    }
+  }
+
+  Future<bool> isiJurnal(
+      {required String id,
+      required String pertemuan,
+      required String deskripsi,
+      filepath}) async {
+    try {
+      await Services().isiJurnal(
+          id: id,
+          pertemuan: pertemuan,
+          deskripsi: deskripsi,
+          filepath: filepath);
+      return true;
+    } catch (e) {
+      print(e);
+      errorMessage = e.toString();
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> getDetailPresensiSiswa({String? id}) async {
+    try {
+      PresensiSiswaModel presensiSiswaModel =
+          await Services().getDetailPresensiSiswa(id: '$id');
+      _detailPresensiSiswa = presensiSiswaModel;
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> presensiSiswa({
+    required String id,
+    required String keterangan,
+    required String nis,
+  }) async {
+    try {
+      print('cok');
+      await Services().presensiSiswa(id: id, keterangan: keterangan, nis: nis);
+      return true;
+    } catch (e) {
+      print(e);
+      errorMessage = e.toString();
+      notifyListeners();
       return false;
     }
   }

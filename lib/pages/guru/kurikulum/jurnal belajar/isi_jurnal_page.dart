@@ -1,5 +1,11 @@
+import 'package:adistetsa/models/guru_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 class IsiJurnalPage extends StatefulWidget {
   const IsiJurnalPage({Key? key}) : super(key: key);
@@ -11,13 +17,75 @@ class IsiJurnalPage extends StatefulWidget {
 class _IsiJurnalPageState extends State<IsiJurnalPage> {
   FocusNode pertemuanFocusNode = new FocusNode();
   FocusNode deskripsiFocusNode = new FocusNode();
+  PlatformFile? file;
+  FilePickerResult? result;
   bool isActivePertemuan = false;
   bool isActiveDeskripsi = false;
+  bool isLoading = false;
+  TextEditingController pertemuanInput = TextEditingController(text: '');
+  TextEditingController deskripsiMengajarInput =
+      TextEditingController(text: '');
   @override
   Widget build(BuildContext context) {
-    TextEditingController pertemuanInput = TextEditingController(text: '');
-    TextEditingController deskripsiMengajarInput =
-        TextEditingController(text: '');
+    Providers provider = Provider.of<Providers>(context);
+    GuruModel guruModel = provider.guru;
+    var id = provider.idJurnalMengajar;
+    _selectFolder() async {
+      result = await FilePicker.platform.pickFiles(
+        type: FileType.image,
+      );
+      if (result != null) {
+        setState(() {
+          file = result!.files.first;
+        });
+      } else {}
+    }
+
+    handleSimpanJurnal() async {
+      if (pertemuanInput.text == '' ||
+          deskripsiMengajarInput.text == '' ||
+          file == null) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: dangerColor,
+            content: Text(
+              'Anda belum mengisi semua form yang ada',
+              textAlign: TextAlign.center,
+            )));
+      } else {
+        setState(() {
+          isLoading = true;
+        });
+        if (await provider.isiJurnal(
+            id: id,
+            pertemuan: pertemuanInput.text,
+            deskripsi: deskripsiMengajarInput.text,
+            filepath: file != null ? file!.path : null)) {
+          setState(() {
+            pertemuanInput.text = '';
+            deskripsiMengajarInput.text = '';
+            file = null;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              backgroundColor: successColor,
+              content: Text(
+                'Sukses menyimpan jurnal',
+                textAlign: TextAlign.center,
+              )));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              backgroundColor: dangerColor,
+              content: Text(
+                '${provider.errorMessage}'
+                    .replaceAll('Exception: [', '')
+                    .replaceAll(']', ''),
+                textAlign: TextAlign.center,
+              )));
+        }
+      }
+      setState(() {
+        isLoading = false;
+      });
+    }
 
     PreferredSizeWidget headerIsiJurnal() {
       return AppBar(
@@ -83,7 +151,7 @@ class _IsiJurnalPageState extends State<IsiJurnalPage> {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      'Miguel Wagnes',
+                      '${guruModel.nAMALENGKAP}',
                       style: mono2TextStyle.copyWith(
                         fontSize: 12,
                       ),
@@ -139,6 +207,7 @@ class _IsiJurnalPageState extends State<IsiJurnalPage> {
                       isActiveDeskripsi = false;
                     });
                   },
+                  keyboardType: TextInputType.number,
                   focusNode: pertemuanFocusNode,
                   onEditingComplete: () {
                     FocusScopeNode currentFocus = FocusScope.of(context);
@@ -190,7 +259,7 @@ class _IsiJurnalPageState extends State<IsiJurnalPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Pertemuan Ke-',
+              'Deskripsi Mengajar',
               style: mono3TextStyle.copyWith(
                 fontSize: 10,
                 color: deskripsiFocusNode.hasFocus || isActiveDeskripsi == true
@@ -283,7 +352,9 @@ class _IsiJurnalPageState extends State<IsiJurnalPage> {
             ),
             Container(
               child: TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  _selectFolder();
+                },
                 style: TextButton.styleFrom(
                   backgroundColor: m5Color,
                   primary: m5Color,
@@ -308,7 +379,7 @@ class _IsiJurnalPageState extends State<IsiJurnalPage> {
                       ),
                       Flexible(
                         child: Text(
-                          'Pilih File',
+                          (file == null) ? 'Pilih File' : file!.name.toString(),
                           style: mono6TextStyle.copyWith(
                             fontSize: 12,
                           ),
@@ -335,7 +406,9 @@ class _IsiJurnalPageState extends State<IsiJurnalPage> {
           bottom: 40,
         ),
         child: TextButton(
-          onPressed: () {},
+          onPressed: () {
+            handleSimpanJurnal();
+          },
           style: TextButton.styleFrom(
             primary: m2Color,
             backgroundColor: m2Color,
@@ -346,13 +419,22 @@ class _IsiJurnalPageState extends State<IsiJurnalPage> {
               ),
             ),
           ),
-          child: Text(
-            'Simpan',
-            style: mono6TextStyle.copyWith(
-              fontSize: 16,
-              fontWeight: bold,
-            ),
-          ),
+          child: isLoading == false
+              ? Text(
+                  'Simpan',
+                  style: mono6TextStyle.copyWith(
+                    fontSize: 16,
+                    fontWeight: bold,
+                  ),
+                )
+              : Container(
+                  width: 14,
+                  height: 14,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 4,
+                    color: mono6Color,
+                  ),
+                ),
         ),
       );
     }

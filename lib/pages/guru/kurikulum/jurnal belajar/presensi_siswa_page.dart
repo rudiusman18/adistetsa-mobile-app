@@ -1,5 +1,10 @@
+import 'package:adistetsa/models/presensisiswa_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class PresensiSiswaPage extends StatefulWidget {
   @override
@@ -13,6 +18,7 @@ class _PresensiSiswaPageState extends State<PresensiSiswaPage> {
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
     PreferredSizeWidget presensiSiswaHeader() {
       return AppBar(
         centerTitle: true,
@@ -92,6 +98,7 @@ class _PresensiSiswaPageState extends State<PresensiSiswaPage> {
     }
 
     Widget listSiswa({
+      required String id,
       required String nama,
       required String nis,
       required String status,
@@ -107,20 +114,25 @@ class _PresensiSiswaPageState extends State<PresensiSiswaPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        nama,
-                        style: mono1TextStyle,
+                  Flexible(
+                    child: Container(
+                      width: 150,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            nama,
+                            style: mono1TextStyle,
+                          ),
+                          Text(
+                            nis,
+                            style: mono1TextStyle.copyWith(
+                              fontSize: 10,
+                            ),
+                          ),
+                        ],
                       ),
-                      Text(
-                        nis,
-                        style: mono1TextStyle.copyWith(
-                          fontSize: 10,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                   Text(
                     status,
@@ -129,8 +141,12 @@ class _PresensiSiswaPageState extends State<PresensiSiswaPage> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context,
+                    onTap: () async {
+                      setState(() {
+                        loading(context);
+                      });
+                      await provider.getDetailPresensiSiswa(id: id);
+                      Navigator.pushReplacementNamed(context,
                               '/guru/kurikulum/list-jurnal-belajar/lihat-jadwal/presensi/edit-page')
                           .then(
                         (_) => setState(
@@ -165,16 +181,48 @@ class _PresensiSiswaPageState extends State<PresensiSiswaPage> {
         padding: const EdgeInsets.only(
           top: 20,
         ),
-        child: ListView(
-          children: [
-            for (var i = 0; i < 20; i++)
-              listSiswa(
-                nama: 'Syauqi',
-                nis: '123455',
-                status: 'Janda',
-              ),
-          ],
+        child: FutureBuilder(
+          future: Services().getPresensiSiswa(id: provider.idJurnalMengajar),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.hasData) {
+              List<PresensiSiswaModel> data = snapshot.data;
+              return data.isEmpty
+                  ? Center(
+                      child: Text(
+                        'Data tidak ditemukan',
+                        style: mono1TextStyle,
+                      ),
+                    )
+                  : ListView(
+                      children: data.map((item) {
+                        return listSiswa(
+                          id: '${item.iD}',
+                          nama: '${item.nAMA}',
+                          nis: '${item.nIS}',
+                          status: '${item.kETERANGAN}',
+                        );
+                      }).toList(),
+                    );
+            } else {
+              return Center(
+                child: CircularProgressIndicator(
+                  strokeWidth: 4,
+                  color: m1Color,
+                ),
+              );
+            }
+          },
         ),
+        // ListView(
+        //   children: [
+        //     for (var i = 0; i < 20; i++)
+        // listSiswa(
+        //   nama: 'Syauqi',
+        //   nis: '123455',
+        //   status: 'Janda',
+        // ),
+        //   ],
+        // ),
       ),
     );
   }
