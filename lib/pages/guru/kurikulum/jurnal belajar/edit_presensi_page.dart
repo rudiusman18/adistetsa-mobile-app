@@ -1,5 +1,8 @@
+import 'package:adistetsa/models/presensisiswa_model.dart';
+import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class EditPresensiPage extends StatefulWidget {
   @override
@@ -8,8 +11,33 @@ class EditPresensiPage extends StatefulWidget {
 
 class _EditPresensiPageState extends State<EditPresensiPage> {
   int selectedIndex = -1;
+  String keterangan = '';
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+    PresensiSiswaModel presensiSiswaModel = provider.detailPresensiSiswa;
+
+    handleSimpanPresensi() async {
+      if (await provider.presensiSiswa(
+          id: presensiSiswaModel.iD.toString(),
+          keterangan: keterangan,
+          nis: presensiSiswaModel.nIS.toString())) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: successColor,
+            content: Text(
+              '${provider.errorMessage}',
+              textAlign: TextAlign.center,
+            )));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: dangerColor,
+            content: Text(
+              '${provider.errorMessage}',
+              textAlign: TextAlign.center,
+            )));
+      }
+    }
+
     PreferredSizeWidget header() {
       return AppBar(
         backgroundColor: mono6Color,
@@ -67,13 +95,15 @@ class _EditPresensiPageState extends State<EditPresensiPage> {
       return GestureDetector(
         onTap: () {
           setState(() {
+            keterangan = name;
+            print(keterangan);
             selectedIndex = index;
           });
         },
         child: Row(
           children: [
             Container(
-              width: 124,
+              width: 135,
               padding: EdgeInsets.all(12),
               decoration: selectedIndex == index
                   ? BoxDecoration(
@@ -122,7 +152,9 @@ class _EditPresensiPageState extends State<EditPresensiPage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   )),
-              onPressed: () {},
+              onPressed: () {
+                handleSimpanPresensi();
+              },
               child: Text(
                 'Simpan',
                 style: mono6TextStyle.copyWith(
@@ -142,8 +174,8 @@ class _EditPresensiPageState extends State<EditPresensiPage> {
         body: Column(
           children: [
             nameCard(
-              name: 'Syauqi Babi',
-              nis: '132141241',
+              name: '${presensiSiswaModel.nAMA}',
+              nis: '${presensiSiswaModel.nIS}',
             ),
             Expanded(
               child: Container(
@@ -171,7 +203,7 @@ class _EditPresensiPageState extends State<EditPresensiPage> {
                                 : i == 2
                                     ? 'Sakit'
                                     : i == 3
-                                        ? 'Alpa'
+                                        ? 'Tanpa Keterangan'
                                         : '',
                       ),
                     SizedBox(

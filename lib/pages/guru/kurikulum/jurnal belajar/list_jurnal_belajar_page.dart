@@ -385,8 +385,13 @@ class _ListJurnalBelajarPageState extends State<ListJurnalBelajarPage> {
                             ),
                           ),
                         ),
-                        onPressed: () {
-                          Navigator.pushNamed(context,
+                        onPressed: () async {
+                          setState(() {
+                            loading(context);
+                          });
+                          await provider.setIdJurnalBelajar(
+                              getIdJurnalBelajar: '$id');
+                          Navigator.pushReplacementNamed(context,
                               '/guru/kurikulum/list-jurnal-belajar/isi-jurnal-page');
                         },
                         child: Row(
@@ -417,11 +422,12 @@ class _ListJurnalBelajarPageState extends State<ListJurnalBelajarPage> {
                             ),
                           ),
                         ),
-                        onPressed: () async{
+                        onPressed: () async {
                           setState(() {
                             loading(context);
                           });
-                          await provider.getDetailJurnalMengajarGuru(id: id);
+                          await provider.setIdJurnalBelajar(
+                              getIdJurnalBelajar: '$id');
                           Navigator.pushReplacementNamed(context,
                               '/guru/kurikulum/list-jurnal-belajar/lihat-jadwal-page');
                         },

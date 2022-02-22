@@ -3,6 +3,7 @@ import 'package:adistetsa/models/jadwalmengajarguru_model.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:adistetsa/widget/loading.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +21,8 @@ class _DaftarPertemuanPageState extends State<DaftarPertemuanPage> {
   @override
   Widget build(BuildContext context) {
     Providers provider = Provider.of<Providers>(context);
-    DetailJurnalMengajarGuruModel detailJurnalMengajarGuruModel = provider.detailJurnalMengajar;
+    DetailJurnalMengajarGuruModel detailJurnalMengajarGuruModel =
+        provider.detailJurnalMengajar;
     PreferredSizeWidget daftarPertemuanHeader() {
       return AppBar(
         centerTitle: true,
@@ -166,7 +168,8 @@ class _DaftarPertemuanPageState extends State<DaftarPertemuanPage> {
     Widget expandList({
       required String header,
       required String content,
-      required int? id,
+      String documentation = '',
+      required String? id,
     }) {
       return ExpandableNotifier(
           child: Padding(
@@ -229,9 +232,22 @@ class _DaftarPertemuanPageState extends State<DaftarPertemuanPage> {
                   SizedBox(
                     height: 11,
                   ),
-                  Image.asset(
-                    'assets/dokumentasi_icon.png',
-                    width: 52,
+                  Center(
+                    child: Image.network(
+                      '$documentation',
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) {
+                          return child;
+                        } else {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 4,
+                              color: m1Color,
+                            ),
+                          );
+                        }
+                      },
+                    ),
                   ),
                   SizedBox(
                     height: 20,
@@ -247,8 +263,13 @@ class _DaftarPertemuanPageState extends State<DaftarPertemuanPage> {
                             ),
                           ),
                         ),
-                        onPressed: () {
-                          Navigator.pushNamed(context,
+                        onPressed: () async {
+                          setState(() {
+                            loading(context);
+                          });
+                          await provider.setIdJurnalBelajar(
+                              getIdJurnalBelajar: '$id');
+                          Navigator.pushReplacementNamed(context,
                               '/guru/kurikulum/list-jurnal-belajar/lihat-jadwal/presensi-page');
                         },
                         child: Row(
@@ -289,18 +310,18 @@ class _DaftarPertemuanPageState extends State<DaftarPertemuanPage> {
         body: Column(
           children: [
             nameCard(
-              name: 'Syauqi Babi',
+              name: 'Syauqi',
               mataPelajaran: 'Penyusup',
               kelas: 'XII IPA A - 2021/2022',
               semester: 'Semester 12',
             ),
             Expanded(
               child: FutureBuilder(
-                future: Services().getJadwalMengajarGuru(),
+                future: Services()
+                    .getDetailJurnalMengajarGuru(id: provider.idJurnalMengajar),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (snapshot.hasData) {
-                    List<JadwalMengajarGuruModel> data = snapshot.data;
-                    var index = 0;
+                    List<DetailJurnalMengajarGuruModel> data = snapshot.data;
                     return data.isEmpty
                         ? Center(
                             child: Text(
@@ -310,12 +331,11 @@ class _DaftarPertemuanPageState extends State<DaftarPertemuanPage> {
                           )
                         : ListView(
                             children: data.map((item) {
-                              index++;
                               return expandList(
-                                header: 'Pertemuan ke ' + (index).toString(),
-                                content:
-                                    'Materi tentang bahasa indonesia menjelaskan pribahasa hiperbola dan membuat majas.',
-                                id: 0,
+                                header: 'Pertemuan ke - ${item.pERTEMUAN}',
+                                content: '${item.dESKRIPSIMATERI}',
+                                documentation: '${item.fILEDOKUMENTASI}',
+                                id: '${item.iD}',
                               );
                             }).toList(),
                           );
@@ -329,17 +349,6 @@ class _DaftarPertemuanPageState extends State<DaftarPertemuanPage> {
                   }
                 },
               ),
-              // ListView(
-              //   children: [
-              //     for (var i = 0; i < 20; i++)
-              // expandList(
-              //   header: 'Pertemuan ke ' + (i + 1).toString(),
-              //   content:
-              //       'Materi tentang bahasa indonesia menjelaskan pribahasa hiperbola dan membuat majas.',
-              //   id: 0,
-              // ),
-              //   ],
-              // ),
             ),
           ],
         ));
