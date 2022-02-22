@@ -1,3 +1,4 @@
+import 'package:adistetsa/models/detailjurnalmengajarguru_model.dart';
 import 'package:adistetsa/models/katalogbarang_model.dart';
 import 'package:adistetsa/models/katalogruangan_model.dart';
 import 'package:adistetsa/models/peminjambarang_model.dart';
@@ -82,6 +83,11 @@ class Providers with ChangeNotifier {
 
   PeminjamBarangModel _peminjamanBarang = PeminjamBarangModel();
   PeminjamBarangModel get peminjamanBarang => _peminjamanBarang;
+
+  DetailJurnalMengajarGuruModel _detailJurnalMengajar =
+      DetailJurnalMengajarGuruModel();
+  DetailJurnalMengajarGuruModel get detailJurnalMengajar =>
+      _detailJurnalMengajar;
 
   List listJenisProgramKebaikan = [];
 
@@ -194,6 +200,11 @@ class Providers with ChangeNotifier {
 
   set setPeminjamanBarang(PeminjamBarangModel peminjamanBarang) {
     _peminjamanBarang = peminjamanBarang;
+    notifyListeners();
+  }
+
+  set setJurnalMengajar(DetailJurnalMengajarGuruModel detailJurnal) {
+    _detailJurnalMengajar = detailJurnal;
     notifyListeners();
   }
 
@@ -361,6 +372,18 @@ class Providers with ChangeNotifier {
       PeminjamRuanganModel peminjamanRuanganModel =
           await Services().getDetailPeminjamanRuangan(id: '$id');
       _peminjamanRuangan = peminjamanRuanganModel;
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> getDetailJurnalMengajarGuru({String? id}) async {
+    try {
+      DetailJurnalMengajarGuruModel jurnalMengajarguru =
+          await Services().getDetailJurnalMengajarGuru(id: '$id');
+      _detailJurnalMengajar = jurnalMengajarguru;
       return true;
     } catch (e) {
       print(e);

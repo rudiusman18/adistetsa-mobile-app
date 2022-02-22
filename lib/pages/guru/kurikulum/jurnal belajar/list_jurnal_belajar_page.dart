@@ -1,6 +1,11 @@
+import 'package:adistetsa/models/jadwalmengajarguru_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:adistetsa/widget/loading.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ListJurnalBelajarPage extends StatefulWidget {
   @override
@@ -18,6 +23,7 @@ class _ListJurnalBelajarPageState extends State<ListJurnalBelajarPage> {
   Object? value2Item;
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
     PreferredSizeWidget jurnalBelajarHeader() {
       return AppBar(
         centerTitle: true,
@@ -296,6 +302,10 @@ class _ListJurnalBelajarPageState extends State<ListJurnalBelajarPage> {
                     'Senin',
                     'Selasa',
                     'Rabu',
+                    'Kamis',
+                    'Jum\'at',
+                    'Sabtu',
+                    'Minggu'
                   ],
                 ),
               ],
@@ -310,7 +320,7 @@ class _ListJurnalBelajarPageState extends State<ListJurnalBelajarPage> {
       required String subtitle,
       required String content,
       required String subtitleContent,
-      required int? id,
+      required String? id,
     }) {
       return ExpandableNotifier(
           child: Padding(
@@ -407,8 +417,12 @@ class _ListJurnalBelajarPageState extends State<ListJurnalBelajarPage> {
                             ),
                           ),
                         ),
-                        onPressed: () {
-                          Navigator.pushNamed(context,
+                        onPressed: () async{
+                          setState(() {
+                            loading(context);
+                          });
+                          await provider.getDetailJurnalMengajarGuru(id: id);
+                          Navigator.pushReplacementNamed(context,
                               '/guru/kurikulum/list-jurnal-belajar/lihat-jadwal-page');
                         },
                         child: Row(
@@ -451,17 +465,42 @@ class _ListJurnalBelajarPageState extends State<ListJurnalBelajarPage> {
         children: [
           filter(),
           Expanded(
-            child: ListView(
-              children: [
-                for (var i = 0; i < 20; i++)
-                  expandList(
-                    header: 'XII IPA - 2020/2021 A',
-                    subtitle: 'Bahasa Indonesia',
-                    content: '07:00 - 08:30 (Jam Pertama)',
-                    subtitleContent: 'Semester 1',
-                    id: 0,
-                  ),
-              ],
+            child: FutureBuilder(
+              future: Services().getJurnalBelajarMengajarGuru(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  List<JadwalMengajarGuruModel> data = snapshot.data;
+                  return data.isEmpty
+                      ? Center(
+                          child: Text(
+                            'Data tidak ditemukan',
+                            style: mono1TextStyle,
+                          ),
+                        )
+                      : ListView(
+                          children: data.map((item) {
+                            return expandList(
+                              header: '${item.kELAS!.split('-')[0]}' +
+                                  ' - ' +
+                                  '${item.kELAS!.split('-')[1]}',
+                              subtitle: '${item.mATAPELAJARAN}',
+                              content: '${item.wAKTUPELAJARAN}'
+                                  .replaceAll('[', '')
+                                  .replaceAll(']', ''),
+                              subtitleContent: '${item.sEMESTER}',
+                              id: '${item.iD}',
+                            );
+                          }).toList(),
+                        );
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 4,
+                      color: m1Color,
+                    ),
+                  );
+                }
+              },
             ),
           ),
         ],

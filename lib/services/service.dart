@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:adistetsa/models/detailjurnalmengajarguru_model.dart';
+import 'package:adistetsa/models/jadwalmengajarguru_model.dart';
 import 'package:adistetsa/models/peminjambarang_model.dart';
 import 'package:adistetsa/models/guru_model.dart';
 import 'package:adistetsa/models/jenispelanggaran_model.dart';
@@ -911,6 +913,57 @@ class Services extends ChangeNotifier {
       var data = jsonDecode(response.body);
       PeminjamRuanganModel ruangan = PeminjamRuanganModel.fromJson(data);
       return ruangan;
+    } else {
+      throw Exception('Gagal Mendapatkan Barang Admin');
+    }
+  }
+
+  getJadwalMengajarGuru(
+      {String? search, String? filterTahunAjaran, String? filterKelas}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/kurikulum/jadwal_mengajar_guru');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<JadwalMengajarGuruModel> jadwalMengajarGuru =
+          data.map((item) => JadwalMengajarGuruModel.fromJson(item)).toList();
+      return jadwalMengajarGuru;
+    } else {
+      throw Exception('Gagal Mendapatkan Barang Admin');
+    }
+  }
+
+  getJurnalBelajarMengajarGuru(
+      {String? search, String? filterTahunAjaran, String? filterKelas}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/kurikulum/jurnal_belajar_mengajar');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<JadwalMengajarGuruModel> jadwalMengajarGuru =
+          data.map((item) => JadwalMengajarGuruModel.fromJson(item)).toList();
+      return jadwalMengajarGuru;
+    } else {
+      throw Exception('Gagal Mendapatkan Barang Admin');
+    }
+  }
+
+  getDetailJurnalMengajarGuru({required String id}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/kurikulum/jurnal_belajar_pertemuan/$id');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<DetailJurnalMengajarGuruModel> jurnal = data
+          .map((item) => DetailJurnalMengajarGuruModel.fromJson(item))
+          .toList();
+      return jurnal;
     } else {
       throw Exception('Gagal Mendapatkan Barang Admin');
     }
