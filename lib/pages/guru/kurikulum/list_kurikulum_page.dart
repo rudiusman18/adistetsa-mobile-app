@@ -1,9 +1,18 @@
+import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class ListKurikulumPage extends StatelessWidget {
+class ListKurikulumPage extends StatefulWidget {
+  @override
+  _ListKurikulumPageState createState() => _ListKurikulumPageState();
+}
+
+class _ListKurikulumPageState extends State<ListKurikulumPage> {
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
     PreferredSizeWidget header() {
       return AppBar(
         backgroundColor: mono6Color,
@@ -61,8 +70,12 @@ class ListKurikulumPage extends StatelessWidget {
               height: 20,
             ),
             GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(
+              onTap: () async {
+                setState(() {
+                  loading(context);
+                });
+                await provider.getTahunAjaranFilter();
+                Navigator.pushReplacementNamed(
                     context, '/guru/kurikulum/jadwal-mengajar-page');
               },
               child: contentItem(
@@ -70,8 +83,12 @@ class ListKurikulumPage extends StatelessWidget {
               ),
             ),
             GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(
+              onTap: () async {
+                setState(() {
+                  loading(context);
+                });
+                await provider.getTahunAjaranFilter();
+                Navigator.pushReplacementNamed(
                     context, '/guru/kurikulum/list-jurnal-belajar');
               },
               child: contentItem(

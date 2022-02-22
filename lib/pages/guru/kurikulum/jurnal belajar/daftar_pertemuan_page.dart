@@ -266,8 +266,7 @@ class _DaftarPertemuanPageState extends State<DaftarPertemuanPage> {
                           setState(() {
                             loading(context);
                           });
-                          await provider.setIdJurnalBelajar(
-                              getIdJurnalBelajar: '$id');
+                          await provider.setIdPresensiSiswa(getIdPresensiSiswa: '$id');
                           Navigator.pushReplacementNamed(context,
                               '/guru/kurikulum/list-jurnal-belajar/lihat-jadwal/presensi-page');
                         },

@@ -99,10 +99,13 @@ class Providers with ChangeNotifier {
       _getJadwalMengajarGuru;
 
   List listJenisProgramKebaikan = [];
+  List listTahunAjaranFilter = [];
 
   String detailRuang = '';
 
   String idJurnalMengajar = '';
+
+  String idPresensiSiswa = '';
 
   String errorMessage = '';
 
@@ -216,6 +219,11 @@ class Providers with ChangeNotifier {
     notifyListeners();
   }
 
+  setIdPresensiSiswa({required String getIdPresensiSiswa}) {
+    idPresensiSiswa = getIdPresensiSiswa;
+    notifyListeners();
+  }
+
   set setPeminjamanRuangan(PeminjamRuanganModel peminjamanRuangan) {
     _peminjamanRuangan = peminjamanRuangan;
     notifyListeners();
@@ -243,6 +251,16 @@ class Providers with ChangeNotifier {
   Future<bool> getJenisProgramKebaikan() async {
     try {
       listJenisProgramKebaikan = await Services().getJenisProgramKebaikan();
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> getTahunAjaranFilter() async {
+    try {
+      listTahunAjaranFilter = await Services().getTahunAjaranFilter();
       return true;
     } catch (e) {
       print(e);

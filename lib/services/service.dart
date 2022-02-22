@@ -21,6 +21,7 @@ import 'package:adistetsa/models/riwayatruangan_model.dart';
 import 'package:adistetsa/models/role_model.dart';
 import 'package:adistetsa/models/peminjamruangan_model.dart';
 import 'package:adistetsa/models/siswa_model.dart';
+import 'package:adistetsa/pages/siswa/kesiswaan/proyek%20kebaikan/input_proyek_kebaikan_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -923,7 +924,7 @@ class Services extends ChangeNotifier {
       {String? search, String? filterTahunAjaran, String? filterKelas}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url = Uri.parse('$baseUrl/kurikulum/jadwal_mengajar_guru');
+    var url = Uri.parse('$baseUrl/kurikulum/jadwal_mengajar_guru?$filterTahunAjaran');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -937,10 +938,13 @@ class Services extends ChangeNotifier {
   }
 
   getJurnalBelajarMengajarGuru(
-      {String? search, String? filterTahunAjaran, String? filterKelas}) async {
+      {String? search, String? filterTahunAjaran, String? filterHari}) async {
+    print(filterTahunAjaran);
+    print(filterHari);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url = Uri.parse('$baseUrl/kurikulum/jurnal_belajar_mengajar');
+    var url = Uri.parse(
+        '$baseUrl/kurikulum/jurnal_belajar_mengajar?$filterTahunAjaran');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
 
@@ -967,7 +971,7 @@ class Services extends ChangeNotifier {
           .toList();
       return jurnal;
     } else {
-      throw Exception('Gagal Mendapatkan Barang Admin');
+      throw Exception(response.body);
     }
   }
 
@@ -1000,11 +1004,14 @@ class Services extends ChangeNotifier {
   }
 
   getPresensiSiswa({String? id}) async {
+    print(id);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
     var url = Uri.parse('$baseUrl/kurikulum/presensi_siswa/$id');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
+    print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body)['results'];
       List<PresensiSiswaModel> presensiSiswa =
@@ -1047,6 +1054,20 @@ class Services extends ChangeNotifier {
       return true;
     } else {
       throw Exception(response.body);
+    }
+  }
+
+  getTahunAjaranFilter() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/kurikulum/tahun_ajaran');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      var jenisProgramKebaikan = jsonDecode(response.body);
+      return jenisProgramKebaikan['results'];
+    } else {
+      print('GAGAL');
     }
   }
 }

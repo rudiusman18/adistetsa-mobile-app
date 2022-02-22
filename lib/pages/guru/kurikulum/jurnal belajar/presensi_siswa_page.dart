@@ -192,7 +192,7 @@ class _PresensiSiswaPageState extends State<PresensiSiswaPage> {
             ? Container()
             : FutureBuilder(
                 future:
-                    Services().getPresensiSiswa(id: provider.idJurnalMengajar),
+                    Services().getPresensiSiswa(id: provider.idPresensiSiswa),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (snapshot.hasData) {
                     List<PresensiSiswaModel> data = snapshot.data;

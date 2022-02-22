@@ -21,6 +21,9 @@ class _ListJurnalBelajarPageState extends State<ListJurnalBelajarPage> {
   Object? value1Item;
   bool flag2 = false;
   Object? value2Item;
+  String url = '';
+  String filterTahun = '';
+  String filterHari = '';
   @override
   Widget build(BuildContext context) {
     Providers provider = Provider.of<Providers>(context);
@@ -140,12 +143,12 @@ class _ListJurnalBelajarPageState extends State<ListJurnalBelajarPage> {
                 dropdownColor: mono6Color,
                 elevation: 2,
                 value: value1Item,
-                items: data.map(
+                items: provider.listTahunAjaranFilter.map(
                   (value) {
                     return DropdownMenuItem(
-                      value: value,
+                      value: value['ID'],
                       child: Text(
-                        value,
+                        value['tahun_ajaran'],
                         style: mono2TextStyle.copyWith(
                           color: value1Item == value ? p1Color : mono2Color,
                           fontWeight: regular,
@@ -158,9 +161,15 @@ class _ListJurnalBelajarPageState extends State<ListJurnalBelajarPage> {
                 onChanged: (value) async {
                   setState(() {
                     isLoading = true;
-                    print(value);
                     value1Item = value;
+                    filterTahun = '?TAHUN_AJARAN=$value';
+
                     flag1 = true;
+                  });
+                  await Services()
+                      .getJurnalBelajarMengajarGuru(filterTahunAjaran: url);
+                  setState(() {
+                    isLoading = false;
                   });
                 },
               ),
@@ -226,13 +235,23 @@ class _ListJurnalBelajarPageState extends State<ListJurnalBelajarPage> {
                     isLoading = true;
                     print(value);
                     value2Item = value;
+                    filterHari = 'HARI=$value';
                     flag2 = true;
+                  });
+                  await Services()
+                      .getJurnalBelajarMengajarGuru(filterTahunAjaran: url);
+                  setState(() {
+                    isLoading = false;
                   });
                 },
               ),
             ),
           ));
     }
+
+    setState(() {
+      url = '$filterTahun&$filterHari';
+    });
 
     Widget filter() {
       return Container(
@@ -254,9 +273,16 @@ class _ListJurnalBelajarPageState extends State<ListJurnalBelajarPage> {
 
                             value1Item = null;
                             value2Item = null;
-
+                            filterHari = '';
+                            filterTahun = '';
+                            url = '';
                             flag1 = false;
                             flag2 = false;
+                          });
+                          await Services().getJurnalBelajarMengajarGuru(
+                              filterTahunAjaran: url);
+                          setState(() {
+                            isLoading = false;
                           });
                         },
                         child: Container(
@@ -472,43 +498,46 @@ class _ListJurnalBelajarPageState extends State<ListJurnalBelajarPage> {
         children: [
           filter(),
           Expanded(
-            child: FutureBuilder(
-              future: Services().getJurnalBelajarMengajarGuru(),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.hasData) {
-                  List<JadwalMengajarGuruModel> data = snapshot.data;
-                  return data.isEmpty
-                      ? Center(
-                          child: Text(
-                            'Data tidak ditemukan',
-                            style: mono1TextStyle,
+            child: isLoading == false
+                ? FutureBuilder(
+                    future: Services()
+                        .getJurnalBelajarMengajarGuru(filterTahunAjaran: url),
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (snapshot.hasData) {
+                        List<JadwalMengajarGuruModel> data = snapshot.data;
+                        return data.isEmpty
+                            ? Center(
+                                child: Text(
+                                  'Data tidak ditemukan',
+                                  style: mono1TextStyle,
+                                ),
+                              )
+                            : ListView(
+                                children: data.map((item) {
+                                  return expandList(
+                                    header: '${item.kELAS!.split('-')[0]}' +
+                                        ' - ' +
+                                        '${item.kELAS!.split('-')[1]}',
+                                    subtitle: '${item.mATAPELAJARAN}',
+                                    content: '${item.wAKTUPELAJARAN}'
+                                        .replaceAll('[', '')
+                                        .replaceAll(']', ''),
+                                    subtitleContent: '${item.sEMESTER}',
+                                    id: '${item.iD}',
+                                  );
+                                }).toList(),
+                              );
+                      } else {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 4,
+                            color: m1Color,
                           ),
-                        )
-                      : ListView(
-                          children: data.map((item) {
-                            return expandList(
-                              header: '${item.kELAS!.split('-')[0]}' +
-                                  ' - ' +
-                                  '${item.kELAS!.split('-')[1]}',
-                              subtitle: '${item.mATAPELAJARAN}',
-                              content: '${item.wAKTUPELAJARAN}'
-                                  .replaceAll('[', '')
-                                  .replaceAll(']', ''),
-                              subtitleContent: '${item.sEMESTER}',
-                              id: '${item.iD}',
-                            );
-                          }).toList(),
                         );
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      strokeWidth: 4,
-                      color: m1Color,
-                    ),
-                  );
-                }
-              },
-            ),
+                      }
+                    },
+                  )
+                : Container(),
           ),
         ],
       ),

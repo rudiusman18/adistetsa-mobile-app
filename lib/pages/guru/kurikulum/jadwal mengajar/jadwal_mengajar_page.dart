@@ -1,8 +1,10 @@
 import 'package:adistetsa/models/jadwalmengajarguru_model.dart';
+import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class JadwalMengajarPage extends StatefulWidget {
   @override
@@ -18,8 +20,12 @@ class _JadwalMengajarPageState extends State<JadwalMengajarPage> {
   Object? value1Item;
   bool flag2 = false;
   Object? value2Item;
+  String filterTahun = '';
+  String filterHari = '';
+  String url = '';
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
     PreferredSizeWidget jurnalBelajarHeader() {
       return AppBar(
         centerTitle: true,
@@ -136,12 +142,12 @@ class _JadwalMengajarPageState extends State<JadwalMengajarPage> {
                 dropdownColor: mono6Color,
                 elevation: 2,
                 value: value1Item,
-                items: data.map(
+                items: provider.listTahunAjaranFilter.map(
                   (value) {
                     return DropdownMenuItem(
-                      value: value,
+                      value: value['ID'],
                       child: Text(
-                        value,
+                        value['tahun_ajaran'],
                         style: mono2TextStyle.copyWith(
                           color: value1Item == value ? p1Color : mono2Color,
                           fontWeight: regular,
@@ -156,7 +162,13 @@ class _JadwalMengajarPageState extends State<JadwalMengajarPage> {
                     isLoading = true;
                     print(value);
                     value1Item = value;
+                    filterTahun = 'TAHUN_AJARAN=$value';
                     flag1 = true;
+                  });
+                  await Services()
+                      .getJadwalMengajarGuru(filterTahunAjaran: url);
+                  setState(() {
+                    isLoading = false;
                   });
                 },
               ),
@@ -222,13 +234,23 @@ class _JadwalMengajarPageState extends State<JadwalMengajarPage> {
                     isLoading = true;
                     print(value);
                     value2Item = value;
+                    filterHari = '&HARI=$value';
                     flag2 = true;
+                  });
+                  await Services()
+                      .getJadwalMengajarGuru(filterTahunAjaran: url);
+                  setState(() {
+                    isLoading = false;
                   });
                 },
               ),
             ),
           ));
     }
+
+    setState(() {
+      url = '$filterTahun$filterHari';
+    });
 
     Widget filter() {
       return Container(
@@ -247,12 +269,18 @@ class _JadwalMengajarPageState extends State<JadwalMengajarPage> {
                         onTap: () async {
                           setState(() {
                             isLoading = true;
-
                             value1Item = null;
                             value2Item = null;
-
+                            url = '';
+                            filterTahun = '';
+                            filterHari = '';
                             flag1 = false;
                             flag2 = false;
+                          });
+                          await Services()
+                              .getJadwalMengajarGuru(filterTahunAjaran: url);
+                          setState(() {
+                            isLoading = false;
                           });
                         },
                         child: Container(
@@ -385,8 +413,8 @@ class _JadwalMengajarPageState extends State<JadwalMengajarPage> {
         children: [
           filter(),
           Expanded(
-            child: FutureBuilder(
-              future: Services().getJadwalMengajarGuru(),
+            child: isLoading == false? FutureBuilder(
+              future: Services().getJadwalMengajarGuru(filterTahunAjaran: url),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
                   List<JadwalMengajarGuruModel> data = snapshot.data;
@@ -422,7 +450,7 @@ class _JadwalMengajarPageState extends State<JadwalMengajarPage> {
                   );
                 }
               },
-            ),
+            ) : Container(),
           ),
         ],
       ),
