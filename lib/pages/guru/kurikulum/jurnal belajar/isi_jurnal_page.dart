@@ -273,7 +273,7 @@ class _IsiJurnalPageState extends State<IsiJurnalPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Unggah Dokumen',
+              'Unggah Dokumentasi',
               style: mono2TextStyle.copyWith(
                 fontSize: 10,
               ),
