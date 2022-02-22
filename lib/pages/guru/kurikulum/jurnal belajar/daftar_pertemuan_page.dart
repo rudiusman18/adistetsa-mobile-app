@@ -110,7 +110,7 @@ class _DaftarPertemuanPageState extends State<DaftarPertemuanPage> {
       return Container(
         width: double.infinity,
         margin: EdgeInsets.symmetric(
-          horizontal: 34,
+          horizontal: 20,
           vertical: 22,
         ),
         padding: EdgeInsets.only(
