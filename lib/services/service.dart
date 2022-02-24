@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:adistetsa/models/daftaranggotaekskul_model.dart';
 import 'package:adistetsa/models/detailjurnalmengajarguru_model.dart';
+import 'package:adistetsa/models/jadwalekskul_model.dart';
 import 'package:adistetsa/models/jadwalmengajarguru_model.dart';
 import 'package:adistetsa/models/peminjambarang_model.dart';
 import 'package:adistetsa/models/guru_model.dart';
@@ -13,6 +15,7 @@ import 'package:adistetsa/models/kompetensi_model.dart';
 import 'package:adistetsa/models/laporankebaikan_model.dart';
 import 'package:adistetsa/models/list_buku_model.dart';
 import 'package:adistetsa/models/pelangaran_model.dart';
+import 'package:adistetsa/models/pengajuanekskul_model.dart';
 import 'package:adistetsa/models/pengajuanpeminjaman_model.dart';
 import 'package:adistetsa/models/presensisiswa_model.dart';
 import 'package:adistetsa/models/riwayatbarang_model.dart';
@@ -1004,14 +1007,11 @@ class Services extends ChangeNotifier {
   }
 
   getPresensiSiswa({String? id}) async {
-    print(id);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
     var url = Uri.parse('$baseUrl/kurikulum/presensi_siswa/$id');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
-    print(response.statusCode);
-    print(response.body);
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body)['results'];
       List<PresensiSiswaModel> presensiSiswa =
@@ -1068,6 +1068,126 @@ class Services extends ChangeNotifier {
       return jenisProgramKebaikan['results'];
     } else {
       print('GAGAL');
+    }
+  }
+
+  getPengajuanEkskul() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/kesiswaan/pengajuan_ekskul');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<PengajuanEkskulModel> pengajuanEkskul =
+          data.map((item) => PengajuanEkskulModel.fromJson(item)).toList();
+      return pengajuanEkskul;
+    } else {
+      throw Exception(response.body);
+    }
+  }
+
+  getDetailPengajuanEkskul({required String id}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/kesiswaan/pengajuan_ekskul/$id');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      PengajuanEkskulModel pengajuanEkskul =
+          PengajuanEkskulModel.fromJson(data);
+      return pengajuanEkskul;
+    } else {
+      throw Exception('Gagal Mendapatkan Detail Pengajuan Ekskul');
+    }
+  }
+
+  terimaPengajuanEkskul({required String id}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/kesiswaan/acc_pengajuan_ekskul/$id');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Gagal Menerima Ekskul');
+    }
+  }
+
+  tolakPengajuanEkskul({required String id}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/kesiswaan/pengajuan_ekskul/$id');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.delete(url, headers: headers);
+    if (response.statusCode == 200 || response.statusCode == 204) {
+      return true;
+    } else {
+      throw Exception('Gagal Menolak Ekskul');
+    }
+  }
+
+  getJadwalEkskul({String filter = ''}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/kesiswaan/jadwal_ekskul$filter');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<JadwalEkskulModel> jadwalEkskulModel =
+          data.map((item) => JadwalEkskulModel.fromJson(item)).toList();
+      return jadwalEkskulModel;
+    } else {
+      throw Exception('Gagal Mendapatkan Jadwal Admin');
+    }
+  }
+
+  getDaftarAnggotaEkskul({required String id}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/kesiswaan/daftar_anggota/$id');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<DaftarAnggotaEkskulModel> daftarAnggota =
+          data.map((item) => DaftarAnggotaEkskulModel.fromJson(item)).toList();
+      return daftarAnggota;
+    } else {
+      throw Exception(response.body);
+    }
+  }
+
+  getDetailAnggotaEkskul({required String id}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/kesiswaan/detail_anggota/$id');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      DaftarAnggotaEkskulModel daftarAnggota =
+          DaftarAnggotaEkskulModel.fromJson(data);
+      return daftarAnggota;
+    } else {
+      throw Exception('Gagal Mendapatkan Detail Pengajuan Ekskul');
+    }
+  }
+
+  terimaDaftarAnggota({required String id, required String status}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/kesiswaan/detail_anggota/$id');
+    var headers = {"Accept": "application/json", "authorization": token};
+    var body = {'STATUS': status};
+    var response = await http.patch(url, headers: headers, body: body);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception(response.body);
     }
   }
 }

@@ -1,4 +1,6 @@
+import 'package:adistetsa/models/daftaranggotaekskul_model.dart';
 import 'package:adistetsa/models/detailjurnalmengajarguru_model.dart';
+import 'package:adistetsa/models/jadwalekskul_model.dart';
 import 'package:adistetsa/models/jadwalmengajarguru_model.dart';
 import 'package:adistetsa/models/katalogbarang_model.dart';
 import 'package:adistetsa/models/katalogruangan_model.dart';
@@ -8,6 +10,7 @@ import 'package:adistetsa/models/jenispelanggaran_model.dart';
 import 'package:adistetsa/models/karyawan_model.dart';
 import 'package:adistetsa/models/katalogbuku_model.dart';
 import 'package:adistetsa/models/list_buku_model.dart';
+import 'package:adistetsa/models/pengajuanekskul_model.dart';
 import 'package:adistetsa/models/pengajuanpeminjaman_model.dart';
 import 'package:adistetsa/models/presensisiswa_model.dart';
 import 'package:adistetsa/models/riwayatbarang_model.dart';
@@ -98,7 +101,17 @@ class Providers with ChangeNotifier {
   List<JadwalMengajarGuruModel> get getJadwalMengajarGuru =>
       _getJadwalMengajarGuru;
 
+  PengajuanEkskulModel _pengajuanEkskul = PengajuanEkskulModel();
+  PengajuanEkskulModel get pengajuanEkskul => _pengajuanEkskul;
+
+  List<JadwalEkskulModel> _jadwalEkskul = [];
+  List<JadwalEkskulModel> get jadwalEkskul => _jadwalEkskul;
+
+  DaftarAnggotaEkskulModel _daftarAnggota = DaftarAnggotaEkskulModel();
+  DaftarAnggotaEkskulModel get daftarAnggota => _daftarAnggota;
+
   List listJenisProgramKebaikan = [];
+
   List listTahunAjaranFilter = [];
 
   String detailRuang = '';
@@ -244,6 +257,21 @@ class Providers with ChangeNotifier {
     notifyListeners();
   }
 
+  set setDetailPengajuanEkskul(PengajuanEkskulModel pengajuanEkskulModel) {
+    _pengajuanEkskul = pengajuanEkskulModel;
+    notifyListeners();
+  }
+
+  set setJadwalEkskul(List<JadwalEkskulModel> jadwalEkskulModel) {
+    _jadwalEkskul = jadwalEkskulModel;
+    notifyListeners();
+  }
+
+  set setDaftarAnggota(DaftarAnggotaEkskulModel daftarAnggotaEkskulModel) {
+    _daftarAnggota = daftarAnggotaEkskulModel;
+    notifyListeners();
+  }
+
   clearDataSiswa() {
     _dataSiswa = SiswaModel();
   }
@@ -261,6 +289,7 @@ class Providers with ChangeNotifier {
   Future<bool> getTahunAjaranFilter() async {
     try {
       listTahunAjaranFilter = await Services().getTahunAjaranFilter();
+      print(listTahunAjaranFilter);
       return true;
     } catch (e) {
       print(e);
@@ -475,7 +504,6 @@ class Providers with ChangeNotifier {
     required String nis,
   }) async {
     try {
-      print('cok');
       await Services().presensiSiswa(id: id, keterangan: keterangan, nis: nis);
       return true;
     } catch (e) {
@@ -490,6 +518,42 @@ class Providers with ChangeNotifier {
     try {
       _getJadwalMengajarGuru = await Services().getJurnalBelajarMengajarGuru();
 
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> getDetailPengajuanEkskul({String? id}) async {
+    try {
+      PengajuanEkskulModel pengajuanEkskulModel =
+          await Services().getDetailPengajuanEkskul(id: '$id');
+      _pengajuanEkskul = pengajuanEkskulModel;
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> getJadwalEkskul() async {
+    try {
+      List<JadwalEkskulModel> jadwalEkskulModel =
+          await Services().getJadwalEkskul();
+      _jadwalEkskul = jadwalEkskulModel;
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> getDetailAnggotaEkskul({String? id}) async {
+    try {
+      DaftarAnggotaEkskulModel pengajuanEkskulModel =
+          await Services().getDetailAnggotaEkskul(id: '$id');
+      _daftarAnggota = pengajuanEkskulModel;
       return true;
     } catch (e) {
       print(e);

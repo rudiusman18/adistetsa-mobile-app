@@ -1,5 +1,10 @@
+import 'package:adistetsa/models/daftaranggotaekskul_model.dart';
+import 'package:adistetsa/models/jadwalekskul_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DetailDaftarAnggotaPage extends StatefulWidget {
   @override
@@ -14,6 +19,10 @@ class _DetailDaftarAnggotaPageState extends State<DetailDaftarAnggotaPage> {
 
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+    DaftarAnggotaEkskulModel daftarAnggotaEkskulModel = provider.daftarAnggota;
+    List<JadwalEkskulModel> jadwalEkskulModel = provider.jadwalEkskul;
+
     PreferredSizeWidget header() {
       return AppBar(
         automaticallyImplyLeading: false,
@@ -163,7 +172,6 @@ class _DetailDaftarAnggotaPageState extends State<DetailDaftarAnggotaPage> {
                 ).toList(),
                 onChanged: (value) async {
                   setState(() {
-                    isLoading = true;
                     value1Item = value;
 
                     flag1 = true;
@@ -194,14 +202,42 @@ class _DetailDaftarAnggotaPageState extends State<DetailDaftarAnggotaPage> {
             ),
             backgroundColor: m2Color,
           ),
-          onPressed: () {},
-          child: Text(
-            'Simpan',
-            style: mono6TextStyle.copyWith(
-              fontWeight: bold,
-              fontSize: 16,
-            ),
-          ),
+          onPressed: () async {
+            setState(() {
+              isLoading = true;
+            });
+            if (await Services().terimaDaftarAnggota(
+                id: daftarAnggotaEkskulModel.iD.toString(),
+                status: value1Item.toString())) {
+              Navigator.pop(context);
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  backgroundColor: dangerColor,
+                  content: Text(
+                    'Gagal Simpan Detail Anggota',
+                    textAlign: TextAlign.center,
+                  )));
+            }
+            setState(() {
+              isLoading = false;
+            });
+          },
+          child: isLoading == false
+              ? Text(
+                  'Simpan',
+                  style: mono6TextStyle.copyWith(
+                    fontWeight: bold,
+                    fontSize: 16,
+                  ),
+                )
+              : Container(
+                  width: 14,
+                  height: 14,
+                  child: CircularProgressIndicator(
+                    color: mono6Color,
+                    strokeWidth: 2,
+                  ),
+                ),
         ),
       );
     }
@@ -212,9 +248,9 @@ class _DetailDaftarAnggotaPageState extends State<DetailDaftarAnggotaPage> {
         body: Column(
           children: [
             nameCard(
-              name: 'Syauqi Babi',
-              nis: '123123123',
-              kelas: 'XII-IPA A',
+              name: '${daftarAnggotaEkskulModel.nAMA}',
+              nis: '${daftarAnggotaEkskulModel.nIS}',
+              kelas: '${daftarAnggotaEkskulModel.kELASSISWA}',
             ),
             SizedBox(
               height: 20,
@@ -225,7 +261,7 @@ class _DetailDaftarAnggotaPageState extends State<DetailDaftarAnggotaPage> {
                   listItem(
                     name: 'Ekstrakurikuler',
                     value: Text(
-                      'Bola Basket',
+                      '${jadwalEkskulModel.first.eKSKUL}',
                       style: mono1TextStyle.copyWith(
                         fontSize: 12,
                       ),
@@ -234,16 +270,7 @@ class _DetailDaftarAnggotaPageState extends State<DetailDaftarAnggotaPage> {
                   listItem(
                     name: 'Tahun',
                     value: Text(
-                      '2022/2023',
-                      style: mono1TextStyle.copyWith(
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
-                  listItem(
-                    name: 'Tanggal',
-                    value: Text(
-                      '2022 - 02 - 22',
+                      '${jadwalEkskulModel.first.tAHUNAJARAN}',
                       style: mono1TextStyle.copyWith(
                         fontSize: 12,
                       ),
@@ -255,7 +282,7 @@ class _DetailDaftarAnggotaPageState extends State<DetailDaftarAnggotaPage> {
                       hint: 'Status',
                       data: [
                         'Aktif',
-                        'Non Aktif',
+                        'Nonaktif',
                       ],
                     ),
                   ),

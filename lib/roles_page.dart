@@ -62,6 +62,8 @@ class _RolesPageState extends State<RolesPage> {
               context, '/main-page', (route) => false);
         } else if (role == 'Pelatih') {
           currentIndex = -1;
+          await provider.getJadwalEkskul();
+          await provider.getTahunAjaranFilter();
           Navigator.pushNamedAndRemoveUntil(
               context, '/main-page', (route) => false);
         }

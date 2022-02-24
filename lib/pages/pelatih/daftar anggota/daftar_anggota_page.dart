@@ -1,5 +1,11 @@
+import 'package:adistetsa/models/daftaranggotaekskul_model.dart';
+import 'package:adistetsa/models/jadwalekskul_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DaftarAnggotaPage extends StatefulWidget {
   @override
@@ -14,6 +20,8 @@ class _DaftarAnggotaPageState extends State<DaftarAnggotaPage> {
 
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+    List<JadwalEkskulModel> jadwalEkskulModel = provider.jadwalEkskul;
     PreferredSizeWidget header() {
       return AppBar(
         centerTitle: true,
@@ -93,15 +101,30 @@ class _DaftarAnggotaPageState extends State<DaftarAnggotaPage> {
     }
 
     listItem({
+      required String id,
       required String name,
       required String nis,
       required String status,
       required String kelas,
     }) {
       return GestureDetector(
-        onTap: () {
-          Navigator.pushNamed(
-              context, '/pelatih/daftar-anggota/detail-daftar-anggota-page');
+        onTap: () async {
+          setState(() {
+            loading(context);
+          });
+          await provider.getDetailAnggotaEkskul(id: id);
+          Navigator.pushReplacementNamed(
+                  context, '/pelatih/daftar-anggota/detail-daftar-anggota-page')
+              .then((_) async {
+            setState(() {
+              isLoading = true;
+            });
+            await Services().getDaftarAnggotaEkskul(
+                id: jadwalEkskulModel.first.iD.toString());
+            setState(() {
+              isLoading = false;
+            });
+          });
         },
         child: Container(
           color: mono6Color,
@@ -112,20 +135,23 @@ class _DaftarAnggotaPageState extends State<DaftarAnggotaPage> {
             children: [
               Row(
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        name,
-                        style: mono1TextStyle,
-                      ),
-                      Text(
-                        nis,
-                        style: mono1TextStyle.copyWith(
-                          fontSize: 10,
+                  Container(
+                    width: 130,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          name,
+                          style: mono1TextStyle,
                         ),
-                      )
-                    ],
+                        Text(
+                          nis,
+                          style: mono1TextStyle.copyWith(
+                            fontSize: 10,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                   Spacer(),
                   Text(
@@ -164,20 +190,44 @@ class _DaftarAnggotaPageState extends State<DaftarAnggotaPage> {
         appBar: isSearch == true ? searchAppbar() : header(),
         backgroundColor: mono6Color,
         body: Padding(
-          padding: const EdgeInsets.only(
-            top: 20,
-          ),
-          child: ListView(
-            children: [
-              for (var i = 0; i < 50; i++)
-                listItem(
-                  name: 'Syauqi Babi',
-                  nis: '123123123',
-                  status: 'Aktif',
-                  kelas: 'XII-IPA A',
-                ),
-            ],
-          ),
-        ));
+            padding: const EdgeInsets.only(
+              top: 20,
+            ),
+            child: isLoading == false
+                ? FutureBuilder(
+                    future: Services().getDaftarAnggotaEkskul(
+                        id: jadwalEkskulModel.first.iD.toString()),
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (snapshot.hasData) {
+                        List<DaftarAnggotaEkskulModel> data = snapshot.data;
+                        return data.isEmpty
+                            ? Center(
+                                child: Text(
+                                  'Data tidak ditemukan',
+                                  style: mono1TextStyle,
+                                ),
+                              )
+                            : ListView(
+                                children: data.map((item) {
+                                  return listItem(
+                                    id: '${item.iD}',
+                                    name: '${item.nAMA}',
+                                    nis: '${item.nIS}',
+                                    status: '${item.sTATUS}',
+                                    kelas: '${item.kELASSISWA}',
+                                  );
+                                }).toList(),
+                              );
+                      } else {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 4,
+                            color: m1Color,
+                          ),
+                        );
+                      }
+                    },
+                  )
+                : Container()));
   }
 }

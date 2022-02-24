@@ -1,9 +1,23 @@
+import 'package:adistetsa/models/pengajuanekskul_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class DetailPengajuanEkskulPage extends StatelessWidget {
+class DetailPengajuanEkskulPage extends StatefulWidget {
+  @override
+  _DetailPengajuanEkskulPageState createState() =>
+      _DetailPengajuanEkskulPageState();
+}
+
+class _DetailPengajuanEkskulPageState extends State<DetailPengajuanEkskulPage> {
+  String valueAcc = '';
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+    PengajuanEkskulModel pengajuanEkskulModel = provider.pengajuanEkskul;
     PreferredSizeWidget header() {
       return AppBar(
         automaticallyImplyLeading: false,
@@ -107,7 +121,7 @@ class DetailPengajuanEkskulPage extends StatelessWidget {
     confirmAccept() async {
       return showDialog(
         context: context,
-        builder: (BuildContext context) {
+        builder: (BuildContext confirmContext) {
           return Dialog(
             backgroundColor: mono6Color,
             shape: RoundedRectangleBorder(
@@ -162,57 +176,87 @@ class DetailPengajuanEkskulPage extends StatelessWidget {
                   SizedBox(
                     height: 20,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 120,
-                        height: 46,
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          style: TextButton.styleFrom(
-                            backgroundColor: mono3Color,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                  isLoading == false
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 120,
+                              height: 46,
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                style: TextButton.styleFrom(
+                                  backgroundColor: mono3Color,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Batal',
+                                  style: mono6TextStyle.copyWith(
+                                    fontWeight: semiBold,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                          child: Text(
-                            'Batal',
-                            style: mono6TextStyle.copyWith(
-                              fontWeight: semiBold,
+                            SizedBox(
+                              width: 20,
                             ),
+                            Container(
+                              width: 120,
+                              height: 46,
+                              child: TextButton(
+                                onPressed: () async {
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                  Navigator.pop(confirmContext);
+                                  confirmAccept();
+                                  if (await Services().terimaPengajuanEkskul(
+                                      id: pengajuanEkskulModel.iD.toString())) {
+                                    Navigator.pop(context);
+                                  } else {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                            backgroundColor: dangerColor,
+                                            content: Text(
+                                              'Gagal Setuju Pengajuan Ekskul',
+                                              textAlign: TextAlign.center,
+                                            )));
+                                  }
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                  Navigator.pop(context);
+                                },
+                                style: TextButton.styleFrom(
+                                  backgroundColor: successColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Setuju',
+                                  style: mono6TextStyle.copyWith(
+                                    fontWeight: semiBold,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      : Container(
+                          alignment: Alignment.center,
+                          width: 25,
+                          height: 25,
+                          child: CircularProgressIndicator(
+                            color: m1Color,
+                            strokeWidth: 2,
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Container(
-                        width: 120,
-                        height: 46,
-                        child: TextButton(
-                          onPressed: () async {
-                            Navigator.pop(context);
-                          },
-                          style: TextButton.styleFrom(
-                            backgroundColor: successColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          child: Text(
-                            'Setuju',
-                            style: mono6TextStyle.copyWith(
-                              fontWeight: semiBold,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ),
@@ -224,7 +268,7 @@ class DetailPengajuanEkskulPage extends StatelessWidget {
     confirmDecline() async {
       return showDialog(
         context: context,
-        builder: (BuildContext context) {
+        builder: (BuildContext declineContext) {
           return Dialog(
             backgroundColor: mono6Color,
             shape: RoundedRectangleBorder(
@@ -279,57 +323,87 @@ class DetailPengajuanEkskulPage extends StatelessWidget {
                   SizedBox(
                     height: 20,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 120,
-                        height: 46,
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          style: TextButton.styleFrom(
-                            backgroundColor: mono3Color,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                  isLoading == false
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 120,
+                              height: 46,
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                style: TextButton.styleFrom(
+                                  backgroundColor: mono3Color,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Batal',
+                                  style: mono6TextStyle.copyWith(
+                                    fontWeight: semiBold,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                          child: Text(
-                            'Batal',
-                            style: mono6TextStyle.copyWith(
-                              fontWeight: semiBold,
+                            SizedBox(
+                              width: 20,
                             ),
+                            Container(
+                              width: 120,
+                              height: 46,
+                              child: TextButton(
+                                onPressed: () async {
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                  Navigator.pop(declineContext);
+                                  confirmDecline();
+                                  if (await Services().tolakPengajuanEkskul(
+                                      id: pengajuanEkskulModel.iD.toString())) {
+                                    Navigator.pop(context);
+                                  } else {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                            backgroundColor: dangerColor,
+                                            content: Text(
+                                              'Gagal Tolak Pengajuan Ekskul',
+                                              textAlign: TextAlign.center,
+                                            )));
+                                  }
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                  Navigator.pop(context);
+                                },
+                                style: TextButton.styleFrom(
+                                  backgroundColor: dangerColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Tolak',
+                                  style: mono6TextStyle.copyWith(
+                                    fontWeight: semiBold,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      : Container(
+                          alignment: Alignment.center,
+                          width: 25,
+                          height: 25,
+                          child: CircularProgressIndicator(
+                            color: m1Color,
+                            strokeWidth: 2,
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Container(
-                        width: 120,
-                        height: 46,
-                        child: TextButton(
-                          onPressed: () async {
-                            Navigator.pop(context);
-                          },
-                          style: TextButton.styleFrom(
-                            backgroundColor: dangerColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          child: Text(
-                            'Tolak',
-                            style: mono6TextStyle.copyWith(
-                              fontWeight: semiBold,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ),
@@ -387,7 +461,7 @@ class DetailPengajuanEkskulPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 side: BorderSide(
-                  width: 2,
+                  width: 1,
                   color: dangerColor,
                 ),
               ),
@@ -409,9 +483,9 @@ class DetailPengajuanEkskulPage extends StatelessWidget {
         body: Column(
           children: [
             nameCard(
-              name: 'Syauqi Babi',
-              nis: '123123123',
-              kelas: 'XII-IPA A',
+              name: '${pengajuanEkskulModel.nAMA}',
+              nis: '${pengajuanEkskulModel.nIS}'.split(' - ')[0],
+              kelas: '${pengajuanEkskulModel.kELAS}',
             ),
             SizedBox(
               height: 20,
@@ -421,19 +495,19 @@ class DetailPengajuanEkskulPage extends StatelessWidget {
                 children: [
                   listItem(
                     name: 'Ekstrakurikuler',
-                    value: 'Bola Basket',
+                    value: '${pengajuanEkskulModel.eKSKUL}',
                   ),
                   listItem(
                     name: 'Tahun',
-                    value: '2022/2023',
+                    value: '${pengajuanEkskulModel.tAHUNAJARAN}',
                   ),
                   listItem(
                     name: 'Tanggal',
-                    value: '2022 - 02 - 22',
+                    value: '${pengajuanEkskulModel.tANGGALPENGAJUAN}',
                   ),
                   listItem(
                     name: 'Status',
-                    value: 'Pengajuan',
+                    value: '${pengajuanEkskulModel.sTATUSPENGAJUAN}',
                   ),
                   buttonSubmit(),
                   buttonTolak(),

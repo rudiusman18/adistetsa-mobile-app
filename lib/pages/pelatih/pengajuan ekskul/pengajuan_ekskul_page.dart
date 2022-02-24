@@ -1,5 +1,10 @@
+import 'package:adistetsa/models/pengajuanekskul_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class PengajuanEkskulPage extends StatefulWidget {
   @override
@@ -14,6 +19,7 @@ class _PengajuanEkskulPageState extends State<PengajuanEkskulPage> {
 
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
     PreferredSizeWidget header() {
       return AppBar(
         centerTitle: true,
@@ -93,11 +99,27 @@ class _PengajuanEkskulPageState extends State<PengajuanEkskulPage> {
     }
 
     listItem(
-        {required String name, required String nis, required String kelas}) {
+        {required String id,
+        required String name,
+        required String nis,
+        required String kelas}) {
       return GestureDetector(
-        onTap: () {
-          Navigator.pushNamed(context,
-              '/pelatih/pengajuan-ekskul/detail-pengajuan-ekskul-page');
+        onTap: () async {
+          setState(() {
+            loading(context);
+          });
+          await provider.getDetailPengajuanEkskul(id: id);
+          Navigator.pushReplacementNamed(context,
+                  '/pelatih/pengajuan-ekskul/detail-pengajuan-ekskul-page')
+              .then((_) async {
+            setState(() {
+              isLoading = true;
+            });
+            await Services().getPengajuanEkskul();
+            setState(() {
+              isLoading = false;
+            });
+          });
         },
         child: Container(
           color: mono6Color,
@@ -156,16 +178,40 @@ class _PengajuanEkskulPageState extends State<PengajuanEkskulPage> {
           padding: const EdgeInsets.only(
             top: 20,
           ),
-          child: ListView(
-            children: [
-              for (var i = 0; i < 50; i++)
-                listItem(
-                  name: 'Syauqi Babi',
-                  nis: '123123123',
-                  kelas: 'XII-IPA A',
-                ),
-            ],
-          ),
+          child: isLoading == false
+              ? FutureBuilder(
+                  future: Services().getPengajuanEkskul(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData) {
+                      List<PengajuanEkskulModel> data = snapshot.data;
+                      return data.isEmpty
+                          ? Center(
+                              child: Text(
+                                'Data tidak ditemukan',
+                                style: mono1TextStyle,
+                              ),
+                            )
+                          : ListView(
+                              children: data.map((item) {
+                                return listItem(
+                                  id: '${item.iD}',
+                                  name: '${item.nAMA}',
+                                  nis: '${item.nIS}'.split(' - ')[0],
+                                  kelas: '${item.kELAS}',
+                                );
+                              }).toList(),
+                            );
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 4,
+                          color: m1Color,
+                        ),
+                      );
+                    }
+                  },
+                )
+              : Container(),
         ));
   }
 }

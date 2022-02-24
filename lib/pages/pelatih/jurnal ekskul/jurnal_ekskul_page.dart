@@ -1,7 +1,11 @@
+import 'package:adistetsa/models/jadwalekskul_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:adistetsa/widget/loading.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class JurnalEkskulPage extends StatefulWidget {
   @override
@@ -22,6 +26,7 @@ class _JurnalEkskulPageState extends State<JurnalEkskulPage> {
   String filterHari = '';
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
     PreferredSizeWidget jurnalBelajarHeader() {
       return AppBar(
         centerTitle: true,
@@ -138,14 +143,15 @@ class _JurnalEkskulPageState extends State<JurnalEkskulPage> {
                 dropdownColor: mono6Color,
                 elevation: 2,
                 value: value1Item,
-                items: data.map(
+                items: provider.listTahunAjaranFilter.map(
                   (value) {
                     return DropdownMenuItem(
-                      value: value,
+                      value: value['ID'],
                       child: Text(
-                        value,
+                        value['tahun_ajaran'],
                         style: mono2TextStyle.copyWith(
-                          color: value1Item == value ? p1Color : mono2Color,
+                          color:
+                              value1Item == value['ID'] ? p1Color : mono2Color,
                           fontWeight: regular,
                           fontSize: 10,
                         ),
@@ -157,9 +163,13 @@ class _JurnalEkskulPageState extends State<JurnalEkskulPage> {
                   setState(() {
                     isLoading = true;
                     value1Item = value;
-                    filterTahun = '?TAHUN_AJARAN=$value';
+                    filterTahun = 'TAHUN_AJARAN=$value';
 
                     flag1 = true;
+                  });
+                  await Services().getJadwalEkskul(filter: url);
+                  setState(() {
+                    isLoading = false;
                   });
                 },
               ),
@@ -228,6 +238,10 @@ class _JurnalEkskulPageState extends State<JurnalEkskulPage> {
                     filterHari = 'HARI=$value';
                     flag2 = true;
                   });
+                  await Services().getJadwalEkskul(filter: url);
+                  setState(() {
+                    isLoading = false;
+                  });
                 },
               ),
             ),
@@ -235,7 +249,7 @@ class _JurnalEkskulPageState extends State<JurnalEkskulPage> {
     }
 
     setState(() {
-      url = '$filterTahun&$filterHari';
+      url = '?$filterTahun&$filterHari';
     });
 
     Widget filter() {
@@ -263,6 +277,10 @@ class _JurnalEkskulPageState extends State<JurnalEkskulPage> {
                             url = '';
                             flag1 = false;
                             flag2 = false;
+                          });
+                          await Services().getJadwalEkskul(filter: url);
+                          setState(() {
+                            isLoading = false;
                           });
                         },
                         child: Container(
@@ -474,17 +492,41 @@ class _JurnalEkskulPageState extends State<JurnalEkskulPage> {
         children: [
           filter(),
           Expanded(
-              child: ListView(
-            children: [
-              expandList(
-                header: '2020/2021',
-                subtitle: 'Bola Basket',
-                content: 'Senin, 07.00 - 08.30 (Jam Ke-1) ',
-                subtitleContent: 'Semester I',
-                id: '0',
-              ),
-            ],
-          )),
+              child: isLoading == false
+                  ? FutureBuilder(
+                      future: Services().getJadwalEkskul(filter: url),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData) {
+                          List<JadwalEkskulModel> data = snapshot.data;
+                          return data.isEmpty
+                              ? Center(
+                                  child: Text(
+                                    'Data tidak ditemukan',
+                                    style: mono1TextStyle,
+                                  ),
+                                )
+                              : ListView(
+                                  children: data.map((item) {
+                                    return expandList(
+                                        header: '${item.tAHUNAJARAN}',
+                                        subtitle: '${item.eKSKUL}',
+                                        content:
+                                            '${item.hARI}, ${item.wAKTUMULAI!.split(':')[0]}:${item.wAKTUMULAI!.split(':')[1]} - ${item.wAKTUBERAKHIR!.split(':')[0]}:${item.wAKTUBERAKHIR!.split(':')[1]}',
+                                        subtitleContent: '${item.sEMESTER}',
+                                        id: '${item.iD}');
+                                  }).toList(),
+                                );
+                        } else {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 4,
+                              color: m1Color,
+                            ),
+                          );
+                        }
+                      },
+                    )
+                  : Container()),
         ],
       ),
     );
