@@ -99,68 +99,148 @@ class _ListKesiswaanPageState extends State<ListKesiswaanPage> {
             ),
           ),
           ExpandableNotifier(
-              child: Padding(
-            padding: const EdgeInsets.only(
-              left: 20,
-              right: 20,
-            ),
-            child: Column(
-              children: [
-                ExpandablePanel(
-                  theme: const ExpandableThemeData(
-                    headerAlignment: ExpandablePanelHeaderAlignment.center,
-                    tapBodyToCollapse: true,
-                  ),
-                  header: Text(
-                    'Riwayat',
-                    style: mono1TextStyle.copyWith(
-                      fontSize: 16,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 20,
+                right: 20,
+              ),
+              child: Column(
+                children: [
+                  ExpandablePanel(
+                    theme: const ExpandableThemeData(
+                      headerAlignment: ExpandablePanelHeaderAlignment.center,
+                      tapBodyToCollapse: true,
+                    ),
+                    header: Text(
+                      'Riwayat',
+                      style: mono1TextStyle.copyWith(
+                        fontSize: 16,
+                      ),
+                    ),
+                    collapsed: Container(),
+                    expanded: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 30,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context,
+                                '/siswa/kesiswaan/riwayat/riwayat-pelanggaran-page');
+                          },
+                          child: Text(
+                            'Pelanggaran',
+                            style: mono1TextStyle.copyWith(
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 36,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context,
+                                '/siswa/kesiswaan/riwayat/riwayat-proyek-kebaikan-page');
+                          },
+                          child: Text(
+                            'Proyek Kebaikan',
+                            style: mono1TextStyle.copyWith(
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  collapsed: Container(),
-                  expanded: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 30,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(context,
-                              '/siswa/kesiswaan/riwayat/riwayat-pelanggaran-page');
-                        },
-                        child: Text(
-                          'Pelanggaran',
-                          style: mono1TextStyle.copyWith(
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 36,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(context,
-                              '/siswa/kesiswaan/riwayat/riwayat-proyek-kebaikan-page');
-                        },
-                        child: Text(
-                          'Proyek Kebaikan',
-                          style: mono1TextStyle.copyWith(
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ],
+                  Divider(
+                    thickness: 0.5,
+                    color: mono3Color,
                   ),
-                ),
-                Divider(
-                  thickness: 0.5,
-                  color: mono3Color,
-                ),
-              ],
+                ],
+              ),
             ),
-          ))
+          ),
+          ExpandableNotifier(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 20,
+                right: 20,
+              ),
+              child: Column(
+                children: [
+                  ExpandablePanel(
+                    theme: const ExpandableThemeData(
+                      headerAlignment: ExpandablePanelHeaderAlignment.center,
+                      tapBodyToCollapse: true,
+                    ),
+                    header: Text(
+                      'Ekstrakurikuler',
+                      style: mono1TextStyle.copyWith(
+                        fontSize: 16,
+                      ),
+                    ),
+                    collapsed: Container(),
+                    expanded: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 30,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(
+                                context, '/siswa/katalog-ekskul');
+                          },
+                          child: Text(
+                            'Katalog',
+                            style: mono1TextStyle.copyWith(
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 36,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(
+                                context, '/siswa/daftar-pengajuan-page');
+                          },
+                          child: Text(
+                            'Daftar Pengajuan',
+                            style: mono1TextStyle.copyWith(
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 36,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(
+                                context, '/siswa/lihat-ekskul-page');
+                          },
+                          child: Text(
+                            'Lihat Ekskul',
+                            style: mono1TextStyle.copyWith(
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    thickness: 0.5,
+                    color: mono3Color,
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );

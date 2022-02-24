@@ -394,7 +394,7 @@ class _LoginPageState extends State<LoginPage> {
                     showPassword = false;
                     isActivePassword = false;
                     isActiveUsername = false;
-                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/splash-screen-page');
                   },
                   child: Icon(
                     Icons.close,

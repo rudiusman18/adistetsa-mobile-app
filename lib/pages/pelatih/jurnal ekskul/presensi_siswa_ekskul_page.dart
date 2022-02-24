@@ -1,10 +1,6 @@
-import 'package:adistetsa/models/presensisiswa_model.dart';
-import 'package:adistetsa/providers/provider.dart';
-import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class PresensiSiswaEkskulPage extends StatefulWidget {
   @override
@@ -19,7 +15,6 @@ class _PresensiSiswaEkskulPageState extends State<PresensiSiswaEkskulPage> {
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
-    Providers provider = Provider.of<Providers>(context);
     PreferredSizeWidget presensiSiswaHeader() {
       return AppBar(
         centerTitle: true,

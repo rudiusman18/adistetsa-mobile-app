@@ -18,6 +18,13 @@ import 'package:adistetsa/pages/pelatih/jurnal%20ekskul/lihat_jurnal_ekskul_page
 import 'package:adistetsa/pages/pelatih/jurnal%20ekskul/presensi_siswa_ekskul_page.dart';
 import 'package:adistetsa/pages/pelatih/pengajuan%20ekskul/detail_pengajuan_ekskul_page.dart';
 import 'package:adistetsa/pages/pelatih/pengajuan%20ekskul/pengajuan_ekskul_page.dart';
+import 'package:adistetsa/pages/siswa/kesiswaan/ekstrakurikuler/daftar_ekstrakurikuler_siswa_page.dart';
+import 'package:adistetsa/pages/siswa/kesiswaan/ekstrakurikuler/daftar_pengajuan_ekstrakurikuler_siswa_page.dart';
+import 'package:adistetsa/pages/siswa/kesiswaan/ekstrakurikuler/detail_daftar_ekstrakurikuler_siswa_page.dart';
+import 'package:adistetsa/pages/siswa/kesiswaan/ekstrakurikuler/detail_katalog_ekskul_siswa_page.dart';
+import 'package:adistetsa/pages/siswa/kesiswaan/ekstrakurikuler/detail_lihat_ekstrakurikuler_siswa_page.dart';
+import 'package:adistetsa/pages/siswa/kesiswaan/ekstrakurikuler/katalog_ekskul_siswa_page.dart';
+import 'package:adistetsa/pages/siswa/kesiswaan/ekstrakurikuler/lihat_ekstrakurikuler_siswa_page.dart';
 import 'package:adistetsa/pages/siswa/kesiswaan/proyek%20kebaikan/input_proyek_kebaikan_page.dart';
 import 'package:adistetsa/pages/siswa/kesiswaan/riwayat/riwayat_pelanggaran_page.dart';
 import 'package:adistetsa/pages/siswa/kesiswaan/riwayat/riwayat_proyek_kebaikan_page.dart';
@@ -92,6 +99,11 @@ class AdiStetsa extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         onGenerateRoute: (settings) {
           switch (settings.name) {
+            case '/splash-screen-page':
+              return PageTransition(
+                child: SplashScreen(),
+                type: PageTransitionType.leftToRight,
+              );
             case '/login-page':
               return PageTransition(
                 child: LoginPage(),
@@ -371,6 +383,41 @@ class AdiStetsa extends StatelessWidget {
             case '/pelatih/jurnal-ekskul/lihat-jurnal/presensi-siswa-ekskul/detail-page':
               return PageTransition(
                 child: EditPresensiEkskulPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/siswa/katalog-ekskul':
+              return PageTransition(
+                child: KatalogEkskulSiswaPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/siswa/katalog-ekskul/detal-page':
+              return PageTransition(
+                child: DetailKatalogEkskulPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/siswa/katalog-ekskul/daftar-ekskul-page':
+              return PageTransition(
+                child: DaftarEkstrakurikulerSiswaPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/siswa/daftar-pengajuan-page':
+              return PageTransition(
+                child: DaftarPengajuanEkstrakurikulerSiswaPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/siswa/daftar-pengajuan/detail-page':
+              return PageTransition(
+                child: DetailDaftarEkstrakurikulerSiswaPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/siswa/lihat-ekskul-page':
+              return PageTransition(
+                child: LihatEkstrakurikulerSiswaPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/siswa/lihat-ekskul/detail-page':
+              return PageTransition(
+                child: DetailLihatEkstrakurikulerSiswaPage(),
                 type: PageTransitionType.rightToLeft,
               );
             case '/main-page/back':

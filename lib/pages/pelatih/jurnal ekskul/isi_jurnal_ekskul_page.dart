@@ -1,10 +1,7 @@
-import 'package:adistetsa/models/guru_model.dart';
-import 'package:adistetsa/providers/provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 
 class IsiJurnalEkskulPage extends StatefulWidget {
   const IsiJurnalEkskulPage({Key? key}) : super(key: key);
@@ -26,9 +23,6 @@ class _IsiJurnalEkskulPageState extends State<IsiJurnalEkskulPage> {
       TextEditingController(text: '');
   @override
   Widget build(BuildContext context) {
-    Providers provider = Provider.of<Providers>(context);
-    GuruModel guruModel = provider.guru;
-
     _selectFolder() async {
       result = await FilePicker.platform.pickFiles(
         type: FileType.image,
