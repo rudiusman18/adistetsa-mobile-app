@@ -1,5 +1,9 @@
+import 'package:adistetsa/models/katalogekskul_model.dart';
+import 'package:adistetsa/models/siswa_model.dart';
+import 'package:adistetsa/providers/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class DetailLihatEkstrakurikulerSiswaPage extends StatefulWidget {
   const DetailLihatEkstrakurikulerSiswaPage({Key? key}) : super(key: key);
@@ -13,6 +17,13 @@ class _DetailLihatEkstrakurikulerSiswaPageState
     extends State<DetailLihatEkstrakurikulerSiswaPage> {
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+    KatalogEkskulModel katalogEkskulModel = provider.katalogEkskul;
+    List cok = [
+      'COK',
+      'BANGSAD',
+      'MEMEWasdasdsadasdasdasdasdasdsasdasdasdasdasdasdasd'
+    ];
     PreferredSizeWidget detaillihatekstrakurikulerHeader() {
       return AppBar(
         backgroundColor: mono6Color,
@@ -63,7 +74,6 @@ class _DetailLihatEkstrakurikulerSiswaPageState
 
     Widget ekstrakurikulerBody({
       required String kategori,
-      required String pelatih,
       required String deskripsi,
       required String dokumentasi,
     }) {
@@ -97,32 +107,6 @@ class _DetailLihatEkstrakurikulerSiswaPageState
             SizedBox(
               height: 25,
             ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Pelatih',
-                  style: mono1TextStyle.copyWith(
-                    fontSize: 12,
-                    fontWeight: semiBold,
-                  ),
-                ),
-                SizedBox(
-                  width: 88,
-                ),
-                Expanded(
-                  child: Text(
-                    '$pelatih',
-                    style: mono1TextStyle.copyWith(
-                      fontSize: 12,
-                    ),
-                  ),
-                )
-              ],
-            ),
-            SizedBox(
-              height: 25,
-            ),
             Container(
               width: double.infinity,
               child: Column(
@@ -138,47 +122,42 @@ class _DetailLihatEkstrakurikulerSiswaPageState
                   SizedBox(
                     height: 20,
                   ),
-                  Text(
-                    'Jum`at, 16.00 - 17.00  WIB',
-                    style: mono1TextStyle.copyWith(
-                      fontSize: 12,
+                  for (var i = 0; i < katalogEkskulModel.jADWAL!.length; i++)
+                    Text(
+                      katalogEkskulModel.jADWAL![i],
+                      style: mono1TextStyle.copyWith(
+                        fontSize: 12,
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 9,
-                  ),
-                  Text(
-                    'Sabtu, 16.00 - 17.00  WIB',
-                    style: mono1TextStyle.copyWith(
-                      fontSize: 12,
-                    ),
-                  ),
                 ],
               ),
             ),
             SizedBox(
               height: 25,
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Deskripsi',
-                  style: mono1TextStyle.copyWith(
-                    fontSize: 12,
-                    fontWeight: semiBold,
+            Container(
+              width: double.infinity,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Deskripsi',
+                    style: mono1TextStyle.copyWith(
+                      fontSize: 12,
+                      fontWeight: semiBold,
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  '$deskripsi',
-                  style: mono1TextStyle.copyWith(
-                    fontSize: 12,
+                  SizedBox(
+                    height: 20,
                   ),
-                )
-              ],
+                  Text(
+                    '$deskripsi',
+                    style: mono1TextStyle.copyWith(
+                      fontSize: 12,
+                    ),
+                  )
+                ],
+              ),
             ),
             SizedBox(
               height: 20,
@@ -198,9 +177,20 @@ class _DetailLihatEkstrakurikulerSiswaPageState
                   SizedBox(
                     height: 20,
                   ),
-                  Image.asset(
-                    'assets/dokumentasi_icon.png',
-                    height: 70,
+                  Image.network(
+                    '$dokumentasi',
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) {
+                        return child;
+                      } else {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 4,
+                            color: m1Color,
+                          ),
+                        );
+                      }
+                    },
                   ),
                 ],
               ),
@@ -213,24 +203,23 @@ class _DetailLihatEkstrakurikulerSiswaPageState
     return Scaffold(
       backgroundColor: mono6Color,
       appBar: detaillihatekstrakurikulerHeader(),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              ekstrakurikulername(
-                name: 'Bola Basket',
-              ),
-              ekstrakurikulerBody(
-                kategori: 'Pilihan',
-                pelatih:
-                    'Rize Abdul Kodir SPK Rize Abdul Kodir SPK Rize Abdul Kodir SPK',
-                deskripsi:
-                    'Ekstrakurikuler ini bertujuan untuk melatih siswa dalam sigap dan tanggap dari sisi ketangkasan dan kecakapan dalam bersosialisasi. Sehingga dapat membantu siswa menjadi lebih sehat dan supportif dalam bersosialisasi.',
-                dokumentasi: 'image',
-              ),
-            ],
+      body: Column(
+        children: [
+          ekstrakurikulername(
+            name: '${katalogEkskulModel.nAMA}',
           ),
-        ),
+          Expanded(
+            child: ListView(
+              children: [
+                ekstrakurikulerBody(
+                  kategori: '${katalogEkskulModel.kATEGORI}',
+                  deskripsi: '${katalogEkskulModel.dESKRIPSI}',
+                  dokumentasi: '${katalogEkskulModel.dOKUMENTASI}',
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

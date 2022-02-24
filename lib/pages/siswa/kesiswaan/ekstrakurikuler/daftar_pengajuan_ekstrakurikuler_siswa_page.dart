@@ -1,5 +1,10 @@
+import 'package:adistetsa/models/pengajuanekskul_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
+import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class DaftarPengajuanEkstrakurikulerSiswaPage extends StatefulWidget {
   @override
@@ -15,6 +20,8 @@ class _DaftarPengajuanEkstrakurikulerSiswaPageState
 
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+
     PreferredSizeWidget daftarpengajuanekstrakurikulerHeader() {
       return AppBar(
         backgroundColor: mono6Color,
@@ -108,13 +115,28 @@ class _DaftarPengajuanEkstrakurikulerSiswaPageState
       );
     }
 
-    Widget listItem({
-      required String name,
-      required String date,
-    }) {
+    Widget listItem(
+        {required String id,
+        required String name,
+        required String date,
+        required String status}) {
       return GestureDetector(
-        onTap: () {
-          Navigator.pushNamed(context, '/siswa/daftar-pengajuan/detail-page');
+        onTap: () async {
+          setState(() {
+            loading(context);
+          });
+          await provider.getDetailPengajuanEkskul(id: id);
+          Navigator.pushReplacementNamed(
+                  context, '/siswa/daftar-pengajuan/detail-page')
+              .then((_) async {
+            setState(() {
+              isLoading = true;
+            });
+            await Services().getPengajuanEkskul();
+            setState(() {
+              isLoading = false;
+            });
+          });
         },
         child: Container(
           margin: EdgeInsets.only(
@@ -146,7 +168,7 @@ class _DaftarPengajuanEkstrakurikulerSiswaPageState
                     ),
                   ),
                   Text(
-                    'Diajukan',
+                    '$status',
                     style: infoTextStyle.copyWith(
                       fontSize: 10,
                     ),
@@ -173,29 +195,48 @@ class _DaftarPengajuanEkstrakurikulerSiswaPageState
           ? daftarpengajuanekstrakurikulerHeader()
           : searchAppbar(),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 20,
-              ),
-              listItem(name: 'Futsal', date: '2022-02-22'),
-              listItem(name: 'Futsal', date: '2022-02-22'),
-              listItem(name: 'Futsal', date: '2022-02-22'),
-              listItem(name: 'Futsal', date: '2022-02-22'),
-              listItem(name: 'Futsal', date: '2022-02-22'),
-              listItem(name: 'Futsal', date: '2022-02-22'),
-              listItem(name: 'Futsal', date: '2022-02-22'),
-              listItem(name: 'Futsal', date: '2022-02-22'),
-              listItem(name: 'Futsal', date: '2022-02-22'),
-              listItem(name: 'Futsal', date: '2022-02-22'),
-              listItem(name: 'Futsal', date: '2022-02-22'),
-              listItem(name: 'Futsal', date: '2022-02-22'),
-              listItem(name: 'Futsal', date: '2022-02-22'),
-              listItem(name: 'Futsal', date: '2022-02-22'),
-              listItem(name: 'Futsal', date: '2022-02-22'),
-            ],
-          ),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 20,
+            ),
+            Expanded(
+              child: isLoading == false
+                  ? FutureBuilder(
+                      future: Services().getPengajuanEkskul(),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData) {
+                          List<PengajuanEkskulModel> data = snapshot.data;
+                          return data.isEmpty
+                              ? Center(
+                                  child: Text(
+                                    'Data tidak ditemukan',
+                                    style: mono1TextStyle,
+                                  ),
+                                )
+                              : ListView(
+                                  children: data.map((item) {
+                                    return listItem(
+                                        id: '${item.iD}',
+                                        name: '${item.eKSKUL}',
+                                        date: '${item.tANGGALPENGAJUAN}',
+                                        status: '${item.sTATUSPENGAJUAN}');
+                                  }).toList(),
+                                );
+                        } else {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 4,
+                              color: m1Color,
+                            ),
+                          );
+                        }
+                      },
+                    )
+                  : Container(),
+            ),
+            // listItem(name: 'Futsal', date: '2022-02-22'),
+          ],
         ),
       ),
     );

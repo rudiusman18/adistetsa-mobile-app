@@ -3,6 +3,7 @@ import 'package:adistetsa/models/detailjurnalmengajarguru_model.dart';
 import 'package:adistetsa/models/jadwalekskul_model.dart';
 import 'package:adistetsa/models/jadwalmengajarguru_model.dart';
 import 'package:adistetsa/models/katalogbarang_model.dart';
+import 'package:adistetsa/models/katalogekskul_model.dart';
 import 'package:adistetsa/models/katalogruangan_model.dart';
 import 'package:adistetsa/models/peminjambarang_model.dart';
 import 'package:adistetsa/models/guru_model.dart';
@@ -113,6 +114,9 @@ class Providers with ChangeNotifier {
 
   DaftarAnggotaEkskulModel _daftarAnggota = DaftarAnggotaEkskulModel();
   DaftarAnggotaEkskulModel get daftarAnggota => _daftarAnggota;
+
+  KatalogEkskulModel _katalogEkskul = KatalogEkskulModel();
+  KatalogEkskulModel get katalogEkskul => _katalogEkskul;
 
   List listJenisProgramKebaikan = [];
 
@@ -292,6 +296,11 @@ class Providers with ChangeNotifier {
 
   set setDetailPresensiSiswaEkskul(PresensiSiswaModel presensiEkskul) {
     _detailPresensiSiswaEkskul = presensiEkskul;
+    notifyListeners();
+  }
+
+  set setDetailKatalogEkskul(KatalogEkskulModel katalogEkskul) {
+    _katalogEkskul = katalogEkskul;
     notifyListeners();
   }
 
@@ -609,6 +618,34 @@ class Providers with ChangeNotifier {
           deskripsi: deskripsi,
           tanggalMelatih: tanggalMelatih,
           filepath: filepath);
+      return true;
+    } catch (e) {
+      print(e);
+      errorMessage = e.toString();
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> getDetailKatalogEkskul({String? id}) async {
+    try {
+      KatalogEkskulModel katalogEkskulModel =
+          await Services().getDetailKatalogEkskul(id: '$id');
+      _katalogEkskul = katalogEkskulModel;
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> daftarEkstrakurikuler({
+    required String id,
+    required String tanggalPengajuan,
+  }) async {
+    try {
+      await Services()
+          .daftarEkstrakurikuler(id: id, tanggalPengajuan: tanggalPengajuan);
       return true;
     } catch (e) {
       print(e);

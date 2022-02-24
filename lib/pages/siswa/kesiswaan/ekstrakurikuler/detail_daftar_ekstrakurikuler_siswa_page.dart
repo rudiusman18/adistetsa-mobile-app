@@ -1,5 +1,10 @@
+import 'package:adistetsa/models/pengajuanekskul_model.dart';
+import 'package:adistetsa/models/siswa_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class DetailDaftarEkstrakurikulerSiswaPage extends StatefulWidget {
   const DetailDaftarEkstrakurikulerSiswaPage({Key? key}) : super(key: key);
@@ -11,8 +16,11 @@ class DetailDaftarEkstrakurikulerSiswaPage extends StatefulWidget {
 
 class _DetailDaftarEkstrakurikulerSiswaPageState
     extends State<DetailDaftarEkstrakurikulerSiswaPage> {
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+    PengajuanEkskulModel pengajuanEkskulModel = provider.pengajuanEkskul;
     PreferredSizeWidget detaildaftarekstrakurikulerHeader() {
       return AppBar(
         backgroundColor: mono6Color,
@@ -93,20 +101,53 @@ class _DetailDaftarEkstrakurikulerSiswaPageState
         width: double.infinity,
         height: 46,
         child: TextButton(
-          onPressed: () {},
+          onPressed: () async {
+            setState(() {
+              isLoading = true;
+            });
+            if (await Services()
+                .tolakPengajuanEkskul(id: pengajuanEkskulModel.iD.toString())) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  backgroundColor: successColor,
+                  content: Text(
+                    'Berhasil membatalkan ekstrakurikuler',
+                    textAlign: TextAlign.center,
+                  )));
+              Navigator.pop(context);
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  backgroundColor: dangerColor,
+                  content: Text(
+                    'Gagal membatalkan ekstrakurikuler',
+                    textAlign: TextAlign.center,
+                  )));
+            }
+            setState(() {
+              isLoading = true;
+            });
+          },
           style: TextButton.styleFrom(
               backgroundColor: m2Color,
               primary: m2Color,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               )),
-          child: Text(
-            'Batalkan',
-            style: mono6TextStyle.copyWith(
-              fontSize: 16,
-              fontWeight: bold,
-            ),
-          ),
+          child: isLoading == false
+              ? Text(
+                  'Batalkan',
+                  style: mono6TextStyle.copyWith(
+                    fontSize: 16,
+                    fontWeight: bold,
+                  ),
+                )
+              : Container(
+                  width: 14,
+                  height: 14,
+                  child: CircularProgressIndicator(
+                    color: mono6Color,
+                    strokeWidth: 2,
+                  ),
+                ),
         ),
       );
     }
@@ -122,20 +163,21 @@ class _DetailDaftarEkstrakurikulerSiswaPageState
                 height: 20,
               ),
               itemBody(
-                hint: 'Kelas Siswa',
-                data: 'Garry Buchanan  - X IPA - 2020/2021 A',
+                hint: 'Nama Siswa',
+                data:
+                    '${pengajuanEkskulModel.nAMA} - ${pengajuanEkskulModel.kELAS}',
               ),
               itemBody(
                 hint: 'Eskul',
-                data: 'Bola Basket',
+                data: '${pengajuanEkskulModel.eKSKUL}',
               ),
               itemBody(
                 hint: 'Tahun',
-                data: '2020/2021',
+                data: '${pengajuanEkskulModel.tAHUNAJARAN}',
               ),
               itemBody(
                 hint: 'Tanggal',
-                data: '2022-02-22',
+                data: '${pengajuanEkskulModel.tANGGALPENGAJUAN}',
               ),
               buttonSubmit(),
             ],

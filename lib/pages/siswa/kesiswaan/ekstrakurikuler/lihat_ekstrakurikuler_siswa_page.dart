@@ -1,5 +1,10 @@
+import 'package:adistetsa/models/katalogekskul_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
+import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class LihatEkstrakurikulerSiswaPage extends StatefulWidget {
   const LihatEkstrakurikulerSiswaPage({Key? key}) : super(key: key);
@@ -17,6 +22,7 @@ class _LihatEkstrakurikulerSiswaPageState
 
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
     PreferredSizeWidget lihatekstrakurikulerHeader() {
       return AppBar(
         backgroundColor: mono6Color,
@@ -113,10 +119,16 @@ class _LihatEkstrakurikulerSiswaPageState
     Widget listItem({
       required String name,
       required String date,
+      required String id,
     }) {
       return GestureDetector(
-        onTap: () {
-          Navigator.pushNamed(context, '/siswa/lihat-ekskul/detail-page');
+        onTap: () async {
+          setState(() {
+            loading(context);
+          });
+          await provider.getDetailKatalogEkskul(id: id);
+          Navigator.pushReplacementNamed(
+              context, '/siswa/lihat-ekskul/detail-page');
         },
         child: Container(
           color: mono6Color,
@@ -168,30 +180,46 @@ class _LihatEkstrakurikulerSiswaPageState
       backgroundColor: mono6Color,
       appBar: isSearch == false ? lihatekstrakurikulerHeader() : searchAppbar(),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 20,
-              ),
-              listItem(name: 'Futsal', date: '2022-02-22'),
-              listItem(name: 'Futsal', date: '2022-02-22'),
-              listItem(name: 'Futsal', date: '2022-02-22'),
-              listItem(name: 'Futsal', date: '2022-02-22'),
-              listItem(name: 'Futsal', date: '2022-02-22'),
-              listItem(name: 'Futsal', date: '2022-02-22'),
-              listItem(name: 'Futsal', date: '2022-02-22'),
-              listItem(name: 'Futsal', date: '2022-02-22'),
-              listItem(name: 'Futsal', date: '2022-02-22'),
-              listItem(name: 'Futsal', date: '2022-02-22'),
-              listItem(name: 'Futsal', date: '2022-02-22'),
-              listItem(name: 'Futsal', date: '2022-02-22'),
-              listItem(name: 'Futsal', date: '2022-02-22'),
-              listItem(name: 'Futsal', date: '2022-02-22'),
-              listItem(name: 'Futsal', date: '2022-02-22'),
-            ],
+        child: Column(children: [
+          SizedBox(
+            height: 22,
           ),
-        ),
+          Expanded(
+            child: FutureBuilder(
+              future: Services().getEkskulSaya(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  List<KatalogEkskulModel> data = snapshot.data;
+                  return data.isEmpty
+                      ? Center(
+                          child: Text(
+                            'Data tidak ditemukan',
+                            style: mono1TextStyle,
+                          ),
+                        )
+                      : ListView(
+                          children: data.map((item) {
+                            return listItem(
+                              name: "${item.nAMA}",
+                              date: '${item.jADWAL}'
+                                  .replaceAll('[', '')
+                                  .replaceAll(']', ''),
+                              id: '${item.iD}',
+                            );
+                          }).toList(),
+                        );
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 4,
+                      color: m1Color,
+                    ),
+                  );
+                }
+              },
+            ),
+          )
+        ]),
       ),
     );
   }

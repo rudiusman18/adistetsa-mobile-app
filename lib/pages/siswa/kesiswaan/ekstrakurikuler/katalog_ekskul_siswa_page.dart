@@ -1,5 +1,10 @@
+import 'package:adistetsa/models/katalogekskul_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
+import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class KatalogEkskulSiswaPage extends StatefulWidget {
   const KatalogEkskulSiswaPage({Key? key}) : super(key: key);
@@ -15,6 +20,7 @@ class _KatalogEkskulSiswaPageState extends State<KatalogEkskulSiswaPage> {
 
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
     PreferredSizeWidget katalogekstrakurikulerHeader() {
       return AppBar(
         backgroundColor: mono6Color,
@@ -108,10 +114,15 @@ class _KatalogEkskulSiswaPageState extends State<KatalogEkskulSiswaPage> {
       );
     }
 
-    Widget listItem({required String namaEkstrakurikuler}) {
+    Widget listItem({required String id, required String namaEkstrakurikuler}) {
       return GestureDetector(
-        onTap: () {
-          Navigator.pushNamed(context, '/siswa/katalog-ekskul/detal-page');
+        onTap: () async {
+          setState(() {
+            loading(context);
+          });
+          await provider.getDetailKatalogEkskul(id: id);
+          Navigator.pushReplacementNamed(
+              context, '/siswa/katalog-ekskul/detal-page');
         },
         child: Container(
           margin: EdgeInsets.only(
@@ -153,43 +164,43 @@ class _KatalogEkskulSiswaPageState extends State<KatalogEkskulSiswaPage> {
       backgroundColor: mono6Color,
       appBar:
           isSearch == false ? katalogekstrakurikulerHeader() : searchAppbar(),
-      body: SingleChildScrollView(
-        child: Column(children: [
-          SizedBox(
-            height: 22,
+      body: Column(children: [
+        SizedBox(
+          height: 22,
+        ),
+        Expanded(
+          child: FutureBuilder(
+            future: Services().getKatalogEkskul(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                List<KatalogEkskulModel> data = snapshot.data;
+                return data.isEmpty
+                    ? Center(
+                        child: Text(
+                          'Data tidak ditemukan',
+                          style: mono1TextStyle,
+                        ),
+                      )
+                    : ListView(
+                        children: data.map((item) {
+                          return listItem(
+                            namaEkstrakurikuler: "${item.nAMA}",
+                            id: '${item.iD}',
+                          );
+                        }).toList(),
+                      );
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 4,
+                    color: m1Color,
+                  ),
+                );
+              }
+            },
           ),
-          listItem(
-            namaEkstrakurikuler: "Bola Basket",
-          ),
-          listItem(
-            namaEkstrakurikuler: "Bola Voly",
-          ),
-          listItem(
-            namaEkstrakurikuler: "Catur",
-          ),
-          listItem(
-            namaEkstrakurikuler: "Bulu Tangkis",
-          ),
-          listItem(
-            namaEkstrakurikuler: "Code",
-          ),
-          listItem(
-            namaEkstrakurikuler: "Fotografi",
-          ),
-          listItem(
-            namaEkstrakurikuler: "Fotografi",
-          ),
-          listItem(
-            namaEkstrakurikuler: "Fotografi",
-          ),
-          listItem(
-            namaEkstrakurikuler: "Fotografi",
-          ),
-          listItem(
-            namaEkstrakurikuler: "Fotografi",
-          ),
-        ]),
-      ),
+        )
+      ]),
     );
   }
 }

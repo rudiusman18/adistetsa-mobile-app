@@ -1,5 +1,9 @@
+import 'package:adistetsa/models/katalogekskul_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class DaftarEkstrakurikulerSiswaPage extends StatefulWidget {
   const DaftarEkstrakurikulerSiswaPage({Key? key}) : super(key: key);
@@ -12,35 +16,13 @@ class DaftarEkstrakurikulerSiswaPage extends StatefulWidget {
 class _DaftarEkstrakurikulerSiswaPageState
     extends State<DaftarEkstrakurikulerSiswaPage> {
   // Note: get date
-  DateTime? selectedDate;
-  String tanggalPendaftaran = '';
-  _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      builder: (context, child) {
-        return Theme(
-          data: ThemeData().copyWith(
-            colorScheme: ColorScheme.light(
-              primary: p2Color,
-            ),
-          ),
-          child: child!,
-        );
-      },
-      context: context,
-      initialDate: DateTime.now(), // Refer step 1
-      firstDate: DateTime(2000),
-      lastDate: DateTime(3000),
-    );
-    if (picked != null && picked != selectedDate)
-      setState(() {
-        selectedDate = picked;
-        tanggalPendaftaran = selectedDate.toString().split(' ')[0].toString();
-        print(selectedDate);
-      });
-  }
+  String tanggalPendaftaran = DateTime.now().toString().split(' ')[0];
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+    KatalogEkskulModel katalogEkskulModel = provider.katalogEkskul;
     PreferredSizeWidget daftarekstrakurikulerHeader() {
       return AppBar(
         backgroundColor: mono6Color,
@@ -87,38 +69,30 @@ class _DaftarEkstrakurikulerSiswaPageState
             ),
             SizedBox(
               height: 44,
-              child: TextButton(
-                onPressed: () {
-                  _selectDate(context);
-                },
-                style: TextButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        side: BorderSide(
-                          color: mono2Color,
-                          width: 2,
-                        ))),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 12,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        selectedDate == null
-                            ? 'Tanggal Pengajuan'
-                            : tanggalPendaftaran,
-                        style: mono2TextStyle.copyWith(
-                          fontSize: 12,
-                        ),
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 12,
+                ),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: mono2Color,
+                      width: 1,
+                    )),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      tanggalPendaftaran,
+                      style: mono2TextStyle.copyWith(
+                        fontSize: 12,
                       ),
-                      Icon(
-                        Icons.calendar_today_outlined,
-                        color: mono2Color,
-                      ),
-                    ],
-                  ),
+                    ),
+                    Icon(
+                      Icons.calendar_today_outlined,
+                      color: mono2Color,
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -136,7 +110,35 @@ class _DaftarEkstrakurikulerSiswaPageState
           right: 18,
         ),
         child: TextButton(
-          onPressed: () {},
+          onPressed: () async {
+            setState(() {
+              isLoading = true;
+            });
+            if (await provider.daftarEkstrakurikuler(
+                id: katalogEkskulModel.iD.toString(),
+                tanggalPengajuan: tanggalPendaftaran)) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  backgroundColor: successColor,
+                  content: Text(
+                    'Berhasil mengajukan ekstrakurikuler',
+                    textAlign: TextAlign.center,
+                  )));
+              Navigator.pop(context);
+              Navigator.pop(context);
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  backgroundColor: dangerColor,
+                  content: Text(
+                    '${provider.errorMessage}'
+                        .replaceAll('Exception: ["', '')
+                        .replaceAll('"]', ''),
+                    textAlign: TextAlign.center,
+                  )));
+            }
+            setState(() {
+              isLoading = false;
+            });
+          },
           style: TextButton.styleFrom(
             backgroundColor: m2Color,
             primary: m2Color,
@@ -144,13 +146,22 @@ class _DaftarEkstrakurikulerSiswaPageState
               borderRadius: BorderRadius.circular(8),
             ),
           ),
-          child: Text(
-            'Ajukan Ekstrakurikuler',
-            style: mono6TextStyle.copyWith(
-              fontSize: 16,
-              fontWeight: bold,
-            ),
-          ),
+          child: isLoading == false
+              ? Text(
+                  'Ajukan Ekstrakurikuler',
+                  style: mono6TextStyle.copyWith(
+                    fontSize: 16,
+                    fontWeight: bold,
+                  ),
+                )
+              : Container(
+                  width: 14,
+                  height: 14,
+                  child: CircularProgressIndicator(
+                    color: mono6Color,
+                    strokeWidth: 2,
+                  ),
+                ),
         ),
       );
     }

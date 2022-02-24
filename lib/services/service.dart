@@ -5,6 +5,7 @@ import 'package:adistetsa/models/detailjurnalmengajarguru_model.dart';
 import 'package:adistetsa/models/jadwalekskul_model.dart';
 import 'package:adistetsa/models/jadwalmengajarguru_model.dart';
 import 'package:adistetsa/models/jurnalpertemuanekskul_model.dart';
+import 'package:adistetsa/models/katalogekskul_model.dart';
 import 'package:adistetsa/models/peminjambarang_model.dart';
 import 'package:adistetsa/models/guru_model.dart';
 import 'package:adistetsa/models/jenispelanggaran_model.dart';
@@ -1283,6 +1284,69 @@ class Services extends ChangeNotifier {
       throw Exception(jsonDecode(res.body));
     } else {
       return false;
+    }
+  }
+
+  getKatalogEkskul() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/kesiswaan/katalog_ekskul');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<KatalogEkskulModel> katalogEkskul =
+          data.map((item) => KatalogEkskulModel.fromJson(item)).toList();
+      return katalogEkskul;
+    } else {
+      throw Exception('Gagal Mendapatkan Katalog Ekskul');
+    }
+  }
+
+  getDetailKatalogEkskul({required String id}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/kesiswaan/katalog_ekskul/$id');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      KatalogEkskulModel katalogEkskul = KatalogEkskulModel.fromJson(data);
+      return katalogEkskul;
+    } else {
+      throw Exception('Gagal Mendapatkan Katalog Ekskul');
+    }
+  }
+
+  daftarEkstrakurikuler(
+      {required String id, required String tanggalPengajuan}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/kesiswaan/ajukan_ekskul/$id');
+    var headers = {"Accept": "application/json", "authorization": token};
+    var body = {'TANGGAL_PENGAJUAN': tanggalPengajuan};
+    var response = await http.post(url, headers: headers, body: body);
+    print(response.statusCode);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return true;
+    } else {
+      throw Exception(response.body);
+    }
+  }
+
+  getEkskulSaya() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/kesiswaan/ekskul_saya');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<KatalogEkskulModel> katalogEkskul =
+          data.map((item) => KatalogEkskulModel.fromJson(item)).toList();
+      return katalogEkskul;
+    } else {
+      throw Exception('Gagal Mendapatkan Katalog Ekskul');
     }
   }
 }
