@@ -19,8 +19,35 @@ class _IsiJurnalEkskulPageState extends State<IsiJurnalEkskulPage> {
   bool isActiveDeskripsi = false;
   bool isLoading = false;
   TextEditingController pertemuanInput = TextEditingController(text: '');
-  TextEditingController deskripsiMengajarInput =
-      TextEditingController(text: '');
+  TextEditingController deskripsiMelatihInput = TextEditingController(text: '');
+  // Note: get date
+  DateTime? selectedDate;
+  String tanggalPendaftaran = '';
+  _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData().copyWith(
+            colorScheme: ColorScheme.light(
+              primary: p2Color,
+            ),
+          ),
+          child: child!,
+        );
+      },
+      context: context,
+      initialDate: DateTime.now(), // Refer step 1
+      firstDate: DateTime(2000),
+      lastDate: DateTime(3000),
+    );
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+        tanggalPendaftaran = selectedDate.toString().split(' ')[0].toString();
+        print(selectedDate);
+      });
+  }
+
   @override
   Widget build(BuildContext context) {
     _selectFolder() async {
@@ -195,7 +222,7 @@ class _IsiJurnalEkskulPageState extends State<IsiJurnalEkskulPage> {
       );
     }
 
-    Widget inputDeskripsiMengajar() {
+    Widget inputDeskripsiMelatih() {
       return Container(
         margin: EdgeInsets.only(
           top: 15,
@@ -206,7 +233,7 @@ class _IsiJurnalEkskulPageState extends State<IsiJurnalEkskulPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Deskripsi Mengajar',
+              'Deskripsi Melatih',
               style: mono3TextStyle.copyWith(
                 fontSize: 10,
                 color: deskripsiFocusNode.hasFocus || isActiveDeskripsi == true
@@ -248,10 +275,10 @@ class _IsiJurnalEkskulPageState extends State<IsiJurnalEkskulPage> {
                       isActiveDeskripsi = false;
                     });
                   },
-                  controller: deskripsiMengajarInput,
+                  controller: deskripsiMelatihInput,
                   textAlignVertical: TextAlignVertical.center,
                   decoration: InputDecoration.collapsed(
-                    hintText: 'Deskripsi Mengajar',
+                    hintText: 'Deskripsi Melatih',
                     hintStyle:
                         deskripsiFocusNode.hasFocus || isActiveDeskripsi == true
                             ? m2TextStyle.copyWith(
@@ -342,6 +369,67 @@ class _IsiJurnalEkskulPageState extends State<IsiJurnalEkskulPage> {
       );
     }
 
+    Widget inputTanggal() {
+      return Container(
+        margin: EdgeInsets.only(
+          top: 20,
+          left: 20,
+          right: 20,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Tanggal',
+              style: mono2TextStyle.copyWith(
+                fontSize: 10,
+              ),
+            ),
+            SizedBox(
+              height: 7,
+            ),
+            SizedBox(
+              height: 44,
+              child: TextButton(
+                onPressed: () {
+                  _selectDate(context);
+                },
+                style: TextButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        side: BorderSide(
+                          color: mono2Color,
+                          width: 2,
+                        ))),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        selectedDate == null
+                            ? 'Tanggal Pengajuan'
+                            : tanggalPendaftaran,
+                        style: mono2TextStyle.copyWith(
+                          fontSize: 12,
+                        ),
+                      ),
+                      Icon(
+                        Icons.calendar_today_outlined,
+                        color: mono2Color,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     Widget buttonSubmit() {
       return Container(
         height: 40,
@@ -393,7 +481,8 @@ class _IsiJurnalEkskulPageState extends State<IsiJurnalEkskulPage> {
             children: [
               inputNamaGuru(),
               inputPertemuanKe(),
-              inputDeskripsiMengajar(),
+              inputDeskripsiMelatih(),
+              inputTanggal(),
               inputUnggahDokumen(),
               buttonSubmit(),
             ],
