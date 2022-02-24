@@ -596,6 +596,28 @@ class Providers with ChangeNotifier {
     }
   }
 
+  Future<bool> isiJurnalEkskul(
+      {required String id,
+      required String pertemuan,
+      required String deskripsi,
+      required String tanggalMelatih,
+      filepath}) async {
+    try {
+      await Services().isiJurnalEkskul(
+          id: id,
+          pertemuan: pertemuan,
+          deskripsi: deskripsi,
+          tanggalMelatih: tanggalMelatih,
+          filepath: filepath);
+      return true;
+    } catch (e) {
+      print(e);
+      errorMessage = e.toString();
+      notifyListeners();
+      return false;
+    }
+  }
+
   // NOTE: Untuk mendapatkan list dari katalog yang user ambil
 
   // ? mengecek apakah buku sudah dipinjam oleh user yang sama

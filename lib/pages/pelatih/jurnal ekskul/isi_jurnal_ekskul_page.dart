@@ -1,7 +1,10 @@
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 class IsiJurnalEkskulPage extends StatefulWidget {
   const IsiJurnalEkskulPage({Key? key}) : super(key: key);
@@ -22,7 +25,7 @@ class _IsiJurnalEkskulPageState extends State<IsiJurnalEkskulPage> {
   TextEditingController deskripsiMelatihInput = TextEditingController(text: '');
   // Note: get date
   DateTime? selectedDate;
-  String tanggalPendaftaran = '';
+  String tanggalMelatih = '';
   _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       builder: (context, child) {
@@ -43,13 +46,14 @@ class _IsiJurnalEkskulPageState extends State<IsiJurnalEkskulPage> {
     if (picked != null && picked != selectedDate)
       setState(() {
         selectedDate = picked;
-        tanggalPendaftaran = selectedDate.toString().split(' ')[0].toString();
+        tanggalMelatih = selectedDate.toString().split(' ')[0].toString();
         print(selectedDate);
       });
   }
 
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
     _selectFolder() async {
       result = await FilePicker.platform.pickFiles(
         type: FileType.image,
@@ -399,7 +403,7 @@ class _IsiJurnalEkskulPageState extends State<IsiJurnalEkskulPage> {
                         borderRadius: BorderRadius.circular(8),
                         side: BorderSide(
                           color: mono2Color,
-                          width: 2,
+                          width: 1,
                         ))),
                 child: Padding(
                   padding: EdgeInsets.symmetric(
@@ -411,7 +415,7 @@ class _IsiJurnalEkskulPageState extends State<IsiJurnalEkskulPage> {
                       Text(
                         selectedDate == null
                             ? 'Tanggal Pengajuan'
-                            : tanggalPendaftaran,
+                            : tanggalMelatih,
                         style: mono2TextStyle.copyWith(
                           fontSize: 12,
                         ),
@@ -441,7 +445,52 @@ class _IsiJurnalEkskulPageState extends State<IsiJurnalEkskulPage> {
           bottom: 40,
         ),
         child: TextButton(
-          onPressed: () {},
+          onPressed: () async {
+            setState(() {
+              isLoading = true;
+            });
+            if (pertemuanInput.text == '' ||
+                deskripsiMelatihInput.text == '' ||
+                tanggalMelatih == '' ||
+                file == null) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  backgroundColor: dangerColor,
+                  content: Text(
+                    'Silahkan melengkapi form terlebih dahulu',
+                    textAlign: TextAlign.center,
+                  )));
+            } else {
+              if (await provider.isiJurnalEkskul(
+                  id: provider.idJurnalEkstrakurikuler,
+                  pertemuan: pertemuanInput.text,
+                  deskripsi: deskripsiMelatihInput.text,
+                  tanggalMelatih: tanggalMelatih,
+                  filepath: file != null ? file!.path : null)) {
+                setState(() {
+                  pertemuanInput.text = '';
+                  deskripsiMelatihInput.text = '';
+                  tanggalMelatih = '';
+                  file = null;
+                });
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: successColor,
+                    content: Text(
+                      'Berhasil mengisi jurnal ekskul',
+                      textAlign: TextAlign.center,
+                    )));
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: dangerColor,
+                    content: Text(
+                      '${provider.errorMessage}',
+                      textAlign: TextAlign.center,
+                    )));
+              }
+            }
+            setState(() {
+              isLoading = false;
+            });
+          },
           style: TextButton.styleFrom(
             primary: m2Color,
             backgroundColor: m2Color,
@@ -479,7 +528,7 @@ class _IsiJurnalEkskulPageState extends State<IsiJurnalEkskulPage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              inputNamaGuru(),
+              // inputNamaGuru(),
               inputPertemuanKe(),
               inputDeskripsiMelatih(),
               inputTanggal(),

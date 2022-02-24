@@ -990,8 +990,7 @@ class Services extends ChangeNotifier {
     var request = http.MultipartRequest('POST', url);
     request.headers['Authorization'] = token;
     request.fields['PERTEMUAN'] = pertemuan;
-    request.fields['DESKRIPSI_MATERI'] = pertemuan;
-    request.fields['id_jurnal_belajar_mengajar'] = pertemuan;
+    request.fields['DESKRIPSI_MATERI'] = deskripsi;
     request.files
         .add(await http.MultipartFile.fromPath('FILE_DOKUMENTASI', filepath));
     var response = await request.send();
@@ -1044,8 +1043,6 @@ class Services extends ChangeNotifier {
       required String nis}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    print(nis);
-    print(id);
     var url = Uri.parse('$baseUrl/kurikulum/detail_presensi_siswa/$id');
     var headers = {"Accept": "application/json", "authorization": token};
     var body = {'KETERANGAN': keterangan, 'NIS': nis};
@@ -1257,6 +1254,35 @@ class Services extends ChangeNotifier {
       return true;
     } else {
       throw Exception(response.body);
+    }
+  }
+
+  isiJurnalEkskul(
+      {required String id,
+      required String pertemuan,
+      required String deskripsi,
+      required String tanggalMelatih,
+      filepath}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/kesiswaan/isi_jurnal_ekskul/$id');
+    var request = http.MultipartRequest('POST', url);
+    request.headers['Authorization'] = token;
+    request.fields['PERTEMUAN'] = pertemuan;
+    request.fields['DESKRIPSI_KEGIATAN'] = deskripsi;
+    request.fields['TANGGAL_MELATIH'] = tanggalMelatih;
+    request.files
+        .add(await http.MultipartFile.fromPath('FILE_DOKUMENTASI', filepath));
+    var response = await request.send();
+    final res = await http.Response.fromStream(response);
+    print(res.statusCode);
+    print(res.body);
+    if (res.statusCode == 200 || res.statusCode == 201) {
+      return true;
+    } else if (res.statusCode == 400) {
+      throw Exception(jsonDecode(res.body));
+    } else {
+      return false;
     }
   }
 }

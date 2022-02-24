@@ -413,7 +413,8 @@ class _JurnalEkskulPageState extends State<JurnalEkskulPage> {
                           setState(() {
                             loading(context);
                           });
-
+                          await provider.setIdjurnalEkstrakurikuler(
+                              getIdJurnal: id.toString());
                           Navigator.pushReplacementNamed(context,
                               '/pelatih/jurnal-ekskul/isi-jurnal-page');
                         },
@@ -449,7 +450,8 @@ class _JurnalEkskulPageState extends State<JurnalEkskulPage> {
                           setState(() {
                             loading(context);
                           });
-                          await provider.setIdjurnalEkstrakurikuler(getIdJurnal: id.toString());
+                          await provider.setIdjurnalEkstrakurikuler(
+                              getIdJurnal: id.toString());
                           Navigator.pushReplacementNamed(context,
                               '/pelatih/jurnal-ekskul/lihat-jurnal-page');
                         },
