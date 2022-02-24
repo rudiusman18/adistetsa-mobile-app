@@ -235,7 +235,6 @@ class _DaftarPengajuanEkstrakurikulerSiswaPageState
                     )
                   : Container(),
             ),
-            // listItem(name: 'Futsal', date: '2022-02-22'),
           ],
         ),
       ),
