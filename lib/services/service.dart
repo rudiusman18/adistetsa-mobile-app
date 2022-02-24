@@ -21,7 +21,6 @@ import 'package:adistetsa/models/riwayatruangan_model.dart';
 import 'package:adistetsa/models/role_model.dart';
 import 'package:adistetsa/models/peminjamruangan_model.dart';
 import 'package:adistetsa/models/siswa_model.dart';
-import 'package:adistetsa/pages/siswa/kesiswaan/proyek%20kebaikan/input_proyek_kebaikan_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -924,7 +923,8 @@ class Services extends ChangeNotifier {
       {String? search, String? filterTahunAjaran, String? filterKelas}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url = Uri.parse('$baseUrl/kurikulum/jadwal_mengajar_guru?$filterTahunAjaran');
+    var url =
+        Uri.parse('$baseUrl/kurikulum/jadwal_mengajar_guru?$filterTahunAjaran');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {

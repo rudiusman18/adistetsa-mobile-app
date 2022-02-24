@@ -1,26 +1,20 @@
-import 'package:adistetsa/models/detailjurnalmengajarguru_model.dart';
-import 'package:adistetsa/providers/provider.dart';
-import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:adistetsa/widget/loading.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-class DaftarPertemuanPage extends StatefulWidget {
+class LihatJurnalEkskulPage extends StatefulWidget {
   @override
-  State<DaftarPertemuanPage> createState() => _DaftarPertemuanPageState();
+  State<LihatJurnalEkskulPage> createState() => _LihatJurnalEkskulPageState();
 }
 
-class _DaftarPertemuanPageState extends State<DaftarPertemuanPage> {
+class _LihatJurnalEkskulPageState extends State<LihatJurnalEkskulPage> {
   bool isSearch = false;
   TextEditingController searchController = TextEditingController();
   String urlSearch = '';
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
-    Providers provider = Provider.of<Providers>(context);
-
     PreferredSizeWidget daftarPertemuanHeader() {
       return AppBar(
         centerTitle: true,
@@ -231,21 +225,22 @@ class _DaftarPertemuanPageState extends State<DaftarPertemuanPage> {
                     height: 11,
                   ),
                   Center(
-                    child: Image.network(
-                      '$documentation',
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) {
-                          return child;
-                        } else {
-                          return Center(
-                            child: CircularProgressIndicator(
-                              strokeWidth: 4,
-                              color: m1Color,
-                            ),
-                          );
-                        }
-                      },
-                    ),
+                    child: Image.asset('assets/dokumentasi_icon.png'),
+                    // Image.network(
+                    //   '$documentation',
+                    //   loadingBuilder: (context, child, loadingProgress) {
+                    //     if (loadingProgress == null) {
+                    //       return child;
+                    //     } else {
+                    //       return Center(
+                    //         child: CircularProgressIndicator(
+                    //           strokeWidth: 4,
+                    //           color: m1Color,
+                    //         ),
+                    //       );
+                    //     }
+                    //   },
+                    // ),
                   ),
                   SizedBox(
                     height: 20,
@@ -265,10 +260,9 @@ class _DaftarPertemuanPageState extends State<DaftarPertemuanPage> {
                           setState(() {
                             loading(context);
                           });
-                          await provider.setIdPresensiSiswa(
-                              getIdPresensiSiswa: '$id');
+
                           Navigator.pushReplacementNamed(context,
-                              '/guru/kurikulum/list-jurnal-belajar/lihat-jadwal/presensi-page');
+                              '/pelatih/jurnal-ekskul/lihat-jurnal/presensi-siswa-ekskul-page');
                         },
                         child: Row(
                           children: [
@@ -308,45 +302,16 @@ class _DaftarPertemuanPageState extends State<DaftarPertemuanPage> {
         body: Column(
           children: [
             nameCard(
-              name: '${provider.getJadwalMengajarGuru.first.gURU}',
-              mataPelajaran:
-                  '${provider.getJadwalMengajarGuru.first.mATAPELAJARAN}',
-              kelas: '${provider.getJadwalMengajarGuru.first.kELAS}',
-              semester: '${provider.getJadwalMengajarGuru.first.sEMESTER}',
+              name: 'Syauqi Babi',
+              mataPelajaran: 'Basketball',
+              kelas: '2020/2021',
+              semester: 'Semester 2',
             ),
             Expanded(
-              child: FutureBuilder(
-                future: Services()
-                    .getDetailJurnalMengajarGuru(id: provider.idJurnalMengajar),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (snapshot.hasData) {
-                    List<DetailJurnalMengajarGuruModel> data = snapshot.data;
-                    return data.isEmpty
-                        ? Center(
-                            child: Text(
-                              'Data tidak ditemukan',
-                              style: mono1TextStyle,
-                            ),
-                          )
-                        : ListView(
-                            children: data.map((item) {
-                              return expandList(
-                                header: 'Pertemuan ke - ${item.pERTEMUAN}',
-                                content: '${item.dESKRIPSIMATERI}',
-                                documentation: '${item.fILEDOKUMENTASI}',
-                                id: '${item.iD}',
-                              );
-                            }).toList(),
-                          );
-                  } else {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 4,
-                        color: m1Color,
-                      ),
-                    );
-                  }
-                },
+              child: expandList(
+                header: 'Pertemuan 1',
+                content: 'asdasdasd',
+                id: 'id',
               ),
             ),
           ],

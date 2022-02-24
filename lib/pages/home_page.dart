@@ -325,6 +325,57 @@ class HomePage extends StatelessWidget {
       );
     }
 
+    Widget itemsPelatih() {
+      return Container(
+        alignment: Alignment.center,
+        child: Wrap(
+          spacing: 25,
+          children: [
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/pelatih/pengajuan-ekskul-page');
+              },
+              child: ItemCard(
+                urlImg: 'pengajuan ekskul',
+                text: 'Pengajuan Ekskul',
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/pelatih/daftar-anggota-page');
+              },
+              child: ItemCard(
+                urlImg: 'daftar anggota',
+                text: 'Daftar Anggota',
+              ),
+            ),
+            ItemCard(
+              urlImg: 'daftar jurnal',
+              text: 'Daftar Jurnal',
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/pelatih/jurnal-ekskul');
+              },
+              child: ItemCard(
+                urlImg: 'jurnal ekskul',
+                text: 'Jurnal Ekskul',
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/pelatih/jadwal-ekskul');
+              },
+              child: ItemCard(
+                urlImg: 'jadwal ekskul',
+                text: 'Jadwal Ekskul',
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: mono6Color,
       body: SafeArea(
@@ -368,7 +419,7 @@ class HomePage extends StatelessWidget {
                           fontWeight: regular,
                         ),
                       ),
-                      ProfileCard(),
+                      role == 'Pelatih' ? Container() : ProfileCard(),
                       Text(
                         'Menu',
                         style: mono1TextStyle,
@@ -391,7 +442,9 @@ class HomePage extends StatelessWidget {
                                   ? itemsKaryawan()
                                   : role == 'Staf Sarpras'
                                       ? itemsStafSarpras()
-                                      : SizedBox(),
+                                      : role == 'Pelatih'
+                                          ? itemsPelatih()
+                                          : SizedBox(),
                 ),
               ],
             ),

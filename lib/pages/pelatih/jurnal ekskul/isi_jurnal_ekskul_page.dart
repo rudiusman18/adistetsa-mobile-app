@@ -6,14 +6,14 @@ import 'package:adistetsa/theme.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-class IsiJurnalPage extends StatefulWidget {
-  const IsiJurnalPage({Key? key}) : super(key: key);
+class IsiJurnalEkskulPage extends StatefulWidget {
+  const IsiJurnalEkskulPage({Key? key}) : super(key: key);
 
   @override
-  _IsiJurnalPageState createState() => _IsiJurnalPageState();
+  _IsiJurnalEkskulPageState createState() => _IsiJurnalEkskulPageState();
 }
 
-class _IsiJurnalPageState extends State<IsiJurnalPage> {
+class _IsiJurnalEkskulPageState extends State<IsiJurnalEkskulPage> {
   FocusNode pertemuanFocusNode = new FocusNode();
   FocusNode deskripsiFocusNode = new FocusNode();
   PlatformFile? file;
@@ -28,7 +28,7 @@ class _IsiJurnalPageState extends State<IsiJurnalPage> {
   Widget build(BuildContext context) {
     Providers provider = Provider.of<Providers>(context);
     GuruModel guruModel = provider.guru;
-    var id = provider.idJurnalMengajar;
+
     _selectFolder() async {
       result = await FilePicker.platform.pickFiles(
         type: FileType.image,
@@ -40,52 +40,6 @@ class _IsiJurnalPageState extends State<IsiJurnalPage> {
       } else {}
     }
 
-    handleSimpanJurnal() async {
-      if (pertemuanInput.text == '' ||
-          deskripsiMengajarInput.text == '' ||
-          file == null) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            backgroundColor: dangerColor,
-            content: Text(
-              'Anda belum mengisi semua form yang ada',
-              textAlign: TextAlign.center,
-            )));
-      } else {
-        setState(() {
-          isLoading = true;
-        });
-        if (await provider.isiJurnal(
-            id: id,
-            pertemuan: pertemuanInput.text,
-            deskripsi: deskripsiMengajarInput.text,
-            filepath: file != null ? file!.path : null)) {
-          setState(() {
-            pertemuanInput.text = '';
-            deskripsiMengajarInput.text = '';
-            file = null;
-          });
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              backgroundColor: successColor,
-              content: Text(
-                'Sukses menyimpan jurnal',
-                textAlign: TextAlign.center,
-              )));
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              backgroundColor: dangerColor,
-              content: Text(
-                '${provider.errorMessage}'
-                    .replaceAll('Exception: [', '')
-                    .replaceAll(']', ''),
-                textAlign: TextAlign.center,
-              )));
-        }
-      }
-      setState(() {
-        isLoading = false;
-      });
-    }
-
     PreferredSizeWidget headerIsiJurnal() {
       return AppBar(
         backgroundColor: mono6Color,
@@ -93,7 +47,7 @@ class _IsiJurnalPageState extends State<IsiJurnalPage> {
         elevation: 4,
         centerTitle: true,
         title: Text(
-          'Isi Jurnal',
+          'Isi Jurnal Ekskul',
           style: mono1TextStyle.copyWith(
             fontSize: 18,
             fontWeight: semiBold,
@@ -150,7 +104,7 @@ class _IsiJurnalPageState extends State<IsiJurnalPage> {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      '${guruModel.nAMALENGKAP}',
+                      'Rize',
                       style: mono2TextStyle.copyWith(
                         fontSize: 12,
                       ),
@@ -405,9 +359,7 @@ class _IsiJurnalPageState extends State<IsiJurnalPage> {
           bottom: 40,
         ),
         child: TextButton(
-          onPressed: () {
-            handleSimpanJurnal();
-          },
+          onPressed: () {},
           style: TextButton.styleFrom(
             primary: m2Color,
             backgroundColor: m2Color,

@@ -8,6 +8,16 @@ import 'package:adistetsa/pages/guru/kurikulum/jurnal%20belajar/list_jurnal_bela
 import 'package:adistetsa/pages/guru/kurikulum/jurnal%20belajar/presensi_siswa_page.dart';
 import 'package:adistetsa/pages/guru/kurikulum/list_kurikulum_page.dart';
 import 'package:adistetsa/pages/main_page.dart';
+import 'package:adistetsa/pages/pelatih/daftar%20anggota/daftar_anggota_page.dart';
+import 'package:adistetsa/pages/pelatih/daftar%20anggota/detail_daftar_anggota_page.dart';
+import 'package:adistetsa/pages/pelatih/jadwal%20ekskul/jadwal_ekskul_page.dart';
+import 'package:adistetsa/pages/pelatih/jurnal%20ekskul/edit_presensi_ekskul_page.dart';
+import 'package:adistetsa/pages/pelatih/jurnal%20ekskul/isi_jurnal_ekskul_page.dart';
+import 'package:adistetsa/pages/pelatih/jurnal%20ekskul/jurnal_ekskul_page.dart';
+import 'package:adistetsa/pages/pelatih/jurnal%20ekskul/lihat_jurnal_ekskul_page.dart';
+import 'package:adistetsa/pages/pelatih/jurnal%20ekskul/presensi_siswa_ekskul_page.dart';
+import 'package:adistetsa/pages/pelatih/pengajuan%20ekskul/detail_pengajuan_ekskul_page.dart';
+import 'package:adistetsa/pages/pelatih/pengajuan%20ekskul/pengajuan_ekskul_page.dart';
 import 'package:adistetsa/pages/siswa/kesiswaan/proyek%20kebaikan/input_proyek_kebaikan_page.dart';
 import 'package:adistetsa/pages/siswa/kesiswaan/riwayat/riwayat_pelanggaran_page.dart';
 import 'package:adistetsa/pages/siswa/kesiswaan/riwayat/riwayat_proyek_kebaikan_page.dart';
@@ -311,6 +321,56 @@ class AdiStetsa extends StatelessWidget {
             case '/guru/kurikulum/list-jurnal-belajar/lihat-jadwal/presensi/edit-page':
               return PageTransition(
                 child: EditPresensiPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/pelatih/pengajuan-ekskul-page':
+              return PageTransition(
+                child: PengajuanEkskulPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/pelatih/pengajuan-ekskul/detail-pengajuan-ekskul-page':
+              return PageTransition(
+                child: DetailPengajuanEkskulPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/pelatih/daftar-anggota-page':
+              return PageTransition(
+                child: DaftarAnggotaPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/pelatih/daftar-anggota/detail-daftar-anggota-page':
+              return PageTransition(
+                child: DetailDaftarAnggotaPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/pelatih/jadwal-ekskul':
+              return PageTransition(
+                child: JadwalEkskulPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/pelatih/jurnal-ekskul':
+              return PageTransition(
+                child: JurnalEkskulPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/pelatih/jurnal-ekskul/isi-jurnal-page':
+              return PageTransition(
+                child: IsiJurnalEkskulPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/pelatih/jurnal-ekskul/lihat-jurnal-page':
+              return PageTransition(
+                child: LihatJurnalEkskulPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/pelatih/jurnal-ekskul/lihat-jurnal/presensi-siswa-ekskul-page':
+              return PageTransition(
+                child: PresensiSiswaEkskulPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/pelatih/jurnal-ekskul/lihat-jurnal/presensi-siswa-ekskul/detail-page':
+              return PageTransition(
+                child: EditPresensiEkskulPage(),
                 type: PageTransitionType.rightToLeft,
               );
             case '/main-page/back':

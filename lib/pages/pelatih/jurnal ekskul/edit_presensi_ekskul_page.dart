@@ -1,0 +1,201 @@
+import 'package:adistetsa/theme.dart';
+import 'package:flutter/material.dart';
+
+class EditPresensiEkskulPage extends StatefulWidget {
+  @override
+  _EditPresensiEkskulPageState createState() => _EditPresensiEkskulPageState();
+}
+
+class _EditPresensiEkskulPageState extends State<EditPresensiEkskulPage> {
+  bool isLoading = false;
+  int selectedIndex = -1;
+  String keterangan = '';
+  @override
+  Widget build(BuildContext context) {
+    PreferredSizeWidget header() {
+      return AppBar(
+        backgroundColor: mono6Color,
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Icon(
+            Icons.arrow_back,
+            color: mono1Color,
+          ),
+        ),
+        title: Text(
+          'Edit Presensi',
+          style: mono1TextStyle.copyWith(
+            fontSize: 18,
+            fontWeight: semiBold,
+          ),
+        ),
+      );
+    }
+
+    Widget nameCard({required String name, required String nis}) {
+      return Container(
+        color: m4Color,
+        padding: EdgeInsets.symmetric(
+          vertical: 14,
+          horizontal: 12,
+        ),
+        width: double.infinity,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              name,
+              style: mono5TextStyle.copyWith(
+                fontSize: 20,
+                fontWeight: bold,
+              ),
+            ),
+            Text(
+              nis,
+              style: mono5TextStyle.copyWith(
+                fontSize: 10,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    Widget option({required int index, required String name}) {
+      return GestureDetector(
+        onTap: () {
+          setState(() {
+            keterangan = name;
+            print(keterangan);
+            selectedIndex = index;
+          });
+        },
+        child: Row(
+          children: [
+            Container(
+              width: 135,
+              padding: EdgeInsets.all(12),
+              decoration: selectedIndex == index
+                  ? BoxDecoration(
+                      color: m5Color.withOpacity(0.25),
+                      borderRadius: BorderRadius.circular(5),
+                    )
+                  : BoxDecoration(),
+              margin: EdgeInsets.only(
+                top: 30,
+              ),
+              child: Row(
+                children: [
+                  Image.asset(
+                    selectedIndex == index
+                        ? 'assets/selected pilih keterangan.png'
+                        : 'assets/unselected pilih keterangan.png',
+                    width: 14,
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Text(
+                    name,
+                    style: mono1TextStyle.copyWith(
+                      fontSize: 10,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    Widget submitButton() {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 216,
+            height: 46,
+            child: TextButton(
+              style: TextButton.styleFrom(
+                  backgroundColor: m2Color,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  )),
+              onPressed: () {},
+              child: isLoading == true
+                  ? Container(
+                      width: 14,
+                      height: 14,
+                      child: CircularProgressIndicator(
+                        color: mono6Color,
+                        strokeWidth: 4,
+                      ),
+                    )
+                  : Text(
+                      'Simpan',
+                      style: mono6TextStyle.copyWith(
+                        fontSize: 16,
+                        fontWeight: bold,
+                      ),
+                    ),
+            ),
+          ),
+        ],
+      );
+    }
+
+    return Scaffold(
+        backgroundColor: mono6Color,
+        appBar: header(),
+        body: Column(
+          children: [
+            nameCard(
+              name: 'Syauqi Babi',
+              nis: '123123132',
+            ),
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.only(
+                  top: 18,
+                  left: 16,
+                  right: 16,
+                ),
+                child: ListView(
+                  children: [
+                    Text(
+                      'Pilih Keterangan',
+                      style: mono1TextStyle.copyWith(
+                        fontSize: 12,
+                        fontWeight: semiBold,
+                      ),
+                    ),
+                    for (var i = 0; i < 4; i++)
+                      option(
+                        index: i,
+                        name: i == 0
+                            ? 'Hadir'
+                            : i == 1
+                                ? 'Izin'
+                                : i == 2
+                                    ? 'Sakit'
+                                    : i == 3
+                                        ? 'Tanpa Keterangan'
+                                        : '',
+                      ),
+                    SizedBox(
+                      height: 100,
+                    ),
+                    selectedIndex != -1 ? submitButton() : SizedBox(),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ));
+  }
+}

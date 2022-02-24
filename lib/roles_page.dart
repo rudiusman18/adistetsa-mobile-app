@@ -60,6 +60,10 @@ class _RolesPageState extends State<RolesPage> {
           currentIndex = -1;
           Navigator.pushNamedAndRemoveUntil(
               context, '/main-page', (route) => false);
+        } else if (role == 'Pelatih') {
+          currentIndex = -1;
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/main-page', (route) => false);
         }
       }
       setState(() {
