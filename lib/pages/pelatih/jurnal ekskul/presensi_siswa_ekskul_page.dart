@@ -1,6 +1,10 @@
+import 'package:adistetsa/models/presensisiswa_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class PresensiSiswaEkskulPage extends StatefulWidget {
   @override
@@ -15,6 +19,7 @@ class _PresensiSiswaEkskulPageState extends State<PresensiSiswaEkskulPage> {
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
     PreferredSizeWidget presensiSiswaHeader() {
       return AppBar(
         centerTitle: true,
@@ -141,15 +146,18 @@ class _PresensiSiswaEkskulPageState extends State<PresensiSiswaEkskulPage> {
                       setState(() {
                         loading(context);
                       });
-
+                      await provider.getDetailPresensiSiswaEkskul(id: id);
                       Navigator.pushReplacementNamed(context,
                               '/pelatih/jurnal-ekskul/lihat-jurnal/presensi-siswa-ekskul/detail-page')
                           .then((_) async {
-                        setState(
-                          () {
-                            isLoading = true;
-                          },
-                        );
+                        setState(() {
+                          isLoading = true;
+                        });
+                        await Services().getPresensiSiswaEkskul(
+                            id: provider.idPresensiSiswaEkskul);
+                        setState(() {
+                          isLoading = false;
+                        });
                       });
                     },
                     child: Icon(
@@ -176,21 +184,44 @@ class _PresensiSiswaEkskulPageState extends State<PresensiSiswaEkskulPage> {
       backgroundColor: mono6Color,
       appBar: isSearch ? searchAppbar() : presensiSiswaHeader(),
       body: Padding(
-        padding: const EdgeInsets.only(
-          top: 20,
-        ),
-        child: ListView(
-          children: [
-            for (var i = 0; i < 20; i++)
-              listSiswa(
-                nama: 'Syauqi',
-                nis: '123455',
-                status: 'Janda',
-                id: '0',
-              ),
-          ],
-        ),
-      ),
+          padding: const EdgeInsets.only(
+            top: 20,
+          ),
+          child: isLoading == false
+              ? FutureBuilder(
+                  future: Services().getPresensiSiswaEkskul(
+                      id: provider.idPresensiSiswaEkskul),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData) {
+                      List<PresensiSiswaModel> data = snapshot.data;
+                      return data.isEmpty
+                          ? Center(
+                              child: Text(
+                                'Data tidak ditemukan',
+                                style: mono1TextStyle,
+                              ),
+                            )
+                          : ListView(
+                              children: data.map((item) {
+                                return listSiswa(
+                                  nama: '${item.nAMA}',
+                                  nis: '${item.nIS}',
+                                  status: '${item.kETERANGAN}',
+                                  id: '${item.iD}',
+                                );
+                              }).toList(),
+                            );
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 4,
+                          color: m1Color,
+                        ),
+                      );
+                    }
+                  },
+                )
+              : Container()),
     );
   }
 }

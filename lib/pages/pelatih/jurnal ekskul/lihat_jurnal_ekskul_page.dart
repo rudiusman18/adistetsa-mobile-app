@@ -1,7 +1,11 @@
+import 'package:adistetsa/models/jurnalpertemuanekskul_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:adistetsa/widget/loading.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LihatJurnalEkskulPage extends StatefulWidget {
   @override
@@ -15,6 +19,7 @@ class _LihatJurnalEkskulPageState extends State<LihatJurnalEkskulPage> {
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
     PreferredSizeWidget daftarPertemuanHeader() {
       return AppBar(
         centerTitle: true,
@@ -225,22 +230,21 @@ class _LihatJurnalEkskulPageState extends State<LihatJurnalEkskulPage> {
                     height: 11,
                   ),
                   Center(
-                    child: Image.asset('assets/dokumentasi_icon.png'),
-                    // Image.network(
-                    //   '$documentation',
-                    //   loadingBuilder: (context, child, loadingProgress) {
-                    //     if (loadingProgress == null) {
-                    //       return child;
-                    //     } else {
-                    //       return Center(
-                    //         child: CircularProgressIndicator(
-                    //           strokeWidth: 4,
-                    //           color: m1Color,
-                    //         ),
-                    //       );
-                    //     }
-                    //   },
-                    // ),
+                    child: Image.network(
+                      '$documentation',
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) {
+                          return child;
+                        } else {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 4,
+                              color: m1Color,
+                            ),
+                          );
+                        }
+                      },
+                    ),
                   ),
                   SizedBox(
                     height: 20,
@@ -260,7 +264,8 @@ class _LihatJurnalEkskulPageState extends State<LihatJurnalEkskulPage> {
                           setState(() {
                             loading(context);
                           });
-
+                          await provider.setIdPresensiSiswaEkskul(
+                              getIdPresesnsiSiswaEkskul: id.toString());
                           Navigator.pushReplacementNamed(context,
                               '/pelatih/jurnal-ekskul/lihat-jurnal/presensi-siswa-ekskul-page');
                         },
@@ -301,19 +306,49 @@ class _LihatJurnalEkskulPageState extends State<LihatJurnalEkskulPage> {
         backgroundColor: mono6Color,
         body: Column(
           children: [
-            nameCard(
-              name: 'Syauqi Babi',
-              mataPelajaran: 'Basketball',
-              kelas: '2020/2021',
-              semester: 'Semester 2',
-            ),
-            Expanded(
-              child: expandList(
-                header: 'Pertemuan 1',
-                content: 'asdasdasd',
-                id: 'id',
-              ),
-            ),
+            // nameCard(
+            //   name: 'ADAM Babi',
+            //   mataPelajaran: 'Basketball',
+            //   kelas: '2020/2021',
+            //   semester: 'Semester 2',
+            // ),
+            FutureBuilder(
+              future: Services().getJurnalEkskulPertemuan(
+                  id: provider.idJurnalEkstrakurikuler),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  List<JurnalEkskulPertemuanModel> data = snapshot.data;
+                  return data.isEmpty
+                      ? Center(
+                          child: Text(
+                            'Data tidak ditemukan',
+                            style: mono1TextStyle,
+                          ),
+                        )
+                      : Expanded(
+                          child: ListView(
+                            children: data.map((item) {
+                              return expandList(
+                                header: 'Pertemuan ${item.pERTEMUAN}',
+                                content: '${item.dESKRIPSIKEGIATAN}',
+                                documentation: '${item.fILEDOKUMENTASI}',
+                                id: '${item.iD}',
+                              );
+                            }).toList(),
+                          ),
+                        );
+                } else {
+                  return Expanded(
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 4,
+                        color: m1Color,
+                      ),
+                    ),
+                  );
+                }
+              },
+            )
           ],
         ));
   }

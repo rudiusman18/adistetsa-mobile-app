@@ -448,9 +448,10 @@ class _JurnalEkskulPageState extends State<JurnalEkskulPage> {
                         onPressed: () async {
                           setState(() {
                             loading(context);
-                            Navigator.pushReplacementNamed(context,
-                                '/pelatih/jurnal-ekskul/lihat-jurnal-page');
                           });
+                          await provider.setIdjurnalEkstrakurikuler(getIdJurnal: id.toString());
+                          Navigator.pushReplacementNamed(context,
+                              '/pelatih/jurnal-ekskul/lihat-jurnal-page');
                         },
                         child: Row(
                           children: [

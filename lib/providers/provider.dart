@@ -97,6 +97,10 @@ class Providers with ChangeNotifier {
   PresensiSiswaModel _detailPresensiSiswa = PresensiSiswaModel();
   PresensiSiswaModel get detailPresensiSiswa => _detailPresensiSiswa;
 
+  PresensiSiswaModel _detailPresensiSiswaEkskul = PresensiSiswaModel();
+  PresensiSiswaModel get detailPresensiSiswaEkskul =>
+      _detailPresensiSiswaEkskul;
+
   List<JadwalMengajarGuruModel> _getJadwalMengajarGuru = [];
   List<JadwalMengajarGuruModel> get getJadwalMengajarGuru =>
       _getJadwalMengajarGuru;
@@ -121,6 +125,10 @@ class Providers with ChangeNotifier {
   String idPresensiSiswa = '';
 
   String errorMessage = '';
+
+  String idJurnalEkstrakurikuler = '';
+
+  String idPresensiSiswaEkskul = '';
 
   set jadwalMengajarGuru(List<JadwalMengajarGuruModel> jadwalMengajarGuru) {
     _getJadwalMengajarGuru = jadwalMengajarGuru;
@@ -237,6 +245,16 @@ class Providers with ChangeNotifier {
     notifyListeners();
   }
 
+  setIdjurnalEkstrakurikuler({required String getIdJurnal}) {
+    idJurnalEkstrakurikuler = getIdJurnal;
+    notifyListeners();
+  }
+
+  setIdPresensiSiswaEkskul({required String getIdPresesnsiSiswaEkskul}) {
+    idPresensiSiswaEkskul = getIdPresesnsiSiswaEkskul;
+    notifyListeners();
+  }
+
   set setPeminjamanRuangan(PeminjamRuanganModel peminjamanRuangan) {
     _peminjamanRuangan = peminjamanRuangan;
     notifyListeners();
@@ -269,6 +287,11 @@ class Providers with ChangeNotifier {
 
   set setDaftarAnggota(DaftarAnggotaEkskulModel daftarAnggotaEkskulModel) {
     _daftarAnggota = daftarAnggotaEkskulModel;
+    notifyListeners();
+  }
+
+  set setDetailPresensiSiswaEkskul(PresensiSiswaModel presensiEkskul) {
+    _detailPresensiSiswaEkskul = presensiEkskul;
     notifyListeners();
   }
 
@@ -554,6 +577,18 @@ class Providers with ChangeNotifier {
       DaftarAnggotaEkskulModel pengajuanEkskulModel =
           await Services().getDetailAnggotaEkskul(id: '$id');
       _daftarAnggota = pengajuanEkskulModel;
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> getDetailPresensiSiswaEkskul({String? id}) async {
+    try {
+      PresensiSiswaModel presensiSiswaModel =
+          await Services().getDetailPresensiSiswaEkskul(id: '$id');
+      _detailPresensiSiswaEkskul = presensiSiswaModel;
       return true;
     } catch (e) {
       print(e);

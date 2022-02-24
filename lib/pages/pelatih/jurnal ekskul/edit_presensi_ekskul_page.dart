@@ -1,5 +1,9 @@
+import 'package:adistetsa/models/presensisiswa_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class EditPresensiEkskulPage extends StatefulWidget {
   @override
@@ -12,6 +16,8 @@ class _EditPresensiEkskulPageState extends State<EditPresensiEkskulPage> {
   String keterangan = '';
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+    PresensiSiswaModel presensiSiswaModel = provider.detailPresensiSiswaEkskul;
     PreferredSizeWidget header() {
       return AppBar(
         backgroundColor: mono6Color,
@@ -70,7 +76,6 @@ class _EditPresensiEkskulPageState extends State<EditPresensiEkskulPage> {
         onTap: () {
           setState(() {
             keterangan = name;
-            print(keterangan);
             selectedIndex = index;
           });
         },
@@ -126,7 +131,27 @@ class _EditPresensiEkskulPageState extends State<EditPresensiEkskulPage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   )),
-              onPressed: () {},
+              onPressed: () async {
+                setState(() {
+                  isLoading = true;
+                });
+                if (await Services().presensiSiswaEkskul(
+                    id: presensiSiswaModel.iD.toString(),
+                    keterangan: keterangan,
+                    nis: presensiSiswaModel.nIS.toString())) {
+                  Navigator.pop(context);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      backgroundColor: dangerColor,
+                      content: Text(
+                        'Gagal melakukan presensi ekskul',
+                        textAlign: TextAlign.center,
+                      )));
+                }
+                setState(() {
+                  isLoading = false;
+                });
+              },
               child: isLoading == true
                   ? Container(
                       width: 14,
@@ -155,8 +180,8 @@ class _EditPresensiEkskulPageState extends State<EditPresensiEkskulPage> {
         body: Column(
           children: [
             nameCard(
-              name: 'Syauqi Babi',
-              nis: '123123132',
+              name: '${presensiSiswaModel.nAMA}',
+              nis: '${presensiSiswaModel.nIS}',
             ),
             Expanded(
               child: Container(
