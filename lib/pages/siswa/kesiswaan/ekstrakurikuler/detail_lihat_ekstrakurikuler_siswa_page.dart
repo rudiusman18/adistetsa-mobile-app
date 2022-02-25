@@ -19,11 +19,6 @@ class _DetailLihatEkstrakurikulerSiswaPageState
   Widget build(BuildContext context) {
     Providers provider = Provider.of<Providers>(context);
     KatalogEkskulModel katalogEkskulModel = provider.katalogEkskul;
-    List cok = [
-      'COK',
-      'BANGSAD',
-      'MEMEWasdasdsadasdasdasdasdasdsasdasdasdasdasdasdasd'
-    ];
     PreferredSizeWidget detaillihatekstrakurikulerHeader() {
       return AppBar(
         backgroundColor: mono6Color,
