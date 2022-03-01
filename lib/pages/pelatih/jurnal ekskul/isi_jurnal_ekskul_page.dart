@@ -1,5 +1,4 @@
 import 'package:adistetsa/providers/provider.dart';
-import 'package:adistetsa/services/service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
@@ -100,7 +99,7 @@ class _IsiJurnalEkskulPageState extends State<IsiJurnalEkskulPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Nama Guru',
+              'Nama Pelatih',
               style: mono2TextStyle.copyWith(
                 fontSize: 10,
               ),
@@ -124,12 +123,12 @@ class _IsiJurnalEkskulPageState extends State<IsiJurnalEkskulPage> {
                         ))),
                 child: Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: 12,
+                    horizontal: 5,
                   ),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      'Rize',
+                      '${provider.jadwalEkskul.first.pELATIH}',
                       style: mono2TextStyle.copyWith(
                         fontSize: 12,
                       ),
@@ -529,7 +528,7 @@ class _IsiJurnalEkskulPageState extends State<IsiJurnalEkskulPage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // inputNamaGuru(),
+              inputNamaGuru(),
               inputPertemuanKe(),
               inputDeskripsiMelatih(),
               inputTanggal(),

@@ -1,5 +1,4 @@
 import 'package:adistetsa/models/katalogekskul_model.dart';
-import 'package:adistetsa/models/siswa_model.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';

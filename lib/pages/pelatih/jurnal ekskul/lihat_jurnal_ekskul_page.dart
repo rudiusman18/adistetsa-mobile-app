@@ -306,12 +306,15 @@ class _LihatJurnalEkskulPageState extends State<LihatJurnalEkskulPage> {
         backgroundColor: mono6Color,
         body: Column(
           children: [
-            // nameCard(
-            //   name: 'ADAM Babi',
-            //   mataPelajaran: 'Basketball',
-            //   kelas: '2020/2021',
-            //   semester: 'Semester 2',
-            // ),
+            nameCard(
+              name: '${provider.jadwalEkskul.first.pELATIH}',
+              mataPelajaran:
+                  '${provider.jadwalEkskul.map((e) => e.eKSKUL).toList()}'
+                      .replaceAll('[', '')
+                      .replaceAll(']', ''),
+              kelas: '${provider.jadwalEkskul.first.tAHUNAJARAN}',
+              semester: '${provider.jadwalEkskul.first.sEMESTER}',
+            ),
             FutureBuilder(
               future: Services().getJurnalEkskulPertemuan(
                   id: provider.idJurnalEkstrakurikuler),
