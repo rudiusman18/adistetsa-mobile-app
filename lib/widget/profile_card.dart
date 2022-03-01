@@ -27,7 +27,9 @@ class ProfileCard extends StatelessWidget {
                 ? '${karyawanModel.nAMALENGKAP}'
                 : role == 'Siswa'
                     ? '${siswaModel.nAMA}'
-                    : '';
+                    : role == 'Pelatih'
+                        ? provider.jadwalEkskul.first.pELATIH
+                        : '';
     var _noInduk = role == 'Guru'
         ? 'NIP ${guruModel.nIP}'
         : role == 'Staf Perpustakaan' || role == 'Staf Sarpras'
@@ -36,7 +38,9 @@ class ProfileCard extends StatelessWidget {
                 ? 'NIP ${karyawanModel.nIP}'
                 : role == 'Siswa'
                     ? 'NIS ${siswaModel.nIS}'
-                    : '';
+                    : role == 'Pelatih'
+                        ? rolesModel.name
+                        : '';
     var _spesialisParameter = role == 'Guru'
         ? 'Kompetensi'
         : role == 'Staf Perpustakaan' || role == 'Staf Sarpras'
@@ -45,7 +49,9 @@ class ProfileCard extends StatelessWidget {
                 ? 'Jenis PTK'
                 : role == 'Siswa'
                     ? 'Kelas'
-                    : '';
+                    : role == 'Pelatih'
+                        ? 'Ekstrakurikuler'
+                        : '';
     var _parameter = role == 'Staf Perpustakaan'
         ? 'Perpustakaan'
         : role == 'Staf Sarpras'
@@ -54,7 +60,14 @@ class ProfileCard extends StatelessWidget {
                 ? '${karyawanModel.jENISPTK}'
                 : role == 'Siswa'
                     ? 'Kelas'
-                    : '';
+                    : role == 'Pelatih'
+                        ? provider.jadwalEkskul
+                            .map((e) => e.eKSKUL)
+                            .toList()
+                            .toString()
+                            .replaceAll('[', '')
+                            .replaceAll(']', '')
+                        : '';
     return Container(
       decoration: BoxDecoration(
           color: m2Color,
@@ -99,7 +112,9 @@ class ProfileCard extends StatelessWidget {
                 Text(
                   role == 'Staf Perpustakaan' || role == 'Staf Sarpras'
                       ? 'Staf'
-                      : '$role',
+                      : role == 'Pelatih'
+                          ? ''
+                          : '$role',
                   style: mono6TextStyle.copyWith(
                     fontWeight: semiBold,
                     fontSize: 16,
@@ -113,85 +128,87 @@ class ProfileCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '$_nama',
-                      style: mono6TextStyle.copyWith(
-                        fontWeight: semiBold,
-                        fontSize: 18,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '$_nama',
+                        style: mono6TextStyle.copyWith(
+                          fontWeight: semiBold,
+                          fontSize: 18,
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    Text(
-                      '$_noInduk',
-                      style: mono6TextStyle,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      '$_spesialisParameter',
-                      style: mono6TextStyle.copyWith(
-                        fontWeight: regular,
-                        fontSize: 10,
+                      SizedBox(
+                        height: 4,
                       ),
-                    ),
-                    rolesModel.name == 'Guru'
-                        ? FutureBuilder(
-                            future: Services().getKompetensiGuru(),
-                            builder:
-                                (BuildContext context, AsyncSnapshot snapshot) {
-                              if (snapshot.hasData) {
-                                List<KompetensiModel> data = snapshot.data;
-                                return data.isEmpty
-                                    ? Text(
-                                        'Tidak ada data',
-                                        style: mono6TextStyle.copyWith(
-                                          fontWeight: semiBold,
-                                          color: mono5Color,
-                                        ),
-                                      )
-                                    : Column(
-                                        children: data.map((item) {
-                                        return Text(
-                                          item.bIDANGSTUDI.toString(),
+                      Text(
+                        '$_noInduk',
+                        style: mono6TextStyle,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        '$_spesialisParameter',
+                        style: mono6TextStyle.copyWith(
+                          fontWeight: regular,
+                          fontSize: 10,
+                        ),
+                      ),
+                      rolesModel.name == 'Guru'
+                          ? FutureBuilder(
+                              future: Services().getKompetensiGuru(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot snapshot) {
+                                if (snapshot.hasData) {
+                                  List<KompetensiModel> data = snapshot.data;
+                                  return data.isEmpty
+                                      ? Text(
+                                          'Tidak ada data',
                                           style: mono6TextStyle.copyWith(
                                             fontWeight: semiBold,
                                             color: mono5Color,
                                           ),
-                                        );
-                                      }).toList());
-                              } else {
-                                return Column(
-                                  children: [
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Container(
-                                      width: 180,
-                                      child: LinearProgressIndicator(
-                                        color: Colors.white,
-                                        minHeight: 2,
-                                        backgroundColor: m1Color,
+                                        )
+                                      : Column(
+                                          children: data.map((item) {
+                                          return Text(
+                                            item.bIDANGSTUDI.toString(),
+                                            style: mono6TextStyle.copyWith(
+                                              fontWeight: semiBold,
+                                              color: mono5Color,
+                                            ),
+                                          );
+                                        }).toList());
+                                } else {
+                                  return Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 5,
                                       ),
-                                    ),
-                                  ],
-                                );
-                              }
-                            },
-                          )
-                        : Text(
-                            '$_parameter',
-                            style: mono6TextStyle.copyWith(
-                              fontWeight: semiBold,
-                              fontSize: 18,
+                                      Container(
+                                        width: 180,
+                                        child: LinearProgressIndicator(
+                                          color: Colors.white,
+                                          minHeight: 2,
+                                          backgroundColor: m1Color,
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                }
+                              },
+                            )
+                          : Text(
+                              '$_parameter',
+                              style: mono6TextStyle.copyWith(
+                                fontWeight: semiBold,
+                                fontSize: 18,
+                              ),
                             ),
-                          ),
-                  ],
+                    ],
+                  ),
                 ),
                 Opacity(
                   opacity: 0.15,

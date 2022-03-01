@@ -471,6 +471,7 @@ class _IsiJurnalEkskulPageState extends State<IsiJurnalEkskulPage> {
                   deskripsiMelatihInput.text = '';
                   tanggalMelatih = '';
                   file = null;
+                  selectedDate = null;
                 });
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     backgroundColor: successColor,
