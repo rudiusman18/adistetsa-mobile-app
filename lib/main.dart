@@ -97,6 +97,7 @@ class AdiStetsa extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+        title: "Adistetsa",
         onGenerateRoute: (settings) {
           switch (settings.name) {
             case '/splash-screen-page':
