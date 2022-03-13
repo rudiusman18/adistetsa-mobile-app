@@ -57,6 +57,7 @@ class Services extends ChangeNotifier {
     var role = prefs.getString('role');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
+
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       if (role == 'Guru') {
@@ -818,12 +819,15 @@ class Services extends ChangeNotifier {
     var url = Uri.parse('$baseUrl/sarpras/riwayat_peminjaman_ruangan/$id');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
+    print(response.statusCode);
+    print(response.body);
+
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       RiwayatRuanganModel ruangan = RiwayatRuanganModel.fromJson(data);
       return ruangan;
     } else {
-      throw Exception('Gagal Mendapatkan Ruangan Admin');
+      throw Exception(response.body);
     }
   }
 

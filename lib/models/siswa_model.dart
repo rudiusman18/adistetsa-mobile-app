@@ -1,5 +1,5 @@
 class SiswaModel {
-  String? nIS;
+  int? nIS;
   String? nISN;
   String? nAMA;
   String? nIPD;

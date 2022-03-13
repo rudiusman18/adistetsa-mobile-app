@@ -205,7 +205,7 @@ class _RiwayatPeminjamanPageState extends State<RiwayatPeminjamanPage> {
                               ? warningColor
                               : '$status' == 'Diajukan'
                                   ? infoColor
-                                  : '$status' == 'Sudah Dikembalikan'
+                                  : '$status' == 'Selesai Dipinjam'
                                       ? successColor
                                       : '$status' == 'Tenggat'
                                           ? m1Color
