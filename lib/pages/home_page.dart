@@ -152,9 +152,14 @@ class HomePage extends StatelessWidget {
                 text: 'Perpustakaan',
               ),
             ),
-            ItemCard(
-              urlImg: 'bimbingan konseling',
-              text: 'Bimbingan Konseling',
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/user/bk');
+              },
+              child: ItemCard(
+                urlImg: 'bimbingan konseling',
+                text: 'Bimbingan Konseling',
+              ),
             ),
             GestureDetector(
               onTap: () {
