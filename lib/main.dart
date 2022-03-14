@@ -18,6 +18,7 @@ import 'package:adistetsa/pages/pelatih/jurnal%20ekskul/lihat_jurnal_ekskul_page
 import 'package:adistetsa/pages/pelatih/jurnal%20ekskul/presensi_siswa_ekskul_page.dart';
 import 'package:adistetsa/pages/pelatih/pengajuan%20ekskul/detail_pengajuan_ekskul_page.dart';
 import 'package:adistetsa/pages/pelatih/pengajuan%20ekskul/pengajuan_ekskul_page.dart';
+import 'package:adistetsa/pages/siswa/bk/peminatan%20dan%20lintas%20minat/angket_page.dart';
 import 'package:adistetsa/pages/siswa/kesiswaan/ekstrakurikuler/daftar_ekstrakurikuler_siswa_page.dart';
 import 'package:adistetsa/pages/siswa/kesiswaan/ekstrakurikuler/daftar_pengajuan_ekstrakurikuler_siswa_page.dart';
 import 'package:adistetsa/pages/siswa/kesiswaan/ekstrakurikuler/detail_daftar_ekstrakurikuler_siswa_page.dart';
@@ -41,6 +42,11 @@ import 'package:adistetsa/pages/staff/sarpras/Peminjaman/list_peminjaman_barang_
 import 'package:adistetsa/pages/staff/sarpras/Peminjaman/list_peminjaman_ruang_page.dart';
 import 'package:adistetsa/pages/staff/sarpras/katalog%20barang/list_katalog_barang_page.dart';
 import 'package:adistetsa/pages/staff/sarpras/katalog%20barang/list_katalog_ruang_page.dart';
+import 'package:adistetsa/pages/user/bk/daftar%20konseling/ajukan_konsultasi_page.dart';
+import 'package:adistetsa/pages/user/bk/daftar%20konseling/daftar_konseling_page.dart';
+import 'package:adistetsa/pages/user/bk/list_bk_page.dart';
+import 'package:adistetsa/pages/user/bk/status%20data/detail_status_data_page.dart';
+import 'package:adistetsa/pages/user/bk/status%20data/status_data_page.dart';
 import 'package:adistetsa/pages/user/kesiswaan/pengajuan%20pelanggaran/data_pelanggaran_page.dart';
 import 'package:adistetsa/pages/user/kesiswaan/pengajuan%20pelanggaran/data_siswa_page.dart';
 import 'package:adistetsa/pages/user/kesiswaan/pengajuan%20pelanggaran/input_pelanggaran_page.dart';
@@ -97,6 +103,7 @@ class AdiStetsa extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+        title: "Adistetsa",
         onGenerateRoute: (settings) {
           switch (settings.name) {
             case '/splash-screen-page':
@@ -418,6 +425,36 @@ class AdiStetsa extends StatelessWidget {
             case '/siswa/lihat-ekskul/detail-page':
               return PageTransition(
                 child: DetailLihatEkstrakurikulerSiswaPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/user/bk':
+              return PageTransition(
+                child: ListBkPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/user/bk/daftar-konseling':
+              return PageTransition(
+                child: DaftarKkonselingPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/user/bk/daftar-konseling/ajukan-konsultasi':
+              return PageTransition(
+                child: AjukanKonsultasiPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/user/bk/angket':
+              return PageTransition(
+                child: AngketPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/user/bk/status-data':
+              return PageTransition(
+                child: StatusDataPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/user/bk/status-data/detail':
+              return PageTransition(
+                child: DetailStatusDataPage(),
                 type: PageTransitionType.rightToLeft,
               );
             case '/main-page/back':

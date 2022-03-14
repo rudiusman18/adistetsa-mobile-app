@@ -20,6 +20,7 @@ class AuthService extends ChangeNotifier {
     var response = await http.post(url, headers: headers, body: body);
 
     print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       prefs.setString('token', 'Bearer ' + data['access']);

@@ -6,8 +6,6 @@ import 'package:adistetsa/theme.dart';
 import 'package:provider/provider.dart';
 
 class DetailRiwayatPeminjamanPage extends StatefulWidget {
-  DetailRiwayatPeminjamanPage({Key? key}) : super(key: key);
-
   @override
   State<DetailRiwayatPeminjamanPage> createState() =>
       _DetailRiwayatPeminjamanPageState();
@@ -23,7 +21,6 @@ class _DetailRiwayatPeminjamanPageState
 
     String detailRuangan = provider.detailRuang;
     var index = 0;
-
     PreferredSizeWidget header() {
       return AppBar(
         centerTitle: true,
@@ -80,7 +77,7 @@ class _DetailRiwayatPeminjamanPageState
                       ? warningColor
                       : value == 'Pengajuan' || value == 'Diajukan'
                           ? infoColor
-                          : value == 'Sudah Dikembalikan'
+                          : value == 'Selesai Dipinjam'
                               ? successColor
                               : value == 'Tenggat'
                                   ? m1Color
@@ -156,7 +153,7 @@ class _DetailRiwayatPeminjamanPageState
                   ? '${riwayatRuanganModel.tANGGALBERAKHIR}'
                   : '${riwayatBarangModel.tANGGALPENGEMBALIAN}',
             ),
-            detailRuangan == 'Ruang'
+            detailRuangan == 'Ruang' && riwayatRuanganModel.tANDATANGAN != null
                 ? itemInfoPeminjam(
                     teks: 'File Pengajuan',
                     value: '${riwayatRuanganModel.tANDATANGAN!.split('/')[5]}')
@@ -305,7 +302,7 @@ class _DetailRiwayatPeminjamanPageState
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Barang',
+                              detailRuangan,
                               style: mono6TextStyle.copyWith(
                                 fontSize: 12,
                               ),

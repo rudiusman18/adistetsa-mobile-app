@@ -134,6 +134,24 @@ class Providers with ChangeNotifier {
 
   String idPresensiSiswaEkskul = '';
 
+  String _angket = '';
+  String get angket => _angket;
+
+  // NOTE: Sementara
+  String _status = '';
+  String get status => _status;
+
+  set setStatus(String status) {
+    _status = status;
+    notifyListeners();
+  }
+  // NOTE: End of sementara
+
+  set setAngket(String angket) {
+    _angket = angket;
+    notifyListeners();
+  }
+
   set jadwalMengajarGuru(List<JadwalMengajarGuruModel> jadwalMengajarGuru) {
     _getJadwalMengajarGuru = jadwalMengajarGuru;
     notifyListeners();

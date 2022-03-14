@@ -1,4 +1,3 @@
-import 'package:adistetsa/models/jadwalekskul_model.dart';
 import 'package:adistetsa/models/role_model.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/widget/item_card.dart';
@@ -13,6 +12,7 @@ class HomePage extends StatelessWidget {
     Providers provider = Provider.of<Providers>(context);
     RolesModel rolesModel = provider.role;
     var role = rolesModel.name;
+
     Widget itemsStafPerpustakaan() {
       return Container(
         alignment: Alignment.center,
@@ -152,9 +152,14 @@ class HomePage extends StatelessWidget {
                 text: 'Perpustakaan',
               ),
             ),
-            ItemCard(
-              urlImg: 'bimbingan konseling',
-              text: 'Bimbingan Konseling',
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/user/bk');
+              },
+              child: ItemCard(
+                urlImg: 'bimbingan konseling',
+                text: 'Bimbingan Konseling',
+              ),
             ),
             GestureDetector(
               onTap: () {
@@ -364,7 +369,6 @@ class HomePage extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                
                 Navigator.pushNamed(context, '/pelatih/jadwal-ekskul');
               },
               child: ItemCard(
@@ -420,7 +424,7 @@ class HomePage extends StatelessWidget {
                           fontWeight: regular,
                         ),
                       ),
-                      role == 'Pelatih' ? Container() : ProfileCard(),
+                      ProfileCard(),
                       Text(
                         'Menu',
                         style: mono1TextStyle,

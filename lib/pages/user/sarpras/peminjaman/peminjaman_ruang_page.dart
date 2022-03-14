@@ -1,7 +1,3 @@
-import 'package:adistetsa/models/guru_model.dart';
-import 'package:adistetsa/models/karyawan_model.dart';
-import 'package:adistetsa/models/role_model.dart';
-import 'package:adistetsa/models/siswa_model.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
@@ -114,34 +110,6 @@ class _PeminjamanRuangPageState extends State<PeminjamanRuangPage> {
   @override
   Widget build(BuildContext context) {
     Providers provider = Provider.of<Providers>(context);
-    RolesModel rolesModel = provider.role;
-    GuruModel guruModel = provider.guru;
-    KaryawanModel karyawanModel = provider.karyawan;
-    SiswaModel siswaModel = provider.siswa;
-
-    var role = rolesModel.name;
-    var _nama = role == 'Guru'
-        ? '${guruModel.nAMALENGKAP}'
-        : role == 'Staf Perpustakaan' || role == 'Staf Sarpras'
-            ? '${guruModel.nAMALENGKAP}'
-            : role == 'Karyawan'
-                ? '${karyawanModel.nAMALENGKAP}'
-                : role == 'Siswa'
-                    ? '${siswaModel.nAMA}'
-                    : '';
-    var _noHp = role == 'Guru'
-        ? '${guruModel.hP}'
-        : role == 'Staf Perpustakaan' || role == 'Staf Sarpras'
-            ? '${guruModel.hP}'
-            : role == 'Karyawan'
-                ? '${karyawanModel.hP}'
-                : role == 'Siswa'
-                    ? '${siswaModel.hP}'
-                    : '';
-    setState(() {
-      nameInput.text = _nama;
-      phoneInput.text = _noHp;
-    });
 
     handlePeminjamanRuang() async {
       if (nameInput.text == '' ||
@@ -152,22 +120,22 @@ class _PeminjamanRuangPageState extends State<PeminjamanRuangPage> {
           jamAkhir == '' ||
           keteranganInput.text == '' ||
           file == null ||
-          value1Item == null) {
+          value1Item == null ||
+          provider.ruangChart == null) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             backgroundColor: dangerColor,
             content: Text(
               'Anda belum melengkapi form yang tersedia',
               textAlign: TextAlign.center,
             )));
-      } else if(jamAwal == jamAkhir){
+      } else if (jamAwal == jamAkhir) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             backgroundColor: dangerColor,
             content: Text(
               'Jam awal dan jam berakhir pinjaman tidak bisa sama',
               textAlign: TextAlign.center,
             )));
-      } 
-      else {
+      } else {
         setState(() {
           isLoading = true;
         });
@@ -517,7 +485,6 @@ class _PeminjamanRuangPageState extends State<PeminjamanRuangPage> {
                 ),
               ),
               child: TextFormField(
-                enabled: false,
                 controller: nameInput,
                 decoration: InputDecoration.collapsed(
                   hintText: 'Nama',
@@ -567,7 +534,6 @@ class _PeminjamanRuangPageState extends State<PeminjamanRuangPage> {
                 ),
               ),
               child: TextFormField(
-                enabled: false,
                 controller: phoneInput,
                 keyboardType: TextInputType.phone,
                 decoration: InputDecoration.collapsed(
