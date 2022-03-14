@@ -140,12 +140,12 @@ class Providers with ChangeNotifier {
   // NOTE: Sementara
   String _status = '';
   String get status => _status;
-  // NOTE: End of sementara
 
   set setStatus(String status) {
     _status = status;
     notifyListeners();
   }
+  // NOTE: End of sementara
 
   set setAngket(String angket) {
     _angket = angket;
