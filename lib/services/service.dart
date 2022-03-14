@@ -1344,6 +1344,7 @@ class Services extends ChangeNotifier {
     var url = Uri.parse('$baseUrl/kesiswaan/ekskul_saya');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
+
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body)['results'];
       List<KatalogEkskulModel> katalogEkskul =
