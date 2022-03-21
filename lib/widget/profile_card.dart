@@ -29,10 +29,14 @@ class ProfileCard extends StatelessWidget {
                     ? '${siswaModel.nAMA}'
                     : role == 'Pelatih'
                         ? provider.jadwalEkskul.first.pELATIH
-                        : '';
+                        : role == 'Staf BK'
+                            ? '${guruModel.nAMALENGKAP}'
+                            : '';
     var _noInduk = role == 'Guru'
         ? 'NIP ${guruModel.nIP}'
-        : role == 'Staf Perpustakaan' || role == 'Staf Sarpras'
+        : role == 'Staf Perpustakaan' ||
+                role == 'Staf Sarpras' ||
+                role == 'Staf BK'
             ? 'NIP ${guruModel.nIP}'
             : role == 'Karyawan'
                 ? 'NIP ${karyawanModel.nIP}'
@@ -43,7 +47,9 @@ class ProfileCard extends StatelessWidget {
                         : '';
     var _spesialisParameter = role == 'Guru'
         ? 'Kompetensi'
-        : role == 'Staf Perpustakaan' || role == 'Staf Sarpras'
+        : role == 'Staf Perpustakaan' ||
+                role == 'Staf Sarpras' ||
+                role == 'Staf BK'
             ? 'Bidang'
             : role == 'Karyawan'
                 ? 'Jenis PTK'
@@ -67,7 +73,9 @@ class ProfileCard extends StatelessWidget {
                             .toString()
                             .replaceAll('[', '')
                             .replaceAll(']', '')
-                        : '';
+                        : role == 'Staf BK'
+                            ? 'Bimbingan Konseling'
+                            : '';
     return Container(
       decoration: BoxDecoration(
           color: m2Color,
@@ -110,7 +118,9 @@ class ProfileCard extends StatelessWidget {
                   width: 146.57,
                 ),
                 Text(
-                  role == 'Staf Perpustakaan' || role == 'Staf Sarpras'
+                  role == 'Staf Perpustakaan' ||
+                          role == 'Staf Sarpras' ||
+                          role == 'Staf BK'
                       ? 'Staf'
                       : role == 'Pelatih'
                           ? ''

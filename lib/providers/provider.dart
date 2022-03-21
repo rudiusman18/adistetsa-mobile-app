@@ -141,8 +141,16 @@ class Providers with ChangeNotifier {
   String _status = '';
   String get status => _status;
 
+  String _staffStatus = '';
+  String get staffStatus => _staffStatus;
+
   set setStatus(String status) {
     _status = status;
+    notifyListeners();
+  }
+
+  set setStaffStatus(String staffStatus) {
+    _staffStatus = staffStatus;
     notifyListeners();
   }
   // NOTE: End of sementara

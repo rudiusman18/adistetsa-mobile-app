@@ -66,6 +66,11 @@ class _RolesPageState extends State<RolesPage> {
           await provider.getTahunAjaranFilter();
           Navigator.pushNamedAndRemoveUntil(
               context, '/main-page', (route) => false);
+        } else if (role == 'Staf BK') {
+          await provider.getGuruProfile();
+          currentIndex = -1;
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/main-page', (route) => false);
         }
       }
       setState(() {
@@ -258,7 +263,6 @@ class _RolesPageState extends State<RolesPage> {
                               fontSize: 16,
                             ),
                           ),
-                        
                           FutureBuilder(
                             future: Services().getRoles(),
                             builder:

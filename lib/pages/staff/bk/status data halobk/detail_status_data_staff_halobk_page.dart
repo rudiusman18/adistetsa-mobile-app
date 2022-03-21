@@ -3,16 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:provider/provider.dart';
 
-class DetailStatusDataPage extends StatefulWidget {
+class DetailStatusDataStaffHalobkPage extends StatefulWidget {
   @override
-  _DetailStatusDataPageState createState() => _DetailStatusDataPageState();
+  _DetailStatusDataStaffHalobkPageState createState() =>
+      _DetailStatusDataStaffHalobkPageState();
 }
 
-class _DetailStatusDataPageState extends State<DetailStatusDataPage> {
+class _DetailStatusDataStaffHalobkPageState
+    extends State<DetailStatusDataStaffHalobkPage> {
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     Providers provider = Provider.of(context);
+
+    print(provider.staffStatus);
     PreferredSizeWidget header() {
       return AppBar(
         centerTitle: true,
@@ -106,7 +110,6 @@ class _DetailStatusDataPageState extends State<DetailStatusDataPage> {
     Widget buttonSubmit({required String name}) {
       return Container(
         margin: EdgeInsets.only(
-          top: 60,
           left: 20,
           right: 20,
           bottom: 20,
@@ -119,19 +122,20 @@ class _DetailStatusDataPageState extends State<DetailStatusDataPage> {
                 borderRadius: BorderRadius.circular(8),
               ),
               side: BorderSide(
-                color: m2Color,
+                color: name == 'Setuju' ? successColor : m2Color,
                 width: 2,
               ),
-              backgroundColor: m2Color,
+              backgroundColor: name == 'Setuju'
+                  ? successColor
+                  : name == 'Tolak'
+                      ? mono6Color
+                      : m2Color,
             ),
             onPressed: () {
-              provider.status == 'Diterima'
+              name == 'Lihat Feedback'
                   ? Navigator.pushNamed(
-                      context, '/user/bk/status-data/diterima')
-                  : provider.status == 'Selesai'
-                      ? Navigator.pushNamed(
-                          context, '/user/bk/status-data/selesai')
-                      : Container();
+                      context, '/staff/bk/status-data/detail/feedback')
+                  : Container();
             },
             child: isLoading == false
                 ? Text(
@@ -139,6 +143,7 @@ class _DetailStatusDataPageState extends State<DetailStatusDataPage> {
                     style: mono6TextStyle.copyWith(
                       fontWeight: bold,
                       fontSize: 16,
+                      color: name == 'Tolak' ? m2Color : mono6Color,
                     ),
                   )
                 : Container(
@@ -158,7 +163,7 @@ class _DetailStatusDataPageState extends State<DetailStatusDataPage> {
       body: Column(
         children: [
           profile(
-            name: 'Adam Anjing',
+            name: 'Syauqi Anak Babi',
             role: 'Pengacara (Pengangguran Banyak Acara)',
           ),
           Expanded(
@@ -194,15 +199,21 @@ class _DetailStatusDataPageState extends State<DetailStatusDataPage> {
                 ),
                 item(
                   name: 'Status Pengajuan',
-                  value: '${provider.status}',
+                  value: '${provider.staffStatus}',
                 ),
-                provider.status == 'Diajukan'
-                    ? buttonSubmit(name: 'Batalkan')
-                    : provider.status == 'Diterima'
-                        ? buttonSubmit(name: 'Konsultasi HaloBk')
-                        : provider.status == 'Selesai'
-                            ? buttonSubmit(name: 'Berikan Feedback')
+                SizedBox(
+                  height: 60,
+                ),
+                provider.staffStatus == 'Diajukan'
+                    ? buttonSubmit(name: 'Setuju')
+                    : provider.staffStatus == 'Dijadwalkan'
+                        ? buttonSubmit(name: 'Selesai Konsultasi')
+                        : provider.staffStatus == 'Selesai'
+                            ? buttonSubmit(name: 'Lihat Feedback')
                             : Container(),
+                provider.staffStatus == 'Diajukan'
+                    ? buttonSubmit(name: 'Tolak')
+                    : Container(),
               ],
             ),
           )

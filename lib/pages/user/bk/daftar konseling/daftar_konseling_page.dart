@@ -103,13 +103,15 @@ class _DaftarKkonselingPageState extends State<DaftarKkonselingPage> {
         padding: const EdgeInsets.only(top: 20),
         child: GestureDetector(
           onTap: () {
-            Navigator.pushNamed(
-                context, '/user/bk/daftar-konseling/ajukan-konsultasi');
+            status == 'Online'
+                ? Navigator.pushNamed(
+                    context, '/user/bk/daftar-konseling/ajukan-konsultasi')
+                : Container();
           },
           child: Column(
             children: [
               Container(
-                color: mono6Color,
+                color: status == 'Online' ? mono6Color : mono4Color,
                 margin: EdgeInsets.only(
                   bottom: 20,
                   left: 20,

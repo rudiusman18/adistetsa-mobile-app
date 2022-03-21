@@ -75,6 +75,9 @@ class Services extends ChangeNotifier {
       } else if (role == 'Siswa') {
         SiswaModel siswaModel = SiswaModel.fromJson(data);
         return siswaModel;
+      } else if (role == 'Staf BK') {
+        GuruModel stafBK = GuruModel.fromJson(data);
+        return stafBK;
       } else {
         throw Exception('Gagal Mendapatkan Data');
       }

@@ -30,6 +30,14 @@ import 'package:adistetsa/pages/siswa/kesiswaan/proyek%20kebaikan/input_proyek_k
 import 'package:adistetsa/pages/siswa/kesiswaan/riwayat/riwayat_pelanggaran_page.dart';
 import 'package:adistetsa/pages/siswa/kesiswaan/riwayat/riwayat_proyek_kebaikan_page.dart';
 import 'package:adistetsa/pages/siswa/list_kesiswaan_page.dart';
+import 'package:adistetsa/pages/staff/bk/alumni/detail_staff_bk_daftar_alumni_page.dart';
+import 'package:adistetsa/pages/staff/bk/alumni/staff_bk_daftar_alumni_page.dart';
+import 'package:adistetsa/pages/staff/bk/alumni/staff_bk_edit_daftar_alumni_page.dart';
+import 'package:adistetsa/pages/staff/bk/konsultasi%20halobk/edit_layanan_bk_page.dart';
+import 'package:adistetsa/pages/staff/bk/konsultasi%20halobk/layanan_bk_page.dart';
+import 'package:adistetsa/pages/staff/bk/status%20data%20halobk/detail_status_data_staff_halobk_page.dart';
+import 'package:adistetsa/pages/staff/bk/status%20data%20halobk/feedback/staff_feedback_page.dart';
+import 'package:adistetsa/pages/staff/bk/status%20data%20halobk/status_data_staff_halobk_page.dart';
 import 'package:adistetsa/pages/staff/perpustakaan/katalog%20buku/detail_katalog_buku_page.dart';
 import 'package:adistetsa/pages/staff/perpustakaan/katalog%20buku/katalog_buku_page.dart';
 import 'package:adistetsa/pages/staff/perpustakaan/peminjaman%20buku/detail_peminjaman_buku_page.dart';
@@ -46,6 +54,8 @@ import 'package:adistetsa/pages/user/bk/daftar%20konseling/ajukan_konsultasi_pag
 import 'package:adistetsa/pages/user/bk/daftar%20konseling/daftar_konseling_page.dart';
 import 'package:adistetsa/pages/user/bk/list_bk_page.dart';
 import 'package:adistetsa/pages/user/bk/status%20data/detail_status_data_page.dart';
+import 'package:adistetsa/pages/user/bk/status%20data/diterima/konsultasi_diterima_page.dart';
+import 'package:adistetsa/pages/user/bk/status%20data/selesai/konsultasi_selesai_page.dart';
 import 'package:adistetsa/pages/user/bk/status%20data/status_data_page.dart';
 import 'package:adistetsa/pages/user/kesiswaan/pengajuan%20pelanggaran/data_pelanggaran_page.dart';
 import 'package:adistetsa/pages/user/kesiswaan/pengajuan%20pelanggaran/data_siswa_page.dart';
@@ -455,6 +465,56 @@ class AdiStetsa extends StatelessWidget {
             case '/user/bk/status-data/detail':
               return PageTransition(
                 child: DetailStatusDataPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/user/bk/status-data/diterima':
+              return PageTransition(
+                child: KonsultasiDiterimaPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/user/bk/status-data/selesai':
+              return PageTransition(
+                child: KonsultasiSelesaiPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/staff/bk/halobk':
+              return PageTransition(
+                child: LayananBkPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/staff/bk/halobk/edit':
+              return PageTransition(
+                child: EditLayananBkPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/staff/bk/status-data':
+              return PageTransition(
+                child: StatusDataStaffHalobkPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/staff/bk/status-data/detail':
+              return PageTransition(
+                child: DetailStatusDataStaffHalobkPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/staff/bk/status-data/detail/feedback':
+              return PageTransition(
+                child: StaffFeedbackPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/staff/bk/alumni':
+              return PageTransition(
+                child: StaffBkDaftarAlumniPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/staff/bk/alumni/detail':
+              return PageTransition(
+                child: DetailStaffBkDaftarAlumniPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/staff/bk/alumni/detail/edit':
+              return PageTransition(
+                child: StaffBkEditDaftarAlumniPage(),
                 type: PageTransitionType.rightToLeft,
               );
             case '/main-page/back':

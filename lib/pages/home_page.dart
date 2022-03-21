@@ -13,6 +13,60 @@ class HomePage extends StatelessWidget {
     RolesModel rolesModel = provider.role;
     var role = rolesModel.name;
 
+    Widget itemsStafBK() {
+      return Container(
+        alignment: Alignment.center,
+        child: Wrap(
+          spacing: 25,
+          children: [
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/staff/bk/halobk');
+              },
+              child: ItemCard(
+                urlImg: 'halobk',
+                text: 'HaloBK',
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/staff/bk/status-data');
+              },
+              child: ItemCard(
+                urlImg: 'status data halobk',
+                text: 'Status Data HaloBK',
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/staff/bk/alumni');
+              },
+              child: ItemCard(
+                urlImg: 'alumni',
+                text: 'Alumni',
+              ),
+            ),
+            ItemCard(
+              urlImg: 'snmptn',
+              text: 'SNMPTN',
+            ),
+            ItemCard(
+              urlImg: 'angket lintas minat',
+              text: 'Angket Lintas Minat',
+            ),
+            ItemCard(
+              urlImg: 'angket data siswa',
+              text: 'Angket Data Siswa',
+            ),
+            ItemCard(
+              urlImg: 'angket peminatan',
+              text: 'Angket Peminatan',
+            ),
+          ],
+        ),
+      );
+    }
+
     Widget itemsStafPerpustakaan() {
       return Container(
         alignment: Alignment.center,
@@ -75,10 +129,15 @@ class HomePage extends StatelessWidget {
         child: Wrap(
           spacing: 25,
           children: [
-            // ItemCard(
-            //   urlImg: 'bimbingan konseling',
-            //   text: 'Bimbingan Konseling',
-            // ),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/user/bk');
+              },
+              child: ItemCard(
+                urlImg: 'bimbingan konseling',
+                text: 'Bimbingan Konseling',
+              ),
+            ),
             GestureDetector(
               onTap: () {
                 Navigator.pushNamed(
@@ -449,7 +508,9 @@ class HomePage extends StatelessWidget {
                                       ? itemsStafSarpras()
                                       : role == 'Pelatih'
                                           ? itemsPelatih()
-                                          : SizedBox(),
+                                          : role == 'Staf BK'
+                                              ? itemsStafBK()
+                                              : SizedBox(),
                 ),
               ],
             ),
