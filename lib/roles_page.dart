@@ -71,6 +71,11 @@ class _RolesPageState extends State<RolesPage> {
           currentIndex = -1;
           Navigator.pushNamedAndRemoveUntil(
               context, '/main-page', (route) => false);
+        } else if (role == 'Staf Humas') {
+          await provider.getGuruProfile();
+          currentIndex = -1;
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/main-page', (route) => false);
         }
       }
       setState(() {

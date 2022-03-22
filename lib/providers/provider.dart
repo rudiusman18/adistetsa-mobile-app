@@ -155,6 +155,39 @@ class Providers with ChangeNotifier {
   }
   // NOTE: End of sementara
 
+  //NOTE: Digunakan untuk mendapatkan angket pada role staff BK
+  String _angketPilihanStaffBk = '';
+  String get angketPilihanStaffBk => _angketPilihanStaffBk;
+  set setAngketPilihanStaffBk(String angketPilihanStaffBk) {
+    _angketPilihanStaffBk = angketPilihanStaffBk;
+  }
+  //NOTE: END
+
+  // NOTE: Digunakan untuk mendapatkan jenis PTK yang akan melakukan input
+  String _namaPTK = '';
+  String get namaPTK => _namaPTK;
+  set setNamaPTK(String namaPTK) {
+    _namaPTK = namaPTK;
+    notifyListeners();
+  }
+  // NOTE: END
+
+  // NOTE: digunakan untuk mendapatkan role pada fitur riwayat log UKS
+  String _roleRiwayatLogUks = '';
+  String get roleRiwayatLogUks => _roleRiwayatLogUks;
+  set setRoleRiwayatLogUks(String roleRwayatLogUks) {
+    _roleRiwayatLogUks = roleRwayatLogUks;
+  }
+  // NOTE: END
+
+// NOTE: digunakan untuk mendapatkan menu fitur pada fitur Humas
+  String _fiturHumas = '';
+  String get fiturHumas => _fiturHumas;
+  set setFiturHumas(String fiturHumas) {
+    _fiturHumas = fiturHumas;
+  }
+// NOTE: END
+
   set setAngket(String angket) {
     _angket = angket;
     notifyListeners();

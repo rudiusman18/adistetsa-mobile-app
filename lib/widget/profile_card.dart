@@ -31,12 +31,15 @@ class ProfileCard extends StatelessWidget {
                         ? provider.jadwalEkskul.first.pELATIH
                         : role == 'Staf BK'
                             ? '${guruModel.nAMALENGKAP}'
-                            : '';
+                            : role == 'Staf Humas'
+                                ? '${guruModel.nAMALENGKAP}'
+                                : '';
     var _noInduk = role == 'Guru'
         ? 'NIP ${guruModel.nIP}'
         : role == 'Staf Perpustakaan' ||
                 role == 'Staf Sarpras' ||
-                role == 'Staf BK'
+                role == 'Staf BK' ||
+                role == 'Staf Humas'
             ? 'NIP ${guruModel.nIP}'
             : role == 'Karyawan'
                 ? 'NIP ${karyawanModel.nIP}'
@@ -49,7 +52,8 @@ class ProfileCard extends StatelessWidget {
         ? 'Kompetensi'
         : role == 'Staf Perpustakaan' ||
                 role == 'Staf Sarpras' ||
-                role == 'Staf BK'
+                role == 'Staf BK' ||
+                role == 'Staf Humas'
             ? 'Bidang'
             : role == 'Karyawan'
                 ? 'Jenis PTK'
@@ -75,7 +79,9 @@ class ProfileCard extends StatelessWidget {
                             .replaceAll(']', '')
                         : role == 'Staf BK'
                             ? 'Bimbingan Konseling'
-                            : '';
+                            : role == 'Staf Humas'
+                                ? 'Hubungan Masyarakat'
+                                : '';
     return Container(
       decoration: BoxDecoration(
           color: m2Color,
@@ -120,7 +126,8 @@ class ProfileCard extends StatelessWidget {
                 Text(
                   role == 'Staf Perpustakaan' ||
                           role == 'Staf Sarpras' ||
-                          role == 'Staf BK'
+                          role == 'Staf BK' ||
+                          role == 'Staf Humas'
                       ? 'Staf'
                       : role == 'Pelatih'
                           ? ''

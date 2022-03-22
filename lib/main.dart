@@ -35,9 +35,18 @@ import 'package:adistetsa/pages/staff/bk/alumni/staff_bk_daftar_alumni_page.dart
 import 'package:adistetsa/pages/staff/bk/alumni/staff_bk_edit_daftar_alumni_page.dart';
 import 'package:adistetsa/pages/staff/bk/konsultasi%20halobk/edit_layanan_bk_page.dart';
 import 'package:adistetsa/pages/staff/bk/konsultasi%20halobk/layanan_bk_page.dart';
+import 'package:adistetsa/pages/staff/bk/lintasminat/staff_bk_angket_page.dart';
+import 'package:adistetsa/pages/staff/bk/snmptn/staff_bk_nilai_siswa_page.dart';
 import 'package:adistetsa/pages/staff/bk/status%20data%20halobk/detail_status_data_staff_halobk_page.dart';
 import 'package:adistetsa/pages/staff/bk/status%20data%20halobk/feedback/staff_feedback_page.dart';
 import 'package:adistetsa/pages/staff/bk/status%20data%20halobk/status_data_staff_halobk_page.dart';
+import 'package:adistetsa/pages/staff/humas/buku%20tamu/detail_riwayat_buku_tamu_page.dart';
+import 'package:adistetsa/pages/staff/humas/buku%20tamu/riwayat_buku_tamu_page.dart';
+import 'package:adistetsa/pages/staff/humas/log%20uks/detail_riwayat_log_uks_page.dart';
+import 'package:adistetsa/pages/staff/humas/log%20uks/input_data_uks_page.dart';
+import 'package:adistetsa/pages/staff/humas/log%20uks/pilih_ptk_page.dart';
+import 'package:adistetsa/pages/staff/humas/log%20uks/riwayat_log_uks_page.dart';
+import 'package:adistetsa/pages/staff/humas/menu_humas_page.dart';
 import 'package:adistetsa/pages/staff/perpustakaan/katalog%20buku/detail_katalog_buku_page.dart';
 import 'package:adistetsa/pages/staff/perpustakaan/katalog%20buku/katalog_buku_page.dart';
 import 'package:adistetsa/pages/staff/perpustakaan/peminjaman%20buku/detail_peminjaman_buku_page.dart';
@@ -515,6 +524,56 @@ class AdiStetsa extends StatelessWidget {
             case '/staff/bk/alumni/detail/edit':
               return PageTransition(
                 child: StaffBkEditDaftarAlumniPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/staff/bk/snmptn':
+              return PageTransition(
+                child: StaffBkNilaiSiswaPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/staff/bk/lintasminat':
+              return PageTransition(
+                child: StaffBkAngketPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/staff/humas/':
+              return PageTransition(
+                child: MenuHumasPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/staff/humas/loguks/pilihPTK':
+              return PageTransition(
+                child: PilihPTKPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/staff/humas/loguks/input-data':
+              return PageTransition(
+                child: InputDataUKSPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/staff/humas/loguks/riwayat-data':
+              return PageTransition(
+                child: RiwayatLogUKSPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/staff/humas/loguks/riwayat-data/detail':
+              return PageTransition(
+                child: DetailRiwayatLogUKSPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/staff/buku-tamu/input-data':
+              return PageTransition(
+                child: InputDataUKSPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/staff/buku-tamu/riwayat':
+              return PageTransition(
+                child: RiwayatBukuTamuPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/staff/buku-tamu/riwayat/detail':
+              return PageTransition(
+                child: DetailRiwayatBukuTamuPage(),
                 type: PageTransitionType.rightToLeft,
               );
             case '/main-page/back':

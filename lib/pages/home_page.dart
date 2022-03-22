@@ -13,6 +13,37 @@ class HomePage extends StatelessWidget {
     RolesModel rolesModel = provider.role;
     var role = rolesModel.name;
 
+    Widget itemsStafHumas() {
+      return Container(
+        margin: EdgeInsets.only(left: 20),
+        child: Wrap(
+          spacing: 25,
+          children: [
+            GestureDetector(
+              onTap: () {
+                provider.setFiturHumas = 'Log UKS';
+                Navigator.pushNamed(context, '/staff/humas/');
+              },
+              child: ItemCard(
+                urlImg: 'log uks',
+                text: 'Log UKS',
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                provider.setFiturHumas = 'Buku Tamu';
+                Navigator.pushNamed(context, '/staff/humas/');
+              },
+              child: ItemCard(
+                urlImg: 'buku tamu',
+                text: 'Buku Tamu',
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     Widget itemsStafBK() {
       return Container(
         alignment: Alignment.center,
@@ -46,21 +77,44 @@ class HomePage extends StatelessWidget {
                 text: 'Alumni',
               ),
             ),
-            ItemCard(
-              urlImg: 'snmptn',
-              text: 'SNMPTN',
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/staff/bk/snmptn');
+              },
+              child: ItemCard(
+                urlImg: 'snmptn',
+                text: 'SNMPTN',
+              ),
             ),
-            ItemCard(
-              urlImg: 'angket lintas minat',
-              text: 'Angket Lintas Minat',
+            GestureDetector(
+              onTap: () {
+                provider.setAngketPilihanStaffBk = 'Lintas Minat';
+                Navigator.pushNamed(context, '/staff/bk/lintasminat');
+              },
+              child: ItemCard(
+                urlImg: 'angket lintas minat',
+                text: 'Angket Lintas Minat',
+              ),
             ),
-            ItemCard(
-              urlImg: 'angket data siswa',
-              text: 'Angket Data Siswa',
+            GestureDetector(
+              onTap: () {
+                provider.setAngketPilihanStaffBk = 'Data Siswa';
+                Navigator.pushNamed(context, '/staff/bk/lintasminat');
+              },
+              child: ItemCard(
+                urlImg: 'angket data siswa',
+                text: 'Angket Data Siswa',
+              ),
             ),
-            ItemCard(
-              urlImg: 'angket peminatan',
-              text: 'Angket Peminatan',
+            GestureDetector(
+              onTap: () {
+                provider.setAngketPilihanStaffBk = 'Peminatan';
+                Navigator.pushNamed(context, '/staff/bk/lintasminat');
+              },
+              child: ItemCard(
+                urlImg: 'angket peminatan',
+                text: 'Angket Peminatan',
+              ),
             ),
           ],
         ),
@@ -510,7 +564,9 @@ class HomePage extends StatelessWidget {
                                           ? itemsPelatih()
                                           : role == 'Staf BK'
                                               ? itemsStafBK()
-                                              : SizedBox(),
+                                              : role == 'Staf Humas'
+                                                  ? itemsStafHumas()
+                                                  : SizedBox(),
                 ),
               ],
             ),
