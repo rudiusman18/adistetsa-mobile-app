@@ -34,6 +34,7 @@ import 'package:http/http.dart' as http;
 class Services extends ChangeNotifier {
   String baseUrl = 'https://adistetsa.pythonanywhere.com';
 
+  //NOTE: Mendapatkan Role User
   getRoles() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var url = Uri.parse('$baseUrl/daftar_role');
@@ -50,6 +51,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan Profile User
   getProfile() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var url = Uri.parse('$baseUrl/profile');
@@ -87,6 +89,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan Kompetensi Guru
   getKompetensiGuru() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var url = Uri.parse('$baseUrl/data_guru_kompetensi');
@@ -99,10 +102,11 @@ class Services extends ChangeNotifier {
           data.map((item) => KompetensiModel.fromJson(item)).toList();
       return roles;
     } else {
-      throw Exception('Gagal Login');
+      throw Exception('Gagal Mendapatkan Kompetensi Guru');
     }
   }
 
+  //NOTE: Mendapatkan Katalog Buku
   getKatalogBuku({String? search}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var url = Uri.parse('$baseUrl/perpustakaan/katalog_buku?$search');
@@ -119,6 +123,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan detail setiap katalog buku
   getDetailKatalogBuku({String? register}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var url = Uri.parse('$baseUrl/perpustakaan/katalog_buku/$register');
@@ -131,10 +136,11 @@ class Services extends ChangeNotifier {
       KatalogBukuModel detailKatalogBukuModel = KatalogBukuModel.fromJson(data);
       return detailKatalogBukuModel;
     } else {
-      throw Exception('Gagal Mendapatkan Katalog Buku');
+      throw Exception('Gagal Mendapatkan Detail Katalog Buku');
     }
   }
-
+  
+  //NOTE: Mendapatkan list buku
   getListBuku({String? search}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var url = Uri.parse('$baseUrl/perpustakaan/katalog_buku_tersedia?$search');
@@ -151,6 +157,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan pengajuan peminjaman sesuai role
   getPengajuanPeminjaman({String? search}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -171,10 +178,11 @@ class Services extends ChangeNotifier {
           data.map((item) => PengajuanPeminjamanModel.fromJson(item)).toList();
       return pengajuaPeminjaman;
     } else {
-      throw Exception('Gagal Mendapatkan list Buku');
+      throw Exception('Gagal Mendapatkan list Pengajuan Peminjaman');
     }
   }
 
+  //NOTE: Mendapatkan detail setiap pengajuan peminjaman sesuai role
   getDetailPengajuanPeminjaman({String? id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -201,10 +209,11 @@ class Services extends ChangeNotifier {
           PengajuanPeminjamanModel.fromJson(data);
       return pengajuanPeminjamanModel;
     } else {
-      throw Exception('Gagal Mendapatkan Katalog Buku');
+      throw Exception('Gagal Mendapatkan Detail Pengajuan Peminjaman');
     }
   }
 
+  //NOTE: Mendapatkan pengajuan peminjaman siswa untuk admin/staf perpustakaan
   getPengajuanPeminjamanSiswaAdmin({String? search}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -218,10 +227,11 @@ class Services extends ChangeNotifier {
           data.map((item) => PengajuanPeminjamanModel.fromJson(item)).toList();
       return pengajuaPeminjaman;
     } else {
-      throw Exception('Gagal Mendapatkan list Buku');
+      throw Exception('Gagal Mendapatkan Pengajuan Peminjaman Siswa');
     }
   }
 
+  //NOTE: Mendapatkan pengajuan peminjaman guru untuk admin/staf perpustakaan
   getPengajuanPeminjamanGuruAdmin({String? search}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -236,10 +246,11 @@ class Services extends ChangeNotifier {
 
       return pengajuaPeminjaman;
     } else {
-      throw Exception('Gagal Mendapatkan list Buku');
+      throw Exception('Gagal Mendapatkan Pengajuan Peminjaman Guru');
     }
   }
 
+  //NOTE: Mendapatkan riwayat pinjaman sesuai dengan role
   getRiwayatPeminjaman({String? search}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -258,10 +269,11 @@ class Services extends ChangeNotifier {
           data.map((item) => RiwayatPeminjamanModel.fromJson(item)).toList();
       return riwayatPeminjam;
     } else {
-      throw Exception('Gagal Mendapatkan list Buku');
+      throw Exception('Gagal Mendapatkan Riwayat Peminjaman');
     }
   }
 
+  //NOTE: Menggabungkan 2 tipe list yang berdeba agar dapat dipanggil menjadi 1 (Concate)
   Future<List<RiwayatPeminjamanModel>> getRiwayatPeminjamanSiswaAdmin(
       {String? search}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -280,6 +292,7 @@ class Services extends ChangeNotifier {
     ];
   }
 
+  //NOTE: Memanggil 2 list yang sudah digabung untuk Future Builder
   List<RiwayatPeminjamanModel> _getRiwayat(http.Response response) {
     return [
       if (response.statusCode == 200)
@@ -288,6 +301,7 @@ class Services extends ChangeNotifier {
     ];
   }
 
+  //NOTE: Mendapatkan detail riwayat peminjam per user
   getDetailRiwayatPeminjam({String? id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -310,6 +324,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: User Melakukan pengajuan peminjaman buku
   setPengajuanBuku(
       {required List<String> buku,
       required String tanggalPengajuan,
@@ -356,6 +371,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Admin menerima pengajuan peminjaman
   terimaPengajuanPerpustakaan(
       {required String id, required String user}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -378,6 +394,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Admin menolak pengajuan peminjaman
   tolakPengajuanPerpustakaan({required String id, required String user}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -399,6 +416,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan riwayat peminjaman untuk admin
   getDetailRiwayatPeminjamanAdmin(
       {String? nis, String? dataGuru, String? id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -422,13 +440,13 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan data siswa pada kesiswaan
   getDataSiswaKesiswaan() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
     var url = Uri.parse('$baseUrl/kesiswaan/daftar_siswa');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
-    print(response.body);
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body)['results'];
       List<SiswaModel> dataSiswaKesiswaan =
@@ -439,23 +457,24 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan list data pelanggaran
   getJenisPelanggaran() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
     var url = Uri.parse('$baseUrl/kesiswaan/data_pelanggaran');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
-    print(response.body);
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body)['results'];
       List<JenisPelanggaranModel> jenisPelanggaranModel =
           data.map((item) => JenisPelanggaranModel.fromJson(item)).toList();
       return jenisPelanggaranModel;
     } else {
-      throw Exception('Gagal Mendapatkan Data Siswa');
+      throw Exception('Gagal Mendapatkan List Jenis Pelanggaran');
     }
   }
 
+  //NOTE: Melakukan laporan pelanggaran
   laporanPelanggaran(
       {required String dataSiswa,
       required String jenisPelanggaran,
@@ -488,6 +507,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan list jenis program kebaikan
   getJenisProgramKebaikan() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -502,6 +522,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mengirimkan program kebaikan
   programKebaikan({required String jenisProgramKebaikan, filepath}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -530,6 +551,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan list pelanggaran diri sendiri
   getPelanggaran() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -546,6 +568,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan list laporan program kebaikan
   getLaporaKebaikan() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -562,6 +585,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan list katalog barang
   getKatalogBarang() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -578,6 +602,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan list katalog ruangan
   getKatalogRuangan() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -594,6 +619,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan list pengajuan peminjaman ruangan untuk admin/staf
   getRuanganAdmin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -610,6 +636,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan detail pengajuan peminjaman ruangan untuk admin/staf
   getDetailRuanganAdmin({required String id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -622,10 +649,11 @@ class Services extends ChangeNotifier {
       PeminjamRuanganModel ruangan = PeminjamRuanganModel.fromJson(data);
       return ruangan;
     } else {
-      throw Exception('Gagal Mendapatkan Ruangan Admin');
+      throw Exception('Gagal Mendapatkan Detail Ruangan Admin');
     }
   }
 
+  //NOTE: Menerima pengajuan ruangan 
   terimaPengajuanRuanganSarpas({required String id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -642,6 +670,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Menolak pengajuan ruangan
   tolakPengajuanRuanganSarpas({required String id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -658,6 +687,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan list pengajuan peminjaman barang untuk admin/staf
   getBarangAdmin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -674,6 +704,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan detail pengajuan peminjaman barang untuk admin/staf
   getDetailBarangAdmin({required String id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -686,10 +717,11 @@ class Services extends ChangeNotifier {
       PeminjamBarangModel ruangan = PeminjamBarangModel.fromJson(data);
       return ruangan;
     } else {
-      throw Exception('Gagal Mendapatkan Barang Admin');
+      throw Exception('Gagal Mendapatkan Detail Barang Admin');
     }
   }
 
+  //NOTE: Menerima pengajuan barang 
   terimaPengajuanBarangSarpas({required String id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -705,6 +737,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Menolak pengajuan barang
   tolakPengajuanBarangSarpas({required String id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -721,6 +754,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Melakukan pengajuan peminjaman barang
   pengajuanPeminjamanBarang(
       {required String nama,
       required String noTelp,
@@ -759,6 +793,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Melakukan pengajuan peminjaman ruangan
   pengajuanPeminjamanRuang(
       {required String nama,
       required String noTelp,
@@ -803,6 +838,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan riwayat pengajuan peminjaman ruangan
   getRiwayatRuangan() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -819,6 +855,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan detail riwayat pengajuan peminjaman ruangan
   getDetailRiwayatRuangan({required String id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -837,6 +874,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan riwayat pengajuan peminjaman barang
   getRiwayatBarang() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -853,6 +891,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan detail riwayat pengajuan peminjaman barang
   getDetailRiwayatBarang({required String id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -870,6 +909,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan pengajuan peminjaman barang
   getPeminjamanBarang() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -882,10 +922,11 @@ class Services extends ChangeNotifier {
           data.map((item) => PeminjamBarangModel.fromJson(item)).toList();
       return barang;
     } else {
-      throw Exception('Gagal Mendapatkan Barang Admin');
+      throw Exception('Gagal Mendapatkan Barang');
     }
   }
 
+  //NOTE: Mendapatkan detail pengajuan peminjaman barang
   getDetailPeminjamanBarang({required String id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -897,10 +938,11 @@ class Services extends ChangeNotifier {
       PeminjamBarangModel ruangan = PeminjamBarangModel.fromJson(data);
       return ruangan;
     } else {
-      throw Exception('Gagal Mendapatkan Barang Admin');
+      throw Exception('Gagal Mendapatkan Detail Barang');
     }
   }
 
+  //NOTE: Mendapatkan pengajuan peminjaman ruangan
   getPeminjamanRuangan() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -913,10 +955,11 @@ class Services extends ChangeNotifier {
           data.map((item) => PeminjamRuanganModel.fromJson(item)).toList();
       return barang;
     } else {
-      throw Exception('Gagal Mendapatkan Barang Admin');
+      throw Exception('Gagal Mendapatkan Ruangan');
     }
   }
 
+  //NOTE: Mendapatkan detail pengajuan peminjaman ruangan
   getDetailPeminjamanRuangan({required String id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -930,10 +973,11 @@ class Services extends ChangeNotifier {
       PeminjamRuanganModel ruangan = PeminjamRuanganModel.fromJson(data);
       return ruangan;
     } else {
-      throw Exception('Gagal Mendapatkan Barang Admin');
+      throw Exception('Gagal Mendapatkan Detail Ruangan');
     }
   }
 
+  //NOTE: Mendapatkan jadwal mengajar guru
   getJadwalMengajarGuru(
       {String? search, String? filterTahunAjaran, String? filterKelas}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -952,6 +996,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan jurnal belajar dan mengajar guru
   getJurnalBelajarMengajarGuru(
       {String? search, String? filterTahunAjaran, String? filterHari}) async {
     print(filterTahunAjaran);
@@ -973,6 +1018,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan detail jurnal belajar dan mengajar guru
   getDetailJurnalMengajarGuru({required String id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -990,6 +1036,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Melakukan pengisian jurnal belajar dan mengajar guru
   isiJurnal(
       {required String id,
       required String pertemuan,
@@ -1017,6 +1064,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan data siswa sesuai presensi
   getPresensiSiswa({String? id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -1033,6 +1081,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan detail data siswa sesuai presensi
   getDetailPresensiSiswa({String? id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -1048,6 +1097,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Melakukan presensi siswa
   presensiSiswa(
       {required String id,
       required String keterangan,
@@ -1066,6 +1116,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan list tahun ajaran filter
   getTahunAjaranFilter() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -1080,6 +1131,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan pengajuan ekskul
   getPengajuanEkskul() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -1096,6 +1148,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan detail pengajuan ekskul
   getDetailPengajuanEkskul({required String id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -1112,6 +1165,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Menerima pengajuan ekskul
   terimaPengajuanEkskul({required String id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -1125,6 +1179,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Menolak pengajuan ekskul
   tolakPengajuanEkskul({required String id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -1138,6 +1193,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan jadwal ekskul
   getJadwalEkskul({String filter = ''}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -1154,6 +1210,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan daftar anggota ekskul
   getDaftarAnggotaEkskul({required String id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -1170,6 +1227,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan detail setiap anggota ekskul
   getDetailAnggotaEkskul({required String id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -1186,6 +1244,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Menerima daftar anggota ekskul
   terimaDaftarAnggota({required String id, required String status}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -1200,6 +1259,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan jurnal pertemuan ekskul
   getJurnalEkskulPertemuan({required String id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -1217,6 +1277,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan daftar siswa sesuai dengan presensi ekskul
   getPresensiSiswaEkskul({String? id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -1233,6 +1294,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan detail setiap siswa sesuai dengan presensi ekskul
   getDetailPresensiSiswaEkskul({String? id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -1248,6 +1310,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Melakukan presesnsi siswa ekskul
   presensiSiswaEkskul(
       {required String id,
       required String keterangan,
@@ -1268,6 +1331,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Melakukan pengisian jurnal ekskul
   isiJurnalEkskul(
       {required String id,
       required String pertemuan,
@@ -1297,6 +1361,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan katalog ekskul
   getKatalogEkskul() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -1313,6 +1378,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan detail katalog ekskul
   getDetailKatalogEkskul({required String id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -1328,6 +1394,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Melakukan daftar ekstrakurikuler
   daftarEkstrakurikuler(
       {required String id, required String tanggalPengajuan}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -1344,6 +1411,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Mendapatkan ekskul masing-masing user
   getEkskulSaya() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
