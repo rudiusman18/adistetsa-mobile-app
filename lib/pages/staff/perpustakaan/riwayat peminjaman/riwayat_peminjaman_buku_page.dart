@@ -23,6 +23,7 @@ class _RiwayatPeminjamanBukuPageState extends State<RiwayatPeminjamanBukuPage> {
 
   bool flag1 = false;
   bool flag2 = false;
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -114,6 +115,12 @@ class _RiwayatPeminjamanBukuPageState extends State<RiwayatPeminjamanBukuPage> {
                 searchController.text = newValue.toString();
               }
               print(searchController.text);
+              isLoading = true;
+            });
+            await Services().getRiwayatPeminjamanSiswaAdmin(
+                search: 'search=${searchController.text}');
+            setState(() {
+              isLoading = false;
             });
           },
         ),
@@ -254,87 +261,97 @@ class _RiwayatPeminjamanBukuPageState extends State<RiwayatPeminjamanBukuPage> {
                 children: [
                   Container(
                     padding: EdgeInsets.only(top: 17),
-                    child: FutureBuilder(
-                      future: Services().getRiwayatPeminjamanSiswaAdmin(),
-                      builder: (BuildContext context, AsyncSnapshot snapshot) {
-                        if (snapshot.hasData) {
-                          List<RiwayatPeminjamanModel> data = snapshot.data;
-                          return data.isEmpty
-                              ? Center(
-                                  child: Text(
-                                    'Data tidak ditemukan',
-                                    style: mono1TextStyle,
+                    child: isLoading == true
+                        ? Container()
+                        : FutureBuilder(
+                            future: Services().getRiwayatPeminjamanSiswaAdmin(
+                                search: 'search=${searchController.text}'),
+                            builder:
+                                (BuildContext context, AsyncSnapshot snapshot) {
+                              if (snapshot.hasData) {
+                                List<RiwayatPeminjamanModel> data =
+                                    snapshot.data;
+                                return data.isEmpty
+                                    ? Center(
+                                        child: Text(
+                                          'Data tidak ditemukan',
+                                          style: mono1TextStyle,
+                                        ),
+                                      )
+                                    : ListView(
+                                        children: data.map((item) {
+                                          return item.jANGKAPEMINJAMAN ==
+                                                  'Jangka Panjang'
+                                              ? listItem(
+                                                  id: item.iD.toString(),
+                                                  status: item.sTATUSPEMINJAMAN
+                                                      .toString(),
+                                                  nama: '${item.nAMA}',
+                                                  nomerInduk: item.nIS != null
+                                                      ? '${item.nIS}'
+                                                      : '${item.dATAGURU}',
+                                                  dataGuru: '${item.dATAGURU}',
+                                                  nis: '${item.nIS}')
+                                              : SizedBox();
+                                        }).toList(),
+                                      );
+                              } else {
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 4,
+                                    color: m1Color,
                                   ),
-                                )
-                              : ListView(
-                                  children: data.map((item) {
-                                    return item.jANGKAPEMINJAMAN ==
-                                            'Jangka Panjang'
-                                        ? listItem(
-                                            id: item.iD.toString(),
-                                            status: item.sTATUSPEMINJAMAN
-                                                .toString(),
-                                            nama: '${item.nAMA}',
-                                            nomerInduk: item.nIS != null
-                                                ? '${item.nIS}'
-                                                : '${item.dATAGURU}',
-                                            dataGuru: '${item.dATAGURU}',
-                                            nis: '${item.nIS}')
-                                        : SizedBox();
-                                  }).toList(),
                                 );
-                        } else {
-                          return Center(
-                            child: CircularProgressIndicator(
-                              strokeWidth: 4,
-                              color: m1Color,
-                            ),
-                          );
-                        }
-                      },
-                    ),
+                              }
+                            },
+                          ),
                   ),
                   Container(
                     padding: EdgeInsets.only(top: 17),
-                    child: FutureBuilder(
-                      future: Services().getRiwayatPeminjamanSiswaAdmin(),
-                      builder: (BuildContext context, AsyncSnapshot snapshot) {
-                        if (snapshot.hasData) {
-                          List<RiwayatPeminjamanModel> data = snapshot.data;
-                          return data.isEmpty
-                              ? Center(
-                                  child: Text(
-                                    'Data tidak ditemukan',
-                                    style: mono1TextStyle,
+                    child: isLoading == true
+                        ? Container()
+                        : FutureBuilder(
+                            future: Services().getRiwayatPeminjamanSiswaAdmin(
+                                search: 'search=${searchController.text}'),
+                            builder:
+                                (BuildContext context, AsyncSnapshot snapshot) {
+                              if (snapshot.hasData) {
+                                List<RiwayatPeminjamanModel> data =
+                                    snapshot.data;
+                                return data.isEmpty
+                                    ? Center(
+                                        child: Text(
+                                          'Data tidak ditemukan',
+                                          style: mono1TextStyle,
+                                        ),
+                                      )
+                                    : ListView(
+                                        children: data.map((item) {
+                                          return item.jANGKAPEMINJAMAN ==
+                                                  'Jangka Pendek'
+                                              ? listItem(
+                                                  id: item.iD.toString(),
+                                                  status: item.sTATUSPEMINJAMAN
+                                                      .toString(),
+                                                  nama: '${item.nAMA}',
+                                                  nomerInduk: item.nIS != null
+                                                      ? '${item.nIS}'
+                                                      : '${item.dATAGURU}',
+                                                  dataGuru: '${item.dATAGURU}',
+                                                  nis: '${item.nIS}')
+                                              : SizedBox();
+                                        }).toList(),
+                                      );
+                              } else {
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 4,
+                                    color: m1Color,
                                   ),
-                                )
-                              : ListView(
-                                  children: data.map((item) {
-                                    return item.jANGKAPEMINJAMAN ==
-                                            'Jangka Pendek'
-                                        ? listItem(
-                                            id: item.iD.toString(),
-                                            status: item.sTATUSPEMINJAMAN
-                                                .toString(),
-                                            nama: '${item.nAMA}',
-                                            nomerInduk: item.nIS != null
-                                                ? '${item.nIS}'
-                                                : '${item.dATAGURU}',
-                                            dataGuru: '${item.dATAGURU}',
-                                            nis: '${item.nIS}')
-                                        : SizedBox();
-                                  }).toList(),
                                 );
-                        } else {
-                          return Center(
-                            child: CircularProgressIndicator(
-                              strokeWidth: 4,
-                              color: m1Color,
-                            ),
-                          );
-                        }
-                      },
-                    ),
+                              }
+                            },
+                          ),
                   ),
                 ],
               ),

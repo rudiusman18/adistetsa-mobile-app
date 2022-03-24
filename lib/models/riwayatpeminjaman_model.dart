@@ -8,7 +8,7 @@ class RiwayatPeminjamanModel {
   String? jANGKAPEMINJAMAN;
   String? fILETTDPENGAJUAN;
   String? sTATUSPEMINJAMAN;
-  String? nIS;
+  int? nIS;
 
   RiwayatPeminjamanModel(
       {this.iD,
