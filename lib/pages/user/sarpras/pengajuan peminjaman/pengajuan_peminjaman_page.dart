@@ -17,6 +17,8 @@ class PengajuanPeminjamanPage extends StatefulWidget {
 
 class _PengajuanPeminjamanPageState extends State<PengajuanPeminjamanPage> {
   bool isSearch = false;
+  bool isLoading = false;
+  String urlSearch = '';
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -83,8 +85,14 @@ class _PengajuanPeminjamanPageState extends State<PengajuanPeminjamanPage> {
           onTap: () async {
             setState(() {
               searchController.clear();
-
+              urlSearch = '';
               isSearch = false;
+              isLoading = true;
+            });
+            await Services().getPeminjamanBarang();
+            await Services().getPeminjamanRuangan();
+            setState(() {
+              isLoading = false;
             });
           },
           child: Icon(
@@ -107,7 +115,13 @@ class _PengajuanPeminjamanPageState extends State<PengajuanPeminjamanPage> {
                     new TextPosition(offset: searchController.text.length));
                 searchController.text = newValue.toString();
               }
-              print(searchController.text);
+              urlSearch = searchController.text;
+              isLoading = true;
+            });
+            await Services().getPeminjamanBarang();
+            await Services().getPeminjamanRuangan();
+            setState(() {
+              isLoading = false;
             });
           },
         ),
@@ -239,77 +253,83 @@ class _PengajuanPeminjamanPageState extends State<PengajuanPeminjamanPage> {
               children: [
                 Container(
                   padding: EdgeInsets.only(top: 20),
-                  child: FutureBuilder(
-                    future: Services().getPeminjamanBarang(),
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      if (snapshot.hasData) {
-                        List<PeminjamBarangModel> data = snapshot.data;
-                        return data.isEmpty
-                            ? Center(
-                                child: Text(
-                                  'Data tidak ditemukan',
-                                  style: mono1TextStyle,
+                  child: isLoading == true
+                      ? Container()
+                      : FutureBuilder(
+                          future: Services().getPeminjamanBarang(urlSearch: urlSearch),
+                          builder:
+                              (BuildContext context, AsyncSnapshot snapshot) {
+                            if (snapshot.hasData) {
+                              List<PeminjamBarangModel> data = snapshot.data;
+                              return data.isEmpty
+                                  ? Center(
+                                      child: Text(
+                                        'Data tidak ditemukan',
+                                        style: mono1TextStyle,
+                                      ),
+                                    )
+                                  : ListView(
+                                      children: data.map((item) {
+                                        return listItem(
+                                          id: '${item.iD}',
+                                          nama: '${item.aLAT![0].nAMA}',
+                                          tanggalPengajuan:
+                                              '${item.tANGGALPENGAJUAN}',
+                                          status: '${item.sTATUSPENGAJUAN}',
+                                          detail: 'Barang',
+                                        );
+                                      }).toList(),
+                                    );
+                            } else {
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 4,
+                                  color: m1Color,
                                 ),
-                              )
-                            : ListView(
-                                children: data.map((item) {
-                                  return listItem(
-                                    id: '${item.iD}',
-                                    nama: '${item.aLAT![0].nAMA}',
-                                    tanggalPengajuan:
-                                        '${item.tANGGALPENGAJUAN}',
-                                    status: '${item.sTATUSPENGAJUAN}',
-                                    detail: 'Barang',
-                                  );
-                                }).toList(),
                               );
-                      } else {
-                        return Center(
-                          child: CircularProgressIndicator(
-                            strokeWidth: 4,
-                            color: m1Color,
-                          ),
-                        );
-                      }
-                    },
-                  ),
+                            }
+                          },
+                        ),
                 ),
                 Container(
                   padding: EdgeInsets.only(top: 20),
-                  child: FutureBuilder(
-                    future: Services().getPeminjamanRuangan(),
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      if (snapshot.hasData) {
-                        List<PeminjamRuanganModel> data = snapshot.data;
-                        return data.isEmpty
-                            ? Center(
-                                child: Text(
-                                  'Data tidak ditemukan',
-                                  style: mono1TextStyle,
+                  child: isLoading == true
+                      ? Container()
+                      : FutureBuilder(
+                          future: Services().getPeminjamanRuangan(urlSearch: urlSearch),
+                          builder:
+                              (BuildContext context, AsyncSnapshot snapshot) {
+                            if (snapshot.hasData) {
+                              List<PeminjamRuanganModel> data = snapshot.data;
+                              return data.isEmpty
+                                  ? Center(
+                                      child: Text(
+                                        'Data tidak ditemukan',
+                                        style: mono1TextStyle,
+                                      ),
+                                    )
+                                  : ListView(
+                                      children: data.map((item) {
+                                        return listItem(
+                                          id: '${item.iD}',
+                                          nama: '${item.rUANGAN}',
+                                          tanggalPengajuan:
+                                              '${item.tANGGALPENGAJUAN}',
+                                          status: '${item.sTATUS}',
+                                          detail: 'Ruang',
+                                        );
+                                      }).toList(),
+                                    );
+                            } else {
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 4,
+                                  color: m1Color,
                                 ),
-                              )
-                            : ListView(
-                                children: data.map((item) {
-                                  return listItem(
-                                    id: '${item.iD}',
-                                    nama: '${item.rUANGAN}',
-                                    tanggalPengajuan:
-                                        '${item.tANGGALPENGAJUAN}',
-                                    status: '${item.sTATUS}',
-                                    detail: 'Ruang',
-                                  );
-                                }).toList(),
                               );
-                      } else {
-                        return Center(
-                          child: CircularProgressIndicator(
-                            strokeWidth: 4,
-                            color: m1Color,
-                          ),
-                        );
-                      }
-                    },
-                  ),
+                            }
+                          },
+                        ),
                 ),
               ],
             ),

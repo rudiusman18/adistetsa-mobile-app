@@ -139,7 +139,7 @@ class Services extends ChangeNotifier {
       throw Exception('Gagal Mendapatkan Detail Katalog Buku');
     }
   }
-  
+
   //NOTE: Mendapatkan list buku
   getListBuku({String? search}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -217,12 +217,10 @@ class Services extends ChangeNotifier {
   getPengajuanPeminjamanSiswaAdmin({String? search}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url = Uri.parse(
-        '$baseUrl/perpustakaan/pengajuan_peminjaman_siswa_admin?$search');
+    var url =
+        Uri.parse('$baseUrl/perpustakaan/pengajuan_peminjaman_siswa_admin');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
-    print(response.statusCode);
-    print(response.body);
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body)['results'];
       List<PengajuanPeminjamanModel> pengajuaPeminjaman =
@@ -237,12 +235,10 @@ class Services extends ChangeNotifier {
   getPengajuanPeminjamanGuruAdmin({String? search}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url = Uri.parse(
-        '$baseUrl/perpustakaan/pengajuan_peminjaman_guru_admin?$search');
+    var url =
+        Uri.parse('$baseUrl/perpustakaan/pengajuan_peminjaman_guru_admin');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
-    print(response.statusCode);
-    print(response.body);
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body)['results'];
       List<PengajuanPeminjamanModel> pengajuaPeminjaman =
@@ -282,15 +278,14 @@ class Services extends ChangeNotifier {
       {String? search}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url1 = Uri.parse(
-        '$baseUrl/perpustakaan/riwayat_peminjaman_siswa_admin?$search');
+    var url1 =
+        Uri.parse('$baseUrl/perpustakaan/riwayat_peminjaman_siswa_admin');
     var url2 = Uri.parse('$baseUrl/perpustakaan/riwayat_peminjaman_guru_admin');
     var headers = {"Content-type": "application/json", "authorization": token};
     var responses = await Future.wait([
       http.get(url1, headers: headers),
       http.get(url2, headers: headers),
     ]);
-
     return <RiwayatPeminjamanModel>[
       ..._getRiwayat(responses[0]),
       ..._getRiwayat(responses[1]),
@@ -319,7 +314,6 @@ class Services extends ChangeNotifier {
     }
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
-
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       RiwayatPeminjamanModel riwayatPeminjamanModel =
@@ -578,7 +572,7 @@ class Services extends ChangeNotifier {
   getLaporaKebaikan() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url = Uri.parse('$baseUrl/kesiswaan/pengajuan_program_kebaikan');
+    var url = Uri.parse('$baseUrl/kesiswaan/riwayat_program_kebaikan');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -592,10 +586,10 @@ class Services extends ChangeNotifier {
   }
 
   //NOTE: Mendapatkan list katalog barang
-  getKatalogBarang() async {
+  getKatalogBarang({String? urlSearch}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url = Uri.parse('$baseUrl/sarpras/katalog_sarana');
+    var url = Uri.parse('$baseUrl/sarpras/katalog_sarana?search=$urlSearch');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -609,10 +603,10 @@ class Services extends ChangeNotifier {
   }
 
   //NOTE: Mendapatkan list katalog ruangan
-  getKatalogRuangan() async {
+  getKatalogRuangan({String? urlSearch}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url = Uri.parse('$baseUrl/sarpras/katalog_ruangan');
+    var url = Uri.parse('$baseUrl/sarpras/katalog_ruangan?search=$urlSearch');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -626,10 +620,10 @@ class Services extends ChangeNotifier {
   }
 
   //NOTE: Mendapatkan list pengajuan peminjaman ruangan untuk admin/staf
-  getRuanganAdmin() async {
+  getRuanganAdmin({String? urlSearch}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url = Uri.parse('$baseUrl/sarpras/pengajuan_peminjaman_ruangan_admin');
+    var url = Uri.parse('$baseUrl/sarpras/pengajuan_peminjaman_ruangan_admin?search=$urlSearch');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -659,7 +653,7 @@ class Services extends ChangeNotifier {
     }
   }
 
-  //NOTE: Menerima pengajuan ruangan 
+  //NOTE: Menerima pengajuan ruangan
   terimaPengajuanRuanganSarpas({required String id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -694,10 +688,10 @@ class Services extends ChangeNotifier {
   }
 
   //NOTE: Mendapatkan list pengajuan peminjaman barang untuk admin/staf
-  getBarangAdmin() async {
+  getBarangAdmin({String? urlSearch}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url = Uri.parse('$baseUrl/sarpras/pengajuan_peminjaman_barang_admin');
+    var url = Uri.parse('$baseUrl/sarpras/pengajuan_peminjaman_barang_admin?search=$urlSearch');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -727,7 +721,7 @@ class Services extends ChangeNotifier {
     }
   }
 
-  //NOTE: Menerima pengajuan barang 
+  //NOTE: Menerima pengajuan barang
   terimaPengajuanBarangSarpas({required String id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
@@ -845,10 +839,11 @@ class Services extends ChangeNotifier {
   }
 
   //NOTE: Mendapatkan riwayat pengajuan peminjaman ruangan
-  getRiwayatRuangan() async {
+  getRiwayatRuangan({String? urlSearch}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url = Uri.parse('$baseUrl/sarpras/riwayat_peminjaman_ruangan');
+    var url = Uri.parse(
+        '$baseUrl/sarpras/riwayat_peminjaman_ruangan?search=$urlSearch');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -881,10 +876,11 @@ class Services extends ChangeNotifier {
   }
 
   //NOTE: Mendapatkan riwayat pengajuan peminjaman barang
-  getRiwayatBarang() async {
+  getRiwayatBarang({String? urlSearch}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url = Uri.parse('$baseUrl/sarpras/riwayat_peminjaman_barang');
+    var url = Uri.parse(
+        '$baseUrl/sarpras/riwayat_peminjaman_barang?search=$urlSearch');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -916,10 +912,11 @@ class Services extends ChangeNotifier {
   }
 
   //NOTE: Mendapatkan pengajuan peminjaman barang
-  getPeminjamanBarang() async {
+  getPeminjamanBarang({String? urlSearch}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url = Uri.parse('$baseUrl/sarpras/pengajuan_peminjaman_barang');
+    var url = Uri.parse(
+        '$baseUrl/sarpras/pengajuan_peminjaman_barang?search=$urlSearch');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -949,10 +946,11 @@ class Services extends ChangeNotifier {
   }
 
   //NOTE: Mendapatkan pengajuan peminjaman ruangan
-  getPeminjamanRuangan() async {
+  getPeminjamanRuangan({String? urlSearch}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url = Uri.parse('$baseUrl/sarpras/pengajuan_peminjaman_ruangan');
+    var url = Uri.parse(
+        '$baseUrl/sarpras/pengajuan_peminjaman_ruangan?search=$urlSearch');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -989,7 +987,7 @@ class Services extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
     var url =
-        Uri.parse('$baseUrl/kurikulum/jadwal_mengajar_guru?$filterTahunAjaran');
+        Uri.parse('$baseUrl/kurikulum/jadwal_mengajar_guru?search=$search&$filterTahunAjaran');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -1010,10 +1008,9 @@ class Services extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
     var url = Uri.parse(
-        '$baseUrl/kurikulum/jurnal_belajar_mengajar?$filterTahunAjaran');
+        '$baseUrl/kurikulum/jurnal_belajar_mengajar?search=$search&$filterTahunAjaran');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
-
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body)['results'];
       List<JadwalMengajarGuruModel> jadwalMengajarGuru =
@@ -1138,10 +1135,11 @@ class Services extends ChangeNotifier {
   }
 
   //NOTE: Mendapatkan pengajuan ekskul
-  getPengajuanEkskul() async {
+  getPengajuanEkskul({String? urlSerach}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url = Uri.parse('$baseUrl/kesiswaan/pengajuan_ekskul');
+    var url =
+        Uri.parse('$baseUrl/kesiswaan/pengajuan_ekskul?search=$urlSerach');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -1161,6 +1159,7 @@ class Services extends ChangeNotifier {
     var url = Uri.parse('$baseUrl/kesiswaan/pengajuan_ekskul/$id');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
+    // print(response.statusCode);
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       PengajuanEkskulModel pengajuanEkskul =
@@ -1368,10 +1367,10 @@ class Services extends ChangeNotifier {
   }
 
   //NOTE: Mendapatkan katalog ekskul
-  getKatalogEkskul() async {
+  getKatalogEkskul({String? urlSearch}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url = Uri.parse('$baseUrl/kesiswaan/katalog_ekskul');
+    var url = Uri.parse('$baseUrl/kesiswaan/katalog_ekskul?search=$urlSearch');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {

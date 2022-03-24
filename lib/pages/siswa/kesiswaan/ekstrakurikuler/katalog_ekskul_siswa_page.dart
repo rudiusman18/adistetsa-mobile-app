@@ -16,6 +16,7 @@ class KatalogEkskulSiswaPage extends StatefulWidget {
 class _KatalogEkskulSiswaPageState extends State<KatalogEkskulSiswaPage> {
   bool isSearch = false;
   bool isLoading = false;
+  String urlSearch = '';
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -64,7 +65,13 @@ class _KatalogEkskulSiswaPageState extends State<KatalogEkskulSiswaPage> {
           onTap: () async {
             setState(() {
               searchController.clear();
+              urlSearch = '';
               isSearch = false;
+              isLoading = true;
+            });
+            await Services().getKatalogEkskul();
+            setState(() {
+              isLoading = false;
             });
           },
           child: Icon(
@@ -72,19 +79,6 @@ class _KatalogEkskulSiswaPageState extends State<KatalogEkskulSiswaPage> {
             color: mono1Color,
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              setState(() {
-                searchController.clear();
-              });
-            },
-            icon: Icon(
-              Icons.clear_outlined,
-              color: mono3Color,
-            ),
-          ),
-        ],
         title: TextFormField(
           controller: searchController,
           decoration: InputDecoration(
@@ -100,10 +94,11 @@ class _KatalogEkskulSiswaPageState extends State<KatalogEkskulSiswaPage> {
                     new TextPosition(offset: searchController.text.length));
                 searchController.text = newValue.toString();
               }
-              print(searchController.text);
+              urlSearch = searchController.text;
+              print(urlSearch);
               isLoading = true;
             });
-
+            await Services().getKatalogEkskul();
             setState(() {
               isLoading = false;
             });
@@ -169,36 +164,38 @@ class _KatalogEkskulSiswaPageState extends State<KatalogEkskulSiswaPage> {
           height: 22,
         ),
         Expanded(
-          child: FutureBuilder(
-            future: Services().getKatalogEkskul(),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData) {
-                List<KatalogEkskulModel> data = snapshot.data;
-                return data.isEmpty
-                    ? Center(
-                        child: Text(
-                          'Data tidak ditemukan',
-                          style: mono1TextStyle,
+          child: isLoading == true
+              ? Container()
+              : FutureBuilder(
+                  future: Services().getKatalogEkskul(urlSearch: urlSearch),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData) {
+                      List<KatalogEkskulModel> data = snapshot.data;
+                      return data.isEmpty
+                          ? Center(
+                              child: Text(
+                                'Data tidak ditemukan',
+                                style: mono1TextStyle,
+                              ),
+                            )
+                          : ListView(
+                              children: data.map((item) {
+                                return listItem(
+                                  namaEkstrakurikuler: "${item.nAMA}",
+                                  id: '${item.iD}',
+                                );
+                              }).toList(),
+                            );
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 4,
+                          color: m1Color,
                         ),
-                      )
-                    : ListView(
-                        children: data.map((item) {
-                          return listItem(
-                            namaEkstrakurikuler: "${item.nAMA}",
-                            id: '${item.iD}',
-                          );
-                        }).toList(),
                       );
-              } else {
-                return Center(
-                  child: CircularProgressIndicator(
-                    strokeWidth: 4,
-                    color: m1Color,
-                  ),
-                );
-              }
-            },
-          ),
+                    }
+                  },
+                ),
         )
       ]),
     );

@@ -67,6 +67,11 @@ class _ListPeminjamanBarangPageState extends State<ListPeminjamanBarangPage> {
               searchController.clear();
               urlSearch = '';
               isSearch = false;
+              isLoading = true;
+            });
+            await Services().getBarangAdmin();
+            setState(() {
+              isLoading = false;
             });
           },
           child: Icon(
@@ -89,11 +94,10 @@ class _ListPeminjamanBarangPageState extends State<ListPeminjamanBarangPage> {
                     new TextPosition(offset: searchController.text.length));
                 searchController.text = newValue.toString();
               }
-              print(searchController.text);
-              urlSearch = 'search=${searchController.text}';
+              urlSearch = searchController.text;
               isLoading = true;
             });
-            await Services().getKatalogBuku(search: urlSearch);
+            await Services().getBarangAdmin();
             setState(() {
               isLoading = false;
             });
@@ -182,7 +186,7 @@ class _ListPeminjamanBarangPageState extends State<ListPeminjamanBarangPage> {
       backgroundColor: mono6Color,
       body: isLoading == false
           ? FutureBuilder(
-              future: Services().getBarangAdmin(),
+              future: Services().getBarangAdmin(urlSearch: urlSearch),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
                   List<PeminjamBarangModel> data = snapshot.data;

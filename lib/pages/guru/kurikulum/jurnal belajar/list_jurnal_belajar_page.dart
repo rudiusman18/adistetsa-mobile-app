@@ -72,6 +72,11 @@ class _ListJurnalBelajarPageState extends State<ListJurnalBelajarPage> {
               searchController.clear();
               urlSearch = '';
               isSearch = false;
+              isLoading = true;
+            });
+            await Services().getJurnalBelajarMengajarGuru();
+            setState(() {
+              isLoading = false;
             });
           },
           child: Icon(
@@ -97,6 +102,10 @@ class _ListJurnalBelajarPageState extends State<ListJurnalBelajarPage> {
               print(searchController.text);
               urlSearch = 'search=${searchController.text}';
               isLoading = true;
+            });
+            await Services().getJurnalBelajarMengajarGuru();
+            setState(() {
+              isLoading = false;
             });
           },
         ),
@@ -167,8 +176,7 @@ class _ListJurnalBelajarPageState extends State<ListJurnalBelajarPage> {
 
                     flag1 = true;
                   });
-                  await Services()
-                      .getJurnalBelajarMengajarGuru(filterTahunAjaran: url);
+                  await Services().getJurnalBelajarMengajarGuru();
                   setState(() {
                     isLoading = false;
                   });
@@ -239,8 +247,7 @@ class _ListJurnalBelajarPageState extends State<ListJurnalBelajarPage> {
                     filterHari = 'HARI=$value';
                     flag2 = true;
                   });
-                  await Services()
-                      .getJurnalBelajarMengajarGuru(filterTahunAjaran: url);
+                  await Services().getJurnalBelajarMengajarGuru();
                   setState(() {
                     isLoading = false;
                   });
@@ -280,8 +287,7 @@ class _ListJurnalBelajarPageState extends State<ListJurnalBelajarPage> {
                             flag1 = false;
                             flag2 = false;
                           });
-                          await Services().getJurnalBelajarMengajarGuru(
-                              filterTahunAjaran: url);
+                          await Services().getJurnalBelajarMengajarGuru();
                           setState(() {
                             isLoading = false;
                           });
@@ -502,7 +508,7 @@ class _ListJurnalBelajarPageState extends State<ListJurnalBelajarPage> {
             child: isLoading == false
                 ? FutureBuilder(
                     future: Services()
-                        .getJurnalBelajarMengajarGuru(filterTahunAjaran: url),
+                        .getJurnalBelajarMengajarGuru(search: urlSearch, filterTahunAjaran: url),
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (snapshot.hasData) {
                         List<JadwalMengajarGuruModel> data = snapshot.data;

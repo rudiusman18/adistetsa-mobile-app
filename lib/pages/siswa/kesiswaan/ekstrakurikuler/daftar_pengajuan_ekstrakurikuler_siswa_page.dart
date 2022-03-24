@@ -16,6 +16,7 @@ class _DaftarPengajuanEkstrakurikulerSiswaPageState
     extends State<DaftarPengajuanEkstrakurikulerSiswaPage> {
   bool isSearch = false;
   bool isLoading = false;
+  String urlSearch = '';
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -65,7 +66,13 @@ class _DaftarPengajuanEkstrakurikulerSiswaPageState
           onTap: () async {
             setState(() {
               searchController.clear();
+              urlSearch = '';
               isSearch = false;
+              isLoading = true;
+            });
+            await Services().getPengajuanEkskul();
+            setState(() {
+              isLoading = false;
             });
           },
           child: Icon(
@@ -73,19 +80,6 @@ class _DaftarPengajuanEkstrakurikulerSiswaPageState
             color: mono1Color,
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              setState(() {
-                searchController.clear();
-              });
-            },
-            icon: Icon(
-              Icons.clear_outlined,
-              color: mono3Color,
-            ),
-          ),
-        ],
         title: TextFormField(
           controller: searchController,
           decoration: InputDecoration(
@@ -101,10 +95,10 @@ class _DaftarPengajuanEkstrakurikulerSiswaPageState
                     new TextPosition(offset: searchController.text.length));
                 searchController.text = newValue.toString();
               }
-              print(searchController.text);
+              urlSearch = searchController.text;
               isLoading = true;
             });
-
+            await Services().getPengajuanEkskul();
             setState(() {
               isLoading = false;
             });
@@ -203,7 +197,8 @@ class _DaftarPengajuanEkstrakurikulerSiswaPageState
             Expanded(
               child: isLoading == false
                   ? FutureBuilder(
-                      future: Services().getPengajuanEkskul(),
+                      future:
+                          Services().getPengajuanEkskul(urlSerach: urlSearch),
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         if (snapshot.hasData) {
                           List<PengajuanEkskulModel> data = snapshot.data;

@@ -199,6 +199,11 @@ class _KatalogRuangPageState extends State<KatalogRuangPage> {
               searchController.clear();
               urlSearch = '';
               isSearch = false;
+              isLoading = true;
+            });
+            await Services().getKatalogRuangan();
+            setState(() {
+              isLoading = false;
             });
           },
           child: Icon(
@@ -221,11 +226,10 @@ class _KatalogRuangPageState extends State<KatalogRuangPage> {
                     new TextPosition(offset: searchController.text.length));
                 searchController.text = newValue.toString();
               }
-              print(searchController.text);
-              urlSearch = 'search=${searchController.text}';
+              urlSearch = searchController.text;
               isLoading = true;
             });
-            await Services().getKatalogBuku(search: urlSearch);
+            await Services().getKatalogRuangan();
             setState(() {
               isLoading = false;
             });
@@ -321,7 +325,7 @@ class _KatalogRuangPageState extends State<KatalogRuangPage> {
           child: isLoading == true
               ? Container()
               : FutureBuilder(
-                  future: Services().getKatalogRuangan(),
+                  future: Services().getKatalogRuangan(urlSearch: urlSearch),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.hasData) {
                       List<KatalogRuanganModel> data = snapshot.data;

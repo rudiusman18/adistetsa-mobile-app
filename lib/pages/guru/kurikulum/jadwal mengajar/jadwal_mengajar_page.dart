@@ -94,8 +94,12 @@ class _JadwalMengajarPageState extends State<JadwalMengajarPage> {
                 searchController.text = newValue.toString();
               }
               print(searchController.text);
-              urlSearch = 'search=${searchController.text}';
+              urlSearch = searchController.text;
               isLoading = true;
+            });
+            await Services().getJadwalMengajarGuru();
+            setState(() {
+              isLoading = false;
             });
           },
         ),
@@ -166,8 +170,7 @@ class _JadwalMengajarPageState extends State<JadwalMengajarPage> {
                     filterTahun = 'TAHUN_AJARAN=$value';
                     flag1 = true;
                   });
-                  await Services()
-                      .getJadwalMengajarGuru(filterTahunAjaran: url);
+                  await Services().getJadwalMengajarGuru();
                   setState(() {
                     isLoading = false;
                   });
@@ -238,8 +241,7 @@ class _JadwalMengajarPageState extends State<JadwalMengajarPage> {
                     filterHari = '&HARI=$value';
                     flag2 = true;
                   });
-                  await Services()
-                      .getJadwalMengajarGuru(filterTahunAjaran: url);
+                  await Services().getJadwalMengajarGuru();
                   setState(() {
                     isLoading = false;
                   });
@@ -416,8 +418,8 @@ class _JadwalMengajarPageState extends State<JadwalMengajarPage> {
           Expanded(
             child: isLoading == false
                 ? FutureBuilder(
-                    future: Services()
-                        .getJadwalMengajarGuru(filterTahunAjaran: url),
+                    future: Services().getJadwalMengajarGuru(
+                        search: urlSearch, filterTahunAjaran: url),
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (snapshot.hasData) {
                         List<JadwalMengajarGuruModel> data = snapshot.data;

@@ -67,6 +67,11 @@ class _ListPeminjamanRuangPageState extends State<ListPeminjamanRuangPage> {
               searchController.clear();
               urlSearch = '';
               isSearch = false;
+              isLoading = true;
+            });
+            await Services().getRuanganAdmin();
+            setState(() {
+              isLoading = false;
             });
           },
           child: Icon(
@@ -90,10 +95,10 @@ class _ListPeminjamanRuangPageState extends State<ListPeminjamanRuangPage> {
                 searchController.text = newValue.toString();
               }
               print(searchController.text);
-              urlSearch = 'search=${searchController.text}';
+              urlSearch = searchController.text;
               isLoading = true;
             });
-            await Services().getKatalogBuku(search: urlSearch);
+            await Services().getRuanganAdmin();
             setState(() {
               isLoading = false;
             });
@@ -180,40 +185,42 @@ class _ListPeminjamanRuangPageState extends State<ListPeminjamanRuangPage> {
     return Scaffold(
       appBar: isSearch == true ? searchAppbar() : katalogBarangHeader(),
       backgroundColor: mono6Color,
-      body: isLoading == false ? FutureBuilder(
-        future: Services().getRuanganAdmin(),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData) {
-            List<PeminjamRuanganModel> data = snapshot.data;
-            return data.isEmpty
-                ? Center(
-                    child: Text(
-                      'Data tidak ditemukan',
-                      style: mono1TextStyle,
+      body: isLoading == false
+          ? FutureBuilder(
+              future: Services().getRuanganAdmin(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  List<PeminjamRuanganModel> data = snapshot.data;
+                  return data.isEmpty
+                      ? Center(
+                          child: Text(
+                            'Data tidak ditemukan',
+                            style: mono1TextStyle,
+                          ),
+                        )
+                      : ListView(
+                          children: data.map((item) {
+                            return Container(
+                              padding: EdgeInsets.only(top: 20),
+                              child: listItem(
+                                id: '${item.iD}',
+                                nama: '${item.rUANGAN}',
+                                tanggalPeminjaman: '${item.tANGGALPENGAJUAN}',
+                              ),
+                            );
+                          }).toList(),
+                        );
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 4,
+                      color: m1Color,
                     ),
-                  )
-                : ListView(
-                    children: data.map((item) {
-                      return Container(
-                        padding: EdgeInsets.only(top: 20),
-                        child: listItem(
-                          id: '${item.iD}',
-                          nama: '${item.rUANGAN}',
-                          tanggalPeminjaman: '${item.tANGGALPENGAJUAN}',
-                        ),
-                      );
-                    }).toList(),
                   );
-          } else {
-            return Center(
-              child: CircularProgressIndicator(
-                strokeWidth: 4,
-                color: m1Color,
-              ),
-            );
-          }
-        },
-      ) : Container(),
+                }
+              },
+            )
+          : Container(),
     );
   }
 }

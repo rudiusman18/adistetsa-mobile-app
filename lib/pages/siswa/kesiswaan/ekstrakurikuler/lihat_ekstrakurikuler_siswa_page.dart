@@ -18,6 +18,7 @@ class _LihatEkstrakurikulerSiswaPageState
     extends State<LihatEkstrakurikulerSiswaPage> {
   bool isSearch = false;
   bool isLoading = false;
+  String urlSearch = '';
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -66,7 +67,13 @@ class _LihatEkstrakurikulerSiswaPageState
           onTap: () async {
             setState(() {
               searchController.clear();
+              urlSearch = '';
               isSearch = false;
+              isLoading = true;
+            });
+            await Services().getEkskulSaya();
+            setState(() {
+              isLoading = false;
             });
           },
           child: Icon(
@@ -74,19 +81,6 @@ class _LihatEkstrakurikulerSiswaPageState
             color: mono1Color,
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              setState(() {
-                searchController.clear();
-              });
-            },
-            icon: Icon(
-              Icons.clear_outlined,
-              color: mono3Color,
-            ),
-          ),
-        ],
         title: TextFormField(
           controller: searchController,
           decoration: InputDecoration(
@@ -102,10 +96,10 @@ class _LihatEkstrakurikulerSiswaPageState
                     new TextPosition(offset: searchController.text.length));
                 searchController.text = newValue.toString();
               }
-              print(searchController.text);
+              urlSearch = searchController.text;
               isLoading = true;
             });
-
+            await Services().getEkskulSaya();
             setState(() {
               isLoading = false;
             });
@@ -185,39 +179,41 @@ class _LihatEkstrakurikulerSiswaPageState
             height: 22,
           ),
           Expanded(
-            child: FutureBuilder(
-              future: Services().getEkskulSaya(),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.hasData) {
-                  List<KatalogEkskulModel> data = snapshot.data;
-                  return data.isEmpty
-                      ? Center(
-                          child: Text(
-                            'Data tidak ditemukan',
-                            style: mono1TextStyle,
+            child: isLoading == true
+                ? Container()
+                : FutureBuilder(
+                    future: Services().getEkskulSaya(),
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (snapshot.hasData) {
+                        List<KatalogEkskulModel> data = snapshot.data;
+                        return data.isEmpty
+                            ? Center(
+                                child: Text(
+                                  'Data tidak ditemukan',
+                                  style: mono1TextStyle,
+                                ),
+                              )
+                            : ListView(
+                                children: data.map((item) {
+                                  return listItem(
+                                    name: "${item.nAMA}",
+                                    date: '${item.jADWAL}'
+                                        .replaceAll('[', '')
+                                        .replaceAll(']', ''),
+                                    id: '${item.iD}',
+                                  );
+                                }).toList(),
+                              );
+                      } else {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 4,
+                            color: m1Color,
                           ),
-                        )
-                      : ListView(
-                          children: data.map((item) {
-                            return listItem(
-                              name: "${item.nAMA}",
-                              date: '${item.jADWAL}'
-                                  .replaceAll('[', '')
-                                  .replaceAll(']', ''),
-                              id: '${item.iD}',
-                            );
-                          }).toList(),
                         );
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      strokeWidth: 4,
-                      color: m1Color,
-                    ),
-                  );
-                }
-              },
-            ),
+                      }
+                    },
+                  ),
           )
         ]),
       ),
