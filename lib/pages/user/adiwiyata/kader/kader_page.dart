@@ -2,24 +2,24 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 
-class SanitasiDrainasePage extends StatefulWidget {
-  const SanitasiDrainasePage({Key? key}) : super(key: key);
+class KaderPage extends StatefulWidget {
+  const KaderPage({Key? key}) : super(key: key);
 
   @override
-  State<SanitasiDrainasePage> createState() => _SanitasiDrainasePageState();
+  State<KaderPage> createState() => _KaderPageState();
 }
 
-class _SanitasiDrainasePageState extends State<SanitasiDrainasePage> {
+class _KaderPageState extends State<KaderPage> {
   bool isSearch = false;
   String urlSearch = '';
   TextEditingController searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    PreferredSizeWidget sanitasiDrainaseHeader() {
+    PreferredSizeWidget kaderHeader() {
       return AppBar(
         centerTitle: true,
         title: Text(
-          'Sanitasi Drainase',
+          'Daftar Kader',
           style: mono1TextStyle.copyWith(
             fontWeight: semiBold,
             fontSize: 18,
@@ -92,13 +92,16 @@ class _SanitasiDrainasePageState extends State<SanitasiDrainasePage> {
       );
     }
 
-    Widget expandableItem() {
+    Widget expandableItem({
+      required String name,
+      required String nis,
+      required String phone,
+      required String address,
+    }) {
       return ExpandableNotifier(
         child: Padding(
           padding: const EdgeInsets.only(
-            left: 7,
-            right: 7,
-            bottom: 18,
+            bottom: 9,
           ),
           child: Column(
             children: [
@@ -112,27 +115,20 @@ class _SanitasiDrainasePageState extends State<SanitasiDrainasePage> {
                   ),
                 ),
                 header: Container(
-                  padding: const EdgeInsets.only(
-                    left: 12,
-                    right: 12,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 39,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '2022-02-02',
-                        style: mono1TextStyle.copyWith(
-                          fontSize: 10,
-                        ),
-                      ),
-                      Text(
-                        'Pembersihan Kamar Mandi',
+                        '$name',
                         style: mono1TextStyle.copyWith(
                           fontSize: 14,
                         ),
                       ),
                       Text(
-                        'Peserta Siswa',
+                        '$nis',
                         style: mono1TextStyle.copyWith(
                           fontSize: 10,
                         ),
@@ -143,67 +139,50 @@ class _SanitasiDrainasePageState extends State<SanitasiDrainasePage> {
                 collapsed: Container(),
                 expanded: Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: 12,
+                    horizontal: 39,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        height: 2,
+                        height: 10,
                       ),
-                      Text(
-                        'Keterangan',
-                        style: mono1TextStyle.copyWith(
-                          fontWeight: semiBold,
-                          fontSize: 10,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 2,
-                      ),
-                      Text(
-                        'Dilakukan Pengurasan Kamar Mandi',
-                        style: mono1TextStyle.copyWith(
-                          fontSize: 10,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 12,
-                      ),
-                      Container(
-                        height: 26,
-                        child: TextButton(
-                          onPressed: () {},
-                          style: TextButton.styleFrom(
-                            backgroundColor: m5Color,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                              side: BorderSide(
-                                color: m5Color,
-                              ),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.phone_in_talk_outlined,
+                            size: 18,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            '$phone',
+                            style: mono1TextStyle.copyWith(
+                              fontSize: 10,
                             ),
                           ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.file_download_outlined,
-                                color: mono6Color,
-                                size: 11,
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                'Dokumentasi',
-                                style: mono6TextStyle.copyWith(
-                                  fontWeight: semiBold,
-                                  fontSize: 10,
-                                ),
-                              ),
-                            ],
+                        ],
+                      ),
+                      SizedBox(
+                        height: 14,
+                      ),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.home_outlined,
+                            size: 18,
                           ),
-                        ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            '$address',
+                            style: mono1TextStyle.copyWith(
+                              fontSize: 10,
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(
                         height: 16,
@@ -224,13 +203,19 @@ class _SanitasiDrainasePageState extends State<SanitasiDrainasePage> {
 
     return Scaffold(
       backgroundColor: mono6Color,
-      appBar: isSearch == true ? searchAppbar() : sanitasiDrainaseHeader(),
+      appBar: isSearch == true ? searchAppbar() : kaderHeader(),
       body: ListView(
         children: [
           SizedBox(
             height: 20,
           ),
-          for (var i = 0; i < 30; i++) expandableItem(),
+          for (var i = 0; i < 30; i++)
+            expandableItem(
+              name: 'Cerry Bans',
+              nis: '123819873182731893',
+              address: 'Jl. Jombang',
+              phone: '099233456789',
+            ),
         ],
       ),
     );

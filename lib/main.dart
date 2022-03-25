@@ -60,6 +60,9 @@ import 'package:adistetsa/pages/staff/sarpras/Peminjaman/list_peminjaman_barang_
 import 'package:adistetsa/pages/staff/sarpras/Peminjaman/list_peminjaman_ruang_page.dart';
 import 'package:adistetsa/pages/staff/sarpras/katalog%20barang/list_katalog_barang_page.dart';
 import 'package:adistetsa/pages/staff/sarpras/katalog%20barang/list_katalog_ruang_page.dart';
+import 'package:adistetsa/pages/user/adiwiyata/Fitur%20sanitasi,%20jaringan,%20publikasi,%20kegiatan%20kader,%20inovatif,%20PRLH,%203R,%20Pemeliharaan%20Sampah,%20Tabungan,%20Penanaman%20Pohon/fitur_one_page.dart';
+import 'package:adistetsa/pages/user/adiwiyata/kader/kader_page.dart';
+import 'package:adistetsa/pages/user/adiwiyata/konservasi/konservasi_page.dart';
 import 'package:adistetsa/pages/user/adiwiyata/list_adiwiyata_page.dart';
 import 'package:adistetsa/pages/user/bk/daftar%20konseling/ajukan_konsultasi_page.dart';
 import 'package:adistetsa/pages/user/bk/daftar%20konseling/daftar_konseling_page.dart';
@@ -581,6 +584,56 @@ class AdiStetsa extends StatelessWidget {
             case '/user/adiwiyata':
               return PageTransition(
                 child: ListAdiwiyataPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/user/adiwiyata/sanitasi-drainase':
+              return PageTransition(
+                child: FiturOnePage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/user/adiwiyata/jejaring-kerja':
+              return PageTransition(
+                child: FiturOnePage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/user/adiwiyata/publikasi':
+              return PageTransition(
+                child: FiturOnePage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/user/adiwiyata/kader':
+              return PageTransition(
+                child: KaderPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/user/adiwiyata/kegiatan-kader':
+              return PageTransition(
+                child: FiturOnePage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/user/adiwiyata/konservasi':
+              return PageTransition(
+                child: KonservasiPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/user/adiwiyata/pemeliharaan-pohon':
+              return PageTransition(
+                child: FiturOnePage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/user/adiwiyata/karya-inovatif-prlh':
+              return PageTransition(
+                child: FiturOnePage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/user/adiwiyata/penerapan-prlh':
+              return PageTransition(
+                child: FiturOnePage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/user/adiwiyata/pengelolaan-sampah':
+              return PageTransition(
+                child: FiturOnePage(),
                 type: PageTransitionType.rightToLeft,
               );
             case '/main-page/back':

@@ -1,10 +1,10 @@
+import 'package:adistetsa/providers/provider.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class ListAdiwiyataPage extends StatefulWidget {
-  ListAdiwiyataPage({Key? key}) : super(key: key);
-
   @override
   State<ListAdiwiyataPage> createState() => _ListAdiwiyataPageState();
 }
@@ -12,6 +12,7 @@ class ListAdiwiyataPage extends StatefulWidget {
 class _ListAdiwiyataPageState extends State<ListAdiwiyataPage> {
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of(context);
     PreferredSizeWidget listAdiwiyataHeader() {
       return AppBar(
         centerTitle: true,
@@ -40,6 +41,7 @@ class _ListAdiwiyataPageState extends State<ListAdiwiyataPage> {
     Widget contentItem(String text, String url) {
       return GestureDetector(
         onTap: () {
+          provider.setfiturAdiwiyata = text;
           Navigator.pushNamed(context, '$url');
         },
         child: Container(
@@ -126,7 +128,9 @@ class _ListAdiwiyataPageState extends State<ListAdiwiyataPage> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.pushNamed(context, '');
+                          provider.setfiturAdiwiyata = '3R';
+                          Navigator.pushNamed(
+                              context, '/user/adiwiyata/pengelolaan-sampah');
                         },
                         child: Text(
                           '3R',
@@ -140,7 +144,9 @@ class _ListAdiwiyataPageState extends State<ListAdiwiyataPage> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.pushNamed(context, '');
+                          provider.setfiturAdiwiyata = 'Pemeliharaan Sampah';
+                          Navigator.pushNamed(
+                              context, '/user/adiwiyata/pengelolaan-sampah');
                         },
                         child: Text(
                           'Pemeliharaan Sampah',
@@ -154,7 +160,9 @@ class _ListAdiwiyataPageState extends State<ListAdiwiyataPage> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.pushNamed(context, '');
+                          provider.setfiturAdiwiyata = 'Tabungan Sampah';
+                          Navigator.pushNamed(
+                              context, '/user/adiwiyata/pengelolaan-sampah');
                         },
                         child: Text(
                           'Tabungan Sampah',
@@ -230,7 +238,9 @@ class _ListAdiwiyataPageState extends State<ListAdiwiyataPage> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.pushNamed(context, '');
+                          provider.setfiturAdiwiyata = 'Pembibitan Pohon';
+                          Navigator.pushNamed(
+                              context, '/user/adiwiyata/pemeliharaan-pohon');
                         },
                         child: Text(
                           'Pembibitan Pohon',
@@ -244,8 +254,9 @@ class _ListAdiwiyataPageState extends State<ListAdiwiyataPage> {
                       ),
                       GestureDetector(
                         onTap: () {
+                          provider.setfiturAdiwiyata = 'Penanaman Pohon';
                           Navigator.pushNamed(
-                              context, '/siswa/adiwiyata/penanaman-pohon-page');
+                              context, '/user/adiwiyata/pemeliharaan-pohon');
                         },
                         child: Text(
                           'Penanaman Pohon',
@@ -259,7 +270,9 @@ class _ListAdiwiyataPageState extends State<ListAdiwiyataPage> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.pushNamed(context, '');
+                          provider.setfiturAdiwiyata = 'Pemeliharaan Pohon';
+                          Navigator.pushNamed(
+                              context, '/user/adiwiyata/pemeliharaan-pohon');
                         },
                         child: Text(
                           'Pemeliharaan Pohon',
@@ -330,7 +343,9 @@ class _ListAdiwiyataPageState extends State<ListAdiwiyataPage> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.pushNamed(context, '');
+                          provider.setfiturAdiwiyata = 'Karya Inovatif PRLH';
+                          Navigator.pushNamed(
+                              context, '/user/adiwiyata/karya-inovatif-prlh');
                         },
                         child: Text(
                           'Karya Inovatif',
@@ -344,7 +359,9 @@ class _ListAdiwiyataPageState extends State<ListAdiwiyataPage> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.pushNamed(context, '');
+                          provider.setfiturAdiwiyata = 'Penerapan PRLH';
+                          Navigator.pushNamed(
+                              context, '/user/adiwiyata/penerapan-prlh');
                         },
                         child: Text(
                           'Penerapan',
@@ -396,7 +413,7 @@ class _ListAdiwiyataPageState extends State<ListAdiwiyataPage> {
                     bottom: 18,
                   ),
                   child: Text(
-                    'Kader ',
+                    'Kader',
                     style: mono1TextStyle.copyWith(
                       fontSize: 16,
                     ),
@@ -415,8 +432,7 @@ class _ListAdiwiyataPageState extends State<ListAdiwiyataPage> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.pushNamed(
-                              context, '/siswa/adiwiyata/kader-page');
+                          Navigator.pushNamed(context, '/user/adiwiyata/kader');
                         },
                         child: Text(
                           'Data Kader',
@@ -430,7 +446,9 @@ class _ListAdiwiyataPageState extends State<ListAdiwiyataPage> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.pushNamed(context, '');
+                          provider.setfiturAdiwiyata = 'Kegiatan Kader';
+                          Navigator.pushNamed(
+                              context, '/user/adiwiyata/kegiatan-kader');
                         },
                         child: Text(
                           'Kegiatan Kader',
@@ -467,23 +485,23 @@ class _ListAdiwiyataPageState extends State<ListAdiwiyataPage> {
           ),
           contentItem(
             'Sanitasi Drainase',
-            '/siswa/adiwiyata/sanitasi-drainase-page',
+            '/user/adiwiyata/sanitasi-drainase',
           ),
           expandableItemPengelolaanSampah(),
           expandableItemPemeliharaanPohon(),
           contentItem(
             'Konservasi',
-            '/siswa/adiwiyata/konservasi-page',
+            '/user/adiwiyata/konservasi',
           ),
           expandableItemPRLH(),
           expandableItemkader(),
           contentItem(
             'Jejaring Kerja',
-            '',
+            '/user/adiwiyata/jejaring-kerja',
           ),
           contentItem(
             'Publikasi',
-            '',
+            '/user/adiwiyata/publikasi',
           ),
         ],
       )),

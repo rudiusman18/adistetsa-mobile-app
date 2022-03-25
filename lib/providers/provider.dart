@@ -188,6 +188,14 @@ class Providers with ChangeNotifier {
   }
 // NOTE: END
 
+// NOTE: digunakan untuk menentukan fitur mana yang dipilih pada Adiwiyata
+  String _fiturAdiwiyata = '';
+  String get fiturAdiwiyata => _fiturAdiwiyata;
+  set setfiturAdiwiyata(String fiturAdiwiyata) {
+    _fiturAdiwiyata = fiturAdiwiyata;
+  }
+  // NOTE: END
+
   set setAngket(String angket) {
     _angket = angket;
     notifyListeners();
