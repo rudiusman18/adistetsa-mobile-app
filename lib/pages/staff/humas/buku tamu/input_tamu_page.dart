@@ -1,3 +1,5 @@
+import 'package:day_night_time_picker/lib/constants.dart';
+import 'package:day_night_time_picker/lib/daynight_timepicker.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 
@@ -37,6 +39,7 @@ class _InputTamuPageState extends State<InputTamuPage> {
 
   DateTime? selectedDate;
   bool isActivedate = false;
+  bool isActivejam = false;
   _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       builder: (context, child) {
@@ -59,6 +62,17 @@ class _InputTamuPageState extends State<InputTamuPage> {
         selectedDate = picked;
         print(selectedDate);
       });
+  }
+
+  // Note: get time
+  String jam = '';
+  TimeOfDay _timeAwal = TimeOfDay.now();
+  void onTimeChangedAwal(TimeOfDay newTime) {
+    setState(() {
+      _timeAwal = newTime;
+      jam =
+          _timeAwal.toString().replaceAll('TimeOfDay(', '').replaceAll(')', '');
+    });
   }
 
   @override
@@ -116,7 +130,7 @@ class _InputTamuPageState extends State<InputTamuPage> {
                 border: Border.all(
                   color: nameFocusNode.hasFocus || isActiveInputName == true
                       ? p1Color
-                      : mono2Color,
+                      : mono3Color,
                 ),
               ),
               child: GestureDetector(
@@ -128,6 +142,8 @@ class _InputTamuPageState extends State<InputTamuPage> {
                       isActiveInputAlamat = false;
                       isActiveInputnohp = false;
                       isActiveInputKeperluan = false;
+                      isActivedate = false;
+                      isActivejam = false;
                     });
                   },
                   focusNode: nameFocusNode,
@@ -148,7 +164,7 @@ class _InputTamuPageState extends State<InputTamuPage> {
                       fontSize: 12,
                       color: nameFocusNode.hasFocus || isActiveInputName == true
                           ? p1Color
-                          : mono2Color,
+                          : mono3Color,
                     ),
                   ),
                   style: p1TextStyle.copyWith(
@@ -193,7 +209,7 @@ class _InputTamuPageState extends State<InputTamuPage> {
                   color: instansiFocusNode.hasFocus ||
                           isActiveInputInstansi == true
                       ? p1Color
-                      : mono2Color,
+                      : mono3Color,
                 ),
               ),
               child: GestureDetector(
@@ -205,6 +221,8 @@ class _InputTamuPageState extends State<InputTamuPage> {
                       isActiveInputAlamat = false;
                       isActiveInputnohp = false;
                       isActiveInputKeperluan = false;
+                      isActivedate = false;
+                      isActivejam = false;
                     });
                   },
                   focusNode: instansiFocusNode,
@@ -226,7 +244,7 @@ class _InputTamuPageState extends State<InputTamuPage> {
                       color: instansiFocusNode.hasFocus ||
                               isActiveInputInstansi == true
                           ? p1Color
-                          : mono2Color,
+                          : mono3Color,
                     ),
                   ),
                   style: p1TextStyle.copyWith(
@@ -270,7 +288,7 @@ class _InputTamuPageState extends State<InputTamuPage> {
                 border: Border.all(
                   color: alamatFocusNode.hasFocus || isActiveInputAlamat == true
                       ? p1Color
-                      : mono2Color,
+                      : mono3Color,
                 ),
               ),
               child: GestureDetector(
@@ -282,6 +300,8 @@ class _InputTamuPageState extends State<InputTamuPage> {
                       isActiveInputAlamat = true;
                       isActiveInputnohp = false;
                       isActiveInputKeperluan = false;
+                      isActivedate = false;
+                      isActivejam = false;
                     });
                   },
                   focusNode: alamatFocusNode,
@@ -303,7 +323,7 @@ class _InputTamuPageState extends State<InputTamuPage> {
                       color: alamatFocusNode.hasFocus ||
                               isActiveInputAlamat == true
                           ? p1Color
-                          : mono2Color,
+                          : mono3Color,
                     ),
                   ),
                   style: p1TextStyle.copyWith(
@@ -347,7 +367,7 @@ class _InputTamuPageState extends State<InputTamuPage> {
                 border: Border.all(
                   color: nohpFocusNode.hasFocus || isActiveInputnohp == true
                       ? p1Color
-                      : mono2Color,
+                      : mono3Color,
                 ),
               ),
               child: GestureDetector(
@@ -359,6 +379,8 @@ class _InputTamuPageState extends State<InputTamuPage> {
                       isActiveInputAlamat = false;
                       isActiveInputnohp = true;
                       isActiveInputKeperluan = false;
+                      isActivedate = false;
+                      isActivejam = false;
                     });
                   },
                   focusNode: nohpFocusNode,
@@ -373,13 +395,14 @@ class _InputTamuPageState extends State<InputTamuPage> {
                     });
                   },
                   controller: nohpInput,
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration.collapsed(
                     hintText: 'Nomor HP',
                     hintStyle: p1TextStyle.copyWith(
                       fontSize: 12,
                       color: nohpFocusNode.hasFocus || isActiveInputnohp == true
                           ? p1Color
-                          : mono2Color,
+                          : mono3Color,
                     ),
                   ),
                   style: p1TextStyle.copyWith(
@@ -424,7 +447,7 @@ class _InputTamuPageState extends State<InputTamuPage> {
                   color: keperluanFocusNode.hasFocus ||
                           isActiveInputKeperluan == true
                       ? p1Color
-                      : mono2Color,
+                      : mono3Color,
                 ),
               ),
               child: GestureDetector(
@@ -436,6 +459,8 @@ class _InputTamuPageState extends State<InputTamuPage> {
                       isActiveInputAlamat = false;
                       isActiveInputnohp = false;
                       isActiveInputKeperluan = true;
+                      isActivedate = false;
+                      isActivejam = false;
                     });
                   },
                   focusNode: keperluanFocusNode,
@@ -460,7 +485,7 @@ class _InputTamuPageState extends State<InputTamuPage> {
                       color: keperluanFocusNode.hasFocus ||
                               isActiveInputKeperluan == true
                           ? p1Color
-                          : mono2Color,
+                          : mono3Color,
                     ),
                   ),
                   style: p1TextStyle.copyWith(
@@ -498,13 +523,24 @@ class _InputTamuPageState extends State<InputTamuPage> {
               onPressed: () {
                 _selectDate(context);
                 isActivedate = true;
+                FocusScopeNode currentFocus = FocusScope.of(context);
+                currentFocus.unfocus();
+                isActiveInputName = false;
+                isActiveInputInstansi = false;
+                isActiveInputAlamat = false;
+                isActiveInputnohp = false;
+                isActiveInputKeperluan = false;
+                isActivedate = true;
+                isActivejam = false;
               },
               style: TextButton.styleFrom(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
                 side: BorderSide(
-                  color: isActivedate == true ? p1Color : mono2Color,
+                  color: selectedDate != null && isActivedate
+                      ? p1Color
+                      : mono3Color,
                 ),
               ),
               child: Row(
@@ -516,13 +552,15 @@ class _InputTamuPageState extends State<InputTamuPage> {
                           : selectedDate!.toString().split(' ')[0],
                       style: p1TextStyle.copyWith(
                         fontSize: 12,
-                        color: isActivedate == true ? p1Color : mono2Color,
+                        color: selectedDate != null ? p1Color : mono3Color,
                       ),
                     ),
                   ),
                   Icon(
                     Icons.calendar_today_rounded,
-                    color: isActivedate == true ? p1Color : mono2Color,
+                    color: selectedDate != null && isActivedate
+                        ? p1Color
+                        : mono3Color,
                   ),
                 ],
               ),
@@ -532,7 +570,7 @@ class _InputTamuPageState extends State<InputTamuPage> {
       );
     }
 
-    Widget inputDropdownHari({required String hint, required List item}) {
+    Widget inputJam() {
       return Container(
         margin: EdgeInsets.only(
           left: 20,
@@ -543,7 +581,7 @@ class _InputTamuPageState extends State<InputTamuPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '$hint',
+              'Jam',
               style: mono1TextStyle.copyWith(
                 fontWeight: semiBold,
                 fontSize: 12,
@@ -552,165 +590,65 @@ class _InputTamuPageState extends State<InputTamuPage> {
             SizedBox(
               height: 15,
             ),
-            Container(
-                height: 40,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: flag1 == true && value1Item != null
-                        ? p1Color
-                        : mono3Color,
-                  ),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                padding: EdgeInsets.symmetric(
-                  horizontal: 12,
-                ),
-                child: DropdownButtonHideUnderline(
-                  child: GestureDetector(
-                    onLongPress: () {
-                      setState(() {
-                        flag1 = false;
-                        value1Item = null;
-                      });
+            Row(
+              children: [
+                Expanded(
+                  child: TextButton(
+                    onPressed: () {
+                      isActivedate = true;
+                      FocusScopeNode currentFocus = FocusScope.of(context);
+                      currentFocus.unfocus();
+                      isActiveInputName = false;
+                      isActiveInputInstansi = false;
+                      isActiveInputAlamat = false;
+                      isActiveInputnohp = false;
+                      isActiveInputKeperluan = false;
+                      isActivedate = false;
+                      isActivejam = true;
+                      Navigator.of(context).push(
+                        showPicker(
+                          accentColor: p2Color,
+                          unselectedColor: mono3Color,
+                          cancelStyle: p1TextStyle,
+                          okStyle: p1TextStyle,
+                          context: context,
+                          value: _timeAwal,
+                          onChange: onTimeChangedAwal,
+                          minuteInterval: MinuteInterval.FIVE,
+                          // Optional onChange to receive value as DateTime
+                          onChangeDateTime: (DateTime dateTime) {
+                            print(dateTime);
+                          },
+                        ),
+                      );
                     },
-                    child: DropdownButton(
-                      icon: Icon(
-                        Icons.keyboard_arrow_down_outlined,
-                        color: flag1 == true && value1Item != null
-                            ? p1Color
-                            : mono3Color,
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 12,
                       ),
-                      hint: Text(
-                        hint,
-                        style: mono3TextStyle.copyWith(
-                          color: flag1 == true && value1Item != null
-                              ? p1Color
-                              : mono3Color,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      side: BorderSide(
+                        color: !isActivejam ? mono3Color : p1Color,
+                      ),
+                    ),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        jam == '' ? 'Jam' : jam,
+                        style: p1TextStyle.copyWith(
                           fontSize: 12,
+                          color:
+                              jam == '' && !isActivejam ? mono3Color : p1Color,
                         ),
                       ),
-                      dropdownColor: mono6Color,
-                      elevation: 2,
-                      value: value1Item,
-                      items: item.map(
-                        (value) {
-                          return DropdownMenuItem(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: mono3TextStyle.copyWith(
-                                color:
-                                    value1Item == value ? p1Color : mono1Color,
-                                fontWeight: regular,
-                                fontSize: 12,
-                              ),
-                            ),
-                          );
-                        },
-                      ).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          print(value);
-                          flag1 = true;
-                          value1Item = value;
-                        });
-                      },
                     ),
                   ),
-                )),
-          ],
-        ),
-      );
-    }
-
-    Widget inputDropdownJam({required String hint, required List item}) {
-      return Container(
-        margin: EdgeInsets.only(
-          left: 20,
-          right: 20,
-          bottom: 20,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '$hint',
-              style: mono1TextStyle.copyWith(
-                fontWeight: semiBold,
-                fontSize: 12,
-              ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Container(
-                height: 40,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: flag2 == true && value2Item != null
-                        ? p1Color
-                        : mono3Color,
-                  ),
-                  borderRadius: BorderRadius.circular(8),
                 ),
-                padding: EdgeInsets.symmetric(
-                  horizontal: 12,
-                ),
-                child: DropdownButtonHideUnderline(
-                  child: GestureDetector(
-                    onLongPress: () {
-                      setState(() {
-                        flag2 = false;
-                        value2Item = null;
-                      });
-                    },
-                    child: DropdownButton(
-                      icon: Icon(
-                        Icons.keyboard_arrow_down_outlined,
-                        color: flag2 == true && value2Item != null
-                            ? p1Color
-                            : mono3Color,
-                      ),
-                      hint: Text(
-                        hint,
-                        style: mono3TextStyle.copyWith(
-                          color: flag2 == true && value2Item != null
-                              ? p1Color
-                              : mono3Color,
-                          fontSize: 12,
-                        ),
-                      ),
-                      dropdownColor: mono6Color,
-                      elevation: 2,
-                      value: value2Item,
-                      items: item.map(
-                        (value) {
-                          return DropdownMenuItem(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: mono3TextStyle.copyWith(
-                                color:
-                                    value2Item == value ? p1Color : mono1Color,
-                                fontWeight: regular,
-                                fontSize: 12,
-                              ),
-                            ),
-                          );
-                        },
-                      ).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          print(value);
-                          flag2 = true;
-                          value2Item = value;
-                        });
-                      },
-                    ),
-                  ),
-                )),
+              ],
+            ),
           ],
         ),
       );
@@ -762,21 +700,8 @@ class _InputTamuPageState extends State<InputTamuPage> {
             inputInstansi(),
             inputAlamat(),
             inputNoHP(),
-            inputDropdownHari(
-              hint: 'Hari',
-              item: [
-                'Senin',
-                'Selasa',
-              ],
-            ),
             inputTanggal(),
-            inputDropdownJam(
-              hint: 'Jam',
-              item: [
-                'Senin',
-                'Selasa',
-              ],
-            ),
+            inputJam(),
             inputKeperluan(),
             buttonSubmit(),
           ],

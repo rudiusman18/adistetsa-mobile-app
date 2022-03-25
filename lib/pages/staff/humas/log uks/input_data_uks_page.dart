@@ -135,6 +135,10 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
                       isActiveJenisPemeriksaan = false;
                       isActiveobatDiberikan = false;
                       isActivetindakLanjut = false;
+                      isActivedate = false;
+                      flag1 = false;
+                      flag2 = false;
+                      flag3 = false;
                     });
                   },
                   focusNode: nameFocusNode,
@@ -211,6 +215,9 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
                       isActiveJenisPemeriksaan = false;
                       isActiveobatDiberikan = false;
                       isActivetindakLanjut = false;
+                      flag1 = false;
+                      flag2 = false;
+                      flag3 = false;
                     });
                   },
                   focusNode: nisnFocusNode,
@@ -225,6 +232,7 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
                     });
                   },
                   controller: nisnInput,
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration.collapsed(
                     hintText: 'NISN',
                     hintStyle: p1TextStyle.copyWith(
@@ -288,6 +296,10 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
                       isActiveJenisPemeriksaan = true;
                       isActiveobatDiberikan = false;
                       isActivetindakLanjut = false;
+                      flag1 = false;
+                      isActivedate = false;
+                      flag2 = false;
+                      flag3 = false;
                     });
                   },
                   focusNode: jenisPemeriksaanFocusNode,
@@ -370,6 +382,10 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
                       isActiveJenisPemeriksaan = false;
                       isActiveobatDiberikan = true;
                       isActivetindakLanjut = false;
+                      flag1 = false;
+                      isActivedate = false;
+                      flag2 = false;
+                      flag3 = false;
                     });
                   },
                   // Multiline input
@@ -452,6 +468,10 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
                       isActiveJenisPemeriksaan = false;
                       isActiveobatDiberikan = false;
                       isActivetindakLanjut = true;
+                      flag1 = false;
+                      isActivedate = false;
+                      flag2 = false;
+                      flag3 = false;
                     });
                   },
                   focusNode: tindakLanjutFocusNode,
@@ -513,15 +533,22 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
             ),
             TextButton(
               onPressed: () {
-                _selectDate(context);
+                FocusScopeNode currentFocus = FocusScope.of(context);
+                currentFocus.unfocus();
+                flag1 = false;
+                flag2 = false;
+                flag3 = false;
                 isActivedate = true;
+                _selectDate(context);
               },
               style: TextButton.styleFrom(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
                 side: BorderSide(
-                  color: isActivedate == true ? p1Color : mono3Color,
+                  color: selectedDate != null && isActivedate
+                      ? p1Color
+                      : mono3Color,
                 ),
               ),
               child: Row(
@@ -533,13 +560,15 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
                           : selectedDate!.toString().split(' ')[0],
                       style: p1TextStyle.copyWith(
                         fontSize: 12,
-                        color: isActivedate == true ? p1Color : mono3Color,
+                        color: selectedDate != null ? p1Color : mono3Color,
                       ),
                     ),
                   ),
                   Icon(
                     Icons.calendar_today_rounded,
-                    color: isActivedate == true ? p1Color : mono3Color,
+                    color: selectedDate != null && isActivedate
+                        ? p1Color
+                        : mono3Color,
                   ),
                 ],
               ),
@@ -592,6 +621,16 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
                       });
                     },
                     child: DropdownButton(
+                      onTap: () {
+                        FocusScopeNode currentFocus = FocusScope.of(context);
+                        currentFocus.unfocus();
+                        isActivedate = false;
+                        isActiveInputName = false;
+                        isActiveInputnisn = false;
+                        isActiveJenisPemeriksaan = false;
+                        isActiveobatDiberikan = false;
+                        isActivetindakLanjut = false;
+                      },
                       icon: Icon(
                         Icons.keyboard_arrow_down_outlined,
                         color: flag1 == true && value1Item != null
@@ -684,6 +723,19 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
                       });
                     },
                     child: DropdownButton(
+                      onTap: () {
+                        FocusScopeNode currentFocus = FocusScope.of(context);
+                        currentFocus.unfocus();
+                        isActiveInputName = false;
+                        isActiveInputnisn = false;
+                        isActiveJenisPemeriksaan = false;
+                        isActiveobatDiberikan = false;
+                        isActivetindakLanjut = false;
+                        isActivedate = false;
+                        flag1 = false;
+                        flag2 = false;
+                        flag3 = false;
+                      },
                       icon: Icon(
                         Icons.keyboard_arrow_down_outlined,
                         color: flag2 == true && value2Item != null
@@ -777,6 +829,19 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
                       });
                     },
                     child: DropdownButton(
+                      onTap: () {
+                        FocusScopeNode currentFocus = FocusScope.of(context);
+                        currentFocus.unfocus();
+                        isActiveInputName = false;
+                        isActiveInputnisn = false;
+                        isActiveJenisPemeriksaan = false;
+                        isActiveobatDiberikan = false;
+                        isActivetindakLanjut = false;
+                        isActivedate = false;
+                        flag1 = false;
+                        flag2 = false;
+                        flag3 = false;
+                      },
                       icon: Icon(
                         Icons.keyboard_arrow_down_outlined,
                         color: flag3 == true && value3Item != null
