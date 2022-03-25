@@ -60,6 +60,7 @@ import 'package:adistetsa/pages/staff/sarpras/Peminjaman/list_peminjaman_barang_
 import 'package:adistetsa/pages/staff/sarpras/Peminjaman/list_peminjaman_ruang_page.dart';
 import 'package:adistetsa/pages/staff/sarpras/katalog%20barang/list_katalog_barang_page.dart';
 import 'package:adistetsa/pages/staff/sarpras/katalog%20barang/list_katalog_ruang_page.dart';
+import 'package:adistetsa/pages/user/adiwiyata/list_adiwiyata_page.dart';
 import 'package:adistetsa/pages/user/bk/daftar%20konseling/ajukan_konsultasi_page.dart';
 import 'package:adistetsa/pages/user/bk/daftar%20konseling/daftar_konseling_page.dart';
 import 'package:adistetsa/pages/user/bk/list_bk_page.dart';
@@ -575,6 +576,11 @@ class AdiStetsa extends StatelessWidget {
             case '/staff/buku-tamu/riwayat/detail':
               return PageTransition(
                 child: DetailRiwayatBukuTamuPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/user/adiwiyata':
+              return PageTransition(
+                child: ListAdiwiyataPage(),
                 type: PageTransitionType.rightToLeft,
               );
             case '/main-page/back':
