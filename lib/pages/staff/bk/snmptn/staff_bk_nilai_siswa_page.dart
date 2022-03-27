@@ -257,11 +257,11 @@ class _StaffBkNilaiSiswaPageState extends State<StaffBkNilaiSiswaPage> {
       backgroundColor: mono6Color,
       appBar: header(),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          filter(),
+          Image.asset('assets/404.png'),
           Center(
-            child: Text('Ini adalah halaman nilai siswa masih belum fix'),
+            child: Text('Page is under maintenance'),
           ),
         ],
       ),
