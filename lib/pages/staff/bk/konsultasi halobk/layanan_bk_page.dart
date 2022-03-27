@@ -1,5 +1,12 @@
+import 'package:adistetsa/models/profil_konselor_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
+import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
+
+import 'package:url_launcher/url_launcher.dart';
 
 class LayananBkPage extends StatefulWidget {
   @override
@@ -8,8 +15,40 @@ class LayananBkPage extends StatefulWidget {
 
 class _LayananBkPageState extends State<LayananBkPage> {
   bool isLoading = false;
+  bool getLoading = false;
+  ProfilKonselorModel profile = ProfilKonselorModel();
+  void initState() {
+    getInit();
+
+    super.initState();
+  }
+
+  void getInit({String? status}) async {
+    setState(() {
+      getLoading = true;
+    });
+    profile = await Services().getprofileKonselorBK();
+
+    setState(() {
+      getLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of(context);
+    launchUrl(String url) async {
+      if (await canLaunch(url)) {
+        await launch(
+          url,
+          forceWebView: true,
+          enableJavaScript: true,
+        );
+      } else {
+        Navigator.pushNamed(context, '/error-page');
+      }
+    }
+
     PreferredSizeWidget header() {
       return AppBar(
         backgroundColor: mono6Color,
@@ -33,10 +72,15 @@ class _LayananBkPageState extends State<LayananBkPage> {
         centerTitle: true,
         actions: [
           TextButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/staff/bk/halobk/edit').then(
-                (_) => setState(() {}),
-              );
+            onPressed: () async {
+              loading(context);
+              await provider.getDataStaffBK();
+              Navigator.pushReplacementNamed(
+                context,
+                '/staff/bk/halobk/edit',
+              ).then((_) async {
+                getInit();
+              });
             },
             child: Text(
               'Edit',
@@ -157,27 +201,32 @@ class _LayananBkPageState extends State<LayananBkPage> {
           ),
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Row(
-          children: [
-            Image.asset(
-              iconName,
-              width: 30,
-              height: 30,
-              color: m1Color,
-            ),
-            SizedBox(
-              width: 21,
-            ),
-            Flexible(
-              child: Text(
-                keterangan,
-                style: mono1TextStyle.copyWith(
-                  fontSize: 12,
-                  fontWeight: semiBold,
+        child: GestureDetector(
+          onTap: () {
+            launchUrl(url);
+          },
+          child: Row(
+            children: [
+              Image.asset(
+                iconName,
+                width: 30,
+                height: 30,
+                color: m1Color,
+              ),
+              SizedBox(
+                width: 21,
+              ),
+              Flexible(
+                child: Text(
+                  keterangan,
+                  style: mono1TextStyle.copyWith(
+                    fontSize: 12,
+                    fontWeight: semiBold,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     }
@@ -201,10 +250,25 @@ class _LayananBkPageState extends State<LayananBkPage> {
               ),
               backgroundColor: m2Color,
             ),
-            onPressed: () {},
+            onPressed: () async {
+              setState(() {
+                isLoading = true;
+              });
+              await Services().patchprofileKonselorBK(
+                linkWA: profile.wHATSAPP,
+                linkVC: profile.cONFERENCE,
+                status: profile.sTATUS == 'Offline' ? 'Online' : 'Offline',
+              );
+              setState(() {
+                isLoading = false;
+              });
+              getInit();
+            },
             child: isLoading == false
                 ? Text(
-                    'Buka Layanan HaloBK',
+                    profile.sTATUS == 'Offline'
+                        ? 'Buka Layanan HaloBK'
+                        : 'Tutup layanan HaloBK',
                     style: mono6TextStyle.copyWith(
                       fontWeight: bold,
                       fontSize: 16,
@@ -224,62 +288,67 @@ class _LayananBkPageState extends State<LayananBkPage> {
     return Scaffold(
       appBar: header(),
       backgroundColor: mono6Color,
-      body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 34),
-        child: Column(
-          children: [
-            nameCard(
-              name: 'Adam Babi',
-              role: 'Konsultas HaloBK',
-              status: 'Offline',
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 30),
-                child: ListView(
-                  children: [
-                    infoItem(
-                      iconName: Icons.subtitles_outlined,
-                      keterangan: 'NIP',
-                      value: '191203934090',
+      body: getLoading
+          ? Center(
+              child: CircularProgressIndicator(
+              color: m1Color,
+            ))
+          : Container(
+              margin: EdgeInsets.symmetric(horizontal: 34),
+              child: Column(
+                children: [
+                  nameCard(
+                    name: '${profile.nAMA}',
+                    role: 'Konsultan HaloBK',
+                    status: '${profile.sTATUS}',
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 30),
+                      child: ListView(
+                        children: [
+                          infoItem(
+                            iconName: Icons.subtitles_outlined,
+                            keterangan: 'NIP',
+                            value: '${profile.nIP}',
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          infoItem(
+                            iconName: Icons.app_registration,
+                            keterangan: 'Kompetensi',
+                            value: '${profile.kOMPETENSI}',
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          infoItem(
+                            iconName: Icons.school,
+                            keterangan: 'Alumnus',
+                            value: '${profile.aLUMNUS}',
+                          ),
+                          SizedBox(
+                            height: 40,
+                          ),
+                          buttonCommunication(
+                            url: '${profile.wHATSAPP}',
+                            iconName: 'assets/whatsapp.png',
+                            keterangan: 'Hubungi Melalui Whatsapp',
+                          ),
+                          buttonCommunication(
+                            url: '${profile.cONFERENCE}',
+                            iconName: 'assets/videocam.png',
+                            keterangan: 'Hubungi Melalui Video Conference',
+                          ),
+                          buttonSubmit(),
+                        ],
+                      ),
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    infoItem(
-                      iconName: Icons.app_registration,
-                      keterangan: 'Kompetensi',
-                      value: 'Pendidikan Pancasila dan Kewarganegaraan',
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    infoItem(
-                      iconName: Icons.school,
-                      keterangan: 'Alumnus',
-                      value: 'Universitas Negeri Malang, 2015',
-                    ),
-                    SizedBox(
-                      height: 40,
-                    ),
-                    buttonCommunication(
-                      url: 'url',
-                      iconName: 'assets/whatsapp.png',
-                      keterangan: 'Hubungi Melalui Whatsapp',
-                    ),
-                    buttonCommunication(
-                      url: '',
-                      iconName: 'assets/videocam.png',
-                      keterangan: 'Hubungi Melalui Video Conference',
-                    ),
-                    buttonSubmit(),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
     );
   }
 }

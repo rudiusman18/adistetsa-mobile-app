@@ -14,6 +14,7 @@ import 'package:adistetsa/models/list_buku_model.dart';
 import 'package:adistetsa/models/pengajuanekskul_model.dart';
 import 'package:adistetsa/models/pengajuanpeminjaman_model.dart';
 import 'package:adistetsa/models/presensisiswa_model.dart';
+import 'package:adistetsa/models/profil_konselor_model.dart';
 import 'package:adistetsa/models/riwayatbarang_model.dart';
 import 'package:adistetsa/models/riwayatpeminjaman_model.dart';
 import 'package:adistetsa/models/riwayatruangan_model.dart';
@@ -128,8 +129,14 @@ class Providers with ChangeNotifier {
 
   String idPresensiSiswa = '';
 
-  String errorMessage = '';
+// NOTE: digunakan untuk mengambil pesan error
+  String _errorMessage = '';
+  String get errorMessage => _errorMessage;
+  set setErrorMessage(String errorMessage) {
+    _errorMessage = errorMessage;
+  }
 
+// NOTE: END
   String idJurnalEkstrakurikuler = '';
 
   String idPresensiSiswaEkskul = '';
@@ -177,6 +184,7 @@ class Providers with ChangeNotifier {
   String get roleRiwayatLogUks => _roleRiwayatLogUks;
   set setRoleRiwayatLogUks(String roleRwayatLogUks) {
     _roleRiwayatLogUks = roleRwayatLogUks;
+    notifyListeners();
   }
   // NOTE: END
 
@@ -185,6 +193,7 @@ class Providers with ChangeNotifier {
   String get fiturHumas => _fiturHumas;
   set setFiturHumas(String fiturHumas) {
     _fiturHumas = fiturHumas;
+    notifyListeners();
   }
 // NOTE: END
 
@@ -193,6 +202,16 @@ class Providers with ChangeNotifier {
   String get fiturAdiwiyata => _fiturAdiwiyata;
   set setfiturAdiwiyata(String fiturAdiwiyata) {
     _fiturAdiwiyata = fiturAdiwiyata;
+    notifyListeners();
+  }
+  // NOTE: END
+
+  // NOTE: digunakan untuk mendapatkan data profile staff
+  ProfilKonselorModel _konselor = ProfilKonselorModel();
+  ProfilKonselorModel get konselor => _konselor;
+  set setKonselor(ProfilKonselorModel konselor) {
+    _konselor = konselor;
+    notifyListeners();
   }
   // NOTE: END
 
@@ -579,7 +598,7 @@ class Providers with ChangeNotifier {
       return true;
     } catch (e) {
       print(e);
-      errorMessage = e.toString();
+      _errorMessage = e.toString();
       notifyListeners();
       return false;
     }
@@ -607,7 +626,7 @@ class Providers with ChangeNotifier {
       return true;
     } catch (e) {
       print(e);
-      errorMessage = e.toString();
+      _errorMessage = e.toString();
       notifyListeners();
       return false;
     }
@@ -688,7 +707,7 @@ class Providers with ChangeNotifier {
       return true;
     } catch (e) {
       print(e);
-      errorMessage = e.toString();
+      _errorMessage = e.toString();
       notifyListeners();
       return false;
     }
@@ -716,11 +735,48 @@ class Providers with ChangeNotifier {
       return true;
     } catch (e) {
       print(e);
-      errorMessage = e.toString();
+      _errorMessage = e.toString();
       notifyListeners();
       return false;
     }
   }
+
+// NOTE:untuk mengambil data profile konselor
+  Future<bool> getDataStaffBK() async {
+    try {
+      _konselor = await Services().getprofileKonselorBK();
+
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  // NOTE: untuk mendapatkan pesan dari edit data profile konselor
+  Future<bool> patchDataStaffBK({
+    String? kompetensi,
+    String? alumnus,
+    String? linkWA,
+    String? linkVC,
+    String? status,
+  }) async {
+    try {
+      await Services().patchprofileKonselorBK(
+        kompetensi: kompetensi,
+        alumnus: alumnus,
+        linkVC: linkVC,
+        linkWA: linkWA,
+        status: status,
+      );
+      return true;
+    } catch (e) {
+      _errorMessage = e.toString();
+      return false;
+    }
+  }
+
+  // NOTE: Untuk mendapatkan list berdasarkan id
 
   // NOTE: Untuk mendapatkan list dari katalog yang user ambil
 

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:adistetsa/models/daftar_konsultasi_BK_model.dart';
 import 'package:adistetsa/models/daftaranggotaekskul_model.dart';
 import 'package:adistetsa/models/detailjurnalmengajarguru_model.dart';
 import 'package:adistetsa/models/jadwalekskul_model.dart';
@@ -21,6 +22,7 @@ import 'package:adistetsa/models/pelangaran_model.dart';
 import 'package:adistetsa/models/pengajuanekskul_model.dart';
 import 'package:adistetsa/models/pengajuanpeminjaman_model.dart';
 import 'package:adistetsa/models/presensisiswa_model.dart';
+import 'package:adistetsa/models/profil_konselor_model.dart';
 import 'package:adistetsa/models/riwayatbarang_model.dart';
 import 'package:adistetsa/models/riwayatpeminjaman_model.dart';
 import 'package:adistetsa/models/riwayatruangan_model.dart';
@@ -1454,6 +1456,72 @@ class Services extends ChangeNotifier {
       return konselorModel;
     } else {
       throw Exception('Gagal Mendapatkan data Konselor');
+    }
+  }
+
+  // NOTE: untuk mendapatkan data konselor yang akan ditampilkan pada halaman staff BK
+  getprofileKonselorBK() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/bimbingan_konseling/profil_konselor');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      ProfilKonselorModel profilKonselorModel =
+          ProfilKonselorModel.fromJson(data);
+      return profilKonselorModel;
+    } else {
+      throw Exception('Gagal Mendapatkan profile Konselor');
+    }
+  }
+
+  // NOTE: untuk mendapatkan data konselor, kemudian dilakukan update berdasarkan kebutuhan
+  patchprofileKonselorBK({
+    String? kompetensi,
+    String? alumnus,
+    String? linkWA,
+    String? linkVC,
+    String? status,
+  }) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/bimbingan_konseling/profil_konselor');
+    var request = http.MultipartRequest('PATCH', url);
+    request.headers['Authorization'] = token;
+    request.fields['KOMPETENSI'] = kompetensi.toString();
+    request.fields['ALUMNUS'] = alumnus.toString();
+    request.fields['WHATSAPP'] = linkWA.toString();
+    request.fields['CONFERENCE'] = linkVC.toString();
+    request.fields['STATUS'] = status.toString();
+
+    var response = await request.send();
+    final res = await http.Response.fromStream(response);
+
+    if (res.statusCode == 200 || res.statusCode == 201) {
+      return true;
+    } else {
+      throw Exception(res.body);
+      // throw Exception(res.body);
+    }
+  }
+
+  getDaftarKonsultasiBK({String? search}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url =
+        Uri.parse('$baseUrl/bimbingan_konseling/daftar_konsultasi?$search');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<DaftarKonsultasiBKModel> daftarKonsultasiBKModel =
+          data.map((item) => DaftarKonsultasiBKModel.fromJson(item)).toList();
+      return daftarKonsultasiBKModel;
+    } else {
+      throw Exception('Gagal Mendapatkan data konsultasi');
     }
   }
 }
