@@ -1,4 +1,6 @@
+import 'package:adistetsa/models/daftar_konsultasi_BK_model.dart';
 import 'package:adistetsa/models/daftaranggotaekskul_model.dart';
+import 'package:adistetsa/models/detail_daftar_konsultasi_bk_model.dart';
 import 'package:adistetsa/models/detailjurnalmengajarguru_model.dart';
 import 'package:adistetsa/models/jadwalekskul_model.dart';
 import 'package:adistetsa/models/jadwalmengajarguru_model.dart';
@@ -211,6 +213,26 @@ class Providers with ChangeNotifier {
   ProfilKonselorModel get konselor => _konselor;
   set setKonselor(ProfilKonselorModel konselor) {
     _konselor = konselor;
+    notifyListeners();
+  }
+  // NOTE: END
+
+  // NOTE: untuk mendapatkan daftar konsultasi BK
+  detailDaftarKonsultasiBKModel _daftarKonsultasiBKModel =
+      detailDaftarKonsultasiBKModel();
+  detailDaftarKonsultasiBKModel get daftarKonsultasiBKModel =>
+      _daftarKonsultasiBKModel;
+  void setDaftarKonsultasiBKModel(
+      detailDaftarKonsultasiBKModel setDaftarKonsultasiBKModel) {
+    _daftarKonsultasiBKModel = setDaftarKonsultasiBKModel;
+  }
+  // NOTE: END
+
+  // NOTE: mengambil id staff BK pada fitur untuk role pengguna
+  String _idStaff = '';
+  String get idStaff => _idStaff;
+  set setId(String idStaff) {
+    _idStaff = idStaff;
     notifyListeners();
   }
   // NOTE: END
@@ -776,7 +798,18 @@ class Providers with ChangeNotifier {
     }
   }
 
-  // NOTE: Untuk mendapatkan list berdasarkan id
+  // NOTE: Untuk mendapatkan listKonseling berdasarkan id
+  Future<bool> getDetailDaftarKonsultasiBK({required String id}) async {
+    try {
+      _daftarKonsultasiBKModel =
+          await Services().getDetailDaftarKonsultasiBK(id: id);
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+  // NOTE: END
 
   // NOTE: Untuk mendapatkan list dari katalog yang user ambil
 

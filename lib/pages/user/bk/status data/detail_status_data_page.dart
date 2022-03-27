@@ -88,7 +88,7 @@ class _DetailStatusDataPageState extends State<DetailStatusDataPage> {
                       ? infoColor
                       : value == 'Ditolak'
                           ? dangerColor
-                          : value == 'Diterima'
+                          : value == 'Dijadwalkan'
                               ? successColor
                               : value == 'Selesai'
                                   ? p1Color
@@ -198,7 +198,7 @@ class _DetailStatusDataPageState extends State<DetailStatusDataPage> {
                 ),
                 provider.status == 'Diajukan'
                     ? buttonSubmit(name: 'Batalkan')
-                    : provider.status == 'Diterima'
+                    : provider.status == 'Dijadwalkan'
                         ? buttonSubmit(name: 'Konsultasi HaloBk')
                         : provider.status == 'Selesai'
                             ? buttonSubmit(name: 'Berikan Feedback')

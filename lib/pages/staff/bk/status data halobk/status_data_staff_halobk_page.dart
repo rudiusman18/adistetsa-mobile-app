@@ -1,6 +1,7 @@
 import 'package:adistetsa/models/daftar_konsultasi_BK_model.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
+import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:provider/provider.dart';
@@ -110,10 +111,21 @@ class _StatusDataStaffHalobkPageState extends State<StatusDataStaffHalobkPage> {
       required String status,
     }) {
       return GestureDetector(
-        onTap: () {
+        onTap: () async {
           provider.setStaffStatus = status;
-          print(provider.staffStatus);
-          Navigator.pushNamed(context, '/staff/bk/status-data/detail');
+          loading(context);
+          await provider.getDetailDaftarKonsultasiBK(id: id);
+          Navigator.pushReplacementNamed(
+                  context, '/staff/bk/status-data/detail')
+              .then((_) async {
+            setState(() {
+              isLoading = true;
+            });
+            await Services().getDaftarKonsultasiBK();
+            setState(() {
+              isLoading = false;
+            });
+          });
         },
         child: Container(
           color: mono6Color,

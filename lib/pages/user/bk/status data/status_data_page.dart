@@ -1,4 +1,7 @@
+import 'package:adistetsa/models/daftar_konsultasi_BK_model.dart';
+import 'package:adistetsa/models/status_pengajuan_konseling_model.dart';
 import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:provider/provider.dart';
@@ -101,7 +104,7 @@ class _StatusDataPageState extends State<StatusDataPage> {
       return GestureDetector(
         onTap: () {
           provider.setStatus = status;
-          print(provider.status);
+
           Navigator.pushNamed(context, '/user/bk/status-data/detail');
         },
         child: Container(
@@ -136,7 +139,7 @@ class _StatusDataPageState extends State<StatusDataPage> {
                           ? infoColor
                           : status == 'Ditolak'
                               ? dangerColor
-                              : status == 'Diterima'
+                              : status == 'Dijadwalkan'
                                   ? successColor
                                   : status == 'Selesai'
                                       ? p1Color
@@ -168,41 +171,39 @@ class _StatusDataPageState extends State<StatusDataPage> {
         padding: const EdgeInsets.symmetric(
           vertical: 20,
         ),
-        child: ListView(
-          children: [
-            listKonsulen(
-              name: 'Adam Babi',
-              tahun: '33-03-2033',
-              status: 'Diajukan',
-            ),
-            listKonsulen(
-              name: 'Adam Babi',
-              tahun: '33-03-2033',
-              status: 'Ditolak',
-            ),
-            listKonsulen(
-              name: 'Adam Babi',
-              tahun: '33-03-2033',
-              status: 'Diterima',
-            ),
-            listKonsulen(
-              name: 'Adam Babi',
-              tahun: '33-03-2033',
-              status: 'Selesai',
-            ),
-            listKonsulen(
-              name: 'Adam Babi',
-              tahun: '33-03-2033',
-              status: 'Telah Mengisi Feedback',
-            ),
-            for (var i = 0; i < 10; i++)
-              listKonsulen(
-                name: 'Adam Babi',
-                tahun: '33-03-2033',
-                status: 'Diajukan',
-              ),
-          ],
-        ),
+        child: isLoading == true
+            ? Container()
+            : FutureBuilder(
+                future: Services().getPengajuanKonseling(search: urlSearch),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    List<StatusPengajuanKonselingModel> data = snapshot.data;
+                    return data.isEmpty
+                        ? Center(
+                            child: Text(
+                              'Data tidak ditemukan',
+                              style: mono1TextStyle,
+                            ),
+                          )
+                        : ListView(
+                            children: data.map((item) {
+                              return listKonsulen(
+                                name: '${item.nAMAKONSELOR}',
+                                tahun: '${item.tANGGALKONSULTASI}',
+                                status: '${item.sTATUS}',
+                              );
+                            }).toList(),
+                          );
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 4,
+                        color: m1Color,
+                      ),
+                    );
+                  }
+                },
+              ), // ListView(
       ),
     );
   }

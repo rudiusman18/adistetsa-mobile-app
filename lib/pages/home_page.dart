@@ -184,15 +184,15 @@ class HomePage extends StatelessWidget {
         child: Wrap(
           spacing: 25,
           children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(context, '/user/bk');
-              },
-              child: ItemCard(
-                urlImg: 'bimbingan konseling',
-                text: 'Bimbingan Konseling',
-              ),
-            ),
+            // GestureDetector(
+            //   onTap: () {
+            //     Navigator.pushNamed(context, '/user/bk');
+            //   },
+            //   child: ItemCard(
+            //     urlImg: 'bimbingan konseling',
+            //     text: 'Bimbingan Konseling',
+            //   ),
+            // ),
             GestureDetector(
               onTap: () {
                 Navigator.pushNamed(

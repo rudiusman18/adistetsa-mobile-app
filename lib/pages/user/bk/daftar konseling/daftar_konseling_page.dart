@@ -1,7 +1,9 @@
 import 'package:adistetsa/models/konselor_model.dart';
+import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class DaftarKkonselingPage extends StatefulWidget {
   @override
@@ -15,6 +17,7 @@ class _DaftarKkonselingPageState extends State<DaftarKkonselingPage> {
   TextEditingController searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of(context);
     PreferredSizeWidget header() {
       return AppBar(
         centerTitle: true,
@@ -99,6 +102,7 @@ class _DaftarKkonselingPageState extends State<DaftarKkonselingPage> {
     }
 
     Widget listKonsulen({
+      required String id,
       required String urlImage,
       required String name,
       required String role,
@@ -108,10 +112,11 @@ class _DaftarKkonselingPageState extends State<DaftarKkonselingPage> {
         padding: const EdgeInsets.only(top: 20),
         child: GestureDetector(
           onTap: () {
-            status == 'Online'
-                ? Navigator.pushNamed(
-                    context, '/user/bk/daftar-konseling/ajukan-konsultasi')
-                : Container();
+            if (status == 'Online') {
+              provider.setId = id;
+              Navigator.pushNamed(
+                  context, '/user/bk/daftar-konseling/ajukan-konsultasi');
+            }
           },
           child: Column(
             children: [
@@ -221,6 +226,7 @@ class _DaftarKkonselingPageState extends State<DaftarKkonselingPage> {
                           : ListView(
                               children: data.map((item) {
                                 return listKonsulen(
+                                  id: item.iD.toString(),
                                   urlImage: item.fOTO.toString(),
                                   name: item.nAMA.toString(),
                                   role: 'Konselor HaloBK',
