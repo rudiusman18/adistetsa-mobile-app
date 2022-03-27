@@ -1,3 +1,5 @@
+import 'package:adistetsa/models/konselor_model.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 
@@ -72,7 +74,7 @@ class _DaftarKkonselingPageState extends State<DaftarKkonselingPage> {
             isDense: true,
             border: InputBorder.none,
           ),
-          onChanged: (newValue) {
+          onChanged: (newValue) async {
             setState(() {
               if (searchController.selection.start >
                   searchController.text.length) {
@@ -85,7 +87,10 @@ class _DaftarKkonselingPageState extends State<DaftarKkonselingPage> {
               isLoading = true;
             });
 
-            //Note: await disini
+            await Services().getKonselorBK();
+            setState(() {
+              isLoading = false;
+            });
           },
         ),
         elevation: 4,
@@ -111,7 +116,7 @@ class _DaftarKkonselingPageState extends State<DaftarKkonselingPage> {
           child: Column(
             children: [
               Container(
-                color: status == 'Online' ? mono6Color : mono4Color,
+                color: mono6Color,
                 margin: EdgeInsets.only(
                   bottom: 20,
                   left: 20,
@@ -170,10 +175,11 @@ class _DaftarKkonselingPageState extends State<DaftarKkonselingPage> {
                           Text(
                             status,
                             style: mono1TextStyle.copyWith(
-                                fontSize: 10,
-                                color: status == 'Online'
-                                    ? successColor
-                                    : dangerColor),
+                              fontSize: 10,
+                              color: status == 'Online'
+                                  ? successColor
+                                  : dangerColor,
+                            ),
                           ),
                         ],
                       ),
@@ -195,31 +201,43 @@ class _DaftarKkonselingPageState extends State<DaftarKkonselingPage> {
     return Scaffold(
         backgroundColor: mono6Color,
         appBar: isSearch ? searchAppbar() : header(),
-        body: ListView(
-          children: [
-            listKonsulen(
-              urlImage:
-                  'https://yt3.ggpht.com/ytc/AKedOLRr2b60uBxJkwXewo3SdAFNLmnSlXnkJxCTr98uhg=s900-c-k-c0x00ffffff-no-rj',
-              name: 'Adam Anjing',
-              role: 'BEBAN',
-              status: 'Online',
-            ),
-            listKonsulen(
-              urlImage:
-                  'https://images.unsplash.com/photo-1549740425-5e9ed4d8cd34?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb',
-              name: 'Adam Anjing',
-              role: 'BEBAN',
-              status: 'Offline',
-            ),
-            for (var i = 0; i < 5; i++)
-              listKonsulen(
-                urlImage:
-                    'https://yt3.ggpht.com/ytc/AKedOLRr2b60uBxJkwXewo3SdAFNLmnSlXnkJxCTr98uhg=s900-c-k-c0x00ffffff-no-rj',
-                name: 'Adam Anjing',
-                role: 'BEBAN',
-                status: 'Online',
-              ),
-          ],
+        body: Padding(
+          padding: const EdgeInsets.only(top: 20),
+          child: isLoading == true
+              ? Container()
+              : FutureBuilder(
+                  future:
+                      Services().getKonselorBK(search: searchController.text),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData) {
+                      List<KonselorModel> data = snapshot.data;
+                      return data.isEmpty
+                          ? Center(
+                              child: Text(
+                                'Data tidak ditemukan',
+                                style: mono1TextStyle,
+                              ),
+                            )
+                          : ListView(
+                              children: data.map((item) {
+                                return listKonsulen(
+                                  urlImage: item.fOTO.toString(),
+                                  name: item.nAMA.toString(),
+                                  role: 'Konselor HaloBK',
+                                  status: item.sTATUS.toString(),
+                                );
+                              }).toList(),
+                            );
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 4,
+                          color: m1Color,
+                        ),
+                      );
+                    }
+                  },
+                ),
         ));
   }
 }

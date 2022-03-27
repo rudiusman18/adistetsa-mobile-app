@@ -6,6 +6,7 @@ import 'package:adistetsa/models/jadwalekskul_model.dart';
 import 'package:adistetsa/models/jadwalmengajarguru_model.dart';
 import 'package:adistetsa/models/jurnalpertemuanekskul_model.dart';
 import 'package:adistetsa/models/katalogekskul_model.dart';
+import 'package:adistetsa/models/konselor_model.dart';
 import 'package:adistetsa/models/peminjambarang_model.dart';
 import 'package:adistetsa/models/guru_model.dart';
 import 'package:adistetsa/models/jenispelanggaran_model.dart';
@@ -41,6 +42,7 @@ class Services extends ChangeNotifier {
     var token = prefs.getString("token").toString();
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
+
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body);
       List<RolesModel> roles =
@@ -623,7 +625,8 @@ class Services extends ChangeNotifier {
   getRuanganAdmin({String? urlSearch}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url = Uri.parse('$baseUrl/sarpras/pengajuan_peminjaman_ruangan_admin?search=$urlSearch');
+    var url = Uri.parse(
+        '$baseUrl/sarpras/pengajuan_peminjaman_ruangan_admin?search=$urlSearch');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -691,7 +694,8 @@ class Services extends ChangeNotifier {
   getBarangAdmin({String? urlSearch}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url = Uri.parse('$baseUrl/sarpras/pengajuan_peminjaman_barang_admin?search=$urlSearch');
+    var url = Uri.parse(
+        '$baseUrl/sarpras/pengajuan_peminjaman_barang_admin?search=$urlSearch');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -986,8 +990,8 @@ class Services extends ChangeNotifier {
       {String? search, String? filterTahunAjaran, String? filterKelas}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url =
-        Uri.parse('$baseUrl/kurikulum/jadwal_mengajar_guru?search=$search&$filterTahunAjaran');
+    var url = Uri.parse(
+        '$baseUrl/kurikulum/jadwal_mengajar_guru?search=$search&$filterTahunAjaran');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -1431,6 +1435,25 @@ class Services extends ChangeNotifier {
       return katalogEkskul;
     } else {
       throw Exception('Gagal Mendapatkan Katalog Ekskul');
+    }
+  }
+
+  // NOTE: Digunakan untuk mengambil list daftar konselor di fitur BK
+  getKonselorBK({String? search}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url =
+        Uri.parse('$baseUrl/bimbingan_konseling/katalog_konselor?$search');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<KonselorModel> konselorModel =
+          data.map((item) => KonselorModel.fromJson(item)).toList();
+      return konselorModel;
+    } else {
+      throw Exception('Gagal Mendapatkan data Konselor');
     }
   }
 }
