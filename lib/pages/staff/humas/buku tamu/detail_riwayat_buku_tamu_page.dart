@@ -1,5 +1,8 @@
+import 'package:adistetsa/models/bukutamu_model.dart';
+import 'package:adistetsa/providers/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class DetailRiwayatBukuTamuPage extends StatefulWidget {
   @override
@@ -10,6 +13,9 @@ class DetailRiwayatBukuTamuPage extends StatefulWidget {
 class _DetailRiwayatBukuTamuPageState extends State<DetailRiwayatBukuTamuPage> {
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+    BukuTamuModel bukuTamuModel = provider.bukuTamu;
+
     PreferredSizeWidget detailBukuTamuHeader() {
       return AppBar(
         centerTitle: true,
@@ -82,7 +88,7 @@ class _DetailRiwayatBukuTamuPageState extends State<DetailRiwayatBukuTamuPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Cerry Rans',
+                  '${bukuTamuModel.nAMA}',
                   style: mono5TextStyle.copyWith(
                     fontSize: 18,
                     fontWeight: semiBold,
@@ -96,27 +102,27 @@ class _DetailRiwayatBukuTamuPageState extends State<DetailRiwayatBukuTamuPage> {
           ),
           listItem(
             name: 'Instansi Asal',
-            value: 'XII IPA 2',
+            value: '${bukuTamuModel.iNSTANSIASAL}',
           ),
           listItem(
             name: 'Alamat',
-            value: '69696969696969',
+            value: '${bukuTamuModel.aLAMAT}',
           ),
           listItem(
             name: 'Nomor HP',
-            value: '2022-02-13',
+            value: '${bukuTamuModel.nOHP}',
           ),
           listItem(
             name: 'Hari, Tanggal',
-            value: 'Hohohihe',
+            value: '${bukuTamuModel.hARI}, ${bukuTamuModel.tANGGAL}',
           ),
           listItem(
             name: 'Jam',
-            value: 'Obat hohohihe',
+            value: '${bukuTamuModel.jAM}'.split(':')[0] + ' : ' + '${bukuTamuModel.jAM}'.split(':')[1],
           ),
           listItem(
             name: 'Keperluan',
-            value: 'Tidak Lanjut',
+            value: '${bukuTamuModel.kEPERLUAN}',
           ),
         ],
       ),

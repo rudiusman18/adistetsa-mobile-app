@@ -1,3 +1,4 @@
+import 'package:adistetsa/models/bukutamu_model.dart';
 import 'package:adistetsa/models/daftaranggotaekskul_model.dart';
 import 'package:adistetsa/models/detailjurnalmengajarguru_model.dart';
 import 'package:adistetsa/models/jadwalekskul_model.dart';
@@ -117,6 +118,9 @@ class Providers with ChangeNotifier {
 
   KatalogEkskulModel _katalogEkskul = KatalogEkskulModel();
   KatalogEkskulModel get katalogEkskul => _katalogEkskul;
+
+  BukuTamuModel _bukuTamu = BukuTamuModel();
+  BukuTamuModel get bukuTamu => _bukuTamu;
 
   List listJenisProgramKebaikan = [];
 
@@ -368,6 +372,11 @@ class Providers with ChangeNotifier {
 
   set setDetailKatalogEkskul(KatalogEkskulModel katalogEkskul) {
     _katalogEkskul = katalogEkskul;
+    notifyListeners();
+  }
+
+  set setDetailBukuTamu(BukuTamuModel bukuTamuModel) {
+    _bukuTamu = bukuTamuModel;
     notifyListeners();
   }
 
@@ -722,6 +731,18 @@ class Providers with ChangeNotifier {
     }
   }
 
+  Future<bool> getDetailBukuTamu({String? id}) async {
+    try {
+      BukuTamuModel bukuTamuModel =
+          await Services().getDetailBukuTamu(id: '$id');
+      _bukuTamu = bukuTamuModel;
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   // NOTE: Untuk mendapatkan list dari katalog yang user ambil
 
   // ? mengecek apakah buku sudah dipinjam oleh user yang sama
@@ -731,6 +752,32 @@ class Providers with ChangeNotifier {
       return false;
     } else {
       return true;
+    }
+  }
+
+  Future<bool> tambahBukuInduk(
+      {required String nama,
+      required String instansiAsal,
+      required String alamat,
+      required String noHP,
+      required String tanggal,
+      required String jam,
+      required String keperluan}) async {
+    try {
+      await Services().tambahBukuInduk(
+          nama: nama,
+          instansiAsal: instansiAsal,
+          alamat: alamat,
+          noHP: noHP,
+          tanggal: tanggal,
+          jam: jam,
+          keperluan: keperluan);
+      return true;
+    } catch (e) {
+      print(e);
+      errorMessage = e.toString();
+      notifyListeners();
+      return false;
     }
   }
 

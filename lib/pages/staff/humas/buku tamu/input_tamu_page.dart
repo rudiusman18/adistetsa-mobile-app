@@ -1,7 +1,9 @@
+import 'package:adistetsa/providers/provider.dart';
 import 'package:day_night_time_picker/lib/constants.dart';
 import 'package:day_night_time_picker/lib/daynight_timepicker.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class InputTamuPage extends StatefulWidget {
   InputTamuPage({Key? key}) : super(key: key);
@@ -36,6 +38,8 @@ class _InputTamuPageState extends State<InputTamuPage> {
 
   Object? value2Item;
   bool flag2 = false;
+
+  bool isLoading = false;
 
   DateTime? selectedDate;
   bool isActivedate = false;
@@ -77,6 +81,8 @@ class _InputTamuPageState extends State<InputTamuPage> {
 
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+
     PreferredSizeWidget inputTamuHeader() {
       return AppBar(
         centerTitle: true,
@@ -665,7 +671,61 @@ class _InputTamuPageState extends State<InputTamuPage> {
           bottom: 40,
         ),
         child: TextButton(
-          onPressed: () {},
+          onPressed: () async {
+            print(selectedDate);
+            if (nameInput.text == '' ||
+                instansiInput.text == '' ||
+                alamatInput.text == '' ||
+                nohpInput.text == '' ||
+                keperluanInput.text == '' ||
+                selectedDate == null ||
+                jam == '') {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  backgroundColor: dangerColor,
+                  content: Text(
+                    'Anda belum mengisi semua form yang ada',
+                    textAlign: TextAlign.center,
+                  )));
+            } else {
+              setState(() {
+                isLoading = true;
+              });
+              if (await provider.tambahBukuInduk(
+                  nama: nameInput.text,
+                  instansiAsal: instansiInput.text,
+                  alamat: alamatInput.text,
+                  noHP: nohpInput.text,
+                  tanggal: selectedDate.toString().split(' ')[0],
+                  jam: jam,
+                  keperluan: keperluanInput.text)) {
+                nameInput.text = '';
+                instansiInput.text = '';
+                alamatInput.text = '';
+                nohpInput.text = '';
+                selectedDate = null;
+                jam = '';
+                keperluanInput.text = '';
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: successColor,
+                    content: Text(
+                      'Sukses menambahkan buku tamu',
+                      textAlign: TextAlign.center,
+                    )));
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: dangerColor,
+                    content: Text(
+                      '${provider.errorMessage}'
+                          .replaceAll('Exception: [', '')
+                          .replaceAll(']', ''),
+                      textAlign: TextAlign.center,
+                    )));
+              }
+              setState(() {
+                isLoading = false;
+              });
+            }
+          },
           style: TextButton.styleFrom(
             primary: m2Color,
             backgroundColor: m2Color,
@@ -676,13 +736,22 @@ class _InputTamuPageState extends State<InputTamuPage> {
               ),
             ),
           ),
-          child: Text(
-            'Simpan',
-            style: mono6TextStyle.copyWith(
-              fontSize: 16,
-              fontWeight: bold,
-            ),
-          ),
+          child: isLoading == false
+              ? Text(
+                  'Simpan',
+                  style: mono6TextStyle.copyWith(
+                    fontSize: 16,
+                    fontWeight: bold,
+                  ),
+                )
+              : Container(
+                  width: 14,
+                  height: 14,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 4,
+                    color: mono6Color,
+                  ),
+                ),
         ),
       );
     }

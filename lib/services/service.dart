@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:adistetsa/models/bukutamu_model.dart';
 import 'package:adistetsa/models/daftaranggotaekskul_model.dart';
 import 'package:adistetsa/models/detailjurnalmengajarguru_model.dart';
 import 'package:adistetsa/models/jadwalekskul_model.dart';
@@ -1454,6 +1455,70 @@ class Services extends ChangeNotifier {
       return konselorModel;
     } else {
       throw Exception('Gagal Mendapatkan data Konselor');
+    }
+  }
+
+  //NOTE: Mendapatkan Buku Tamu
+  getBukuTamu({String? urlSearch, String? filter}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url =
+        Uri.parse('$baseUrl/hubungan_masyarakat/buku_tamu?$urlSearch&$filter');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<BukuTamuModel> bukuTamu =
+          data.map((item) => BukuTamuModel.fromJson(item)).toList();
+      return bukuTamu;
+    } else {
+      throw Exception('Gagal Mendapatkan Buku Tamu');
+    }
+  }
+
+  //NOTE: Mendapatkan detail buku tamu
+  getDetailBukuTamu({required String id}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/hubungan_masyarakat/buku_tamu/$id');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      BukuTamuModel bukuTamu = BukuTamuModel.fromJson(data);
+      return bukuTamu;
+    } else {
+      throw Exception('Gagal Mendapatkan Detail Buku Tamu');
+    }
+  }
+
+  tambahBukuInduk(
+      {required String nama,
+      required String instansiAsal,
+      required String alamat,
+      required String noHP,
+      required String tanggal,
+      required String jam,
+      required String keperluan}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/hubungan_masyarakat/buku_tamu');
+    var headers = {"Accept": "application/json", "authorization": token};
+    var body = {
+      'NAMA': nama,
+      'INSTANSI_ASAL': instansiAsal,
+      'ALAMAT': alamat,
+      'NO_HP': noHP,
+      'TANGGAL': tanggal,
+      'JAM': jam,
+      'KEPERLUAN': keperluan,
+    };
+    var response = await http.post(url, headers: headers, body: body);
+    print(response.statusCode);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return true;
+    } else {
+      throw Exception(response.body);
     }
   }
 }

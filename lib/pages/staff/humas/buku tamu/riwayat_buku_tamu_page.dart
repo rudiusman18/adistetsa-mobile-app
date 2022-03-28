@@ -1,5 +1,10 @@
+import 'package:adistetsa/models/bukutamu_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
+import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class RiwayatBukuTamuPage extends StatefulWidget {
   const RiwayatBukuTamuPage({Key? key}) : super(key: key);
@@ -18,8 +23,17 @@ class _RiwayatBukuTamuPageState extends State<RiwayatBukuTamuPage> {
   bool flag2 = false;
   Object? value2Item;
 
+  bool isLoading = false;
+
+  String filterTanggal = '';
+  String filterNama = '';
+  String urlSearch = '';
+  String url = '';
+
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of<Providers>(context);
+
     PreferredSizeWidget riwayatBukuTamuHeader() {
       return AppBar(
         centerTitle: true,
@@ -62,8 +76,13 @@ class _RiwayatBukuTamuPageState extends State<RiwayatBukuTamuPage> {
           onTap: () async {
             setState(() {
               searchController.clear();
-
+              urlSearch = '';
               isSearch = false;
+              isLoading = true;
+            });
+            await Services().getBukuTamu();
+            setState(() {
+              isLoading = false;
             });
           },
           child: Icon(
@@ -86,7 +105,12 @@ class _RiwayatBukuTamuPageState extends State<RiwayatBukuTamuPage> {
                     new TextPosition(offset: searchController.text.length));
                 searchController.text = newValue.toString();
               }
-              print(searchController.text);
+              urlSearch = 'search=${searchController.text}';
+              isLoading = true;
+            });
+            await Services().getBukuTamu();
+            setState(() {
+              isLoading = false;
             });
           },
         ),
@@ -135,11 +159,13 @@ class _RiwayatBukuTamuPageState extends State<RiwayatBukuTamuPage> {
                 items: data.map(
                   (value) {
                     return DropdownMenuItem(
-                      value: value,
+                      value: value.split('-')[1],
                       child: Text(
-                        value,
+                        value.split('-')[0],
                         style: mono2TextStyle.copyWith(
-                          color: value1Item == value ? p1Color : mono2Color,
+                          color: value1Item == value.split('-')[1]
+                              ? p1Color
+                              : mono2Color,
                           fontWeight: regular,
                           fontSize: 10,
                         ),
@@ -150,7 +176,13 @@ class _RiwayatBukuTamuPageState extends State<RiwayatBukuTamuPage> {
                 onChanged: (value) async {
                   setState(() {
                     value1Item = value;
+                    filterTanggal = 'TANGGAL=$value1Item';
                     flag1 = true;
+                    isLoading = true;
+                  });
+                  await Services().getBukuTamu();
+                  setState(() {
+                    isLoading = false;
                   });
                 },
               ),
@@ -198,11 +230,13 @@ class _RiwayatBukuTamuPageState extends State<RiwayatBukuTamuPage> {
                 items: data.map(
                   (value) {
                     return DropdownMenuItem(
-                      value: value,
+                      value: value.split('.')[1],
                       child: Text(
-                        value,
+                        value.split('.')[0],
                         style: mono2TextStyle.copyWith(
-                          color: value2Item == value ? p1Color : mono2Color,
+                          color: value2Item == value.split('.')[1]
+                              ? p1Color
+                              : mono2Color,
                           fontWeight: regular,
                           fontSize: 10,
                         ),
@@ -213,7 +247,13 @@ class _RiwayatBukuTamuPageState extends State<RiwayatBukuTamuPage> {
                 onChanged: (value) async {
                   setState(() {
                     value2Item = value;
+                    filterNama = 'NAMA=$value2Item';
                     flag2 = true;
+                    isLoading = true;
+                  });
+                  await Services().getBukuTamu();
+                  setState(() {
+                    isLoading = false;
                   });
                 },
               ),
@@ -221,6 +261,9 @@ class _RiwayatBukuTamuPageState extends State<RiwayatBukuTamuPage> {
           ));
     }
 
+    setState(() {
+      url = '$filterTanggal&$filterNama';
+    });
     Widget filter() {
       return Container(
         width: double.infinity,
@@ -240,9 +283,16 @@ class _RiwayatBukuTamuPageState extends State<RiwayatBukuTamuPage> {
                           setState(() {
                             value1Item = null;
                             value2Item = null;
-
+                            url = '';
+                            filterNama = '';
+                            filterTanggal = '';
                             flag1 = false;
                             flag2 = false;
+                            isLoading = true;
+                          });
+                          await Services().getBukuTamu();
+                          setState(() {
+                            isLoading = false;
                           });
                         },
                         child: Container(
@@ -278,15 +328,15 @@ class _RiwayatBukuTamuPageState extends State<RiwayatBukuTamuPage> {
                 dropdownList1(
                   hint: 'Tanggal',
                   data: [
-                    'Tanggal Terbaru',
-                    'Tanggal Terlama',
+                    'Tanggal Terbaru-1',
+                    'Tanggal Terlama-2',
                   ],
                 ),
                 dropdownList2(
                   hint: 'Nama',
                   data: [
-                    'A-Z (Ascending)',
-                    'Z-A (Descending)',
+                    'A-Z (Ascending).2',
+                    'Z-A (Descending).1',
                   ],
                 ),
               ],
@@ -296,10 +346,16 @@ class _RiwayatBukuTamuPageState extends State<RiwayatBukuTamuPage> {
       );
     }
 
-    Widget itemList({required String name, required String date}) {
+    Widget itemList(
+        {required String id, required String name, required String date}) {
       return GestureDetector(
-        onTap: () {
-          Navigator.pushNamed(context, '/staff/buku-tamu/riwayat/detail');
+        onTap: () async {
+          setState(() {
+            loading(context);
+          });
+          await provider.getDetailBukuTamu(id: id);
+          Navigator.pushReplacementNamed(
+              context, '/staff/buku-tamu/riwayat/detail');
         },
         child: Container(
           color: mono6Color,
@@ -357,14 +413,40 @@ class _RiwayatBukuTamuPageState extends State<RiwayatBukuTamuPage> {
           children: [
             filter(),
             Expanded(
-              child: ListView(
-                children: [
-                  itemList(
-                    name: 'Cerry Rans',
-                    date: '2000-04-18',
-                  ),
-                ],
-              ),
+              child: isLoading == true
+                  ? Container()
+                  : FutureBuilder(
+                      future: Services()
+                          .getBukuTamu(urlSearch: urlSearch, filter: url),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData) {
+                          List<BukuTamuModel> data = snapshot.data;
+                          return data.isEmpty
+                              ? Center(
+                                  child: Text(
+                                    'data tidak ditemukan',
+                                    style: mono1TextStyle,
+                                  ),
+                                )
+                              : ListView(
+                                  children: data.map((item) {
+                                    return itemList(
+                                      id: '${item.iD}',
+                                      name: '${item.nAMA}',
+                                      date: '${item.tANGGAL}',
+                                    );
+                                  }).toList(),
+                                );
+                        } else {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 4,
+                              color: m1Color,
+                            ),
+                          );
+                        }
+                      },
+                    ),
             ),
           ],
         ),
