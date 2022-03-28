@@ -1783,7 +1783,7 @@ class Services extends ChangeNotifier {
           DetailDaftarAlumniModel.fromJson(data);
       return daftarAlumniModel;
     } else {
-      throw Exception('Gagal mendapatkan detail data daftar alumni');
+      throw Exception(response.body);
     }
   }
 }

@@ -791,25 +791,34 @@ class _StaffBkEditDaftarAlumniPageState
               setState(() {
                 isLoading = true;
               });
-              await Services().patchDetailDaftarAlumni(
-                id: id,
-                namaSiswa: namaSiswa,
-                kelas: kelas,
-                nisn: nisn,
-                nis: nis,
-                tahunAjaran: tahunAjaran,
-                namaPTN: namaPTN,
-                programStudi: programStudi,
-                mediaSosial: mediaSosial,
-                email: email,
-                alamatRumah: alamatRumah,
-                tempatKerja: tempatKerja,
-              );
+              try {
+                await Services().patchDetailDaftarAlumni(
+                  id: id,
+                  namaSiswa: namaSiswa,
+                  kelas: kelas,
+                  nisn: nisn,
+                  nis: nis,
+                  tahunAjaran: tahunAjaran,
+                  namaPTN: namaPTN,
+                  programStudi: programStudi,
+                  mediaSosial: mediaSosial,
+                  email: email,
+                  alamatRumah: alamatRumah,
+                  tempatKerja: tempatKerja,
+                );
+                Navigator.pop(context);
+                Navigator.pop(context);
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: dangerColor,
+                    content: Text(
+                      e.toString(),
+                      textAlign: TextAlign.center,
+                    )));
+              }
               setState(() {
                 isLoading = false;
               });
-              Navigator.pop(context);
-              Navigator.pop(context);
             },
             child: isLoading == false
                 ? Text(
