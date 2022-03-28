@@ -1,7 +1,10 @@
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:day_night_time_picker/lib/constants.dart';
 import 'package:day_night_time_picker/lib/daynight_timepicker.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class AjukanKonsultasiPage extends StatefulWidget {
   @override
@@ -64,6 +67,7 @@ class _AjukanKonsultasiPageState extends State<AjukanKonsultasiPage> {
 
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of(context);
     PreferredSizeWidget header() {
       return AppBar(
         centerTitle: true,
@@ -382,7 +386,34 @@ class _AjukanKonsultasiPageState extends State<AjukanKonsultasiPage> {
               ),
               backgroundColor: m2Color,
             ),
-            onPressed: () {},
+            onPressed: () async {
+              if (selectedDate != null &&
+                  jamAwal != '' &&
+                  jamAkhir != '' &&
+                  value1Item != null) {
+                setState(() {
+                  isLoading = true;
+                });
+                await Services().postPengajuanKonseling(
+                  id: provider.idStaff,
+                  tanggal: selectedDate!.toString().split(' ')[0],
+                  jamAwal: jamAwal,
+                  jamAkhir: jamAkhir,
+                  jenisMasalah: value1Item.toString(),
+                );
+                setState(() {
+                  isLoading = false;
+                });
+                Navigator.pop(context);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: dangerColor,
+                    content: Text(
+                      'Anda harus mengisi semua form yang tersedia',
+                      textAlign: TextAlign.center,
+                    )));
+              }
+            },
             child: isLoading == false
                 ? Text(
                     'Ajukan Konsultasi',

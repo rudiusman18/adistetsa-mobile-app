@@ -1,5 +1,8 @@
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class StaffBkEditDaftarAlumniPage extends StatefulWidget {
   @override
@@ -10,19 +13,17 @@ class StaffBkEditDaftarAlumniPage extends StatefulWidget {
 class _StaffBkEditDaftarAlumniPageState
     extends State<StaffBkEditDaftarAlumniPage> {
   bool isLoading = false;
-  TextEditingController namaSiswaController = TextEditingController(text: '');
-  TextEditingController kelasSiswaController = TextEditingController(text: '');
-  TextEditingController nisnSiswaController = TextEditingController(text: '');
-  TextEditingController nisSiswaController = TextEditingController(text: '');
-  TextEditingController tahunAjaranLulusSiswaController =
-      TextEditingController(text: '');
-  TextEditingController kampusSiswaController = TextEditingController(text: '');
-  TextEditingController prodiSiswaController = TextEditingController(text: '');
-  TextEditingController medsosSiswaController = TextEditingController(text: '');
-  TextEditingController emailSiswaController = TextEditingController(text: '');
-  TextEditingController alamatSiswaController = TextEditingController(text: '');
-  TextEditingController tempatKerjaSiswaController =
-      TextEditingController(text: '');
+  String namaSiswaController = '';
+  String kelasSiswaController = '';
+  String nisnSiswaController = '';
+  String nisSiswaController = '';
+  String tahunAjaranLulusSiswaController = '';
+  String kampusSiswaController = '';
+  String prodiSiswaController = '';
+  String medsosSiswaController = '';
+  String emailSiswaController = '';
+  String alamatSiswaController = '';
+  String tempatKerjaSiswaController = '';
 
   late FocusNode namaSiswaFocusNode;
   late FocusNode kelasSiswaFocusNode;
@@ -68,53 +69,7 @@ class _StaffBkEditDaftarAlumniPageState
 
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      namaSiswaController.text = 'Adam Bangsat';
-      namaSiswaController.selection = TextSelection.fromPosition(
-        TextPosition(offset: namaSiswaController.text.length),
-      );
-      kelasSiswaController.text = 'XII-IPA A';
-      kelasSiswaController.selection = TextSelection.fromPosition(
-        TextPosition(offset: kelasSiswaController.text.length),
-      );
-      nisnSiswaController.text = '123456789';
-      nisnSiswaController.selection = TextSelection.fromPosition(
-        TextPosition(offset: nisnSiswaController.text.length),
-      );
-      nisSiswaController.text = '987654321';
-      nisSiswaController.selection = TextSelection.fromPosition(
-        TextPosition(offset: nisSiswaController.text.length),
-      );
-      tahunAjaranLulusSiswaController.text = '2000/2001';
-      tahunAjaranLulusSiswaController.selection = TextSelection.fromPosition(
-        TextPosition(offset: tahunAjaranLulusSiswaController.text.length),
-      );
-      kampusSiswaController.text = 'Universitas Gadjah Mada';
-      kampusSiswaController.selection = TextSelection.fromPosition(
-        TextPosition(offset: kampusSiswaController.text.length),
-      );
-      prodiSiswaController.text = 'Aktuaria';
-      prodiSiswaController.selection = TextSelection.fromPosition(
-        TextPosition(offset: prodiSiswaController.text.length),
-      );
-      medsosSiswaController.text = '@Adambgst';
-      medsosSiswaController.selection = TextSelection.fromPosition(
-        TextPosition(offset: medsosSiswaController.text.length),
-      );
-      emailSiswaController.text = 'Adambangsat@gmail.com';
-      emailSiswaController.selection = TextSelection.fromPosition(
-        TextPosition(offset: emailSiswaController.text.length),
-      );
-      alamatSiswaController.text =
-          'perum peruri, jln, wijaya kusuma blok 3 rt 5';
-      alamatSiswaController.selection = TextSelection.fromPosition(
-        TextPosition(offset: alamatSiswaController.text.length),
-      );
-      tempatKerjaSiswaController.text = 'Penjara';
-      tempatKerjaSiswaController.selection = TextSelection.fromPosition(
-        TextPosition(offset: tempatKerjaSiswaController.text.length),
-      );
-    });
+    Providers provider = Provider.of(context);
     PreferredSizeWidget header() {
       return AppBar(
         automaticallyImplyLeading: false,
@@ -173,14 +128,16 @@ class _StaffBkEditDaftarAlumniPageState
                   });
                 },
                 focusNode: namaSiswaFocusNode,
-                controller: namaSiswaController,
+                initialValue: provider.daftarAlumni.nAMASISWA,
+                onChanged: (value) {
+                  namaSiswaController = value;
+                },
                 onEditingComplete: () {
                   setState(() {
                     FocusScope.of(context).unfocus();
                   });
                 },
-                style: namaSiswaFocusNode.hasFocus ||
-                        namaSiswaController.text != ''
+                style: namaSiswaFocusNode.hasFocus
                     ? p1TextStyle.copyWith(fontSize: 12)
                     : mono3TextStyle.copyWith(fontSize: 12),
                 decoration: InputDecoration.collapsed(
@@ -230,14 +187,16 @@ class _StaffBkEditDaftarAlumniPageState
                   });
                 },
                 focusNode: kelasSiswaFocusNode,
-                controller: kelasSiswaController,
+                initialValue: provider.daftarAlumni.kELAS,
+                onChanged: (value) {
+                  kelasSiswaController = value;
+                },
                 onEditingComplete: () {
                   setState(() {
                     FocusScope.of(context).unfocus();
                   });
                 },
-                style: kelasSiswaFocusNode.hasFocus ||
-                        kelasSiswaController.text != ''
+                style: kelasSiswaFocusNode.hasFocus
                     ? p1TextStyle.copyWith(fontSize: 12)
                     : mono3TextStyle.copyWith(fontSize: 12),
                 decoration: InputDecoration.collapsed(
@@ -288,14 +247,16 @@ class _StaffBkEditDaftarAlumniPageState
                 },
                 focusNode: nisnSiswaFocusNode,
                 keyboardType: TextInputType.number,
-                controller: nisnSiswaController,
+                initialValue: provider.daftarAlumni.nISN,
+                onChanged: (value) {
+                  nisnSiswaController = value;
+                },
                 onEditingComplete: () {
                   setState(() {
                     FocusScope.of(context).unfocus();
                   });
                 },
-                style: nisnSiswaFocusNode.hasFocus ||
-                        nisnSiswaController.text != ''
+                style: nisnSiswaFocusNode.hasFocus
                     ? p1TextStyle.copyWith(fontSize: 12)
                     : mono3TextStyle.copyWith(fontSize: 12),
                 decoration: InputDecoration.collapsed(
@@ -346,16 +307,18 @@ class _StaffBkEditDaftarAlumniPageState
                 },
                 keyboardType: TextInputType.number,
                 focusNode: nisSiswaFocusNode,
-                controller: nisSiswaController,
+                initialValue: provider.daftarAlumni.nIS,
+                onChanged: (value) {
+                  nisSiswaController = value;
+                },
                 onEditingComplete: () {
                   setState(() {
                     FocusScope.of(context).unfocus();
                   });
                 },
-                style:
-                    nisSiswaFocusNode.hasFocus || nisSiswaController.text != ''
-                        ? p1TextStyle.copyWith(fontSize: 12)
-                        : mono3TextStyle.copyWith(fontSize: 12),
+                style: nisSiswaFocusNode.hasFocus
+                    ? p1TextStyle.copyWith(fontSize: 12)
+                    : mono3TextStyle.copyWith(fontSize: 12),
                 decoration: InputDecoration.collapsed(
                   hintText: 'NIS',
                   hintStyle: nisSiswaFocusNode.hasFocus
@@ -405,14 +368,16 @@ class _StaffBkEditDaftarAlumniPageState
                   });
                 },
                 focusNode: tahunAjaranLulusSiswaFocusNode,
-                controller: tahunAjaranLulusSiswaController,
+                initialValue: provider.daftarAlumni.tAHUNAJARAN,
+                onChanged: (value) {
+                  tahunAjaranLulusSiswaController = value;
+                },
                 onEditingComplete: () {
                   setState(() {
                     FocusScope.of(context).unfocus();
                   });
                 },
-                style: tahunAjaranLulusSiswaFocusNode.hasFocus ||
-                        tahunAjaranLulusSiswaController.text != ''
+                style: tahunAjaranLulusSiswaFocusNode.hasFocus
                     ? p1TextStyle.copyWith(fontSize: 12)
                     : mono3TextStyle.copyWith(fontSize: 12),
                 decoration: InputDecoration.collapsed(
@@ -462,14 +427,16 @@ class _StaffBkEditDaftarAlumniPageState
                   });
                 },
                 focusNode: kampusSiswaFocusNode,
-                controller: kampusSiswaController,
+                initialValue: provider.daftarAlumni.nAMAPT,
+                onChanged: (value) {
+                  kampusSiswaController = value;
+                },
                 onEditingComplete: () {
                   setState(() {
                     FocusScope.of(context).unfocus();
                   });
                 },
-                style: kampusSiswaFocusNode.hasFocus ||
-                        kampusSiswaController.text != ''
+                style: kampusSiswaFocusNode.hasFocus
                     ? p1TextStyle.copyWith(fontSize: 12)
                     : mono3TextStyle.copyWith(fontSize: 12),
                 decoration: InputDecoration.collapsed(
@@ -519,14 +486,16 @@ class _StaffBkEditDaftarAlumniPageState
                   });
                 },
                 focusNode: prodiSiswaFocusNode,
-                controller: prodiSiswaController,
+                initialValue: provider.daftarAlumni.pROGRAMSTUDI,
+                onChanged: (value) {
+                  prodiSiswaController = value;
+                },
                 onEditingComplete: () {
                   setState(() {
                     FocusScope.of(context).unfocus();
                   });
                 },
-                style: prodiSiswaFocusNode.hasFocus ||
-                        prodiSiswaController.text != ''
+                style: prodiSiswaFocusNode.hasFocus
                     ? p1TextStyle.copyWith(fontSize: 12)
                     : mono3TextStyle.copyWith(fontSize: 12),
                 decoration: InputDecoration.collapsed(
@@ -576,14 +545,16 @@ class _StaffBkEditDaftarAlumniPageState
                   });
                 },
                 focusNode: medsosSiswaFocusNode,
-                controller: medsosSiswaController,
+                initialValue: provider.daftarAlumni.mEDIASOSIAL,
+                onChanged: (value) {
+                  medsosSiswaController = value;
+                },
                 onEditingComplete: () {
                   setState(() {
                     FocusScope.of(context).unfocus();
                   });
                 },
-                style: medsosSiswaFocusNode.hasFocus ||
-                        medsosSiswaController.text != ''
+                style: medsosSiswaFocusNode.hasFocus
                     ? p1TextStyle.copyWith(fontSize: 12)
                     : mono3TextStyle.copyWith(fontSize: 12),
                 decoration: InputDecoration.collapsed(
@@ -634,14 +605,16 @@ class _StaffBkEditDaftarAlumniPageState
                 },
                 keyboardType: TextInputType.emailAddress,
                 focusNode: emailSiswaFocusNode,
-                controller: emailSiswaController,
+                initialValue: provider.daftarAlumni.eMAIL,
+                onChanged: (value) {
+                  emailSiswaController = value;
+                },
                 onEditingComplete: () {
                   setState(() {
                     FocusScope.of(context).unfocus();
                   });
                 },
-                style: emailSiswaFocusNode.hasFocus ||
-                        emailSiswaController.text != ''
+                style: emailSiswaFocusNode.hasFocus
                     ? p1TextStyle.copyWith(fontSize: 12)
                     : mono3TextStyle.copyWith(fontSize: 12),
                 decoration: InputDecoration.collapsed(
@@ -694,14 +667,16 @@ class _StaffBkEditDaftarAlumniPageState
                 minLines: 1,
                 maxLines: 5,
                 focusNode: alamatSiswaFocusNode,
-                controller: alamatSiswaController,
+                initialValue: provider.daftarAlumni.aLAMAT,
+                onChanged: (value) {
+                  alamatSiswaController = value;
+                },
                 onEditingComplete: () {
                   setState(() {
                     FocusScope.of(context).unfocus();
                   });
                 },
-                style: alamatSiswaFocusNode.hasFocus ||
-                        alamatSiswaController.text != ''
+                style: alamatSiswaFocusNode.hasFocus
                     ? p1TextStyle.copyWith(fontSize: 12)
                     : mono3TextStyle.copyWith(fontSize: 12),
                 decoration: InputDecoration.collapsed(
@@ -755,14 +730,16 @@ class _StaffBkEditDaftarAlumniPageState
                 minLines: 1,
                 maxLines: 5,
                 focusNode: tempatKerjaSiswaFocusNode,
-                controller: tempatKerjaSiswaController,
+                initialValue: provider.daftarAlumni.tEMPATBEKERJA,
+                onChanged: (value) {
+                  tempatKerjaSiswaController = value;
+                },
                 onEditingComplete: () {
                   setState(() {
                     FocusScope.of(context).unfocus();
                   });
                 },
-                style: tempatKerjaSiswaFocusNode.hasFocus ||
-                        tempatKerjaSiswaController.text != ''
+                style: tempatKerjaSiswaFocusNode.hasFocus
                     ? p1TextStyle.copyWith(fontSize: 12)
                     : mono3TextStyle.copyWith(fontSize: 12),
                 decoration: InputDecoration.collapsed(
@@ -778,7 +755,20 @@ class _StaffBkEditDaftarAlumniPageState
       );
     }
 
-    Widget buttonSubmit() {
+    Widget buttonSubmit({
+      required String id,
+      required String namaSiswa,
+      required String kelas,
+      required String nisn,
+      required String nis,
+      required String tahunAjaran,
+      required String namaPTN,
+      required String programStudi,
+      required String mediaSosial,
+      required String email,
+      required String alamatRumah,
+      required String tempatKerja,
+    }) {
       return Container(
         margin: EdgeInsets.only(
           top: 20,
@@ -797,7 +787,39 @@ class _StaffBkEditDaftarAlumniPageState
               ),
               backgroundColor: m2Color,
             ),
-            onPressed: () {},
+            onPressed: () async {
+              setState(() {
+                isLoading = true;
+              });
+              try {
+                await Services().patchDetailDaftarAlumni(
+                  id: id,
+                  namaSiswa: namaSiswa,
+                  kelas: kelas,
+                  nisn: nisn,
+                  nis: nis,
+                  tahunAjaran: tahunAjaran,
+                  namaPTN: namaPTN,
+                  programStudi: programStudi,
+                  mediaSosial: mediaSosial,
+                  email: email,
+                  alamatRumah: alamatRumah,
+                  tempatKerja: tempatKerja,
+                );
+                Navigator.pop(context);
+                Navigator.pop(context);
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: dangerColor,
+                    content: Text(
+                      e.toString(),
+                      textAlign: TextAlign.center,
+                    )));
+              }
+              setState(() {
+                isLoading = false;
+              });
+            },
             child: isLoading == false
                 ? Text(
                     'Simpan',
@@ -842,7 +864,42 @@ class _StaffBkEditDaftarAlumniPageState
             emailSiswaInput(),
             alamatSiswaInput(),
             tempatKerjaSiswaInput(),
-            buttonSubmit(),
+            buttonSubmit(
+              id: provider.daftarAlumni.iD.toString(),
+              namaSiswa: namaSiswaController.isEmpty
+                  ? provider.daftarAlumni.nAMASISWA.toString()
+                  : namaSiswaController,
+              kelas: kelasSiswaController.isEmpty
+                  ? provider.daftarAlumni.kELAS.toString()
+                  : kelasSiswaController,
+              nisn: nisnSiswaController.isEmpty
+                  ? provider.daftarAlumni.nISN.toString()
+                  : nisnSiswaController,
+              nis: nisSiswaController.isEmpty
+                  ? provider.daftarAlumni.nIS.toString()
+                  : nisSiswaController,
+              tahunAjaran: tahunAjaranLulusSiswaController.isEmpty
+                  ? provider.daftarAlumni.tAHUNAJARAN.toString()
+                  : tahunAjaranLulusSiswaController,
+              namaPTN: kampusSiswaController.isEmpty
+                  ? provider.daftarAlumni.nAMAPT.toString()
+                  : kampusSiswaController,
+              programStudi: prodiSiswaController.isEmpty
+                  ? provider.daftarAlumni.pROGRAMSTUDI.toString()
+                  : prodiSiswaController,
+              mediaSosial: medsosSiswaController.isEmpty
+                  ? provider.daftarAlumni.mEDIASOSIAL.toString()
+                  : medsosSiswaController,
+              email: emailSiswaController.isEmpty
+                  ? provider.daftarAlumni.eMAIL.toString()
+                  : emailSiswaController,
+              alamatRumah: alamatSiswaController.isEmpty
+                  ? provider.daftarAlumni.aLAMAT.toString()
+                  : alamatSiswaController,
+              tempatKerja: tempatKerjaSiswaController.isEmpty
+                  ? provider.daftarAlumni.tEMPATBEKERJA.toString()
+                  : tempatKerjaSiswaController,
+            ),
           ],
         ),
       ),

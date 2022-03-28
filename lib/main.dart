@@ -94,6 +94,7 @@ import 'package:adistetsa/providers/auth_provider.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/roles_page.dart';
 import 'package:adistetsa/splash_screen.dart';
+import 'package:adistetsa/widget/error_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
@@ -645,6 +646,11 @@ class AdiStetsa extends StatelessWidget {
               return PageTransition(
                 child: MainPage(),
                 type: PageTransitionType.bottomToTop,
+              );
+            case '/error-page':
+              return PageTransition(
+                child: ErrorPages(),
+                type: PageTransitionType.rightToLeft,
               );
           }
         },

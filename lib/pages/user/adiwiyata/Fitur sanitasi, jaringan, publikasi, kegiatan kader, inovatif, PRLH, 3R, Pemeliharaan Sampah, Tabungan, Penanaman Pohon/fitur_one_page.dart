@@ -18,7 +18,7 @@ class _FiturOnePageState extends State<FiturOnePage> {
   @override
   Widget build(BuildContext context) {
     Providers provider = Provider.of(context);
-    PreferredSizeWidget Header() {
+    PreferredSizeWidget header() {
       return AppBar(
         centerTitle: true,
         title: Text(
@@ -310,7 +310,7 @@ class _FiturOnePageState extends State<FiturOnePage> {
 
     return Scaffold(
       backgroundColor: mono6Color,
-      appBar: isSearch == true ? searchAppbar() : Header(),
+      appBar: isSearch == true ? searchAppbar() : header(),
       body: Column(
         children: [
           provider.fiturAdiwiyata == 'Penanaman Pohon'

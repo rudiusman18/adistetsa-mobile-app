@@ -1,4 +1,7 @@
+import 'package:adistetsa/models/role_model.dart';
 import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
+import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:provider/provider.dart';
@@ -15,8 +18,8 @@ class _DetailStatusDataStaffHalobkPageState
   @override
   Widget build(BuildContext context) {
     Providers provider = Provider.of(context);
+    RolesModel rolesModel = provider.role;
 
-    print(provider.staffStatus);
     PreferredSizeWidget header() {
       return AppBar(
         centerTitle: true,
@@ -122,20 +125,60 @@ class _DetailStatusDataStaffHalobkPageState
                 borderRadius: BorderRadius.circular(8),
               ),
               side: BorderSide(
-                color: name == 'Setuju' ? successColor : m2Color,
+                color: name == 'Setuju'
+                    ? successColor
+                    : name == 'Lihat Feedback' &&
+                            provider.daftarKonsultasiBKModel.rATING == null
+                        ? mono2Color
+                        : m2Color,
                 width: 2,
               ),
               backgroundColor: name == 'Setuju'
                   ? successColor
                   : name == 'Tolak'
                       ? mono6Color
-                      : m2Color,
+                      : name == 'Lihat Feedback' &&
+                              provider.daftarKonsultasiBKModel.rATING == null
+                          ? mono2Color
+                          : m2Color,
             ),
-            onPressed: () {
-              name == 'Lihat Feedback'
-                  ? Navigator.pushNamed(
-                      context, '/staff/bk/status-data/detail/feedback')
-                  : Container();
+            onPressed: () async {
+              if (name == 'Tolak') {
+                loading(context);
+                await Services().deleteDetailDaftarKonsultasiBK(
+                    id: '${provider.daftarKonsultasiBKModel.iD}');
+                Navigator.pop(context);
+                Navigator.pop(context);
+              }
+
+              if (name == 'Selesai Konsultasi') {
+                loading(context);
+                await Services().patchDetailDaftarKonsultasiBK(
+                  id: '${provider.daftarKonsultasiBKModel.iD}',
+                  rating: null,
+                  kritikSaran: '',
+                  status: 'Selesai',
+                );
+                Navigator.pop(context);
+                Navigator.pop(context);
+              }
+
+              if (name == 'Setuju') {
+                loading(context);
+                await Services().patchDetailDaftarKonsultasiBK(
+                    id: '${provider.daftarKonsultasiBKModel.iD}',
+                    status: 'Dijadwalkan');
+                Navigator.pop(context);
+                Navigator.pop(context);
+              }
+              if (name == 'Lihat Feedback' &&
+                  provider.daftarKonsultasiBKModel.kRITIKSARAN!.isNotEmpty) {
+                loading(context);
+                await provider.getDetailDaftarKonsultasiBK(
+                    id: '${provider.daftarKonsultasiBKModel.iD}');
+                Navigator.pushReplacementNamed(
+                    context, '/staff/bk/status-data/detail/feedback');
+              }
             },
             child: isLoading == false
                 ? Text(
@@ -163,39 +206,53 @@ class _DetailStatusDataStaffHalobkPageState
       body: Column(
         children: [
           profile(
-            name: 'Syauqi Anak Babi',
-            role: 'Pengacara (Pengangguran Banyak Acara)',
+            name:
+                '${provider.daftarKonsultasiBKModel.nAMA == null ? provider.guru.nAMALENGKAP : provider.daftarKonsultasiBKModel.nAMA}',
+            role:
+                '${provider.daftarKonsultasiBKModel.kELAS == null ? provider.guru.jENISPTK : provider.daftarKonsultasiBKModel.kELAS}',
           ),
           Expanded(
             child: ListView(
               children: [
                 item(
-                  name: 'Nama Siswa',
-                  value: 'Annabelle',
+                  name: provider.daftarKonsultasiBKModel.nAMA == null
+                      ? 'Nama Guru'
+                      : 'Nama Siswa',
+                  value:
+                      '${provider.daftarKonsultasiBKModel.nAMA == null ? provider.guru.nAMALENGKAP : provider.daftarKonsultasiBKModel.nAMA}',
                 ),
+                provider.daftarKonsultasiBKModel.nAMA == null
+                    ? Container()
+                    : item(
+                        name: 'Kelas',
+                        value: '${provider.daftarKonsultasiBKModel.kELAS}',
+                      ),
+                provider.daftarKonsultasiBKModel.nAMA == null
+                    ? Container()
+                    : item(
+                        name: 'NISN',
+                        value: '${provider.daftarKonsultasiBKModel.nISN}',
+                      ),
                 item(
-                  name: 'Kelas',
-                  value: 'XII IPA A',
-                ),
-                item(
-                  name: 'NISN',
-                  value: '18029282739298',
-                ),
-                item(
-                  name: 'NIS',
-                  value: '17728192847362',
+                  name: provider.daftarKonsultasiBKModel.nAMA == null
+                      ? 'NIK'
+                      : 'NIS',
+                  value:
+                      '${provider.daftarKonsultasiBKModel.nAMA == null ? provider.guru.nIK : provider.daftarKonsultasiBKModel.nISN}',
                 ),
                 item(
                   name: 'Tanggal',
-                  value: '2022-02-13',
+                  value:
+                      '${provider.daftarKonsultasiBKModel.tANGGALKONSULTASI}',
                 ),
                 item(
                   name: 'Jam',
-                  value: '09:00 - 12:00 WIB',
+                  value:
+                      '${provider.daftarKonsultasiBKModel.jAMAWAL!.split(':')[0]}:${provider.daftarKonsultasiBKModel.jAMAWAL!.split(':')[1]} - ${provider.daftarKonsultasiBKModel.jAMAKHIR!.split(':')[0]}:${provider.daftarKonsultasiBKModel.jAMAKHIR!.split(':')[1]}',
                 ),
                 item(
                   name: 'Jenis Masalah',
-                  value: 'Belajar',
+                  value: '${provider.daftarKonsultasiBKModel.jENISMASALAH}',
                 ),
                 item(
                   name: 'Status Pengajuan',
@@ -208,7 +265,8 @@ class _DetailStatusDataStaffHalobkPageState
                     ? buttonSubmit(name: 'Setuju')
                     : provider.staffStatus == 'Dijadwalkan'
                         ? buttonSubmit(name: 'Selesai Konsultasi')
-                        : provider.staffStatus == 'Selesai'
+                        : provider.staffStatus == 'Telah Mengisi Feedback' ||
+                                provider.staffStatus == 'Selesai'
                             ? buttonSubmit(name: 'Lihat Feedback')
                             : Container(),
                 provider.staffStatus == 'Diajukan'

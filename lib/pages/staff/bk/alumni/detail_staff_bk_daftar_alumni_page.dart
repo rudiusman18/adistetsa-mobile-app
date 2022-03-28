@@ -1,5 +1,7 @@
+import 'package:adistetsa/providers/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class DetailStaffBkDaftarAlumniPage extends StatefulWidget {
   @override
@@ -12,6 +14,7 @@ class _DetailStaffBkDaftarAlumniPageState
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of(context);
     PreferredSizeWidget header() {
       return AppBar(
         automaticallyImplyLeading: false,
@@ -108,47 +111,47 @@ class _DetailStaffBkDaftarAlumniPageState
         children: [
           listItem(
             keterangan: 'Nama Siswa',
-            value: 'Adam Babi',
+            value: '${provider.daftarAlumni.nAMASISWA}',
           ),
           listItem(
             keterangan: 'Kelas',
-            value: 'XII-IPA A',
+            value: '${provider.daftarAlumni.kELAS}',
           ),
           listItem(
             keterangan: 'NISN',
-            value: '123456789',
+            value: '${provider.daftarAlumni.nISN}',
           ),
           listItem(
             keterangan: 'NIS',
-            value: '987654321',
+            value: '${provider.daftarAlumni.nIS}',
           ),
           listItem(
             keterangan: 'Lulus Tahun Ajaran',
-            value: '2020/2021',
+            value: '${provider.daftarAlumni.tAHUNAJARAN}',
           ),
           listItem(
             keterangan: 'Nama PTN, PTS/PTL',
-            value: 'Universitas Gajah Mada',
+            value: '${provider.daftarAlumni.nAMAPT}',
           ),
           listItem(
             keterangan: 'Program Studi',
-            value: 'Aktuaria',
+            value: '${provider.daftarAlumni.pROGRAMSTUDI}',
           ),
           listItem(
             keterangan: 'Media Sosial',
-            value: '@andis23_',
+            value: '${provider.daftarAlumni.mEDIASOSIAL}',
           ),
           listItem(
             keterangan: 'Email',
-            value: '@anndiss23@gmail.com',
+            value: '${provider.daftarAlumni.eMAIL}',
           ),
           listItem(
             keterangan: 'Alamat Rumah',
-            value: 'Jl. Ijen jember',
+            value: '${provider.daftarAlumni.aLAMAT}',
           ),
           listItem(
             keterangan: 'Tempat Berkerja',
-            value: '-',
+            value: '${provider.daftarAlumni.tEMPATBEKERJA}',
           ),
           buttonSubmit(),
         ],

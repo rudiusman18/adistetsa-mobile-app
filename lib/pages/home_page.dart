@@ -13,6 +13,26 @@ class HomePage extends StatelessWidget {
     RolesModel rolesModel = provider.role;
     var role = rolesModel.name;
 
+    Widget itemsAlumni() {
+      return Container(
+        margin: EdgeInsets.only(left: 20),
+        child: Wrap(
+          spacing: 25,
+          children: [
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/staff/bk/alumni');
+              },
+              child: ItemCard(
+                urlImg: 'alumni',
+                text: 'Alumni',
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     Widget itemsStafHumas() {
       return Container(
         margin: EdgeInsets.only(left: 20),
@@ -349,6 +369,15 @@ class HomePage extends StatelessWidget {
         child: Wrap(
           spacing: 25,
           children: [
+            // GestureDetector(
+            //   onTap: () {
+            //     Navigator.pushNamed(context, '/user/bk');
+            //   },
+            //   child: ItemCard(
+            //     urlImg: 'bimbingan konseling',
+            //     text: 'Bimbingan Konseling',
+            //   ),
+            // ),
             ItemCard(
               urlImg: 'kurikulum',
               text: 'Kurikulum',
@@ -571,7 +600,9 @@ class HomePage extends StatelessWidget {
                                               ? itemsStafBK()
                                               : role == 'Staf Humas'
                                                   ? itemsStafHumas()
-                                                  : SizedBox(),
+                                                  : role == 'Alumni'
+                                                      ? itemsAlumni()
+                                                      : SizedBox(),
                 ),
               ],
             ),

@@ -1,4 +1,4 @@
-class KonselorModel {
+class ProfilKonselorModel {
   int? iD;
   String? nIP;
   String? nAMA;
@@ -10,7 +10,7 @@ class KonselorModel {
   String? sTATUS;
   int? uSER;
 
-  KonselorModel(
+  ProfilKonselorModel(
       {this.iD,
       this.nIP,
       this.nAMA,
@@ -22,7 +22,7 @@ class KonselorModel {
       this.sTATUS,
       this.uSER});
 
-  KonselorModel.fromJson(Map<String, dynamic> json) {
+  ProfilKonselorModel.fromJson(Map<String, dynamic> json) {
     iD = json['ID'];
     nIP = json['NIP'];
     nAMA = json['NAMA'];

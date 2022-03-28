@@ -1,7 +1,11 @@
 import 'dart:convert';
 
 import 'package:adistetsa/models/bukutamu_model.dart';
+import 'package:adistetsa/models/daftar_alumni_model.dart';
+import 'package:adistetsa/models/daftar_konsultasi_BK_model.dart';
 import 'package:adistetsa/models/daftaranggotaekskul_model.dart';
+import 'package:adistetsa/models/detail_daftar_alumni_model.dart';
+import 'package:adistetsa/models/detail_daftar_konsultasi_bk_model.dart';
 import 'package:adistetsa/models/detailjurnalmengajarguru_model.dart';
 import 'package:adistetsa/models/jadwalekskul_model.dart';
 import 'package:adistetsa/models/jadwalmengajarguru_model.dart';
@@ -22,12 +26,14 @@ import 'package:adistetsa/models/pelangaran_model.dart';
 import 'package:adistetsa/models/pengajuanekskul_model.dart';
 import 'package:adistetsa/models/pengajuanpeminjaman_model.dart';
 import 'package:adistetsa/models/presensisiswa_model.dart';
+import 'package:adistetsa/models/profil_konselor_model.dart';
 import 'package:adistetsa/models/riwayatbarang_model.dart';
 import 'package:adistetsa/models/riwayatpeminjaman_model.dart';
 import 'package:adistetsa/models/riwayatruangan_model.dart';
 import 'package:adistetsa/models/role_model.dart';
 import 'package:adistetsa/models/peminjamruangan_model.dart';
 import 'package:adistetsa/models/siswa_model.dart';
+import 'package:adistetsa/models/status_pengajuan_konseling_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -86,6 +92,9 @@ class Services extends ChangeNotifier {
       } else if (role == 'Staf Humas') {
         GuruModel stafHumas = GuruModel.fromJson(data);
         return stafHumas;
+      } else if (role == 'Alumni') {
+        SiswaModel siswaModel = SiswaModel.fromJson(data);
+        return siswaModel;
       } else {
         throw Exception('Gagal Mendapatkan Data');
       }
@@ -1517,6 +1526,326 @@ class Services extends ChangeNotifier {
     print(response.statusCode);
     if (response.statusCode == 200 || response.statusCode == 201) {
       return true;
+    } else {
+      throw Exception('Gagal Mendapatkan data Konselor');
+    }
+  }
+  // NOTE: Digunakan untuk mengambil detail daftar konselor di fitur BK
+  getDetailKonselorBK({required String id}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/bimbingan_konseling/katalog_konselor/$id');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      KonselorModel konselorModel = KonselorModel.fromJson(data);
+      return konselorModel;
+    } else {
+      throw Exception('Gagal Mendapatkan data Konselor');
+    }
+  }
+
+  // NOTE: untuk mendapatkan data konselor yang akan ditampilkan pada halaman staff BK
+  getprofileKonselorBK() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/bimbingan_konseling/profil_konselor');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      ProfilKonselorModel profilKonselorModel =
+          ProfilKonselorModel.fromJson(data);
+      return profilKonselorModel;
+    } else {
+      throw Exception('Gagal Mendapatkan profile Konselor');
+    }
+  }
+
+  // NOTE: untuk mendapatkan data konselor, kemudian dilakukan update berdasarkan kebutuhan
+  patchprofileKonselorBK({
+    String? kompetensi,
+    String? alumnus,
+    String? linkWA,
+    String? linkVC,
+    String? status,
+  }) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/bimbingan_konseling/profil_konselor');
+    var request = http.MultipartRequest('PATCH', url);
+    request.headers['Authorization'] = token;
+    request.fields['KOMPETENSI'] = kompetensi.toString();
+    request.fields['ALUMNUS'] = alumnus.toString();
+    request.fields['WHATSAPP'] = linkWA.toString();
+    request.fields['CONFERENCE'] = linkVC.toString();
+    request.fields['STATUS'] = status.toString();
+
+    var response = await request.send();
+    final res = await http.Response.fromStream(response);
+
+    if (res.statusCode == 200 || res.statusCode == 201) {
+      return true;
+    } else {
+      throw Exception(res.body);
+      // throw Exception(res.body);
+    }
+  }
+
+  getDaftarKonsultasiBK({String? search}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url =
+        Uri.parse('$baseUrl/bimbingan_konseling/daftar_konsultasi?$search');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<DaftarKonsultasiBKModel> daftarKonsultasiBKModel =
+          data.map((item) => DaftarKonsultasiBKModel.fromJson(item)).toList();
+      return daftarKonsultasiBKModel;
+    } else {
+      throw Exception('Gagal Mendapatkan data konsultasi');
+    }
+  }
+
+  getDetailDaftarKonsultasiBK({String? id}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/bimbingan_konseling/daftar_konsultasi/$id');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      DetailDaftarKonsultasiBKModel daftarKonsultasiBKModel =
+          DetailDaftarKonsultasiBKModel.fromJson(data);
+      return daftarKonsultasiBKModel;
+    } else {
+      throw Exception('Gagal Mendapatkan data konsultasi');
+    }
+  }
+
+  deleteDetailDaftarKonsultasiBK({String? id}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/bimbingan_konseling/daftar_konsultasi/$id');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.delete(url, headers: headers);
+    if (response.statusCode == 200 || response.statusCode == 204) {
+      return true;
+    } else {
+      throw Exception('Gagal Menghapus data konsultasi');
+    }
+  }
+
+  patchDetailDaftarKonsultasiBK({
+    String? id,
+    String? status,
+    String? rating,
+    String? kritikSaran,
+  }) async {
+    print(id);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/bimbingan_konseling/daftar_konsultasi/$id');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var body = jsonEncode({
+      'STATUS': status,
+      'RATING':
+          rating != null ? int.parse(rating.toString().split('.')[0]) : null,
+      'KRITIK_SARAN': kritikSaran,
+    });
+
+    var response = await http.patch(
+      url,
+      headers: headers,
+      body: body,
+    );
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode == 200 || response.statusCode == 204) {
+      return true;
+    } else {
+      throw Exception('Gagal mengubah data konsultasi');
+    }
+  }
+
+  postPengajuanKonseling({
+    String? id,
+    String? tanggal,
+    String? jamAwal,
+    String? jamAkhir,
+    String? jenisMasalah,
+  }) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url =
+        Uri.parse('$baseUrl/bimbingan_konseling/pengajuan_konsultasi/$id');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var body = jsonEncode({
+      "TANGGAL_KONSULTASI": tanggal,
+      "JAM_AWAL": jamAwal,
+      "JAM_AKHIR": jamAkhir,
+      "JENIS_MASALAH": jenisMasalah,
+      "STATUS": "Diajukan"
+    });
+    var response = await http.post(
+      url,
+      headers: headers,
+      body: body,
+    );
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode == 200 ||
+        response.statusCode == 204 ||
+        response.statusCode == 201) {
+      return true;
+    } else {
+      throw Exception('Gagal melakukan input data konsultasi');
+    }
+  }
+
+  getPengajuanKonseling({String? search}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url =
+        Uri.parse('$baseUrl/bimbingan_konseling/pengajuan_konsultasi?$search');
+    var headers = {"Content-type": "application/json", "authorization": token};
+
+    var response = await http.get(
+      url,
+      headers: headers,
+    );
+
+    if (response.statusCode == 200 ||
+        response.statusCode == 204 ||
+        response.statusCode == 201) {
+      List data = jsonDecode(response.body)['results'];
+      List<StatusPengajuanKonselingModel> statusPengajuanKonseling = data
+          .map((item) => StatusPengajuanKonselingModel.fromJson(item))
+          .toList();
+      return statusPengajuanKonseling;
+    } else {
+      throw Exception('Gagal melakukan get data konsultasi');
+    }
+  }
+
+  deleteDaftarKonsultasi({required String id}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/bimbingan_konseling/daftar_konsultasi/$id');
+    var headers = {"Content-type": "application/json", "authorization": token};
+
+    var response = await http.delete(
+      url,
+      headers: headers,
+    );
+
+    if (response.statusCode == 200 ||
+        response.statusCode == 204 ||
+        response.statusCode == 201) {
+      return true;
+    } else {
+      throw Exception('Gagal melakukan delete data konsultasi');
+    }
+  }
+
+  // NOTE: digunakan untuk mendapatkan data daftar Alumni
+  getDaftarAlumni({String? search}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/bimbingan_konseling/daftar_alumni?$search');
+    var headers = {"Content-type": "application/json", "authorization": token};
+
+    var response = await http.get(
+      url,
+      headers: headers,
+    );
+
+    if (response.statusCode == 200 ||
+        response.statusCode == 204 ||
+        response.statusCode == 201) {
+      List data = jsonDecode(response.body)['results'];
+      List<DaftarAlumniModel> daftarAlumniModel =
+          data.map((item) => DaftarAlumniModel.fromJson(item)).toList();
+      return daftarAlumniModel;
+    } else {
+      throw Exception('Gagal mendapatkan data daftar alumni');
+    }
+  }
+
+  // NOTE: digunakan untuk mendapatkan detail data daftar Alumni
+  getDetailDaftarAlumni({String? id}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/bimbingan_konseling/daftar_alumni/$id');
+    var headers = {"Content-type": "application/json", "authorization": token};
+
+    var response = await http.get(
+      url,
+      headers: headers,
+    );
+
+    if (response.statusCode == 200 ||
+        response.statusCode == 204 ||
+        response.statusCode == 201) {
+      var data = jsonDecode(response.body);
+      DetailDaftarAlumniModel daftarAlumniModel =
+          DetailDaftarAlumniModel.fromJson(data);
+      return daftarAlumniModel;
+    } else {
+      throw Exception('Gagal mendapatkan detail data daftar alumni');
+    }
+  }
+
+  // NOTE: digunakan untuk melakukan update detail data daftar Alumni
+  patchDetailDaftarAlumni({
+    required String id,
+    required String namaSiswa,
+    required String kelas,
+    required String nisn,
+    required String nis,
+    required String tahunAjaran,
+    required String namaPTN,
+    required String programStudi,
+    required String mediaSosial,
+    required String email,
+    required String alamatRumah,
+    required String tempatKerja,
+  }) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse('$baseUrl/bimbingan_konseling/daftar_alumni/$id');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var body = jsonEncode({
+      "NAMA_SISWA": namaSiswa,
+      "KELAS": kelas,
+      "NISN": nisn,
+      "NIS": nis,
+      "TAHUN_AJARAN": tahunAjaran,
+      "NAMA_PT": namaPTN,
+      "PROGRAM_STUDI": programStudi,
+      "MEDIA_SOSIAL": mediaSosial,
+      "EMAIL": email,
+      "ALAMAT": alamatRumah,
+      "TEMPAT_BEKERJA": tempatKerja,
+    });
+
+    var response = await http.patch(url, headers: headers, body: body);
+
+    if (response.statusCode == 200 ||
+        response.statusCode == 204 ||
+        response.statusCode == 201) {
+      var data = jsonDecode(response.body);
+      DetailDaftarAlumniModel daftarAlumniModel =
+          DetailDaftarAlumniModel.fromJson(data);
+      return daftarAlumniModel;
     } else {
       throw Exception(response.body);
     }

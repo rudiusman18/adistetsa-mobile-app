@@ -1,11 +1,14 @@
 import 'package:adistetsa/models/bukutamu_model.dart';
 import 'package:adistetsa/models/daftaranggotaekskul_model.dart';
+import 'package:adistetsa/models/detail_daftar_alumni_model.dart';
+import 'package:adistetsa/models/detail_daftar_konsultasi_bk_model.dart';
 import 'package:adistetsa/models/detailjurnalmengajarguru_model.dart';
 import 'package:adistetsa/models/jadwalekskul_model.dart';
 import 'package:adistetsa/models/jadwalmengajarguru_model.dart';
 import 'package:adistetsa/models/katalogbarang_model.dart';
 import 'package:adistetsa/models/katalogekskul_model.dart';
 import 'package:adistetsa/models/katalogruangan_model.dart';
+import 'package:adistetsa/models/konselor_model.dart';
 import 'package:adistetsa/models/peminjambarang_model.dart';
 import 'package:adistetsa/models/guru_model.dart';
 import 'package:adistetsa/models/jenispelanggaran_model.dart';
@@ -15,6 +18,7 @@ import 'package:adistetsa/models/list_buku_model.dart';
 import 'package:adistetsa/models/pengajuanekskul_model.dart';
 import 'package:adistetsa/models/pengajuanpeminjaman_model.dart';
 import 'package:adistetsa/models/presensisiswa_model.dart';
+import 'package:adistetsa/models/profil_konselor_model.dart';
 import 'package:adistetsa/models/riwayatbarang_model.dart';
 import 'package:adistetsa/models/riwayatpeminjaman_model.dart';
 import 'package:adistetsa/models/riwayatruangan_model.dart';
@@ -132,8 +136,14 @@ class Providers with ChangeNotifier {
 
   String idPresensiSiswa = '';
 
-  String errorMessage = '';
+// NOTE: digunakan untuk mengambil pesan error
+  String _errorMessage = '';
+  String get errorMessage => _errorMessage;
+  set setErrorMessage(String errorMessage) {
+    _errorMessage = errorMessage;
+  }
 
+// NOTE: END
   String idJurnalEkstrakurikuler = '';
 
   String idPresensiSiswaEkskul = '';
@@ -181,6 +191,7 @@ class Providers with ChangeNotifier {
   String get roleRiwayatLogUks => _roleRiwayatLogUks;
   set setRoleRiwayatLogUks(String roleRwayatLogUks) {
     _roleRiwayatLogUks = roleRwayatLogUks;
+    notifyListeners();
   }
   // NOTE: END
 
@@ -189,6 +200,7 @@ class Providers with ChangeNotifier {
   String get fiturHumas => _fiturHumas;
   set setFiturHumas(String fiturHumas) {
     _fiturHumas = fiturHumas;
+    notifyListeners();
   }
 // NOTE: END
 
@@ -197,9 +209,56 @@ class Providers with ChangeNotifier {
   String get fiturAdiwiyata => _fiturAdiwiyata;
   set setfiturAdiwiyata(String fiturAdiwiyata) {
     _fiturAdiwiyata = fiturAdiwiyata;
+    notifyListeners();
   }
   // NOTE: END
 
+  // NOTE: digunakan untuk mendapatkan data profile staff
+  ProfilKonselorModel _konselor = ProfilKonselorModel();
+  ProfilKonselorModel get konselor => _konselor;
+  set setKonselor(ProfilKonselorModel konselor) {
+    _konselor = konselor;
+    notifyListeners();
+  }
+  // NOTE: END
+
+  // NOTE: Digunakan untuk mendapatkan data konselor di role pengguna
+  KonselorModel _dataKonselor = KonselorModel();
+  KonselorModel get dataKonselor => _dataKonselor;
+  set setDataKonselor(KonselorModel dataKonselor) {
+    _dataKonselor = dataKonselor;
+  }
+  // NOTE: END
+
+  // NOTE: untuk mendapatkan daftar konsultasi BK
+  DetailDaftarKonsultasiBKModel _daftarKonsultasiBKModel =
+      DetailDaftarKonsultasiBKModel();
+  DetailDaftarKonsultasiBKModel get daftarKonsultasiBKModel =>
+      _daftarKonsultasiBKModel;
+  void setDaftarKonsultasiBKModel(
+      DetailDaftarKonsultasiBKModel setDaftarKonsultasiBKModel) {
+    _daftarKonsultasiBKModel = setDaftarKonsultasiBKModel;
+  }
+  // NOTE: END
+
+  // NOTE: mengambil id staff BK pada fitur untuk role pengguna
+  String _idStaff = '';
+  String get idStaff => _idStaff;
+  set setId(String idStaff) {
+    _idStaff = idStaff;
+    notifyListeners();
+  }
+  // NOTE: END
+
+// NOTE: Digunakan untuk mendapatkan data detail daftar Alumni
+  DetailDaftarAlumniModel _daftarAlumni = DetailDaftarAlumniModel();
+  DetailDaftarAlumniModel get daftarAlumni => _daftarAlumni;
+  set setDetailDaftarAlumni(DetailDaftarAlumniModel daftarAlumni) {
+    _daftarAlumni = daftarAlumni;
+    notifyListeners();
+  }
+
+// NOTE: END
   set setAngket(String angket) {
     _angket = angket;
     notifyListeners();
@@ -588,7 +647,7 @@ class Providers with ChangeNotifier {
       return true;
     } catch (e) {
       print(e);
-      errorMessage = e.toString();
+      _errorMessage = e.toString();
       notifyListeners();
       return false;
     }
@@ -616,7 +675,7 @@ class Providers with ChangeNotifier {
       return true;
     } catch (e) {
       print(e);
-      errorMessage = e.toString();
+      _errorMessage = e.toString();
       notifyListeners();
       return false;
     }
@@ -697,7 +756,7 @@ class Providers with ChangeNotifier {
       return true;
     } catch (e) {
       print(e);
-      errorMessage = e.toString();
+      _errorMessage = e.toString();
       notifyListeners();
       return false;
     }
@@ -725,7 +784,7 @@ class Providers with ChangeNotifier {
       return true;
     } catch (e) {
       print(e);
-      errorMessage = e.toString();
+      _errorMessage = e.toString();
       notifyListeners();
       return false;
     }
@@ -742,6 +801,77 @@ class Providers with ChangeNotifier {
       return false;
     }
   }
+
+// NOTE:untuk mengambil data profile konselor
+  Future<bool> getDataStaffBK() async {
+    try {
+      _konselor = await Services().getprofileKonselorBK();
+
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  // NOTE: untuk mendapatkan pesan dari edit data profile konselor
+  Future<bool> patchDataStaffBK({
+    String? kompetensi,
+    String? alumnus,
+    String? linkWA,
+    String? linkVC,
+    String? status,
+  }) async {
+    try {
+      await Services().patchprofileKonselorBK(
+        kompetensi: kompetensi,
+        alumnus: alumnus,
+        linkVC: linkVC,
+        linkWA: linkWA,
+        status: status,
+      );
+      return true;
+    } catch (e) {
+      _errorMessage = e.toString();
+      return false;
+    }
+  }
+
+  // NOTE: Untuk mendapatkan listKonseling berdasarkan id
+  Future<bool> getDetailDaftarKonsultasiBK({required String id}) async {
+    try {
+      _daftarKonsultasiBKModel =
+          await Services().getDetailDaftarKonsultasiBK(id: id);
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+  // NOTE: END
+
+  // NOTE: untuk mendapatkan data konselor pada role pengguna
+  Future<bool> getDataKonselor({required String id}) async {
+    try {
+      _dataKonselor = await Services().getDetailKonselorBK(id: id);
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  // NOTE: mendapatkan detail data Daftar Alumni
+  Future<bool> getDetailDaftarAlumni({required String id}) async {
+    try {
+      _daftarAlumni = await Services().getDetailDaftarAlumni(id: id);
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+  // NOTE: END
 
   // NOTE: Untuk mendapatkan list dari katalog yang user ambil
 
@@ -775,7 +905,7 @@ class Providers with ChangeNotifier {
       return true;
     } catch (e) {
       print(e);
-      errorMessage = e.toString();
+      _errorMessage = e.toString();
       notifyListeners();
       return false;
     }

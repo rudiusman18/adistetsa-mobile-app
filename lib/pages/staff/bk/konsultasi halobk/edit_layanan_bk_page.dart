@@ -1,5 +1,7 @@
+import 'package:adistetsa/providers/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class EditLayananBkPage extends StatefulWidget {
   @override
@@ -7,11 +9,10 @@ class EditLayananBkPage extends StatefulWidget {
 }
 
 class _EditLayananBkPageState extends State<EditLayananBkPage> {
-  TextEditingController kompetensiController = TextEditingController(text: '');
-  TextEditingController alumnusController = TextEditingController(text: '');
-  TextEditingController linkWhatsappController =
-      TextEditingController(text: '');
-  TextEditingController linkVidcallController = TextEditingController(text: '');
+  String kompetensiController = '';
+  String alumnusController = '';
+  String linkWhatsappController = '';
+  String linkVidcallController = '';
   bool isLoading = false;
   late FocusNode kompetensiFocusNode;
   late FocusNode alumnusFocusNode;
@@ -38,6 +39,8 @@ class _EditLayananBkPageState extends State<EditLayananBkPage> {
 
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of(context);
+
     PreferredSizeWidget header() {
       return AppBar(
         backgroundColor: mono6Color,
@@ -52,7 +55,7 @@ class _EditLayananBkPageState extends State<EditLayananBkPage> {
           ),
         ),
         title: Text(
-          'Edit Data Staff BK',
+          'Edit Data Staff',
           style: mono1TextStyle.copyWith(
             fontSize: 18,
             fontWeight: semiBold,
@@ -91,7 +94,13 @@ class _EditLayananBkPageState extends State<EditLayananBkPage> {
                   });
                 },
                 focusNode: kompetensiFocusNode,
-                controller: kompetensiController,
+                // controller: kompetensiController,
+                initialValue: '${provider.konselor.kOMPETENSI}',
+                onChanged: (value) {
+                  setState(() {
+                    kompetensiController = value;
+                  });
+                },
                 onEditingComplete: () {
                   setState(() {
                     FocusScope.of(context).unfocus();
@@ -142,7 +151,10 @@ class _EditLayananBkPageState extends State<EditLayananBkPage> {
                   });
                 },
                 focusNode: alumnusFocusNode,
-                controller: alumnusController,
+                initialValue: provider.konselor.aLUMNUS,
+                onChanged: (value) {
+                  alumnusController = value;
+                },
                 onEditingComplete: () {
                   setState(() {
                     FocusScope.of(context).unfocus();
@@ -193,7 +205,10 @@ class _EditLayananBkPageState extends State<EditLayananBkPage> {
                   });
                 },
                 focusNode: linkWhatsappFocusNode,
-                controller: linkWhatsappController,
+                initialValue: provider.konselor.wHATSAPP,
+                onChanged: (value) {
+                  linkWhatsappController = value;
+                },
                 keyboardType: TextInputType.url,
                 onEditingComplete: () {
                   setState(() {
@@ -245,7 +260,12 @@ class _EditLayananBkPageState extends State<EditLayananBkPage> {
                   });
                 },
                 focusNode: linkVidcallFocusNode,
-                controller: linkVidcallController,
+                initialValue: provider.konselor.cONFERENCE,
+                onChanged: (value) {
+                  setState(() {
+                    linkVidcallController = value;
+                  });
+                },
                 keyboardType: TextInputType.url,
                 onEditingComplete: () {
                   setState(() {
@@ -268,7 +288,12 @@ class _EditLayananBkPageState extends State<EditLayananBkPage> {
       );
     }
 
-    Widget buttonSubmit() {
+    Widget buttonSubmit({
+      required String kompetensi,
+      required String alumnus,
+      required String linkWA,
+      required String linkVC,
+    }) {
       return Container(
         margin: EdgeInsets.only(
           top: 60,
@@ -289,7 +314,31 @@ class _EditLayananBkPageState extends State<EditLayananBkPage> {
               ),
               backgroundColor: m2Color,
             ),
-            onPressed: () {},
+            onPressed: () async {
+              setState(() {
+                isLoading = true;
+              });
+
+              if (await provider.patchDataStaffBK(
+                alumnus: alumnus,
+                kompetensi: kompetensi,
+                linkVC: linkVC,
+                linkWA: linkWA,
+                status: provider.konselor.sTATUS,
+              )) {
+                Navigator.pop(context);
+              } else {
+                setState(() {
+                  isLoading = false;
+                });
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: dangerColor,
+                    content: Text(
+                      '${provider.errorMessage}',
+                      textAlign: TextAlign.center,
+                    )));
+              }
+            },
             child: isLoading == false
                 ? Text(
                     'Simpan',
@@ -318,7 +367,20 @@ class _EditLayananBkPageState extends State<EditLayananBkPage> {
           alumnusInput(),
           linkWhatsappInput(),
           linkVidcallInput(),
-          buttonSubmit(),
+          buttonSubmit(
+            kompetensi: kompetensiController.isEmpty
+                ? provider.konselor.kOMPETENSI.toString()
+                : kompetensiController,
+            alumnus: alumnusController.isEmpty
+                ? provider.konselor.aLUMNUS.toString()
+                : alumnusController,
+            linkWA: linkWhatsappController.isEmpty
+                ? provider.konselor.wHATSAPP.toString()
+                : linkWhatsappController,
+            linkVC: linkVidcallController.isEmpty
+                ? provider.konselor.cONFERENCE.toString()
+                : linkVidcallController,
+          ),
         ],
       ),
     );

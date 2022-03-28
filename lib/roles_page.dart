@@ -76,6 +76,11 @@ class _RolesPageState extends State<RolesPage> {
           currentIndex = -1;
           Navigator.pushNamedAndRemoveUntil(
               context, '/main-page', (route) => false);
+        } else if (role == 'Alumni') {
+          await provider.getSiswa();
+          currentIndex = -1;
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/main-page', (route) => false);
         }
       }
       setState(() {

@@ -1,4 +1,7 @@
+import 'package:adistetsa/models/daftar_konsultasi_BK_model.dart';
 import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
+import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:provider/provider.dart';
@@ -76,7 +79,7 @@ class _StatusDataStaffHalobkPageState extends State<StatusDataStaffHalobkPage> {
             isDense: true,
             border: InputBorder.none,
           ),
-          onChanged: (newValue) {
+          onChanged: (newValue) async {
             setState(() {
               if (searchController.selection.start >
                   searchController.text.length) {
@@ -88,6 +91,10 @@ class _StatusDataStaffHalobkPageState extends State<StatusDataStaffHalobkPage> {
               urlSearch = 'search=${searchController.text}';
               isLoading = true;
             });
+            await Services().getDaftarKonsultasiBK();
+            setState(() {
+              isLoading = false;
+            });
 
             //Note: await disini
           },
@@ -97,13 +104,28 @@ class _StatusDataStaffHalobkPageState extends State<StatusDataStaffHalobkPage> {
       );
     }
 
-    Widget listSiswa(
-        {required String name, required String tahun, required String status}) {
+    Widget listSiswa({
+      required String id,
+      required String name,
+      required String tahun,
+      required String status,
+    }) {
       return GestureDetector(
-        onTap: () {
+        onTap: () async {
           provider.setStaffStatus = status;
-          print(provider.staffStatus);
-          Navigator.pushNamed(context, '/staff/bk/status-data/detail');
+          loading(context);
+          await provider.getDetailDaftarKonsultasiBK(id: id);
+          Navigator.pushReplacementNamed(
+                  context, '/staff/bk/status-data/detail')
+              .then((_) async {
+            setState(() {
+              isLoading = true;
+            });
+            await Services().getDaftarKonsultasiBK();
+            setState(() {
+              isLoading = false;
+            });
+          });
         },
         child: Container(
           color: mono6Color,
@@ -167,31 +189,40 @@ class _StatusDataStaffHalobkPageState extends State<StatusDataStaffHalobkPage> {
         padding: const EdgeInsets.symmetric(
           vertical: 20,
         ),
-        child: ListView(
-          children: [
-            listSiswa(
-              name: 'Syauqi Anak Babi',
-              tahun: '33-03-2033',
-              status: 'Diajukan',
-            ),
-            listSiswa(
-              name: 'Syauqi Anak Babi',
-              tahun: '33-03-2033',
-              status: 'Selesai',
-            ),
-            listSiswa(
-              name: 'Syauqi Anak Babi',
-              tahun: '33-03-2033',
-              status: 'Telah Mengisi Feedback',
-            ),
-            for (var i = 0; i < 10; i++)
-              listSiswa(
-                name: 'Syauqi Anak Babi',
-                tahun: '33-03-2033',
-                status: 'Diajukan',
+        child: isLoading == true
+            ? Container()
+            : FutureBuilder(
+                future: Services().getDaftarKonsultasiBK(search: urlSearch),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    List<DaftarKonsultasiBKModel> data = snapshot.data;
+                    return data.isEmpty
+                        ? Center(
+                            child: Text(
+                              'Data tidak ditemukan',
+                              style: mono1TextStyle,
+                            ),
+                          )
+                        : ListView(
+                            children: data.map((item) {
+                              return listSiswa(
+                                id: item.iD.toString(),
+                                name: '${item.nAMA}',
+                                tahun: '${item.tANGGALKONSULTASI}',
+                                status: '${item.sTATUS}',
+                              );
+                            }).toList(),
+                          );
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 4,
+                        color: m1Color,
+                      ),
+                    );
+                  }
+                },
               ),
-          ],
-        ),
       ),
     );
   }

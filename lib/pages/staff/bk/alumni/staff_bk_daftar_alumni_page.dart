@@ -1,5 +1,10 @@
+import 'package:adistetsa/models/daftar_alumni_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
+import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
 
 class StaffBkDaftarAlumniPage extends StatefulWidget {
   @override
@@ -21,6 +26,7 @@ class _StaffBkDaftarAlumniPageState extends State<StaffBkDaftarAlumniPage> {
   String url = '';
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of(context);
     PreferredSizeWidget header() {
       return AppBar(
         centerTitle: true,
@@ -80,7 +86,7 @@ class _StaffBkDaftarAlumniPageState extends State<StaffBkDaftarAlumniPage> {
             isDense: true,
             border: InputBorder.none,
           ),
-          onChanged: (newValue) {
+          onChanged: (newValue) async {
             setState(() {
               if (searchController.selection.start >
                   searchController.text.length) {
@@ -92,8 +98,10 @@ class _StaffBkDaftarAlumniPageState extends State<StaffBkDaftarAlumniPage> {
               urlSearch = 'search=${searchController.text}';
               isLoading = true;
             });
-
-            //Note: await disini
+            await Services().getDaftarAlumni();
+            setState(() {
+              isLoading = false;
+            });
           },
         ),
         elevation: 4,
@@ -327,13 +335,25 @@ class _StaffBkDaftarAlumniPageState extends State<StaffBkDaftarAlumniPage> {
     }
 
     Widget listItem({
+      required String id,
       required String name,
       required String nis,
       required String kelas,
     }) {
       return GestureDetector(
-        onTap: () {
-          Navigator.pushNamed(context, '/staff/bk/alumni/detail');
+        onTap: () async {
+          loading(context);
+          await provider.getDetailDaftarAlumni(id: id);
+          Navigator.pushReplacementNamed(context, '/staff/bk/alumni/detail')
+              .then((_) async {
+            setState(() {
+              isLoading = true;
+            });
+            await Services().getDaftarAlumni();
+            setState(() {
+              isLoading = false;
+            });
+          });
         },
         child: Container(
           color: mono6Color,
@@ -390,18 +410,45 @@ class _StaffBkDaftarAlumniPageState extends State<StaffBkDaftarAlumniPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          filter(),
+          // filter(),
           Expanded(
-            child: ListView(
-              children: [
-                for (var i = 0; i < 30; i++)
-                  listItem(
-                    name: 'Adam Babi',
-                    nis: '123123123',
-                    kelas: 'XII-IPA A',
+            child: isLoading == true
+                ? Container()
+                : Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: FutureBuilder(
+                      future: Services().getDaftarAlumni(search: urlSearch),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData) {
+                          List<DaftarAlumniModel> data = snapshot.data;
+                          return data.isEmpty
+                              ? Center(
+                                  child: Text(
+                                    'data tidak ditemukan',
+                                    style: mono1TextStyle,
+                                  ),
+                                )
+                              : ListView(
+                                  children: data.map((item) {
+                                    return listItem(
+                                      id: '${item.iD}',
+                                      name: '${item.nAMASISWA}',
+                                      nis: '${item.nIS}',
+                                      kelas: '${item.kELAS}',
+                                    );
+                                  }).toList(),
+                                );
+                        } else {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 4,
+                              color: m1Color,
+                            ),
+                          );
+                        }
+                      },
+                    ),
                   ),
-              ],
-            ),
           )
         ],
       ),
