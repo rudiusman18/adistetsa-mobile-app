@@ -250,7 +250,7 @@ class Providers with ChangeNotifier {
   }
   // NOTE: END
 
-// NOTE: Digunakan untuk mendapatkan data detail daftar Alumni
+  // NOTE: Digunakan untuk mendapatkan data detail daftar Alumni
   DetailDaftarAlumniModel _daftarAlumni = DetailDaftarAlumniModel();
   DetailDaftarAlumniModel get daftarAlumni => _daftarAlumni;
   set setDetailDaftarAlumni(DetailDaftarAlumniModel daftarAlumni) {
@@ -258,7 +258,17 @@ class Providers with ChangeNotifier {
     notifyListeners();
   }
 
-// NOTE: END
+  // NOTE: END
+
+  // NOTE: digunakan untuk mendapatkan id log UKS
+  String _idlogUKS = '';
+  String get idLogUKS => _idlogUKS;
+  set setIdLogUKS(String idLogUKS) {
+    _idlogUKS = idLogUKS;
+    notifyListeners();
+  }
+
+  // NOTE: END
   set setAngket(String angket) {
     _angket = angket;
     notifyListeners();

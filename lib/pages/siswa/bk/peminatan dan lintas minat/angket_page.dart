@@ -1,4 +1,6 @@
+import 'package:adistetsa/models/angketbk_Model.dart';
 import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
@@ -13,6 +15,7 @@ class _AngketPageState extends State<AngketPage> {
   PlatformFile? file;
   bool isLoading = false;
   FilePickerResult? result;
+  AngketBKModel angket = AngketBKModel();
 
   _selectFolder() async {
     result = await FilePicker.platform.pickFiles();
@@ -23,10 +26,26 @@ class _AngketPageState extends State<AngketPage> {
     } else {}
   }
 
+  void getInit({String? jenisAngket}) async {
+      angket =
+          await Services().getAngketSiswa(jenisAngket: jenisAngket);
+    if (this.mounted) {
+      setState(() {});
+    }
+  }
+
+  void adamState() {
+    super.initState();
+    getInit();
+  }
+
   @override
   Widget build(BuildContext context) {
     Providers provider = Provider.of(context);
     print(provider.angket);
+
+    getInit(jenisAngket: provider.angket);
+
     PreferredSizeWidget header() {
       return AppBar(
         centerTitle: true,

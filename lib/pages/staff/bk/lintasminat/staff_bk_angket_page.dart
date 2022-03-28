@@ -1,7 +1,10 @@
+import 'package:adistetsa/models/angketbk_model.dart';
 import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class StaffBkAngketPage extends StatefulWidget {
   @override
@@ -27,6 +30,19 @@ class _StaffBkAngketPageState extends State<StaffBkAngketPage> {
   @override
   Widget build(BuildContext context) {
     Providers provider = Provider.of(context);
+
+    launchUrl(String url) async {
+      if (await canLaunch(url)) {
+        await launch(
+          url,
+          forceWebView: true,
+          enableJavaScript: true,
+        );
+      } else {
+        Navigator.pushNamed(context, '/error-page');
+      }
+    }
+
     PreferredSizeWidget header() {
       return AppBar(
         centerTitle: true,
@@ -72,6 +88,17 @@ class _StaffBkAngketPageState extends State<StaffBkAngketPage> {
               searchController.clear();
               urlSearch = '';
               isSearch = false;
+              isLoading = true;
+            });
+            if (provider.angketPilihanStaffBk == 'Lintas Minat') {
+              await Services().getAngketLintasMinat();
+            } else if (provider.angketPilihanStaffBk == 'Data Siswa') {
+              await Services().getAngketDataSiswa();
+            } else if (provider.angketPilihanStaffBk == 'Peminatan') {
+              await Services().getAngketPeminatan();
+            }
+            setState(() {
+              isLoading = false;
             });
           },
           child: Icon(
@@ -86,7 +113,7 @@ class _StaffBkAngketPageState extends State<StaffBkAngketPage> {
             isDense: true,
             border: InputBorder.none,
           ),
-          onChanged: (newValue) {
+          onChanged: (newValue) async {
             setState(() {
               if (searchController.selection.start >
                   searchController.text.length) {
@@ -98,8 +125,17 @@ class _StaffBkAngketPageState extends State<StaffBkAngketPage> {
               urlSearch = 'search=${searchController.text}';
               isLoading = true;
             });
+            if (provider.angketPilihanStaffBk == 'Lintas Minat') {
+              await Services().getAngketLintasMinat();
+            } else if (provider.angketPilihanStaffBk == 'Data Siswa') {
+              await Services().getAngketDataSiswa();
+            } else if (provider.angketPilihanStaffBk == 'Peminatan') {
+              await Services().getAngketPeminatan();
+            }
 
-            //Note: await disini
+            setState(() {
+              isLoading = false;
+            });
           },
         ),
         elevation: 4,
@@ -358,7 +394,9 @@ class _StaffBkAngketPageState extends State<StaffBkAngketPage> {
                   ],
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    launchUrl(url);
+                  },
                   style: TextButton.styleFrom(
                     backgroundColor: url == '' ? mono3Color : m5Color,
                     shape: RoundedRectangleBorder(
@@ -407,39 +445,109 @@ class _StaffBkAngketPageState extends State<StaffBkAngketPage> {
         children: [
           filter(),
           Expanded(
-            child: ListView(
-              children: [
-                listItem(
-                  name: 'Adam Babi',
-                  kelas: 'XII-IPA A',
-                  url: '',
-                ),
-                listItem(
-                  name: 'Adam Babi',
-                  kelas: 'XII-IPA A',
-                  url: '',
-                ),
-                listItem(
-                  name: 'Adam Babi',
-                  kelas: 'XII-IPA A',
-                  url: '',
-                ),
-                for (var i = 0; i < 10; i++)
-                  provider.angketPilihanStaffBk == 'Lintas Minat'
-                      ? listItem(
-                          name: 'Adam Babi',
-                          kelas: 'XII-IPA A',
-                          url: 'https:/adambabi.com',
-                        )
-                      : provider.angketPilihanStaffBk == 'Data Siswa'
-                          ? listItem(
-                              name: 'Syauqi Babi',
-                              kelas: 'XII-IPA A',
-                              url: 'https:/adambabi.com',
-                            )
-                          : Container()
-              ],
-            ),
+            child: isLoading == true
+                ? Container()
+                : provider.angketPilihanStaffBk == 'Lintas Minat'
+                    ? FutureBuilder(
+                        future: Services()
+                            .getAngketLintasMinat(urlSearch: urlSearch),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          if (snapshot.hasData) {
+                            List<AngketBKModel> data = snapshot.data;
+                            return data.isEmpty
+                                ? Center(
+                                    child: Text(
+                                      'data tidak ditemukan',
+                                      style: mono1TextStyle,
+                                    ),
+                                  )
+                                : ListView(
+                                    children: data.map((item) {
+                                      return listItem(
+                                        name: '${item.iD}',
+                                        kelas: '${item.kELAS}',
+                                        url: '${item.fILE}',
+                                      );
+                                    }).toList(),
+                                  );
+                          } else {
+                            return Center(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 4,
+                                color: m1Color,
+                              ),
+                            );
+                          }
+                        },
+                      )
+                    : provider.angketPilihanStaffBk == 'Data Siswa'
+                        ? FutureBuilder(
+                            future: Services()
+                                .getAngketDataSiswa(urlSearch: urlSearch),
+                            builder:
+                                (BuildContext context, AsyncSnapshot snapshot) {
+                              if (snapshot.hasData) {
+                                List<AngketBKModel> data = snapshot.data;
+                                return data.isEmpty
+                                    ? Center(
+                                        child: Text(
+                                          'data tidak ditemukan',
+                                          style: mono1TextStyle,
+                                        ),
+                                      )
+                                    : ListView(
+                                        children: data.map((item) {
+                                          return listItem(
+                                            name: '${item.iD}',
+                                            kelas: '${item.kELAS}',
+                                            url: '${item.fILE}',
+                                          );
+                                        }).toList(),
+                                      );
+                              } else {
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 4,
+                                    color: m1Color,
+                                  ),
+                                );
+                              }
+                            },
+                          )
+                        : FutureBuilder(
+                            future: Services()
+                                .getAngketPeminatan(urlSearch: urlSearch),
+                            builder:
+                                (BuildContext context, AsyncSnapshot snapshot) {
+                              if (snapshot.hasData) {
+                                List<AngketBKModel> data = snapshot.data;
+                                return data.isEmpty
+                                    ? Center(
+                                        child: Text(
+                                          'data tidak ditemukan',
+                                          style: mono1TextStyle,
+                                        ),
+                                      )
+                                    : ListView(
+                                        children: data.map((item) {
+                                          return listItem(
+                                            name: '${item.iD}',
+                                            kelas: '${item.kELAS}',
+                                            url: '${item.fILE}',
+                                          );
+                                        }).toList(),
+                                      );
+                              } else {
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 4,
+                                    color: m1Color,
+                                  ),
+                                );
+                              }
+                            },
+                          ),
           )
         ],
       ),

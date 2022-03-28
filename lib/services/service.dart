@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:adistetsa/models/angketbk_model.dart';
 import 'package:adistetsa/models/bukutamu_model.dart';
 import 'package:adistetsa/models/daftar_alumni_model.dart';
 import 'package:adistetsa/models/daftar_konsultasi_BK_model.dart';
@@ -7,11 +8,14 @@ import 'package:adistetsa/models/daftaranggotaekskul_model.dart';
 import 'package:adistetsa/models/detail_daftar_alumni_model.dart';
 import 'package:adistetsa/models/detail_daftar_konsultasi_bk_model.dart';
 import 'package:adistetsa/models/detailjurnalmengajarguru_model.dart';
+import 'package:adistetsa/models/detaillogukssiswa_model.dart';
+import 'package:adistetsa/models/detaillogukstendik_model.dart';
 import 'package:adistetsa/models/jadwalekskul_model.dart';
 import 'package:adistetsa/models/jadwalmengajarguru_model.dart';
 import 'package:adistetsa/models/jurnalpertemuanekskul_model.dart';
 import 'package:adistetsa/models/katalogekskul_model.dart';
 import 'package:adistetsa/models/konselor_model.dart';
+import 'package:adistetsa/models/loguks_model.dart';
 import 'package:adistetsa/models/peminjambarang_model.dart';
 import 'package:adistetsa/models/guru_model.dart';
 import 'package:adistetsa/models/jenispelanggaran_model.dart';
@@ -1501,6 +1505,7 @@ class Services extends ChangeNotifier {
     }
   }
 
+  //NOTE: Menambahkan buku tamu
   tambahBukuInduk(
       {required String nama,
       required String instansiAsal,
@@ -1530,6 +1535,7 @@ class Services extends ChangeNotifier {
       throw Exception('Gagal Mendapatkan data Konselor');
     }
   }
+
   // NOTE: Digunakan untuk mengambil detail daftar konselor di fitur BK
   getDetailKonselorBK({required String id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -1848,6 +1854,187 @@ class Services extends ChangeNotifier {
       return daftarAlumniModel;
     } else {
       throw Exception(response.body);
+    }
+  }
+
+  //NOTE: Menampilkan log uks
+  getLogUKS({String? urlSearch, String? filter}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url =
+        Uri.parse('$baseUrl/hubungan_masyarakat/log_uks?$urlSearch&$filter');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body);
+      List<LogUKSModel> logUKS =
+          data.map((item) => LogUKSModel.fromJson(item)).toList();
+      return logUKS;
+    } else {
+      throw Exception('Gagal Mendapatkan Buku Tamu');
+    }
+  }
+
+  //NOTE: Mendapatkan detail buku tamu
+  getDetailLogUKS({required String id, required String jenisPtk}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url;
+    if (jenisPtk == 'Siswa') {
+      url = Uri.parse('$baseUrl/hubungan_masyarakat/detail_log_uks_siswa/$id');
+    } else {
+      url = Uri.parse('$baseUrl/hubungan_masyarakat/detail_log_uks_tendik/$id');
+    }
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (jenisPtk == 'Siswa') {
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        DetailLogUKSSiswaModel detailLogUKSSiswa =
+            DetailLogUKSSiswaModel.fromJson(data);
+        return detailLogUKSSiswa;
+      } else {
+        throw Exception('Gagal Mendapatkan Detail Buku Tamu');
+      }
+    } else {
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        DetailLogUKSTendikModel detailLogUKSTendik =
+            DetailLogUKSTendikModel.fromJson(data);
+        return detailLogUKSTendik;
+      } else {
+        throw Exception('Gagal Mendapatkan Detail Buku Tamu');
+      }
+    }
+  }
+
+  //NOTE: Menambahkan log UKS
+  tambahLogUKS(
+      {String? nama,
+      String? kelas,
+      String? nisn,
+      String? tanggal,
+      String? jenisPemeriksaan,
+      String? obatDiberikan,
+      String? tindakLanjut,
+      String? jenisPTK}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url;
+    var body;
+    if (jenisPTK == 'Siswa') {
+      url = Uri.parse('$baseUrl/hubungan_masyarakat/tambah_log_uks_siswa');
+      body = {
+        'NAMA': nama,
+        'KELAS': kelas,
+        'NISN': nisn,
+        'TANGGAL': tanggal,
+        'JENIS_PEMERIKSAAN': jenisPemeriksaan,
+        'OBAT_DIBERIKAN': obatDiberikan,
+        'TINDAK_LANJUT': tindakLanjut,
+      };
+    } else {
+      url = Uri.parse('$baseUrl/hubungan_masyarakat/tambah_log_uks_tendik');
+      body = {
+        'JENIS_PTK': jenisPTK,
+        'NAMA': nama,
+        'TANGGAL': tanggal,
+        'JENIS_PEMERIKSAAN': jenisPemeriksaan,
+        'OBAT_DIBERIKAN': obatDiberikan,
+        'TINDAK_LANJUT': tindakLanjut,
+      };
+    }
+    var headers = {"Accept": "application/json", "authorization": token};
+    var response = await http.post(url, headers: headers, body: body);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return true;
+    } else {
+      throw Exception(response.body);
+    }
+  }
+
+  //NOTE: Mendapatkan Angket Lintas Minat
+  getAngketLintasMinat({String? urlSearch, String? filter}) async {
+    print('Angket lintas Minat');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse(
+        '$baseUrl/bimbingan_konseling/angket_lintas_minat?$urlSearch&$filter');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<AngketBKModel> angketBK =
+          data.map((item) => AngketBKModel.fromJson(item)).toList();
+      return angketBK;
+    } else {
+      throw Exception('Gagal Mendapatkan Angket Lintas Minat');
+    }
+  }
+
+  //NOTE: Mendapatkan Angket Data Siswa
+  getAngketDataSiswa({String? urlSearch, String? filter}) async {
+    print('Angket Data Siswa');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse(
+        '$baseUrl/bimbingan_konseling/angket_data_diri?$urlSearch&$filter');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<AngketBKModel> angketBK =
+          data.map((item) => AngketBKModel.fromJson(item)).toList();
+      return angketBK;
+    } else {
+      throw Exception('Gagal Mendapatkan Angket Lintas Minat');
+    }
+  }
+
+  //NOTE: Mendapatkan Angket Peminatan
+  getAngketPeminatan({String? urlSearch, String? filter}) async {
+    print('Angket Data Siswa');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token").toString();
+    var url = Uri.parse(
+        '$baseUrl/bimbingan_konseling/angket_peminatan?$urlSearch&$filter');
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<AngketBKModel> angketBK =
+          data.map((item) => AngketBKModel.fromJson(item)).toList();
+      return angketBK;
+    } else {
+      throw Exception('Gagal Mendapatkan Angket Lintas Minat');
+    }
+  }
+
+  //NOTE: Mendapatkan Angket Siswa
+  getAngketSiswa(
+      {String? urlSearch, String? filter, String? jenisAngket}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    print(jenisAngket);
+    var token = prefs.getString("token").toString();
+    var url;
+    if (jenisAngket == 'Peminatan') {
+      url = Uri.parse(
+          '$baseUrl/bimbingan_konseling/angket_peminatan_siswa?$urlSearch&$filter');
+    } else if (jenisAngket == 'Lintas Minat') {
+      url = Uri.parse(
+          '$baseUrl/bimbingan_konseling/angket_lintas_minat_siswa?$urlSearch&$filter');
+    } else if (jenisAngket == 'Data Diri Siswa') {
+      url = Uri.parse(
+          '$baseUrl/bimbingan_konseling/angket_data_diri_siswa?$urlSearch&$filter');
+    }
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      AngketBKModel angketBK = AngketBKModel.fromJson(data);
+      return angketBK;
+    } else {
+      throw Exception('Gagal Mendapatkan Angket Lintas Minat');
     }
   }
 }

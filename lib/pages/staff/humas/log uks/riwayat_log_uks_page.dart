@@ -1,4 +1,6 @@
+import 'package:adistetsa/models/loguks_model.dart';
 import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +14,7 @@ class RiwayatLogUKSPage extends StatefulWidget {
 
 class _RiwayatLogUKSPageState extends State<RiwayatLogUKSPage> {
   bool isSearch = false;
+  bool isLoading = false;
   TextEditingController searchController = TextEditingController();
 
   bool flag1 = false;
@@ -22,6 +25,12 @@ class _RiwayatLogUKSPageState extends State<RiwayatLogUKSPage> {
 
   bool flag3 = false;
   Object? value3Item;
+
+  String filterUrl = '';
+  String filterTanggal = '';
+  String filterNama = '';
+  String filterJenisPTK = '';
+  String urlSearch = '';
 
   @override
   Widget build(BuildContext context) {
@@ -69,8 +78,13 @@ class _RiwayatLogUKSPageState extends State<RiwayatLogUKSPage> {
           onTap: () async {
             setState(() {
               searchController.clear();
-
+              urlSearch = '';
               isSearch = false;
+              isLoading = true;
+            });
+            await Services().getLogUKS();
+            setState(() {
+              isLoading = false;
             });
           },
           child: Icon(
@@ -93,7 +107,12 @@ class _RiwayatLogUKSPageState extends State<RiwayatLogUKSPage> {
                     new TextPosition(offset: searchController.text.length));
                 searchController.text = newValue.toString();
               }
-              print(searchController.text);
+              urlSearch = 'search=${searchController.text}';
+              isLoading = true;
+            });
+            await Services().getLogUKS();
+            setState(() {
+              isLoading = false;
             });
           },
         ),
@@ -142,11 +161,13 @@ class _RiwayatLogUKSPageState extends State<RiwayatLogUKSPage> {
                 items: data.map(
                   (value) {
                     return DropdownMenuItem(
-                      value: value,
+                      value: value.split('.')[1],
                       child: Text(
-                        value,
+                        value.split('.')[0],
                         style: mono2TextStyle.copyWith(
-                          color: value1Item == value ? p1Color : mono2Color,
+                          color: value1Item == value.split('.')[1]
+                              ? p1Color
+                              : mono2Color,
                           fontWeight: regular,
                           fontSize: 10,
                         ),
@@ -157,7 +178,13 @@ class _RiwayatLogUKSPageState extends State<RiwayatLogUKSPage> {
                 onChanged: (value) async {
                   setState(() {
                     value1Item = value;
+                    filterTanggal = 'TANGGAL=$value1Item';
                     flag1 = true;
+                    isLoading = true;
+                  });
+                  await Services().getLogUKS();
+                  setState(() {
+                    isLoading = false;
                   });
                 },
               ),
@@ -205,11 +232,13 @@ class _RiwayatLogUKSPageState extends State<RiwayatLogUKSPage> {
                 items: data.map(
                   (value) {
                     return DropdownMenuItem(
-                      value: value,
+                      value: value.split('.')[1],
                       child: Text(
-                        value,
+                        value.split('.')[0],
                         style: mono2TextStyle.copyWith(
-                          color: value2Item == value ? p1Color : mono2Color,
+                          color: value2Item == value.split('.')[1]
+                              ? p1Color
+                              : mono2Color,
                           fontWeight: regular,
                           fontSize: 10,
                         ),
@@ -220,7 +249,13 @@ class _RiwayatLogUKSPageState extends State<RiwayatLogUKSPage> {
                 onChanged: (value) async {
                   setState(() {
                     value2Item = value;
+                    filterNama = 'NAMA=$value2Item';
                     flag2 = true;
+                    isLoading = true;
+                  });
+                  await Services().getLogUKS();
+                  setState(() {
+                    isLoading = false;
                   });
                 },
               ),
@@ -283,13 +318,23 @@ class _RiwayatLogUKSPageState extends State<RiwayatLogUKSPage> {
                 onChanged: (value) async {
                   setState(() {
                     value3Item = value;
+                    filterJenisPTK = 'JENIS_PTK=$value3Item';
                     flag3 = true;
+                    isLoading = true;
+                  });
+                  await Services().getLogUKS();
+                  setState(() {
+                    isLoading = false;
                   });
                 },
               ),
             ),
           ));
     }
+
+    setState(() {
+      filterUrl = '$filterTanggal&$filterNama&$filterJenisPTK';
+    });
 
     Widget filter() {
       return Container(
@@ -310,10 +355,18 @@ class _RiwayatLogUKSPageState extends State<RiwayatLogUKSPage> {
                             value1Item = null;
                             value2Item = null;
                             value3Item = null;
-
+                            filterUrl = '';
+                            filterTanggal = '';
+                            filterNama = '';
+                            filterJenisPTK = '';
                             flag1 = false;
                             flag2 = false;
                             flag3 = false;
+                            isLoading = true;
+                          });
+                          await Services().getLogUKS();
+                          setState(() {
+                            isLoading = false;
                           });
                         },
                         child: Container(
@@ -349,15 +402,15 @@ class _RiwayatLogUKSPageState extends State<RiwayatLogUKSPage> {
                 dropdownList1(
                   hint: 'Tanggal',
                   data: [
-                    'Tanggal Terbaru',
-                    'Tanggal Terlama',
+                    'Tanggal Terbaru.1',
+                    'Tanggal Terlama.2',
                   ],
                 ),
                 dropdownList2(
                   hint: 'Nama',
                   data: [
-                    'A-Z (Ascending)',
-                    'Z-A (Descending)',
+                    'A-Z (Ascending).2',
+                    'Z-A (Descending).1',
                   ],
                 ),
                 dropdownList3(
@@ -379,6 +432,7 @@ class _RiwayatLogUKSPageState extends State<RiwayatLogUKSPage> {
     }
 
     Widget itemList({
+      required String id,
       required String name,
       required String status,
       required String tanggal,
@@ -386,6 +440,7 @@ class _RiwayatLogUKSPageState extends State<RiwayatLogUKSPage> {
       return GestureDetector(
         onTap: () {
           provider.setRoleRiwayatLogUks = status;
+          provider.setIdLogUKS = id;
           Navigator.pushNamed(
               context, '/staff/humas/loguks/riwayat-data/detail');
         },
@@ -457,70 +512,41 @@ class _RiwayatLogUKSPageState extends State<RiwayatLogUKSPage> {
           children: [
             filter(),
             Expanded(
-              child: ListView(
-                children: [
-                  itemList(
-                    name: 'Cerry Rans',
-                    status: 'Siswa',
-                    tanggal: '18-02-2019',
-                  ),
-                  itemList(
-                    name: 'Cerry Rans',
-                    status: 'GTT',
-                    tanggal: '18-02-2019',
-                  ),
-                  itemList(
-                    name: 'Cerry Rans',
-                    status: 'GTT',
-                    tanggal: '18-02-2019',
-                  ),
-                  itemList(
-                    name: 'Cerry Rans',
-                    status: 'GTT',
-                    tanggal: '18-02-2019',
-                  ),
-                  itemList(
-                    name: 'Cerry Rans',
-                    status: 'GTT',
-                    tanggal: '18-02-2019',
-                  ),
-                  itemList(
-                    name: 'Cerry Rans',
-                    status: 'GTT',
-                    tanggal: '18-02-2019',
-                  ),
-                  itemList(
-                    name: 'Cerry Rans',
-                    status: 'GTT',
-                    tanggal: '18-02-2019',
-                  ),
-                  itemList(
-                    name: 'Cerry Rans',
-                    status: 'GTT',
-                    tanggal: '18-02-2019',
-                  ),
-                  itemList(
-                    name: 'Cerry Rans',
-                    status: 'GTT',
-                    tanggal: '18-02-2019',
-                  ),
-                  itemList(
-                    name: 'Cerry Rans',
-                    status: 'GTT',
-                    tanggal: '18-02-2019',
-                  ),
-                  itemList(
-                    name: 'Cerry Rans',
-                    status: 'GTT',
-                    tanggal: '18-02-2019',
-                  ),
-                  itemList(
-                    name: 'Cerry Rans',
-                    status: 'GTT',
-                    tanggal: '18-02-2019',
-                  ),
-                ],
-              ),
+              child: isLoading == true
+                  ? Container()
+                  : FutureBuilder(
+                      future: Services()
+                          .getLogUKS(urlSearch: urlSearch, filter: filterUrl),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData) {
+                          List<LogUKSModel> data = snapshot.data;
+                          return data.isEmpty
+                              ? Center(
+                                  child: Text(
+                                    'data tidak ditemukan',
+                                    style: mono1TextStyle,
+                                  ),
+                                )
+                              : ListView(
+                                  children: data.map((item) {
+                                    return itemList(
+                                      id: '${item.iD}',
+                                      name: '${item.nAMA}',
+                                      status: '${item.jENISPTK}',
+                                      tanggal: '${item.tANGGAL}',
+                                    );
+                                  }).toList(),
+                                );
+                        } else {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 4,
+                              color: m1Color,
+                            ),
+                          );
+                        }
+                      },
+                    ),
             ),
           ],
         ),

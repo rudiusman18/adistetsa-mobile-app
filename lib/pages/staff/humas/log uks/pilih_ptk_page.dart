@@ -89,10 +89,7 @@ class _PilihPTKPageState extends State<PilihPTKPage> {
             name: 'Siswa',
           ),
           itemList(
-            name: 'ASN/GTT/PTT',
-          ),
-          itemList(
-            name: 'Guru/Karyawan',
+            name: 'Tendik',
           ),
         ],
       ),

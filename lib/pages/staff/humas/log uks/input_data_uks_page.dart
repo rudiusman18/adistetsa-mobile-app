@@ -1,4 +1,5 @@
 import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:provider/provider.dart';
@@ -40,6 +41,8 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
 
   Object? value3Item;
   bool flag3 = false;
+
+  bool isLoading = false;
 
   DateTime? selectedDate;
   bool isActivedate = false;
@@ -757,12 +760,12 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
                       items: item.map(
                         (value) {
                           return DropdownMenuItem(
-                            value: value,
+                            value: value.split('.')[1],
                             child: Text(
-                              value,
+                              value.split('.')[0],
                               style: mono3TextStyle.copyWith(
                                 color:
-                                    value2Item == value ? p1Color : mono1Color,
+                                    value2Item == value.split('.')[0] ? p1Color : mono1Color,
                                 fontWeight: regular,
                                 fontSize: 12,
                               ),
@@ -902,7 +905,112 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
           bottom: 40,
         ),
         child: TextButton(
-          onPressed: () {},
+          onPressed: () async {
+            if (provider.namaPTK == 'Siswa') {
+              if (nameInput.text == '' ||
+                  value1Item == null ||
+                  nisnInput.text == '' ||
+                  selectedDate == null ||
+                  jenisPemeriksaanInput.text == '' ||
+                  obatDiberikanInput.text == '' ||
+                  tindakLanjutInput.text == '') {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: dangerColor,
+                    content: Text(
+                      'Anda belum mengisi semua form yang ada',
+                      textAlign: TextAlign.center,
+                    )));
+              } else {
+                try {
+                  setState(() {
+                    isLoading = true;
+                  });
+                  await Services().tambahLogUKS(
+                      nama: nameInput.text,
+                      kelas: value1Item.toString(),
+                      nisn: nisnInput.text,
+                      tanggal: selectedDate.toString().split(' ')[0],
+                      jenisPemeriksaan: jenisPemeriksaanInput.text,
+                      obatDiberikan: obatDiberikanInput.text,
+                      tindakLanjut: tindakLanjutInput.text,
+                      jenisPTK: provider.namaPTK);
+                  nameInput.text = '';
+                  value1Item = null;
+                  nisnInput.text = '';
+                  selectedDate = null;
+                  jenisPemeriksaanInput.text = '';
+                  obatDiberikanInput.text = '';
+                  tindakLanjutInput.text = '';
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      backgroundColor: successColor,
+                      content: Text(
+                        'Anda berhasil menambahkan log UKS',
+                        textAlign: TextAlign.center,
+                      )));
+                  setState(() {
+                    isLoading = false;
+                  });
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      backgroundColor: dangerColor,
+                      content: Text(
+                        e.toString(),
+                        textAlign: TextAlign.center,
+                      )));
+                }
+              }
+            } else {
+              if (value2Item == null ||
+                  nameInput.text == '' ||
+                  selectedDate == null ||
+                  jenisPemeriksaanInput.text == '' ||
+                  obatDiberikanInput.text == '' ||
+                  tindakLanjutInput.text == '') {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: dangerColor,
+                    content: Text(
+                      'Anda belum mengisi semua form yang ada',
+                      textAlign: TextAlign.center,
+                    )));
+              } else {
+                try {
+                  setState(() {
+                    isLoading = true;
+                  });
+                  await Services().tambahLogUKS(
+                    jenisPTK: value2Item.toString(),
+                    nama: nameInput.text,
+                    tanggal: selectedDate.toString().split(' ')[0],
+                    jenisPemeriksaan: jenisPemeriksaanInput.text,
+                    obatDiberikan: obatDiberikanInput.text,
+                    tindakLanjut: tindakLanjutInput.text,
+                  );
+                  value2Item = null;
+                  nameInput.text = '';
+                  selectedDate = null;
+                  jenisPemeriksaanInput.text = '';
+                  obatDiberikanInput.text = '';
+                  tindakLanjutInput.text = '';
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      backgroundColor: successColor,
+                      content: Text(
+                        'Anda berhasil menambahkan log UKS',
+                        textAlign: TextAlign.center,
+                      )));
+                  setState(() {
+                    isLoading = false;
+                  });
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      backgroundColor: dangerColor,
+                      content: Text(
+                        e.toString(),
+                        textAlign: TextAlign.center,
+                      )));
+                }
+              }
+            }
+          },
           style: TextButton.styleFrom(
             primary: m2Color,
             backgroundColor: m2Color,
@@ -913,13 +1021,22 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
               ),
             ),
           ),
-          child: Text(
-            'Tambah',
-            style: mono6TextStyle.copyWith(
-              fontSize: 16,
-              fontWeight: bold,
-            ),
-          ),
+          child: isLoading == true
+              ? Container(
+                  width: 14,
+                  height: 14,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 4,
+                    color: mono6Color,
+                  ),
+                )
+              : Text(
+                  'Tambah',
+                  style: mono6TextStyle.copyWith(
+                    fontSize: 16,
+                    fontWeight: bold,
+                  ),
+                ),
         ),
       );
     }
@@ -957,9 +1074,10 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
           inputDropdownASNPTTGTT(
             hint: 'Jenis PTK',
             item: [
-              'ASN (Aparatur Sipil Negara)',
-              'GTT (Guru Tidak Tetap)',
-              'PTT (Pegawai Tidak Tetap)',
+              'ASN (Aparatur Sipil Negara).Aparatur Sipil Negara',
+              'GTT (Guru Tidak Tetap).Guru Tidak Tetap',
+              'PTT (Pegawai Tidak Tetap).Pegawai Tidak Tetap',
+              'Guru.Guru',
             ],
           ),
           inputNama(),
@@ -1000,7 +1118,7 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
         children: [
           provider.namaPTK == 'Siswa'
               ? itemSiswa()
-              : provider.namaPTK == 'ASN/GTT/PTT'
+              : provider.namaPTK == 'Tendik'
                   ? itemASN()
                   : itemGuru(),
           buttonSubmit(),
