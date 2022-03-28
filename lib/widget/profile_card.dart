@@ -25,7 +25,7 @@ class ProfileCard extends StatelessWidget {
             ? '${guruModel.nAMALENGKAP}'
             : role == 'Karyawan'
                 ? '${karyawanModel.nAMALENGKAP}'
-                : role == 'Siswa'
+                : role == 'Siswa' || role == 'Alumni'
                     ? '${siswaModel.nAMA}'
                     : role == 'Pelatih'
                         ? provider.jadwalEkskul.first.pELATIH
@@ -43,7 +43,7 @@ class ProfileCard extends StatelessWidget {
             ? 'NIP ${guruModel.nIP}'
             : role == 'Karyawan'
                 ? 'NIP ${karyawanModel.nIP}'
-                : role == 'Siswa'
+                : role == 'Siswa' || role == 'Alumni'
                     ? 'NIS ${siswaModel.nIS}'
                     : role == 'Pelatih'
                         ? rolesModel.name
@@ -57,7 +57,7 @@ class ProfileCard extends StatelessWidget {
             ? 'Bidang'
             : role == 'Karyawan'
                 ? 'Jenis PTK'
-                : role == 'Siswa'
+                : role == 'Siswa' || role == 'Alumni'
                     ? 'Kelas'
                     : role == 'Pelatih'
                         ? 'Ekstrakurikuler'
@@ -68,7 +68,7 @@ class ProfileCard extends StatelessWidget {
             ? 'Sarana Prasarana'
             : role == 'Karyawan'
                 ? '${karyawanModel.jENISPTK}'
-                : role == 'Siswa'
+                : role == 'Siswa' || role == 'Alumni'
                     ? 'Kelas'
                     : role == 'Pelatih'
                         ? provider.jadwalEkskul
