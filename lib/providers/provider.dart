@@ -1,5 +1,5 @@
-import 'package:adistetsa/models/daftar_konsultasi_BK_model.dart';
 import 'package:adistetsa/models/daftaranggotaekskul_model.dart';
+import 'package:adistetsa/models/detail_daftar_alumni_model.dart';
 import 'package:adistetsa/models/detail_daftar_konsultasi_bk_model.dart';
 import 'package:adistetsa/models/detailjurnalmengajarguru_model.dart';
 import 'package:adistetsa/models/jadwalekskul_model.dart';
@@ -7,6 +7,7 @@ import 'package:adistetsa/models/jadwalmengajarguru_model.dart';
 import 'package:adistetsa/models/katalogbarang_model.dart';
 import 'package:adistetsa/models/katalogekskul_model.dart';
 import 'package:adistetsa/models/katalogruangan_model.dart';
+import 'package:adistetsa/models/konselor_model.dart';
 import 'package:adistetsa/models/peminjambarang_model.dart';
 import 'package:adistetsa/models/guru_model.dart';
 import 'package:adistetsa/models/jenispelanggaran_model.dart';
@@ -217,13 +218,21 @@ class Providers with ChangeNotifier {
   }
   // NOTE: END
 
+  // NOTE: Digunakan untuk mendapatkan data konselor di role pengguna
+  KonselorModel _dataKonselor = KonselorModel();
+  KonselorModel get dataKonselor => _dataKonselor;
+  set setDataKonselor(KonselorModel dataKonselor) {
+    _dataKonselor = dataKonselor;
+  }
+  // NOTE: END
+
   // NOTE: untuk mendapatkan daftar konsultasi BK
-  detailDaftarKonsultasiBKModel _daftarKonsultasiBKModel =
-      detailDaftarKonsultasiBKModel();
-  detailDaftarKonsultasiBKModel get daftarKonsultasiBKModel =>
+  DetailDaftarKonsultasiBKModel _daftarKonsultasiBKModel =
+      DetailDaftarKonsultasiBKModel();
+  DetailDaftarKonsultasiBKModel get daftarKonsultasiBKModel =>
       _daftarKonsultasiBKModel;
   void setDaftarKonsultasiBKModel(
-      detailDaftarKonsultasiBKModel setDaftarKonsultasiBKModel) {
+      DetailDaftarKonsultasiBKModel setDaftarKonsultasiBKModel) {
     _daftarKonsultasiBKModel = setDaftarKonsultasiBKModel;
   }
   // NOTE: END
@@ -237,6 +246,15 @@ class Providers with ChangeNotifier {
   }
   // NOTE: END
 
+// NOTE: Digunakan untuk mendapatkan data detail daftar Alumni
+  DetailDaftarAlumniModel _daftarAlumni = DetailDaftarAlumniModel();
+  DetailDaftarAlumniModel get daftarAlumni => _daftarAlumni;
+  set setDetailDaftarAlumni(DetailDaftarAlumniModel daftarAlumni) {
+    _daftarAlumni = daftarAlumni;
+    notifyListeners();
+  }
+
+// NOTE: END
   set setAngket(String angket) {
     _angket = angket;
     notifyListeners();
@@ -803,6 +821,29 @@ class Providers with ChangeNotifier {
     try {
       _daftarKonsultasiBKModel =
           await Services().getDetailDaftarKonsultasiBK(id: id);
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+  // NOTE: END
+
+  // NOTE: untuk mendapatkan data konselor pada role pengguna
+  Future<bool> getDataKonselor({required String id}) async {
+    try {
+      _dataKonselor = await Services().getDetailKonselorBK(id: id);
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  // NOTE: mendapatkan detail data Daftar Alumni
+  Future<bool> getDetailDaftarAlumni({required String id}) async {
+    try {
+      _daftarAlumni = await Services().getDetailDaftarAlumni(id: id);
       return true;
     } catch (e) {
       print(e);

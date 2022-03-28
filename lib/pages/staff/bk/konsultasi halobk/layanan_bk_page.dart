@@ -255,6 +255,8 @@ class _LayananBkPageState extends State<LayananBkPage> {
                 isLoading = true;
               });
               await Services().patchprofileKonselorBK(
+                alumnus: profile.aLUMNUS,
+                kompetensi: profile.kOMPETENSI,
                 linkWA: profile.wHATSAPP,
                 linkVC: profile.cONFERENCE,
                 status: profile.sTATUS == 'Offline' ? 'Online' : 'Offline',

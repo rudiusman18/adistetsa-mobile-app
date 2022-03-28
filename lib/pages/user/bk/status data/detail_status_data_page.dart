@@ -1,4 +1,7 @@
+import 'package:adistetsa/models/role_model.dart';
 import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
+import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +16,8 @@ class _DetailStatusDataPageState extends State<DetailStatusDataPage> {
   @override
   Widget build(BuildContext context) {
     Providers provider = Provider.of(context);
+    RolesModel rolesModel = provider.role;
+
     PreferredSizeWidget header() {
       return AppBar(
         centerTitle: true,
@@ -124,14 +129,31 @@ class _DetailStatusDataPageState extends State<DetailStatusDataPage> {
               ),
               backgroundColor: m2Color,
             ),
-            onPressed: () {
-              provider.status == 'Diterima'
-                  ? Navigator.pushNamed(
-                      context, '/user/bk/status-data/diterima')
-                  : provider.status == 'Selesai'
-                      ? Navigator.pushNamed(
-                          context, '/user/bk/status-data/selesai')
-                      : Container();
+            onPressed: () async {
+              if (name == 'Batalkan') {
+                loading(context);
+                await Services().deleteDaftarKonsultasi(
+                  id: provider.daftarKonsultasiBKModel.iD.toString(),
+                );
+                Navigator.pop(context);
+                Navigator.pop(context);
+              }
+
+              if (provider.status == 'Dijadwalkan') {
+                loading(context);
+                await provider.getDetailDaftarKonsultasiBK(
+                    id: provider.daftarKonsultasiBKModel.iD.toString());
+                Navigator.pushReplacementNamed(
+                    context, '/user/bk/status-data/diterima');
+              }
+              if (provider.status == 'Selesai') {
+                loading(context);
+                await provider.getDetailDaftarKonsultasiBK(
+                    id: provider.daftarKonsultasiBKModel.iD.toString());
+                await provider.getDataKonselor(id: provider.idStaff);
+                Navigator.pushReplacementNamed(
+                    context, '/user/bk/status-data/selesai');
+              }
             },
             child: isLoading == false
                 ? Text(
@@ -158,43 +180,71 @@ class _DetailStatusDataPageState extends State<DetailStatusDataPage> {
       body: Column(
         children: [
           profile(
-            name: 'Adam Anjing',
-            role: 'Pengacara (Pengangguran Banyak Acara)',
+            name: '${provider.daftarKonsultasiBKModel.kONSELOR}',
+            role: 'Konsultan BK',
           ),
           Expanded(
             child: ListView(
               children: [
-                item(
-                  name: 'Nama Siswa',
-                  value: 'Annabelle',
-                ),
-                item(
-                  name: 'Kelas',
-                  value: 'XII IPA A',
-                ),
-                item(
-                  name: 'NISN',
-                  value: '18029282739298',
-                ),
-                item(
-                  name: 'NIS',
-                  value: '17728192847362',
-                ),
+                rolesModel.name == 'Siswa'
+                    ? item(
+                        name: 'Nama Siswa',
+                        value: '${provider.daftarKonsultasiBKModel.nAMA}',
+                      )
+                    : rolesModel.name == 'Guru'
+                        ? item(
+                            name: 'Nama Guru',
+                            value: '${provider.guru.nAMALENGKAP}',
+                          )
+                        : rolesModel.name == 'Karyawan'
+                            ? item(
+                                name: 'Nama Karyawan',
+                                value: '${provider.karyawan.nAMALENGKAP}',
+                              )
+                            : Container(),
+                rolesModel.name == 'Guru' || rolesModel.name == 'Karyawan'
+                    ? Container()
+                    : item(
+                        name: 'Kelas',
+                        value: '${provider.daftarKonsultasiBKModel.kELAS}',
+                      ),
+                rolesModel.name == 'Guru' || rolesModel.name == 'Karyawan'
+                    ? Container()
+                    : item(
+                        name: 'NISN',
+                        value: '${provider.daftarKonsultasiBKModel.nISN}',
+                      ),
+                rolesModel.name == 'Guru'
+                    ? item(
+                        name: 'NIP',
+                        value: '${provider.guru.nIP}',
+                      )
+                    : rolesModel.name == 'Karyawan'
+                        ? item(
+                            name: 'NIK',
+                            value: '${provider.karyawan.nIK}',
+                          )
+                        : item(
+                            name: 'NIS',
+                            value: '${provider.daftarKonsultasiBKModel.nIS}',
+                          ),
                 item(
                   name: 'Tanggal',
-                  value: '2022-02-13',
+                  value:
+                      '${provider.daftarKonsultasiBKModel.tANGGALKONSULTASI}',
                 ),
                 item(
                   name: 'Jam',
-                  value: '09:00 - 12:00 WIB',
+                  value:
+                      '${provider.daftarKonsultasiBKModel.jAMAWAL!.split(':')[0]}:${provider.daftarKonsultasiBKModel.jAMAWAL!.split(':')[1]} - ${provider.daftarKonsultasiBKModel.jAMAKHIR!.split(':')[0]}:${provider.daftarKonsultasiBKModel.jAMAKHIR!.split(':')[1]}',
                 ),
                 item(
                   name: 'Jenis Masalah',
-                  value: 'Belajar',
+                  value: '${provider.daftarKonsultasiBKModel.jENISMASALAH}',
                 ),
                 item(
                   name: 'Status Pengajuan',
-                  value: '${provider.status}',
+                  value: '${provider.daftarKonsultasiBKModel.sTATUS}',
                 ),
                 provider.status == 'Diajukan'
                     ? buttonSubmit(name: 'Batalkan')

@@ -1,7 +1,12 @@
+import 'package:adistetsa/models/detail_daftar_konsultasi_bk_model.dart';
+import 'package:adistetsa/models/konselor_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:provider/provider.dart';
 
 class KonsultasiSelesaiPage extends StatefulWidget {
   @override
@@ -10,9 +15,15 @@ class KonsultasiSelesaiPage extends StatefulWidget {
 
 class _KonsultasiSelesaiPageState extends State<KonsultasiSelesaiPage> {
   TextEditingController kritikSaranController = TextEditingController(text: '');
+  String ratingValue = '';
   bool isLoading = false;
+  KonselorModel profile = KonselorModel();
+  DetailDaftarKonsultasiBKModel dataInput = DetailDaftarKonsultasiBKModel();
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of(context);
+    profile = provider.dataKonselor;
+    dataInput = provider.daftarKonsultasiBKModel;
     PreferredSizeWidget header() {
       return AppBar(
         backgroundColor: mono6Color,
@@ -98,7 +109,7 @@ class _KonsultasiSelesaiPageState extends State<KonsultasiSelesaiPage> {
                 initialRating: 0,
                 minRating: 0,
                 direction: Axis.horizontal,
-                allowHalfRating: true,
+                allowHalfRating: false,
                 itemCount: 5,
                 itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
                 itemBuilder: (context, _) => Icon(
@@ -106,7 +117,8 @@ class _KonsultasiSelesaiPageState extends State<KonsultasiSelesaiPage> {
                   color: Colors.amber,
                 ),
                 onRatingUpdate: (rating) {
-                  print(rating);
+                  ratingValue = rating.toString();
+                  print(ratingValue);
                 },
               ),
             ],
@@ -184,7 +196,31 @@ class _KonsultasiSelesaiPageState extends State<KonsultasiSelesaiPage> {
               ),
               backgroundColor: m2Color,
             ),
-            onPressed: () {},
+            onPressed: () async {
+              if (ratingValue != '' && kritikSaranController.text.isNotEmpty) {
+                setState(() {
+                  isLoading = true;
+                });
+                await Services().patchDetailDaftarKonsultasiBK(
+                  rating: ratingValue,
+                  kritikSaran: kritikSaranController.text,
+                  id: dataInput.iD.toString(),
+                  status: 'Telah Mengisi Feedback',
+                );
+                setState(() {
+                  isLoading = false;
+                });
+                Navigator.pop(context);
+                Navigator.pop(context);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: dangerColor,
+                    content: Text(
+                      'Anda harus mengisi semua form yang tersedia',
+                      textAlign: TextAlign.center,
+                    )));
+              }
+            },
             child: isLoading == false
                 ? Text(
                     name,
@@ -212,9 +248,8 @@ class _KonsultasiSelesaiPageState extends State<KonsultasiSelesaiPage> {
         child: ListView(
           children: [
             body(
-              urlImage:
-                  'https://yt3.ggpht.com/ytc/AKedOLRr2b60uBxJkwXewo3SdAFNLmnSlXnkJxCTr98uhg=s900-c-k-c0x00ffffff-no-rj',
-              name: 'Adam Babi',
+              urlImage: '${profile.fOTO}',
+              name: '${profile.nAMA}',
             ),
             kritikSaranInput(),
             SizedBox(

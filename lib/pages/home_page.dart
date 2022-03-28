@@ -1,6 +1,5 @@
 import 'package:adistetsa/models/role_model.dart';
 import 'package:adistetsa/providers/provider.dart';
-import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/widget/item_card.dart';
 import 'package:adistetsa/widget/profile_card.dart';
 import 'package:flutter/material.dart';
@@ -184,15 +183,15 @@ class HomePage extends StatelessWidget {
         child: Wrap(
           spacing: 25,
           children: [
-            // GestureDetector(
-            //   onTap: () {
-            //     Navigator.pushNamed(context, '/user/bk');
-            //   },
-            //   child: ItemCard(
-            //     urlImg: 'bimbingan konseling',
-            //     text: 'Bimbingan Konseling',
-            //   ),
-            // ),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/user/bk');
+              },
+              child: ItemCard(
+                urlImg: 'bimbingan konseling',
+                text: 'Bimbingan Konseling',
+              ),
+            ),
             GestureDetector(
               onTap: () {
                 Navigator.pushNamed(
@@ -350,6 +349,15 @@ class HomePage extends StatelessWidget {
         child: Wrap(
           spacing: 25,
           children: [
+            // GestureDetector(
+            //   onTap: () {
+            //     Navigator.pushNamed(context, '/user/bk');
+            //   },
+            //   child: ItemCard(
+            //     urlImg: 'bimbingan konseling',
+            //     text: 'Bimbingan Konseling',
+            //   ),
+            // ),
             ItemCard(
               urlImg: 'kurikulum',
               text: 'Kurikulum',

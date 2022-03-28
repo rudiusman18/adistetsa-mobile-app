@@ -1,9 +1,37 @@
+import 'package:adistetsa/models/konselor_model.dart';
+import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class KonsultasiDiterimaPage extends StatelessWidget {
+class KonsultasiDiterimaPage extends StatefulWidget {
+  @override
+  _KonsultasiDiterimaPageState createState() => _KonsultasiDiterimaPageState();
+}
+
+class _KonsultasiDiterimaPageState extends State<KonsultasiDiterimaPage> {
+  KonselorModel profile = KonselorModel();
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
+    Providers provider = Provider.of(context);
+    profile = provider.dataKonselor;
+
+    launchUrl(String url) async {
+      if (await canLaunch(url)) {
+        await launch(
+          url,
+          forceWebView: true,
+          enableJavaScript: true,
+        );
+      } else {
+        Navigator.pushNamed(context, '/error-page');
+      }
+    }
+
     PreferredSizeWidget header() {
       return AppBar(
         backgroundColor: mono6Color,
@@ -135,27 +163,32 @@ class KonsultasiDiterimaPage extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Row(
-          children: [
-            Image.asset(
-              iconName,
-              width: 30,
-              height: 30,
-              color: m1Color,
-            ),
-            SizedBox(
-              width: 21,
-            ),
-            Flexible(
-              child: Text(
-                keterangan,
-                style: mono1TextStyle.copyWith(
-                  fontSize: 12,
-                  fontWeight: semiBold,
+        child: GestureDetector(
+          onTap: () {
+            launchUrl(url);
+          },
+          child: Row(
+            children: [
+              Image.asset(
+                iconName,
+                width: 30,
+                height: 30,
+                color: m1Color,
+              ),
+              SizedBox(
+                width: 21,
+              ),
+              Flexible(
+                child: Text(
+                  keterangan,
+                  style: mono1TextStyle.copyWith(
+                    fontSize: 12,
+                    fontWeight: semiBold,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     }
@@ -168,9 +201,9 @@ class KonsultasiDiterimaPage extends StatelessWidget {
         child: Column(
           children: [
             nameCard(
-              name: 'Adam Babi',
+              name: '${provider.daftarKonsultasiBKModel.kONSELOR}',
               role: 'Konsultas HaloBK',
-              status: 'Online',
+              status: '${profile.sTATUS}',
             ),
             Expanded(
               child: Padding(
@@ -180,7 +213,7 @@ class KonsultasiDiterimaPage extends StatelessWidget {
                     infoItem(
                       iconName: Icons.subtitles_outlined,
                       keterangan: 'NIP',
-                      value: '191203934090',
+                      value: '${profile.nIP}',
                     ),
                     SizedBox(
                       height: 20,
@@ -188,7 +221,7 @@ class KonsultasiDiterimaPage extends StatelessWidget {
                     infoItem(
                       iconName: Icons.app_registration,
                       keterangan: 'Kompetensi',
-                      value: 'Pendidikan Pancasila dan Kewarganegaraan',
+                      value: '${profile.kOMPETENSI}',
                     ),
                     SizedBox(
                       height: 20,
@@ -196,18 +229,18 @@ class KonsultasiDiterimaPage extends StatelessWidget {
                     infoItem(
                       iconName: Icons.school,
                       keterangan: 'Alumnus',
-                      value: 'Universitas Negeri Malang, 2015',
+                      value: '${profile.aLUMNUS}',
                     ),
                     SizedBox(
                       height: 40,
                     ),
                     buttonCommunication(
-                      url: 'url',
+                      url: '${profile.wHATSAPP}',
                       iconName: 'assets/whatsapp.png',
                       keterangan: 'Hubungi Melalui Whatsapp',
                     ),
                     buttonCommunication(
-                      url: '',
+                      url: '${profile.cONFERENCE}',
                       iconName: 'assets/videocam.png',
                       keterangan: 'Hubungi Melalui Video Conference',
                     ),

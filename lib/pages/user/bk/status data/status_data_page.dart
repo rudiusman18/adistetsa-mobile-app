@@ -1,7 +1,7 @@
-import 'package:adistetsa/models/daftar_konsultasi_BK_model.dart';
 import 'package:adistetsa/models/status_pengajuan_konseling_model.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
+import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:provider/provider.dart';
@@ -78,7 +78,7 @@ class _StatusDataPageState extends State<StatusDataPage> {
             isDense: true,
             border: InputBorder.none,
           ),
-          onChanged: (newValue) {
+          onChanged: (newValue) async {
             setState(() {
               if (searchController.selection.start >
                   searchController.text.length) {
@@ -90,8 +90,11 @@ class _StatusDataPageState extends State<StatusDataPage> {
               urlSearch = 'search=${searchController.text}';
               isLoading = true;
             });
+            await Services().getPengajuanKonseling();
 
-            //Note: await disini
+            setState(() {
+              isLoading = false;
+            });
           },
         ),
         elevation: 4,
@@ -99,13 +102,29 @@ class _StatusDataPageState extends State<StatusDataPage> {
       );
     }
 
-    Widget listKonsulen(
-        {required String name, required String tahun, required String status}) {
+    Widget listKonsulen({
+      required String idKonselor,
+      required String id,
+      required String name,
+      required String tahun,
+      required String status,
+    }) {
       return GestureDetector(
-        onTap: () {
+        onTap: () async {
           provider.setStatus = status;
-
-          Navigator.pushNamed(context, '/user/bk/status-data/detail');
+          loading(context);
+          provider.setId = idKonselor;
+          await provider.getDetailDaftarKonsultasiBK(id: id);
+          Navigator.pushReplacementNamed(context, '/user/bk/status-data/detail')
+              .then((_) async {
+            setState(() {
+              isLoading = true;
+            });
+            await Services().getPengajuanKonseling();
+            setState(() {
+              isLoading = false;
+            });
+          });
         },
         child: Container(
           color: mono6Color,
@@ -188,6 +207,8 @@ class _StatusDataPageState extends State<StatusDataPage> {
                         : ListView(
                             children: data.map((item) {
                               return listKonsulen(
+                                idKonselor: '${item.kONSELOR}',
+                                id: '${item.iD}',
                                 name: '${item.nAMAKONSELOR}',
                                 tahun: '${item.tANGGALKONSULTASI}',
                                 status: '${item.sTATUS}',

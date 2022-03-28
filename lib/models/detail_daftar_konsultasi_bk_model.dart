@@ -1,4 +1,4 @@
-class detailDaftarKonsultasiBKModel {
+class DetailDaftarKonsultasiBKModel {
   int? iD;
   String? nAMA;
   String? nIS;
@@ -9,12 +9,12 @@ class detailDaftarKonsultasiBKModel {
   String? jAMAWAL;
   String? jAMAKHIR;
   String? jENISMASALAH;
-  Null? rATING;
+  int? rATING;
   String? sTATUS;
   String? kRITIKSARAN;
   int? uSER;
 
-  detailDaftarKonsultasiBKModel(
+  DetailDaftarKonsultasiBKModel(
       {this.iD,
       this.nAMA,
       this.nIS,
@@ -30,7 +30,7 @@ class detailDaftarKonsultasiBKModel {
       this.kRITIKSARAN,
       this.uSER});
 
-  detailDaftarKonsultasiBKModel.fromJson(Map<String, dynamic> json) {
+  DetailDaftarKonsultasiBKModel.fromJson(Map<String, dynamic> json) {
     iD = json['ID'];
     nAMA = json['NAMA'];
     nIS = json['NIS'];

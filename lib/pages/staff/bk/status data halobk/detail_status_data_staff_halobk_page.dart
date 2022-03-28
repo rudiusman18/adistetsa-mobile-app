@@ -1,3 +1,4 @@
+import 'package:adistetsa/models/role_model.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/widget/loading.dart';
@@ -17,6 +18,7 @@ class _DetailStatusDataStaffHalobkPageState
   @override
   Widget build(BuildContext context) {
     Providers provider = Provider.of(context);
+    RolesModel rolesModel = provider.role;
 
     PreferredSizeWidget header() {
       return AppBar(
@@ -152,8 +154,11 @@ class _DetailStatusDataStaffHalobkPageState
               if (name == 'Selesai Konsultasi') {
                 loading(context);
                 await Services().patchDetailDaftarKonsultasiBK(
-                    id: '${provider.daftarKonsultasiBKModel.iD}',
-                    status: 'Selesai');
+                  id: '${provider.daftarKonsultasiBKModel.iD}',
+                  rating: null,
+                  kritikSaran: '',
+                  status: 'Selesai',
+                );
                 Navigator.pop(context);
                 Navigator.pop(context);
               }
@@ -166,11 +171,14 @@ class _DetailStatusDataStaffHalobkPageState
                 Navigator.pop(context);
                 Navigator.pop(context);
               }
-              name == 'Lihat Feedback' &&
-                      provider.daftarKonsultasiBKModel.kRITIKSARAN!.isNotEmpty
-                  ? Navigator.pushNamed(
-                      context, '/staff/bk/status-data/detail/feedback')
-                  : Container();
+              if (name == 'Lihat Feedback' &&
+                  provider.daftarKonsultasiBKModel.kRITIKSARAN!.isNotEmpty) {
+                loading(context);
+                await provider.getDetailDaftarKonsultasiBK(
+                    id: '${provider.daftarKonsultasiBKModel.iD}');
+                Navigator.pushReplacementNamed(
+                    context, '/staff/bk/status-data/detail/feedback');
+              }
             },
             child: isLoading == false
                 ? Text(
@@ -198,27 +206,39 @@ class _DetailStatusDataStaffHalobkPageState
       body: Column(
         children: [
           profile(
-            name: '${provider.daftarKonsultasiBKModel.nAMA}',
-            role: '${provider.daftarKonsultasiBKModel.kELAS}',
+            name:
+                '${provider.daftarKonsultasiBKModel.nAMA == null ? provider.guru.nAMALENGKAP : provider.daftarKonsultasiBKModel.nAMA}',
+            role:
+                '${provider.daftarKonsultasiBKModel.kELAS == null ? provider.guru.jENISPTK : provider.daftarKonsultasiBKModel.kELAS}',
           ),
           Expanded(
             child: ListView(
               children: [
                 item(
-                  name: 'Nama Siswa',
-                  value: '${provider.daftarKonsultasiBKModel.nAMA}',
+                  name: provider.daftarKonsultasiBKModel.nAMA == null
+                      ? 'Nama Guru'
+                      : 'Nama Siswa',
+                  value:
+                      '${provider.daftarKonsultasiBKModel.nAMA == null ? provider.guru.nAMALENGKAP : provider.daftarKonsultasiBKModel.nAMA}',
                 ),
+                provider.daftarKonsultasiBKModel.nAMA == null
+                    ? Container()
+                    : item(
+                        name: 'Kelas',
+                        value: '${provider.daftarKonsultasiBKModel.kELAS}',
+                      ),
+                provider.daftarKonsultasiBKModel.nAMA == null
+                    ? Container()
+                    : item(
+                        name: 'NISN',
+                        value: '${provider.daftarKonsultasiBKModel.nISN}',
+                      ),
                 item(
-                  name: 'Kelas',
-                  value: '${provider.daftarKonsultasiBKModel.kELAS}',
-                ),
-                item(
-                  name: 'NISN',
-                  value: '${provider.daftarKonsultasiBKModel.nISN}',
-                ),
-                item(
-                  name: 'NIS',
-                  value: '${provider.daftarKonsultasiBKModel.nISN}',
+                  name: provider.daftarKonsultasiBKModel.nAMA == null
+                      ? 'NIK'
+                      : 'NIS',
+                  value:
+                      '${provider.daftarKonsultasiBKModel.nAMA == null ? provider.guru.nIK : provider.daftarKonsultasiBKModel.nISN}',
                 ),
                 item(
                   name: 'Tanggal',
@@ -245,7 +265,8 @@ class _DetailStatusDataStaffHalobkPageState
                     ? buttonSubmit(name: 'Setuju')
                     : provider.staffStatus == 'Dijadwalkan'
                         ? buttonSubmit(name: 'Selesai Konsultasi')
-                        : provider.staffStatus == 'Selesai'
+                        : provider.staffStatus == 'Telah Mengisi Feedback' ||
+                                provider.staffStatus == 'Selesai'
                             ? buttonSubmit(name: 'Lihat Feedback')
                             : Container(),
                 provider.staffStatus == 'Diajukan'
