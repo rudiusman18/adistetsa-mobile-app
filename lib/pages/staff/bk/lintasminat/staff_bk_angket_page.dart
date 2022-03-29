@@ -465,7 +465,7 @@ class _StaffBkAngketPageState extends State<StaffBkAngketPage> {
                                 : ListView(
                                     children: data.map((item) {
                                       return listItem(
-                                        name: '${item.iD}',
+                                        name: '${item.nAMA}',
                                         kelas: '${item.kELAS}',
                                         url: '${item.fILE}',
                                       );
@@ -499,7 +499,7 @@ class _StaffBkAngketPageState extends State<StaffBkAngketPage> {
                                     : ListView(
                                         children: data.map((item) {
                                           return listItem(
-                                            name: '${item.iD}',
+                                            name: '${item.nAMA}',
                                             kelas: '${item.kELAS}',
                                             url: '${item.fILE}',
                                           );
@@ -532,7 +532,7 @@ class _StaffBkAngketPageState extends State<StaffBkAngketPage> {
                                     : ListView(
                                         children: data.map((item) {
                                           return listItem(
-                                            name: '${item.iD}',
+                                            name: '${item.nAMA}',
                                             kelas: '${item.kELAS}',
                                             url: '${item.fILE}',
                                           );
