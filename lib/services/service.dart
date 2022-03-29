@@ -2014,7 +2014,7 @@ class Services extends ChangeNotifier {
   getAngketSiswa(
       {String? urlSearch, String? filter, String? jenisAngket}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    print(jenisAngket);
+
     var token = prefs.getString("token").toString();
     var url;
     if (jenisAngket == 'Peminatan') {
@@ -2029,12 +2029,13 @@ class Services extends ChangeNotifier {
     }
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
+
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       AngketBKModel angketBK = AngketBKModel.fromJson(data);
       return angketBK;
     } else {
-      throw Exception('Gagal Mendapatkan Angket Lintas Minat');
+      throw Exception('Gagal Mendapatkan Angket $jenisAngket');
     }
   }
 }

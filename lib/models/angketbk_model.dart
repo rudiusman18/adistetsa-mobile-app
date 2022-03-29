@@ -6,13 +6,14 @@ class AngketBKModel {
   String? fILE;
   int? kELASSISWA;
 
-  AngketBKModel(
-      {this.iD,
-      this.kELAS,
-      this.kATEGORI,
-      this.fILEANGKET,
-      this.fILE,
-      this.kELASSISWA});
+  AngketBKModel({
+    this.iD,
+    this.kELAS,
+    this.kATEGORI,
+    this.fILEANGKET,
+    this.fILE,
+    this.kELASSISWA,
+  });
 
   AngketBKModel.fromJson(Map<String, dynamic> json) {
     iD = json['ID'];

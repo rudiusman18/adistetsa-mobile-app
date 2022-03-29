@@ -1,10 +1,11 @@
-import 'package:adistetsa/models/angketbk_Model.dart';
+import 'package:adistetsa/models/angketbk_model.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AngketPage extends StatefulWidget {
   @override
@@ -13,7 +14,7 @@ class AngketPage extends StatefulWidget {
 
 class _AngketPageState extends State<AngketPage> {
   PlatformFile? file;
-  bool isLoading = false;
+  bool isLoading = true;
   FilePickerResult? result;
   AngketBKModel angket = AngketBKModel();
 
@@ -27,14 +28,14 @@ class _AngketPageState extends State<AngketPage> {
   }
 
   void getInit({String? jenisAngket}) async {
-      angket =
-          await Services().getAngketSiswa(jenisAngket: jenisAngket);
+    angket = await Services().getAngketSiswa(jenisAngket: jenisAngket);
     if (this.mounted) {
       setState(() {});
     }
+    isLoading = false;
   }
 
-  void adamState() {
+  void iniState() {
     super.initState();
     getInit();
   }
@@ -42,9 +43,18 @@ class _AngketPageState extends State<AngketPage> {
   @override
   Widget build(BuildContext context) {
     Providers provider = Provider.of(context);
-    print(provider.angket);
-
     getInit(jenisAngket: provider.angket);
+    launchUrl(String url) async {
+      if (await canLaunch(url)) {
+        await launch(
+          url,
+          forceWebView: true,
+          enableJavaScript: true,
+        );
+      } else {
+        Navigator.pushNamed(context, '/error-page');
+      }
+    }
 
     PreferredSizeWidget header() {
       return AppBar(
@@ -84,7 +94,10 @@ class _AngketPageState extends State<AngketPage> {
             ),
           ),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              launchUrl(
+                  'https://adistetsa.pythonanywhere.com/${angket.fILEANGKET}');
+            },
             child: Container(
               margin: EdgeInsets.only(top: 15),
               padding: EdgeInsets.all(15),
@@ -222,20 +235,26 @@ class _AngketPageState extends State<AngketPage> {
     return Scaffold(
       appBar: header(),
       backgroundColor: mono6Color,
-      body: Container(
-        padding: EdgeInsets.symmetric(vertical: 16),
-        margin: EdgeInsets.symmetric(horizontal: 20),
-        child: ListView(
-          children: [
-            document(
-              docName: 'Adam Anjing.DOCX',
-              docSize: '2TB',
+      body: isLoading
+          ? Center(
+              child: CircularProgressIndicator(
+                color: m1Color,
+              ),
+            )
+          : Container(
+              padding: EdgeInsets.symmetric(vertical: 16),
+              margin: EdgeInsets.symmetric(horizontal: 20),
+              child: ListView(
+                children: [
+                  document(
+                    docName: '${angket.fILEANGKET}'.split('/')[3],
+                    docSize: '${angket.kATEGORI}',
+                  ),
+                  uploadJawaban(),
+                  buttonSubmit(),
+                ],
+              ),
             ),
-            uploadJawaban(),
-            buttonSubmit(),
-          ],
-        ),
-      ),
     );
   }
 }
