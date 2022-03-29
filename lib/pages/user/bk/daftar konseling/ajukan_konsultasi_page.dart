@@ -40,7 +40,7 @@ class _AjukanKonsultasiPageState extends State<AjukanKonsultasiPage> {
     if (picked != null && picked != selectedDate)
       setState(() {
         selectedDate = picked;
-        print(selectedDate);
+        print(DateTime.now().toString().split(' ')[1].split(':')[0]);
       });
   }
 
@@ -184,6 +184,7 @@ class _AjukanKonsultasiPageState extends State<AjukanKonsultasiPage> {
                           // Optional onChange to receive value as DateTime
                           onChangeDateTime: (DateTime dateTime) {
                             print(dateTime);
+                            print((jamAwal.toString().split(':')[0]));
                           },
                         ),
                       );
@@ -390,26 +391,53 @@ class _AjukanKonsultasiPageState extends State<AjukanKonsultasiPage> {
               if (selectedDate != null &&
                   jamAwal != '' &&
                   jamAkhir != '' &&
-                  value1Item != null) {
-                setState(() {
-                  isLoading = true;
-                });
-                await Services().postPengajuanKonseling(
-                  id: provider.idStaff,
-                  tanggal: selectedDate!.toString().split(' ')[0],
-                  jamAwal: jamAwal,
-                  jamAkhir: jamAkhir,
-                  jenisMasalah: value1Item.toString(),
-                );
-                setState(() {
-                  isLoading = false;
-                });
-                Navigator.pop(context);
+                  value1Item != null &&
+                  int.parse(selectedDate
+                          .toString()
+                          .split(' ')[0]
+                          .split('-')[2]) >=
+                      int.parse(DateTime.now()
+                          .toString()
+                          .split(' ')[0]
+                          .split('-')[2]) &&
+                  int.parse(jamAwal.toString().split(':')[0]) >=
+                      int.parse(DateTime.now()
+                          .toString()
+                          .split(' ')[1]
+                          .split(':')[0]) &&
+                  int.parse(jamAwal.toString().split(':')[1]) >=
+                      int.parse(DateTime.now()
+                          .toString()
+                          .split(' ')[1]
+                          .split(':')[1])) {
+                try {
+                  setState(() {
+                    isLoading = true;
+                  });
+                  await Services().postPengajuanKonseling(
+                    id: provider.idStaff,
+                    tanggal: selectedDate!.toString().split(' ')[0],
+                    jamAwal: jamAwal,
+                    jamAkhir: jamAkhir,
+                    jenisMasalah: value1Item.toString(),
+                  );
+                  setState(() {
+                    isLoading = false;
+                  });
+                  Navigator.pop(context);
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      backgroundColor: dangerColor,
+                      content: Text(
+                        '$e',
+                        textAlign: TextAlign.center,
+                      )));
+                }
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     backgroundColor: dangerColor,
                     content: Text(
-                      'Anda harus mengisi semua form yang tersedia',
+                      'Anda harus mengisi semua form yang tersedia atau anda melakukan input tanggal atau waktu yang salah',
                       textAlign: TextAlign.center,
                     )));
               }

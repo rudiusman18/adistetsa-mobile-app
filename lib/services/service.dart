@@ -1713,7 +1713,7 @@ class Services extends ChangeNotifier {
         response.statusCode == 201) {
       return true;
     } else {
-      throw Exception('Gagal melakukan input data konsultasi');
+      throw Exception(response.body);
     }
   }
 
