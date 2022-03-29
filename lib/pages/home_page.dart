@@ -326,9 +326,14 @@ class HomePage extends StatelessWidget {
               urlImg: 'humas',
               text: 'Humas',
             ),
-            ItemCard(
-              urlImg: 'adiwiyata',
-              text: 'Adiwiyata',
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/user/adiwiyata');
+              },
+              child: ItemCard(
+                urlImg: 'adiwiyata',
+                text: 'Adiwiyata',
+              ),
             ),
             ItemCard(
               urlImg: 'presensi',
