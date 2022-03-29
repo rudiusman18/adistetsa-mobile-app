@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -24,7 +24,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -40,13 +39,11 @@ dependencies:
   date_time_picker: ^2.1.0
   day_night_time_picker: ^1.0.5
   flutter_rating_bar: ^4.0.0
-  
-  
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-    
+
   flutter_launcher_icons: ^0.9.2
 
 #custom pubspec to change launcher icon
@@ -54,13 +51,11 @@ flutter_icons:
   image_path: "assets/logo sekolah.png"
   android: true
 
-
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -83,6 +78,8 @@ flutter:
     - assets/home/staff humas/
     - assets/home/pelatih/
     - assets/home/alumni/
+    - assets/home/alumni/
+    - assets/adiwiyata/tabungan_sampah/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

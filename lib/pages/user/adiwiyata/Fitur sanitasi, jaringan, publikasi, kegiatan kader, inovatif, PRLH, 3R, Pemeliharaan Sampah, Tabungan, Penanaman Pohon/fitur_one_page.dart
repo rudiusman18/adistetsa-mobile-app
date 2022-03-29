@@ -97,17 +97,123 @@ class _FiturOnePageState extends State<FiturOnePage> {
 
     Widget infoCard({
       required String infoMessage,
+      String? sampahKering,
+      String? sampahBasah,
+      String? totalSampah,
     }) {
       return Container(
         padding: EdgeInsets.all(24),
         color: m4Color,
         width: double.infinity,
-        child: Center(
-          child: Text(
-            infoMessage,
-            style: mono6TextStyle.copyWith(fontSize: 12),
-          ),
-        ),
+        child: provider.fiturAdiwiyata == 'Tabungan Sampah'
+            ? Column(
+                children: [
+                  Center(
+                    child: Text(
+                      infoMessage,
+                      style: mono6TextStyle.copyWith(
+                        fontSize: 14,
+                        fontWeight: bold,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 19,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                        children: [
+                          Image.asset(
+                            'assets/adiwiyata/tabungan_sampah/sampah_kering.png',
+                            height: 30,
+                          ),
+                          SizedBox(
+                            height: 7,
+                          ),
+                          Text(
+                            'Sampah Kering',
+                            style: mono6TextStyle.copyWith(
+                              fontSize: 10,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 4,
+                          ),
+                          Text(
+                            '$sampahKering',
+                            style: mono6TextStyle.copyWith(
+                              fontSize: 14,
+                              fontWeight: bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Image.asset(
+                            'assets/adiwiyata/tabungan_sampah/sampah_basah.png',
+                            height: 30,
+                          ),
+                          SizedBox(
+                            height: 7,
+                          ),
+                          Text(
+                            'Sampah Basah',
+                            style: mono6TextStyle.copyWith(
+                              fontSize: 10,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 4,
+                          ),
+                          Text(
+                            '$sampahBasah',
+                            style: mono6TextStyle.copyWith(
+                              fontSize: 14,
+                              fontWeight: bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Image.asset(
+                            'assets/adiwiyata/tabungan_sampah/total_tabungan.png',
+                            height: 30,
+                          ),
+                          SizedBox(
+                            height: 7,
+                          ),
+                          Text(
+                            'Total Tabungan',
+                            style: mono6TextStyle.copyWith(
+                              fontSize: 10,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 4,
+                          ),
+                          Text(
+                            '$totalSampah',
+                            style: mono6TextStyle.copyWith(
+                              fontSize: 14,
+                              fontWeight: bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              )
+            : Center(
+                child: Text(
+                  infoMessage,
+                  style: mono6TextStyle.copyWith(fontSize: 12),
+                ),
+              ),
       );
     }
 
@@ -198,7 +304,95 @@ class _FiturOnePageState extends State<FiturOnePage> {
                             )
                           : Container(),
                       provider.fiturAdiwiyata == 'Tabungan Sampah'
-                          ? Container()
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Column(
+                                  children: [
+                                    Image.asset(
+                                      'assets/adiwiyata/tabungan_sampah/sampah_kering.png',
+                                      height: 30,
+                                      color: mono1Color,
+                                    ),
+                                    SizedBox(
+                                      height: 7,
+                                    ),
+                                    Text(
+                                      'Sampah Kering',
+                                      style: mono1TextStyle.copyWith(
+                                        fontSize: 10,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    Text(
+                                      '$inputTiga',
+                                      style: mono1TextStyle.copyWith(
+                                        fontSize: 14,
+                                        fontWeight: bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    Image.asset(
+                                      'assets/adiwiyata/tabungan_sampah/sampah_basah.png',
+                                      height: 30,
+                                      color: mono1Color,
+                                    ),
+                                    SizedBox(
+                                      height: 7,
+                                    ),
+                                    Text(
+                                      'Sampah Basah',
+                                      style: mono1TextStyle.copyWith(
+                                        fontSize: 10,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    Text(
+                                      '$inputEmpat',
+                                      style: mono1TextStyle.copyWith(
+                                        fontSize: 14,
+                                        fontWeight: bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    Image.asset(
+                                      'assets/adiwiyata/tabungan_sampah/total_tabungan.png',
+                                      height: 30,
+                                      color: mono1Color,
+                                    ),
+                                    SizedBox(
+                                      height: 7,
+                                    ),
+                                    Text(
+                                      'Total Tabungan',
+                                      style: mono1TextStyle.copyWith(
+                                        fontSize: 10,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    Text(
+                                      '$inputLima',
+                                      style: mono1TextStyle.copyWith(
+                                        fontSize: 14,
+                                        fontWeight: bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            )
                           : Text(
                               'Keterangan',
                               style: mono1TextStyle.copyWith(
@@ -209,12 +403,14 @@ class _FiturOnePageState extends State<FiturOnePage> {
                       SizedBox(
                         height: 2,
                       ),
-                      Text(
-                        '$inputLima',
-                        style: mono1TextStyle.copyWith(
-                          fontSize: 10,
-                        ),
-                      ),
+                      provider.fiturAdiwiyata == 'Tabungan Sampah'
+                          ? Container()
+                          : Text(
+                              '$inputLima',
+                              style: mono1TextStyle.copyWith(
+                                fontSize: 10,
+                              ),
+                            ),
                       SizedBox(
                         height: 12,
                       ),
@@ -279,13 +475,21 @@ class _FiturOnePageState extends State<FiturOnePage> {
                                 SizedBox(
                                   width: 10,
                                 ),
-                                Text(
-                                  'Dokumentasi',
-                                  style: mono6TextStyle.copyWith(
-                                    fontWeight: semiBold,
-                                    fontSize: 10,
-                                  ),
-                                ),
+                                provider.fiturAdiwiyata == 'Tabungan Sampah'
+                                    ? Text(
+                                        'Download',
+                                        style: mono6TextStyle.copyWith(
+                                          fontWeight: semiBold,
+                                          fontSize: 10,
+                                        ),
+                                      )
+                                    : Text(
+                                        'Dokumentasi',
+                                        style: mono6TextStyle.copyWith(
+                                          fontWeight: semiBold,
+                                          fontSize: 10,
+                                        ),
+                                      ),
                               ],
                             ),
                           ),
@@ -319,8 +523,10 @@ class _FiturOnePageState extends State<FiturOnePage> {
                 )
               : provider.fiturAdiwiyata == 'Tabungan Sampah'
                   ? infoCard(
-                      infoMessage:
-                          'Hingga 2022-02-02 jumlah tabungan sampah 65kg',
+                      infoMessage: 'Toal Tabungan Sampah Maret 2022',
+                      sampahKering: '7Kg',
+                      sampahBasah: '8Kg',
+                      totalSampah: '15Kg',
                     )
                   : Container(),
           Expanded(
@@ -476,15 +682,15 @@ class _FiturOnePageState extends State<FiturOnePage> {
                                                                       'Tabungan Sampah'
                                                                   ? expandableItem(
                                                                       inputSatu:
-                                                                          '2022-02-02',
+                                                                          '',
                                                                       inputDua:
                                                                           '2022-02-22',
                                                                       inputTiga:
-                                                                          'Recycle',
+                                                                          '5kg',
                                                                       inputEmpat:
-                                                                          'Peserta Siswa',
+                                                                          '5 kg',
                                                                       inputLima:
-                                                                          'Jumlah Tabungan Sampah 20kg',
+                                                                          '19 kg',
                                                                       urlDokumentasi:
                                                                           '',
                                                                       urlMOU:
