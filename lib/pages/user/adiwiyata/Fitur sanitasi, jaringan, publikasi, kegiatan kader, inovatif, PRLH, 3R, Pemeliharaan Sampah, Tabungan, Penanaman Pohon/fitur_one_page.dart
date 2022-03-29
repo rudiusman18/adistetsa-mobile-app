@@ -5,15 +5,21 @@ import 'package:adistetsa/theme.dart';
 import 'package:provider/provider.dart';
 
 class FiturOnePage extends StatefulWidget {
-  const FiturOnePage({Key? key}) : super(key: key);
-
   @override
   State<FiturOnePage> createState() => _FiturOnePageState();
 }
 
 class _FiturOnePageState extends State<FiturOnePage> {
   bool isSearch = false;
+  bool isLoading = false;
   String urlSearch = '';
+  bool flag1 = false;
+  Object? value1Item;
+  bool flag2 = false;
+  Object? value2Item;
+  String filterTahun = '';
+
+  String url = '';
   TextEditingController searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -40,15 +46,17 @@ class _FiturOnePageState extends State<FiturOnePage> {
           color: mono1Color,
         ),
         actions: [
-          IconButton(
-            onPressed: () {
-              setState(() {
-                isSearch = true;
-              });
-            },
-            icon: Icon(Icons.search),
-            color: mono2Color,
-          ),
+          provider.fiturAdiwiyata == 'Tabungan Sampah'
+              ? Container()
+              : IconButton(
+                  onPressed: () {
+                    setState(() {
+                      isSearch = true;
+                    });
+                  },
+                  icon: Icon(Icons.search),
+                  color: mono2Color,
+                ),
         ],
       );
     }
@@ -92,6 +100,152 @@ class _FiturOnePageState extends State<FiturOnePage> {
         ),
         elevation: 4,
         centerTitle: false,
+      );
+    }
+
+    Widget dropdownList1({required String hint, required List data}) {
+      return Container(
+          height: 24,
+          padding: EdgeInsets.symmetric(
+            horizontal: 10,
+          ),
+          margin: EdgeInsets.symmetric(horizontal: 6),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: flag1 == true ? p1Color : mono3Color,
+            ),
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: DropdownButtonHideUnderline(
+            child: GestureDetector(
+              onLongPress: () async {
+                setState(() {
+                  isLoading = true;
+                  flag1 = false;
+                  value1Item = null;
+                });
+              },
+              child: DropdownButton(
+                icon: Icon(
+                  Icons.keyboard_arrow_down_outlined,
+                  color: flag1 == true ? p1Color : mono2Color,
+                ),
+                hint: Text(
+                  hint,
+                  style: mono2TextStyle.copyWith(
+                    color: flag1 == true ? p1Color : mono2Color,
+                    fontWeight: regular,
+                    fontSize: 10,
+                  ),
+                ),
+                dropdownColor: mono6Color,
+                elevation: 2,
+                value: value1Item,
+                items: data.map(
+                  (value) {
+                    return DropdownMenuItem(
+                      value: value,
+                      child: Text(
+                        value,
+                        style: mono2TextStyle.copyWith(
+                          color: value1Item == value ? p1Color : mono2Color,
+                          fontWeight: regular,
+                          fontSize: 10,
+                        ),
+                      ),
+                    );
+                  },
+                ).toList(),
+                onChanged: (value) async {
+                  setState(() {
+                    isLoading = true;
+                    print(value);
+                    value1Item = value;
+                    filterTahun = 'JURUSAN=$value';
+                    flag1 = true;
+                  });
+                },
+              ),
+            ),
+          ));
+    }
+
+    setState(() {
+      url = '$filterTahun';
+    });
+
+    Widget filter() {
+      return Container(
+        padding: EdgeInsets.symmetric(
+          vertical: 20,
+        ),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 21),
+            child: Row(
+              children: [
+                // NOTE: ini adalah button reset yang hanya akan muncul jika salah satu dropdown dipilih
+                value1Item != null || value2Item != null
+                    ? GestureDetector(
+                        onTap: () async {
+                          setState(() {
+                            isLoading = true;
+                            value1Item = null;
+                            value2Item = null;
+                            url = '';
+                            filterTahun = '';
+
+                            flag1 = false;
+                            flag2 = false;
+                          });
+
+                          setState(() {
+                            isLoading = false;
+                          });
+                        },
+                        child: Container(
+                          height: 24,
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: m5Color,
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.restart_alt,
+                                color: mono6Color,
+                                size: 15,
+                              ),
+                              SizedBox(
+                                width: 4,
+                              ),
+                              Text(
+                                'reset',
+                                style: mono6TextStyle.copyWith(
+                                  fontWeight: semiBold,
+                                  fontSize: 10,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    : Container(),
+                dropdownList1(
+                  hint: 'Tahun',
+                  data: [
+                    '2019',
+                    '2020',
+                    '2021',
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
       );
     }
 
@@ -516,6 +670,7 @@ class _FiturOnePageState extends State<FiturOnePage> {
       backgroundColor: mono6Color,
       appBar: isSearch == true ? searchAppbar() : header(),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           provider.fiturAdiwiyata == 'Penanaman Pohon'
               ? infoCard(
@@ -523,12 +678,13 @@ class _FiturOnePageState extends State<FiturOnePage> {
                 )
               : provider.fiturAdiwiyata == 'Tabungan Sampah'
                   ? infoCard(
-                      infoMessage: 'Toal Tabungan Sampah Maret 2022',
+                      infoMessage: 'Total Tabungan Sampah Tahun 2022',
                       sampahKering: '7Kg',
                       sampahBasah: '8Kg',
                       totalSampah: '15Kg',
                     )
                   : Container(),
+          filter(),
           Expanded(
             child: ListView(
               children: [
@@ -684,7 +840,7 @@ class _FiturOnePageState extends State<FiturOnePage> {
                                                                       inputSatu:
                                                                           '',
                                                                       inputDua:
-                                                                          '2022-02-22',
+                                                                          'Januari',
                                                                       inputTiga:
                                                                           '5kg',
                                                                       inputEmpat:
