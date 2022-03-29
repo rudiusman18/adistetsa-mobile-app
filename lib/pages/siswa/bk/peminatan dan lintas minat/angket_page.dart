@@ -212,7 +212,41 @@ class _AngketPageState extends State<AngketPage> {
               ),
               backgroundColor: m2Color,
             ),
-            onPressed: () {},
+            onPressed: () async {
+              if (file == null) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: dangerColor,
+                    content: Text(
+                      'Silahkan unggah jawaban anda terlebih dahulu',
+                      textAlign: TextAlign.center,
+                    )));
+              } else {
+                try {
+                  setState(() {
+                    isLoading = true;
+                  });
+                  await Services().patchAngketSiswa(
+                      jenisAngket: provider.angket, fileUpload: file!.path);
+                  setState(() {
+                    isLoading = false;
+                  });
+                  file = null;
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      backgroundColor: successColor,
+                      content: Text(
+                        'Berhasil melakukan upload data',
+                        textAlign: TextAlign.center,
+                      )));
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      backgroundColor: dangerColor,
+                      content: Text(
+                        '$e',
+                        textAlign: TextAlign.center,
+                      )));
+                }
+              }
+            },
             child: isLoading == false
                 ? Text(
                     'Simpan',

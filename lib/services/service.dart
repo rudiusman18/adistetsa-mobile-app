@@ -2038,4 +2038,32 @@ class Services extends ChangeNotifier {
       throw Exception('Gagal Mendapatkan Angket $jenisAngket');
     }
   }
+
+  //NOTE: Mengirim Angket Siswa
+  patchAngketSiswa({String? jenisAngket, String? fileUpload}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString("token").toString();
+    var url;
+    if (jenisAngket == 'Peminatan') {
+      url = Uri.parse('$baseUrl/bimbingan_konseling/angket_peminatan_siswa');
+    } else if (jenisAngket == 'Lintas Minat') {
+      url = Uri.parse('$baseUrl/bimbingan_konseling/angket_lintas_minat_siswa');
+    } else if (jenisAngket == 'Data Diri Siswa') {
+      url = Uri.parse('$baseUrl/bimbingan_konseling/angket_data_diri_siswa');
+    }
+    var request = http.MultipartRequest('PATCH', url);
+    request.headers['Authorization'] = token;
+
+    request.files
+        .add(await http.MultipartFile.fromPath('FILE', fileUpload.toString()));
+    var response = await request.send();
+    final res = await http.Response.fromStream(response);
+    print(res.statusCode);
+    if (res.statusCode == 200 || res.statusCode == 201) {
+      return true;
+    } else {
+      throw Exception(res.body);
+    }
+  }
 }
