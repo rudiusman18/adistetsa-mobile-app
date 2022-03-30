@@ -684,7 +684,7 @@ class _FiturOnePageState extends State<FiturOnePage> {
                       totalSampah: '15Kg',
                     )
                   : Container(),
-          filter(),
+          provider.fiturAdiwiyata == 'Tabungan Sampah' ? filter() : Container(),
           Expanded(
             child: ListView(
               children: [
