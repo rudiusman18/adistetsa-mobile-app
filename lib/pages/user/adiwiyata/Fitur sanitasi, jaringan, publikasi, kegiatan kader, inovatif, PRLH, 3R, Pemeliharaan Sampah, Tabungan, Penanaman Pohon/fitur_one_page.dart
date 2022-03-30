@@ -1,8 +1,11 @@
+import 'package:adistetsa/models/penanaman_pohon_model.dart';
 import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FiturOnePage extends StatefulWidget {
   @override
@@ -14,15 +17,50 @@ class _FiturOnePageState extends State<FiturOnePage> {
   bool isLoading = false;
   String urlSearch = '';
   bool flag1 = false;
+  bool getLoading = true;
   Object? value1Item;
   bool flag2 = false;
   Object? value2Item;
   String filterTahun = '';
-
   String url = '';
   TextEditingController searchController = TextEditingController();
+  List<PenanamanPohonModel> tahun = [];
+  PenanamanPohonModel getTahun = PenanamanPohonModel();
+  int getTotalPohon = 0;
+  List filterTahunTabunganSampah = [];
+  int sampahKering = 0;
+  int sampahBasah = 0;
+  int totalTabungan = 0;
+
+  void initState() {
+    getInit();
+    super.initState();
+  }
+
+  void getInit() async {
+    sampahKering = await Services().getTotalTabunganSampah();
+    tahun = await Services().getPenamamanPohon();
+    filterTahunTabunganSampah = await Services().getTahunTabunganSampah();
+    getTahun = tahun.last;
+    getTotalPohon = await Services().getJumlahPenamamanPohon();
+    setState(() {});
+    getLoading = false;
+  }
+
   @override
   Widget build(BuildContext context) {
+    launchUrl(String url) async {
+      if (await canLaunch(url)) {
+        await launch(
+          url,
+          forceWebView: true,
+          enableJavaScript: true,
+        );
+      } else {
+        Navigator.pushNamed(context, '/error-page');
+      }
+    }
+
     Providers provider = Provider.of(context);
     PreferredSizeWidget header() {
       return AppBar(
@@ -93,8 +131,43 @@ class _FiturOnePageState extends State<FiturOnePage> {
                     new TextPosition(offset: searchController.text.length));
                 searchController.text = newValue.toString();
               }
+              isLoading = true;
               print(searchController.text);
               urlSearch = 'search=${searchController.text}';
+            });
+            provider.fiturAdiwiyata == 'Sanitasi Drainase'
+                ? await Services().getSanitasiDrainase()
+                : provider.fiturAdiwiyata == 'Jejaring Kerja'
+                    ? await Services().getJaringanKerja()
+                    : provider.fiturAdiwiyata == 'Publikasi'
+                        ? await Services().getPublikasi()
+                        : provider.fiturAdiwiyata == 'Kegiatan Kader'
+                            ? await Services().getPublikasi()
+                            : provider.fiturAdiwiyata == 'Penanaman Pohon'
+                                ? await Services().getPenamamanPohon()
+                                : provider.fiturAdiwiyata == 'Pembibitan Pohon'
+                                    ? await Services().getPembibitanPohon()
+                                    : provider.fiturAdiwiyata ==
+                                            'Pemeliharaan Pohon'
+                                        ? await Services()
+                                            .getPemeliharaanPohon()
+                                        : provider.fiturAdiwiyata ==
+                                                'Karya Inovatif PRLH'
+                                            ? await Services().getInovatif()
+                                            : provider.fiturAdiwiyata ==
+                                                    'Penerapan PRLH'
+                                                ? await Services()
+                                                    .getPenerapanPRLH()
+                                                : provider.fiturAdiwiyata ==
+                                                        '3R'
+                                                    ? await Services().get3R()
+                                                    : provider.fiturAdiwiyata ==
+                                                            'Pemeliharaan Sampah'
+                                                        ? await Services()
+                                                            .getPemeliharaanSampah()
+                                                        : Container();
+            setState(() {
+              isLoading = false;
             });
           },
         ),
@@ -144,11 +217,13 @@ class _FiturOnePageState extends State<FiturOnePage> {
                 items: data.map(
                   (value) {
                     return DropdownMenuItem(
-                      value: value,
+                      value: value['TAHUN'],
                       child: Text(
-                        value,
+                        value['TAHUN'].toString(),
                         style: mono2TextStyle.copyWith(
-                          color: value1Item == value ? p1Color : mono2Color,
+                          color: value1Item == value['TAHUN']
+                              ? p1Color
+                              : mono2Color,
                           fontWeight: regular,
                           fontSize: 10,
                         ),
@@ -161,8 +236,12 @@ class _FiturOnePageState extends State<FiturOnePage> {
                     isLoading = true;
                     print(value);
                     value1Item = value;
-                    filterTahun = 'JURUSAN=$value';
+                    filterTahun = 'TAHUN=$value';
                     flag1 = true;
+                  });
+                  await Services().getTabunganSampah();
+                  setState(() {
+                    isLoading = false;
                   });
                 },
               ),
@@ -236,11 +315,7 @@ class _FiturOnePageState extends State<FiturOnePage> {
                     : Container(),
                 dropdownList1(
                   hint: 'Tahun',
-                  data: [
-                    '2019',
-                    '2020',
-                    '2021',
-                  ],
+                  data: filterTahunTabunganSampah,
                 ),
               ],
             ),
@@ -574,7 +649,9 @@ class _FiturOnePageState extends State<FiturOnePage> {
                               ? Container(
                                   margin: EdgeInsets.only(right: 8),
                                   child: TextButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      launchUrl(urlMOU);
+                                    },
                                     style: TextButton.styleFrom(
                                       backgroundColor: m5Color,
                                       shape: RoundedRectangleBorder(
@@ -607,46 +684,51 @@ class _FiturOnePageState extends State<FiturOnePage> {
                                   ),
                                 )
                               : Container(),
-                          TextButton(
-                            onPressed: () {},
-                            style: TextButton.styleFrom(
-                              backgroundColor: m5Color,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                side: BorderSide(
-                                  color: m5Color,
-                                ),
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.file_download_outlined,
-                                  color: mono6Color,
-                                  size: 11,
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                provider.fiturAdiwiyata == 'Tabungan Sampah'
-                                    ? Text(
-                                        'Download',
-                                        style: mono6TextStyle.copyWith(
-                                          fontWeight: semiBold,
-                                          fontSize: 10,
-                                        ),
-                                      )
-                                    : Text(
-                                        'Dokumentasi',
-                                        style: mono6TextStyle.copyWith(
-                                          fontWeight: semiBold,
-                                          fontSize: 10,
-                                        ),
+                          provider.fiturAdiwiyata == 'Tabungan Sampah'
+                              ? Container()
+                              : TextButton(
+                                  onPressed: () {
+                                    launchUrl(urlDokumentasi);
+                                  },
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: m5Color,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      side: BorderSide(
+                                        color: m5Color,
                                       ),
-                              ],
-                            ),
-                          ),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.file_download_outlined,
+                                        color: mono6Color,
+                                        size: 11,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      provider.fiturAdiwiyata ==
+                                              'Tabungan Sampah'
+                                          ? Text(
+                                              'Download',
+                                              style: mono6TextStyle.copyWith(
+                                                fontWeight: semiBold,
+                                                fontSize: 10,
+                                              ),
+                                            )
+                                          : Text(
+                                              'Dokumentasi',
+                                              style: mono6TextStyle.copyWith(
+                                                fontWeight: semiBold,
+                                                fontSize: 10,
+                                              ),
+                                            ),
+                                    ],
+                                  ),
+                                ),
                         ],
                       ),
                       SizedBox(
@@ -674,186 +756,288 @@ class _FiturOnePageState extends State<FiturOnePage> {
         children: [
           provider.fiturAdiwiyata == 'Penanaman Pohon'
               ? infoCard(
-                  infoMessage: 'Hingga 2022-02-02 Jumlah pohon yang ditanam 65',
+                  infoMessage: getLoading
+                      ? 'Memuat Data'
+                      : 'Hingga ${getTahun.tANGGAL} Jumlah pohon yang ditanam $getTotalPohon',
                 )
               : provider.fiturAdiwiyata == 'Tabungan Sampah'
                   ? infoCard(
-                      infoMessage: 'Total Tabungan Sampah Tahun 2022',
-                      sampahKering: '7Kg',
+                      infoMessage: 'Total Tabungan Sampah Tahun ' +
+                          DateTime.now().toString().split('-')[0],
+                      sampahKering: '90Kg',
                       sampahBasah: '8Kg',
                       totalSampah: '15Kg',
                     )
                   : Container(),
           provider.fiturAdiwiyata == 'Tabungan Sampah' ? filter() : Container(),
           Expanded(
-            child: ListView(
-              children: [
-                SizedBox(
-                  height: 20,
-                ),
-                for (var i = 0; i < 30; i++)
-                  provider.fiturAdiwiyata == 'Sanitasi Drainase'
-                      ? expandableItem(
-                          inputSatu: '2022-02-22',
-                          inputDua: 'Pembersihan Kamar Mandi',
-                          inputTiga: 'Peserta Siswa',
-                          inputEmpat: '',
-                          inputLima: 'Dilakukan pengurasan kamar mandi',
-                          urlDokumentasi: '',
-                          urlMOU: '',
-                        )
-                      : provider.fiturAdiwiyata == 'Jejaring Kerja'
-                          ? expandableItem(
-                              inputSatu: '',
-                              inputDua: 'Reboisasi Hutan Kota Malang',
-                              inputTiga: '2022-02-22',
-                              inputEmpat: '',
-                              inputLima: 'http://',
-                              urlDokumentasi: '',
-                              urlMOU: '',
-                            )
-                          : provider.fiturAdiwiyata == 'Publikasi'
-                              ? expandableItem(
-                                  inputSatu: 'Website Sekolah',
-                                  inputDua: 'Reboisasi Hutan Kota Malang',
-                                  inputTiga: '2022-02-22',
-                                  inputEmpat: '',
-                                  inputLima: 'http://',
-                                  urlDokumentasi: '',
-                                  urlMOU: '',
-                                )
-                              : provider.fiturAdiwiyata == 'Kegiatan Kader'
-                                  ? expandableItem(
-                                      inputSatu: '2022-02-22',
-                                      inputDua:
-                                          'Penanaman Pohon Bakau Pantai A',
-                                      inputTiga: '',
-                                      inputEmpat: '',
-                                      inputLima: 'http://',
-                                      urlDokumentasi: '',
-                                      urlMOU: '',
-                                    )
-                                  : provider.fiturAdiwiyata ==
-                                          'Pembibitan Pohon'
-                                      ? expandableItem(
-                                          inputSatu: '2022-02-22',
-                                          inputDua:
-                                              'Penanaman Pohon Gunung Kawi',
-                                          inputTiga: '',
-                                          inputEmpat: '',
-                                          inputLima:
-                                              'Penanaman lahan gundul hutan kawi',
-                                          urlDokumentasi: '',
-                                          urlMOU: '',
-                                        )
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: isLoading
+                  ? Container()
+                  : FutureBuilder(
+                      future: provider.fiturAdiwiyata == 'Sanitasi Drainase'
+                          ? Services().getSanitasiDrainase(
+                              search: urlSearch, fitur: provider.fiturAdiwiyata)
+                          : provider.fiturAdiwiyata == 'Jejaring Kerja'
+                              ? Services().getJaringanKerja(
+                                  search: urlSearch,
+                                  fitur: provider.fiturAdiwiyata)
+                              : provider.fiturAdiwiyata == 'Publikasi'
+                                  ? Services().getPublikasi(
+                                      search: urlSearch,
+                                      fitur: provider.fiturAdiwiyata)
+                                  : provider.fiturAdiwiyata == 'Kegiatan Kader'
+                                      ? Services().getKegiatanKader(
+                                          search: urlSearch,
+                                          fitur: provider.fiturAdiwiyata)
                                       : provider.fiturAdiwiyata ==
                                               'Penanaman Pohon'
-                                          ? expandableItem(
-                                              inputSatu: '2022-02-22',
-                                              inputDua:
-                                                  'Penanaman Pohon Gunung Kawi',
-                                              inputTiga: 'Jumlah Pohon 55',
-                                              inputEmpat: '',
-                                              inputLima:
-                                                  'Penanaman lahan gundul hutan kawi',
-                                              urlDokumentasi: '',
-                                              urlMOU: '',
-                                            )
+                                          ? Services().getPenamamanPohon(
+                                              search: urlSearch,
+                                              fitur: provider.fiturAdiwiyata)
                                           : provider.fiturAdiwiyata ==
-                                                  'Pemeliharaan Pohon'
-                                              ? expandableItem(
-                                                  inputSatu: '',
-                                                  inputDua:
-                                                      'Pemangkasan Pohon Sekolah',
-                                                  inputTiga: '2022-02-22',
-                                                  inputEmpat: '',
-                                                  inputLima:
-                                                      'Penanaman lahan gundul hutan kawi',
-                                                  urlDokumentasi: '',
-                                                  urlMOU: '',
+                                                  'Pembibitan Pohon'
+                                              ? Services().getPembibitanPohon(
+                                                  search: urlSearch,
+                                                  fitur:
+                                                      provider.fiturAdiwiyata,
                                                 )
                                               : provider.fiturAdiwiyata ==
-                                                      'Karya Inovatif PRLH'
-                                                  ? expandableItem(
-                                                      inputSatu: '2022-02-02',
-                                                      inputDua:
-                                                          'Pembuatan Tas Limbah Makanan RIngan',
-                                                      inputTiga: 'Anabelle',
-                                                      inputEmpat: 'Jenis ?',
-                                                      inputLima:
-                                                          'Penanaman lahan gundul hutan kawi',
-                                                      urlDokumentasi: '',
-                                                      urlMOU: '',
-                                                    )
+                                                      'Pemeliharaan Pohon'
+                                                  ? Services()
+                                                      .getPemeliharaanPohon(
+                                                          search: urlSearch,
+                                                          fitur: provider
+                                                              .fiturAdiwiyata)
                                                   : provider.fiturAdiwiyata ==
-                                                          'Penerapan PRLH'
-                                                      ? expandableItem(
-                                                          inputSatu:
-                                                              '2022-02-02',
-                                                          inputDua:
-                                                              'Pembuatan Tas Limbah Makanan RIngan',
-                                                          inputTiga:
-                                                              'Peserta Siswa',
-                                                          inputEmpat: '',
-                                                          inputLima:
-                                                              'Penerapan karya inovatif  Anabelle di gedung Aula',
-                                                          urlDokumentasi: '',
-                                                          urlMOU: '',
-                                                        )
+                                                          'Karya Inovatif PRLH'
+                                                      ? Services().getInovatif(
+                                                          fitur: provider
+                                                              .fiturAdiwiyata,
+                                                          search: urlSearch)
                                                       : provider.fiturAdiwiyata ==
-                                                              '3R'
-                                                          ? expandableItem(
-                                                              inputSatu:
-                                                                  '2022-02-02',
-                                                              inputDua:
-                                                                  'Pengolahan Sampah Botol Kaca',
-                                                              inputTiga:
-                                                                  'Recycle',
-                                                              inputEmpat:
-                                                                  'Peserta Siswa',
-                                                              inputLima:
-                                                                  'Hasil digunakan untuk memperindah taman',
-                                                              urlDokumentasi:
-                                                                  '',
-                                                              urlMOU: '',
-                                                            )
+                                                              'Penerapan PRLH'
+                                                          ? Services().getPenerapanPRLH(
+                                                              fitur: provider
+                                                                  .fiturAdiwiyata,
+                                                              search: urlSearch)
                                                           : provider.fiturAdiwiyata ==
-                                                                  'Pemeliharaan Sampah'
-                                                              ? expandableItem(
-                                                                  inputSatu:
-                                                                      '2022-02-02',
-                                                                  inputDua:
-                                                                      'Mengolah Sampah Organik Menjadi Kompos',
-                                                                  inputTiga:
-                                                                      'Recycle',
-                                                                  inputEmpat:
-                                                                      'Peserta Siswa',
-                                                                  inputLima:
-                                                                      'Mengolah Sampah Organik Menjadi Kompos',
-                                                                  urlDokumentasi:
-                                                                      '',
-                                                                  urlMOU: '',
-                                                                )
+                                                                  '3R'
+                                                              ? Services().get3R(
+                                                                  fitur: provider
+                                                                      .fiturAdiwiyata,
+                                                                  search:
+                                                                      urlSearch)
                                                               : provider.fiturAdiwiyata ==
-                                                                      'Tabungan Sampah'
-                                                                  ? expandableItem(
-                                                                      inputSatu:
-                                                                          '',
-                                                                      inputDua:
-                                                                          'Januari',
-                                                                      inputTiga:
-                                                                          '5kg',
-                                                                      inputEmpat:
-                                                                          '5 kg',
-                                                                      inputLima:
-                                                                          '19 kg',
-                                                                      urlDokumentasi:
-                                                                          '',
-                                                                      urlMOU:
-                                                                          '',
-                                                                    )
-                                                                  : Container(),
-              ],
+                                                                      'Pemeliharaan Sampah'
+                                                                  ? Services().getPemeliharaanSampah(
+                                                                      search:
+                                                                          urlSearch,
+                                                                      fitur: provider
+                                                                          .fiturAdiwiyata)
+                                                                  : provider.fiturAdiwiyata ==
+                                                                          'Tabungan Sampah'
+                                                                      ? Services().getTabunganSampah(
+                                                                          filter: filterTahun,
+                                                                          fitur: provider.fiturAdiwiyata)
+                                                                      : '',
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData) {
+                          List data = snapshot.data;
+
+                          return data.isEmpty
+                              ? Center(
+                                  child: Text(
+                                    'Data tidak ditemukan',
+                                    style: mono1TextStyle,
+                                  ),
+                                )
+                              : ListView(
+                                  children: data.map((item) {
+                                    return provider.fiturAdiwiyata ==
+                                            'Sanitasi Drainase'
+                                        ? expandableItem(
+                                            inputSatu: '${item.tANGGAL}',
+                                            inputDua: '${item.nAMAKEGIATAN}',
+                                            inputTiga: '${item.uNSURTERLIBAT}',
+                                            inputEmpat: '',
+                                            inputLima: '${item.kETERANGAN}',
+                                            urlDokumentasi: '${item.fILE}',
+                                            urlMOU: '',
+                                          )
+                                        : provider.fiturAdiwiyata ==
+                                                'Jejaring Kerja'
+                                            ? expandableItem(
+                                                inputSatu: '',
+                                                inputDua:
+                                                    '${item.nAMAKEGIATAN}',
+                                                inputTiga: '${item.tANGGAL}',
+                                                inputEmpat: '',
+                                                inputLima: '${item.kETERANGAN}',
+                                                urlDokumentasi:
+                                                    '${item.fILEDOKUMENTASI}',
+                                                urlMOU: '${item.fILEMOU}',
+                                              )
+                                            : provider.fiturAdiwiyata ==
+                                                    'Publikasi'
+                                                ? expandableItem(
+                                                    inputSatu:
+                                                        '${item.jENISMEDIA}',
+                                                    inputDua:
+                                                        '${item.nAMAKEGIATAN}',
+                                                    inputTiga:
+                                                        '${item.tANGGAL}',
+                                                    inputEmpat: '',
+                                                    inputLima:
+                                                        '${item.kETERANGAN}',
+                                                    urlDokumentasi:
+                                                        '${item.fILE}',
+                                                    urlMOU: '',
+                                                  )
+                                                : provider.fiturAdiwiyata ==
+                                                        'Kegiatan Kader'
+                                                    ? expandableItem(
+                                                        inputSatu:
+                                                            '${item.tANGGAL}',
+                                                        inputDua:
+                                                            '${item.nAMAKEGIATAN}',
+                                                        inputTiga: '',
+                                                        inputEmpat: '',
+                                                        inputLima:
+                                                            '${item.kETERANGAN}',
+                                                        urlDokumentasi:
+                                                            '${item.fILE}',
+                                                        urlMOU: '',
+                                                      )
+                                                    : provider.fiturAdiwiyata ==
+                                                            'Pembibitan Pohon'
+                                                        ? expandableItem(
+                                                            inputSatu:
+                                                                '${item.tANGGAL}',
+                                                            inputDua:
+                                                                '${item.nAMAKEGIATAN}',
+                                                            inputTiga: '',
+                                                            inputEmpat: '',
+                                                            inputLima:
+                                                                '${item.kETERANGAN}',
+                                                            urlDokumentasi:
+                                                                '${item.fILE}',
+                                                            urlMOU: '',
+                                                          )
+                                                        : provider.fiturAdiwiyata ==
+                                                                'Penanaman Pohon'
+                                                            ? expandableItem(
+                                                                inputSatu:
+                                                                    '${item.tANGGAL}',
+                                                                inputDua:
+                                                                    '${item.nAMAKEGIATAN}',
+                                                                inputTiga:
+                                                                    'Jumlah Pohon ${item.jUMLAH}',
+                                                                inputEmpat: '',
+                                                                inputLima:
+                                                                    '${item.kETERANGAN}',
+                                                                urlDokumentasi:
+                                                                    '${item.fILE}',
+                                                                urlMOU: '',
+                                                              )
+                                                            : provider.fiturAdiwiyata ==
+                                                                    'Pemeliharaan Pohon'
+                                                                ? expandableItem(
+                                                                    inputSatu:
+                                                                        '',
+                                                                    inputDua:
+                                                                        '${item.nAMAKEGIATAN}',
+                                                                    inputTiga:
+                                                                        '${item.tANGGAL}',
+                                                                    inputEmpat:
+                                                                        '',
+                                                                    inputLima:
+                                                                        '${item.kETERANGAN}',
+                                                                    urlDokumentasi:
+                                                                        '${item.fILE}',
+                                                                    urlMOU: '',
+                                                                  )
+                                                                : provider.fiturAdiwiyata ==
+                                                                        'Karya Inovatif PRLH'
+                                                                    ? expandableItem(
+                                                                        inputSatu:
+                                                                            '${item.tANGGAL}',
+                                                                        inputDua:
+                                                                            '${item.nAMAKARYAINOVATIF}',
+                                                                        inputTiga:
+                                                                            '${item.nAMAINOVATOR}',
+                                                                        inputEmpat:
+                                                                            'Jenis ${item.jENIS}',
+                                                                        inputLima:
+                                                                            '${item.kETERANGAN}',
+                                                                        urlDokumentasi:
+                                                                            '${item.fILE}',
+                                                                        urlMOU:
+                                                                            '',
+                                                                      )
+                                                                    : provider.fiturAdiwiyata ==
+                                                                            'Penerapan PRLH'
+                                                                        ? expandableItem(
+                                                                            inputSatu:
+                                                                                '${item.tANGGAL}',
+                                                                            inputDua:
+                                                                                '${item.nAMAKEGIATAN}',
+                                                                            inputTiga:
+                                                                                'Peserta ${item.pESERTA}',
+                                                                            inputEmpat:
+                                                                                '',
+                                                                            inputLima:
+                                                                                '${item.kETERANGAN}',
+                                                                            urlDokumentasi:
+                                                                                '${item.fILE}',
+                                                                            urlMOU:
+                                                                                '',
+                                                                          )
+                                                                        : provider.fiturAdiwiyata ==
+                                                                                '3R'
+                                                                            ? expandableItem(
+                                                                                inputSatu: '${item.tANGGAL}',
+                                                                                inputDua: '${item.nAMAKEGIATAN}',
+                                                                                inputTiga: '${item.jENISKEGIATAN}',
+                                                                                inputEmpat: 'Peserta ${item.pIHAKTERLIBAT}',
+                                                                                inputLima: '${item.kETERANGAN}',
+                                                                                urlDokumentasi: '${item.fILE}',
+                                                                                urlMOU: '',
+                                                                              )
+                                                                            : provider.fiturAdiwiyata == 'Pemeliharaan Sampah'
+                                                                                ? expandableItem(
+                                                                                    inputSatu: '${item.tANGGAL}',
+                                                                                    inputDua: '${item.nAMAKEGIATAN}',
+                                                                                    inputTiga: '',
+                                                                                    inputEmpat: '',
+                                                                                    inputLima: '${item.kETERANGAN}',
+                                                                                    urlDokumentasi: '${item.fILE}',
+                                                                                    urlMOU: '',
+                                                                                  )
+                                                                                : provider.fiturAdiwiyata == 'Tabungan Sampah'
+                                                                                    ? expandableItem(
+                                                                                        inputSatu: '',
+                                                                                        inputDua: '${item.bulan}',
+                                                                                        inputTiga: '${item.sampahKering} kg',
+                                                                                        inputEmpat: '${item.sampahBasah} kg',
+                                                                                        inputLima: '${item.totalTabungan} kg',
+                                                                                        urlDokumentasi: '',
+                                                                                        urlMOU: '',
+                                                                                      )
+                                                                                    : Container();
+                                  }).toList(),
+                                );
+                        } else {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 4,
+                              color: m1Color,
+                            ),
+                          );
+                        }
+                      },
+                    ),
             ),
           ),
         ],

@@ -1,16 +1,17 @@
+import 'package:adistetsa/models/daftar_kader_model.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 
 class KaderPage extends StatefulWidget {
-  const KaderPage({Key? key}) : super(key: key);
-
   @override
   State<KaderPage> createState() => _KaderPageState();
 }
 
 class _KaderPageState extends State<KaderPage> {
   bool isSearch = false;
+  bool isLoading = false;
   String urlSearch = '';
   TextEditingController searchController = TextEditingController();
   @override
@@ -84,6 +85,11 @@ class _KaderPageState extends State<KaderPage> {
               }
               print(searchController.text);
               urlSearch = 'search=${searchController.text}';
+              isLoading = true;
+            });
+            await Services().getDaftarKader();
+            setState(() {
+              isLoading = false;
             });
           },
         ),
@@ -204,20 +210,44 @@ class _KaderPageState extends State<KaderPage> {
     return Scaffold(
       backgroundColor: mono6Color,
       appBar: isSearch == true ? searchAppbar() : kaderHeader(),
-      body: ListView(
-        children: [
-          SizedBox(
-            height: 20,
-          ),
-          for (var i = 0; i < 30; i++)
-            expandableItem(
-              name: 'Cerry Bans',
-              nis: '123819873182731893',
-              address: 'Jl. Jombang',
-              phone: '099233456789',
+      body: isLoading
+          ? Container()
+          : Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: FutureBuilder(
+                future: Services()
+                    .getDaftarKader(search: urlSearch, fitur: 'Daftar Kader'),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    List<DaftarKaderModel> data = snapshot.data;
+                    return data.isEmpty
+                        ? Center(
+                            child: Text(
+                              'Data tidak ditemukan',
+                              style: mono1TextStyle,
+                            ),
+                          )
+                        : ListView(
+                            children: data.map((item) {
+                              return expandableItem(
+                                name: '${item.nAMA}',
+                                nis: '${item.nIS}',
+                                address: '${item.aLAMAT}',
+                                phone: '${item.nOMORHP}',
+                              );
+                            }).toList(),
+                          );
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 4,
+                        color: m1Color,
+                      ),
+                    );
+                  }
+                },
+              ),
             ),
-        ],
-      ),
     );
   }
 }

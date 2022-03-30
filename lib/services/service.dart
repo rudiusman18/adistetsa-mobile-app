@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:adistetsa/models/angketbk_model.dart';
 import 'package:adistetsa/models/bukutamu_model.dart';
 import 'package:adistetsa/models/daftar_alumni_model.dart';
+import 'package:adistetsa/models/daftar_kader_model.dart';
 import 'package:adistetsa/models/daftar_konsultasi_BK_model.dart';
 import 'package:adistetsa/models/daftaranggotaekskul_model.dart';
 import 'package:adistetsa/models/detail_daftar_alumni_model.dart';
@@ -10,12 +11,20 @@ import 'package:adistetsa/models/detail_daftar_konsultasi_bk_model.dart';
 import 'package:adistetsa/models/detailjurnalmengajarguru_model.dart';
 import 'package:adistetsa/models/detaillogukssiswa_model.dart';
 import 'package:adistetsa/models/detaillogukstendik_model.dart';
+import 'package:adistetsa/models/inovatif_model.dart';
 import 'package:adistetsa/models/jadwalekskul_model.dart';
 import 'package:adistetsa/models/jadwalmengajarguru_model.dart';
+import 'package:adistetsa/models/jaringan_kerja_model.dart';
 import 'package:adistetsa/models/jurnalpertemuanekskul_model.dart';
 import 'package:adistetsa/models/katalogekskul_model.dart';
+import 'package:adistetsa/models/kegiatan_kader_model.dart';
 import 'package:adistetsa/models/konselor_model.dart';
+import 'package:adistetsa/models/konservasi_air_model.dart';
+import 'package:adistetsa/models/konservasi_energi_model.dart';
 import 'package:adistetsa/models/loguks_model.dart';
+import 'package:adistetsa/models/pembibitan_pohon_model.dart';
+import 'package:adistetsa/models/pemeliharaan_pohon_model.dart';
+import 'package:adistetsa/models/pemeliharaan_sampah_model.dart';
 import 'package:adistetsa/models/peminjambarang_model.dart';
 import 'package:adistetsa/models/guru_model.dart';
 import 'package:adistetsa/models/jenispelanggaran_model.dart';
@@ -27,17 +36,24 @@ import 'package:adistetsa/models/kompetensi_model.dart';
 import 'package:adistetsa/models/laporankebaikan_model.dart';
 import 'package:adistetsa/models/list_buku_model.dart';
 import 'package:adistetsa/models/pelangaran_model.dart';
+import 'package:adistetsa/models/penanaman_pohon_model.dart';
+import 'package:adistetsa/models/penerapan_prlh_model.dart';
 import 'package:adistetsa/models/pengajuanekskul_model.dart';
 import 'package:adistetsa/models/pengajuanpeminjaman_model.dart';
 import 'package:adistetsa/models/presensisiswa_model.dart';
 import 'package:adistetsa/models/profil_konselor_model.dart';
+import 'package:adistetsa/models/publikasi_model.dart';
+import 'package:adistetsa/models/reduce_reuse_recycle.dart';
 import 'package:adistetsa/models/riwayatbarang_model.dart';
 import 'package:adistetsa/models/riwayatpeminjaman_model.dart';
 import 'package:adistetsa/models/riwayatruangan_model.dart';
 import 'package:adistetsa/models/role_model.dart';
 import 'package:adistetsa/models/peminjamruangan_model.dart';
+import 'package:adistetsa/models/sanitasi_drainase_model.dart';
 import 'package:adistetsa/models/siswa_model.dart';
 import 'package:adistetsa/models/status_pengajuan_konseling_model.dart';
+import 'package:adistetsa/models/tabungan_sampah_model.dart';
+import 'package:adistetsa/providers/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -2064,6 +2080,403 @@ class Services extends ChangeNotifier {
       return true;
     } else {
       throw Exception(res.body);
+    }
+  }
+
+  // NOTE: digunakan untuk mengambil list data sanitasi drainase pada bidang Adiwiyata
+  getSanitasiDrainase({String? search, String? fitur}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString("token").toString();
+    var url;
+
+    url = Uri.parse('$baseUrl/adiwiyata/sanitasi_drainase?$search');
+
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<sanitasiDrainaseModel> sanitasiDrainase =
+          data.map((item) => sanitasiDrainaseModel.fromJson(item)).toList();
+      return sanitasiDrainase;
+    } else {
+      throw Exception('Gagal Mendapatkan data fitur $fitur');
+    }
+  }
+
+  // NOTE: digunakan untuk mengambil list data Jaringan Kerja pada bidang Adiwiyata
+  getJaringanKerja({String? search, String? fitur}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString("token").toString();
+    var url;
+
+    url = Uri.parse('$baseUrl/adiwiyata/jaringan_kerja?$search');
+
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<JaringanKerjaModel> jaringanKerja =
+          data.map((item) => JaringanKerjaModel.fromJson(item)).toList();
+      return jaringanKerja;
+    } else {
+      throw Exception('Gagal Mendapatkan data fitur $fitur');
+    }
+  }
+
+  // NOTE: digunakan untuk mengambil list data Publikasi pada bidang Adiwiyata
+  getPublikasi({String? search, String? fitur}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString("token").toString();
+    var url;
+
+    url = Uri.parse('$baseUrl/adiwiyata/publikasi?$search');
+
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<PublikasiModel> publikasi =
+          data.map((item) => PublikasiModel.fromJson(item)).toList();
+      return publikasi;
+    } else {
+      throw Exception('Gagal Mendapatkan data fitur $fitur');
+    }
+  }
+
+  // NOTE: digunakan untuk mengambil list data Daftar Kader pada bidang Adiwiyata
+  getDaftarKader({String? search, String? fitur}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString("token").toString();
+    var url;
+
+    url = Uri.parse('$baseUrl/adiwiyata/daftar_kader?$search');
+
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<DaftarKaderModel> daftarKader =
+          data.map((item) => DaftarKaderModel.fromJson(item)).toList();
+      return daftarKader;
+    } else {
+      throw Exception('Gagal Mendapatkan data fitur $fitur');
+    }
+  }
+
+  // NOTE: digunakan untuk mengambil list data Kegiatan Kader pada bidang Adiwiyata
+  getKegiatanKader({String? search, String? fitur}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString("token").toString();
+    var url;
+
+    url = Uri.parse('$baseUrl/adiwiyata/kegiatan_kader?$search');
+
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<KegiatanKaderModel> kegiataKader =
+          data.map((item) => KegiatanKaderModel.fromJson(item)).toList();
+      return kegiataKader;
+    } else {
+      throw Exception('Gagal Mendapatkan data fitur $fitur');
+    }
+  }
+
+  // NOTE: digunakan untuk mengambil list data Konservasi Energi pada bidang Adiwiyata
+  getKonservasiEnergi({String? search, String? fitur}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString("token").toString();
+    var url;
+
+    url = Uri.parse('$baseUrl/adiwiyata/konservasi_energi?$search');
+
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<KonservasiEnergiModel> konservasiEnergi =
+          data.map((item) => KonservasiEnergiModel.fromJson(item)).toList();
+      return konservasiEnergi;
+    } else {
+      throw Exception('Gagal Mendapatkan data fitur $fitur');
+    }
+  }
+
+  // NOTE: digunakan untuk mengambil list data Konservasi Air pada bidang Adiwiyata
+  getKonservasiAir({String? search, String? fitur}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString("token").toString();
+    var url;
+
+    url = Uri.parse('$baseUrl/adiwiyata/konservasi_air?$search');
+
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<KonservasiAirModel> konservasiAir =
+          data.map((item) => KonservasiAirModel.fromJson(item)).toList();
+      return konservasiAir;
+    } else {
+      throw Exception('Gagal Mendapatkan data fitur $fitur');
+    }
+  }
+
+  // NOTE: digunakan untuk mengambil list data Penanaman Pohon pada bidang Adiwiyata
+  getPenamamanPohon({String? search, String? fitur}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString("token").toString();
+    var url;
+
+    url = Uri.parse('$baseUrl/adiwiyata/penanaman_pohon?$search');
+
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      // var totalData = jsonDecode(response.body)['TOTAL_POHON'];
+
+      List data = jsonDecode(response.body)['results'];
+      List<PenanamanPohonModel> penanamanPohon =
+          data.map((item) => PenanamanPohonModel.fromJson(item)).toList();
+      return penanamanPohon;
+    } else {
+      throw Exception('Gagal Mendapatkan data fitur $fitur');
+    }
+  }
+
+  // NOTE: digunakan untuk mengambil Jumlah Penanaman Pohon pada bidang Adiwiyata
+  getJumlahPenamamanPohon() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString("token").toString();
+    var url;
+
+    url = Uri.parse('$baseUrl/adiwiyata/penanaman_pohon');
+
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      // var totalData = jsonDecode(response.body)['TOTAL_POHON'];
+
+      var data = jsonDecode(response.body)['TOTAL_POHON'];
+
+      return data;
+    } else {
+      throw Exception('Gagal Mendapatkan data jumlah pohon');
+    }
+  }
+
+  // NOTE: digunakan untuk mengambil list data Pembibitan Pohon pada bidang Adiwiyata
+  getPembibitanPohon({String? search, String? fitur}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString("token").toString();
+    var url;
+
+    url = Uri.parse('$baseUrl/adiwiyata/pembibitan_pohon?$search');
+
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<PembibitanPohonModel> pembibitanPohon =
+          data.map((item) => PembibitanPohonModel.fromJson(item)).toList();
+      return pembibitanPohon;
+    } else {
+      throw Exception('Gagal Mendapatkan data fitur $fitur');
+    }
+  }
+
+  // NOTE: digunakan untuk mengambil list data Pemeliharaan Pohon pada bidang Adiwiyata
+  getPemeliharaanPohon({String? search, String? fitur}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString("token").toString();
+    var url;
+
+    url = Uri.parse('$baseUrl/adiwiyata/pemeliharaan_pohon?$search');
+
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<PemeliharaanPohonModel> pemeliharaanPohon =
+          data.map((item) => PemeliharaanPohonModel.fromJson(item)).toList();
+      return pemeliharaanPohon;
+    } else {
+      throw Exception('Gagal Mendapatkan data fitur $fitur');
+    }
+  }
+
+  // NOTE: digunakan untuk mengambil list data inovatif pada bidang Adiwiyata
+  getInovatif({String? search, String? fitur}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString("token").toString();
+    var url;
+
+    url = Uri.parse('$baseUrl/adiwiyata/inovatif?$search');
+
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<InovatifModel> inovatif =
+          data.map((item) => InovatifModel.fromJson(item)).toList();
+      return inovatif;
+    } else {
+      throw Exception('Gagal Mendapatkan data fitur $fitur');
+    }
+  }
+
+  // NOTE: digunakan untuk mengambil list data penerapan PRLH pada bidang Adiwiyata
+  getPenerapanPRLH({String? search, String? fitur}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString("token").toString();
+    var url;
+
+    url = Uri.parse('$baseUrl/adiwiyata/prlh?$search');
+
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<PenerapanPRLHModel> prlh =
+          data.map((item) => PenerapanPRLHModel.fromJson(item)).toList();
+      return prlh;
+    } else {
+      throw Exception('Gagal Mendapatkan data fitur $fitur');
+    }
+  }
+
+  // NOTE: digunakan untuk mengambil list data 3R Pengelolaan Sampah pada bidang Adiwiyata
+  get3R({String? search, String? fitur}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString("token").toString();
+    var url;
+
+    url = Uri.parse('$baseUrl/adiwiyata/reuse_reduce_recycle?$search');
+
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<ReduceReuseRecycleModel> reduceReuseRecycle =
+          data.map((item) => ReduceReuseRecycleModel.fromJson(item)).toList();
+      return reduceReuseRecycle;
+    } else {
+      throw Exception('Gagal Mendapatkan data fitur $fitur');
+    }
+  }
+
+  // NOTE: digunakan untuk mengambil list data Pemeliharaan Sampah pada bidang Adiwiyata
+  getPemeliharaanSampah({String? search, String? fitur}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString("token").toString();
+    var url;
+
+    url = Uri.parse('$baseUrl/adiwiyata/pemeliharaan_sampah?$search');
+
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<PemeliharaanSampahModel> pemeliharaanSampah =
+          data.map((item) => PemeliharaanSampahModel.fromJson(item)).toList();
+      return pemeliharaanSampah;
+    } else {
+      throw Exception('Gagal Mendapatkan data fitur $fitur');
+    }
+  }
+
+  // NOTE: digunakan untuk mengambil list data tabungan Sampah pada bidang Adiwiyata
+  getTabunganSampah({String? filter, String? fitur}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString("token").toString();
+    var url;
+
+    url = Uri.parse('$baseUrl/adiwiyata/tabungan_sampah?$filter');
+
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<TabunganSampahModel> tabunganSampah =
+          data.map((item) => TabunganSampahModel.fromJson(item)).toList();
+      return tabunganSampah;
+    } else {
+      throw Exception('Gagal Mendapatkan data fitur $fitur');
+    }
+  }
+
+  // NOTE: digunakan untuk mengambil total data tabungan Sampah pada bidang Adiwiyata
+  getTotalTabunganSampah({String? filter, String? fitur}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString("token").toString();
+    var url;
+
+    url = Uri.parse('$baseUrl/adiwiyata/tabungan_sampah');
+
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+
+      return data;
+    } else {
+      throw Exception('Gagal Mendapatkan data fitur $fitur');
+    }
+  }
+
+  // NOTE: digunakan untuk mengambil list tahun tabungan Sampah pada bidang Adiwiyata
+  getTahunTabunganSampah() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString("token").toString();
+    var url;
+
+    url = Uri.parse('$baseUrl/adiwiyata/tabungan_sampah_tahun?');
+
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body);
+
+      return data;
+    } else {
+      throw Exception('Gagal Mendapatkan data fitur tahun');
     }
   }
 }

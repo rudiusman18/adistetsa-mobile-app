@@ -1,6 +1,10 @@
+import 'package:adistetsa/models/konservasi_air_model.dart';
+import 'package:adistetsa/models/konservasi_energi_model.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class KonservasiPage extends StatefulWidget {
   @override
@@ -10,9 +14,22 @@ class KonservasiPage extends StatefulWidget {
 class _KonservasiPageState extends State<KonservasiPage> {
   bool isSearch = false;
   String urlSearch = '';
+  bool isLoading = false;
   TextEditingController searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    launchUrl(String url) async {
+      if (await canLaunch(url)) {
+        await launch(
+          url,
+          forceWebView: true,
+          enableJavaScript: true,
+        );
+      } else {
+        Navigator.pushNamed(context, '/error-page');
+      }
+    }
+
     PreferredSizeWidget konservasiHeader() {
       return AppBar(
         centerTitle: true,
@@ -99,6 +116,12 @@ class _KonservasiPageState extends State<KonservasiPage> {
               }
               print(searchController.text);
               urlSearch = 'search=${searchController.text}';
+              isLoading = true;
+            });
+            await Services().getKonservasiAir();
+            await Services().getKonservasiEnergi();
+            setState(() {
+              isLoading = false;
             });
           },
         ),
@@ -195,7 +218,9 @@ class _KonservasiPageState extends State<KonservasiPage> {
                         height: 12,
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          launchUrl(urlDownload);
+                        },
                         style: TextButton.styleFrom(
                           backgroundColor: m5Color,
                           shape: RoundedRectangleBorder(
@@ -253,32 +278,84 @@ class _KonservasiPageState extends State<KonservasiPage> {
           appBar: isSearch == true ? searchAppbar() : konservasiHeader(),
           body: TabBarView(
             children: [
-              ListView(
-                children: [
-                  SizedBox(
-                    height: 20,
-                  ),
-                  expandableItem(
-                    name: 'Konservasi Energi Listrik',
-                    date: '2022-02-02',
-                    keterangan: 'Dilakukan untuk upaya penghematan',
-                    urlDownload: '',
-                  ),
-                ],
-              ),
-              ListView(
-                children: [
-                  SizedBox(
-                    height: 20,
-                  ),
-                  expandableItem(
-                    name: 'Konservasi Energi Air',
-                    date: '2022-02-02',
-                    keterangan: 'Dilakukan untuk upaya penghematan',
-                    urlDownload: '',
-                  ),
-                ],
-              )
+              isLoading
+                  ? Container()
+                  : Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: FutureBuilder(
+                        future: Services().getKonservasiEnergi(
+                            search: urlSearch, fitur: 'Konservasi Energi'),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          if (snapshot.hasData) {
+                            List<KonservasiEnergiModel> data = snapshot.data;
+                            return data.isEmpty
+                                ? Center(
+                                    child: Text(
+                                      'Data tidak ditemukan',
+                                      style: mono1TextStyle,
+                                    ),
+                                  )
+                                : ListView(
+                                    children: data.map((item) {
+                                      return expandableItem(
+                                        name: '${item.nAMAKEGIATAN}',
+                                        date: '${item.tANGGAL}',
+                                        keterangan: '${item.kETERANGAN}',
+                                        urlDownload: '${item.fILE}',
+                                      );
+                                    }).toList(),
+                                  );
+                          } else {
+                            return Center(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 4,
+                                color: m1Color,
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+              isLoading
+                  ? Container()
+                  : Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: FutureBuilder(
+                        future: Services().getKonservasiAir(
+                            search: urlSearch, fitur: 'Konservasi Air'),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          if (snapshot.hasData) {
+                            List<KonservasiAirModel> data = snapshot.data;
+                            return data.isEmpty
+                                ? Center(
+                                    child: Text(
+                                      'Data tidak ditemukan',
+                                      style: mono1TextStyle,
+                                    ),
+                                  )
+                                : ListView(
+                                    children: data.map((item) {
+                                      return expandableItem(
+                                        name: '${item.nAMAKEGIATAN}',
+                                        date: '${item.tANGGAL}',
+                                        keterangan: '${item.kETERANGAN}',
+                                        urlDownload: '${item.fILE}',
+                                      );
+                                    }).toList(),
+                                  );
+                          } else {
+                            return Center(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 4,
+                                color: m1Color,
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ),
             ],
           ),
         ),

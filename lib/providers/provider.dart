@@ -269,6 +269,16 @@ class Providers with ChangeNotifier {
   }
 
   // NOTE: END
+
+  // NOTE: digunakan untuk mengambil value total Pohon
+  String _totalPohon = '';
+  String get totalPohon => _totalPohon;
+  set setTotalPohon(String totalPohon) {
+    _totalPohon = totalPohon;
+    notifyListeners();
+  }
+
+  // NOTE: END
   set setAngket(String angket) {
     _angket = angket;
     notifyListeners();
