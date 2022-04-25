@@ -22,15 +22,14 @@ class _FiturOnePageState extends State<FiturOnePage> {
   bool flag2 = false;
   Object? value2Item;
   String filterTahun = '';
+  String valueTahun = DateTime.now().toString().split('-')[0];
   String url = '';
   TextEditingController searchController = TextEditingController();
   List<PenanamanPohonModel> tahun = [];
   PenanamanPohonModel getTahun = PenanamanPohonModel();
   int getTotalPohon = 0;
   List filterTahunTabunganSampah = [];
-  int sampahKering = 0;
-  int sampahBasah = 0;
-  int totalTabungan = 0;
+  Map<String, dynamic> json = {};
 
   void initState() {
     getInit();
@@ -38,7 +37,7 @@ class _FiturOnePageState extends State<FiturOnePage> {
   }
 
   void getInit() async {
-    sampahKering = await Services().getTotalTabunganSampah();
+    json = await Services().getTotalTabunganSampah();
     tahun = await Services().getPenamamanPohon();
     filterTahunTabunganSampah = await Services().getTahunTabunganSampah();
     getTahun = tahun.last;
@@ -242,6 +241,7 @@ class _FiturOnePageState extends State<FiturOnePage> {
                   await Services().getTabunganSampah();
                   setState(() {
                     isLoading = false;
+                    valueTahun = value.toString();
                   });
                 },
               ),
@@ -274,7 +274,8 @@ class _FiturOnePageState extends State<FiturOnePage> {
                             value2Item = null;
                             url = '';
                             filterTahun = '';
-
+                            valueTahun =
+                                DateTime.now().toString().split('-')[0];
                             flag1 = false;
                             flag2 = false;
                           });
@@ -370,13 +371,22 @@ class _FiturOnePageState extends State<FiturOnePage> {
                           SizedBox(
                             height: 4,
                           ),
-                          Text(
-                            '$sampahKering',
-                            style: mono6TextStyle.copyWith(
-                              fontSize: 14,
-                              fontWeight: bold,
-                            ),
-                          ),
+                          getLoading
+                              ? Container(
+                                  width: 14,
+                                  height: 14,
+                                  child: CircularProgressIndicator(
+                                    color: mono6Color,
+                                    strokeWidth: 4,
+                                  ),
+                                )
+                              : Text(
+                                  '$sampahKering',
+                                  style: mono6TextStyle.copyWith(
+                                    fontSize: 14,
+                                    fontWeight: bold,
+                                  ),
+                                ),
                         ],
                       ),
                       Column(
@@ -397,13 +407,22 @@ class _FiturOnePageState extends State<FiturOnePage> {
                           SizedBox(
                             height: 4,
                           ),
-                          Text(
-                            '$sampahBasah',
-                            style: mono6TextStyle.copyWith(
-                              fontSize: 14,
-                              fontWeight: bold,
-                            ),
-                          ),
+                          getLoading
+                              ? Container(
+                                  width: 14,
+                                  height: 14,
+                                  child: CircularProgressIndicator(
+                                    color: mono6Color,
+                                    strokeWidth: 4,
+                                  ),
+                                )
+                              : Text(
+                                  '$sampahBasah',
+                                  style: mono6TextStyle.copyWith(
+                                    fontSize: 14,
+                                    fontWeight: bold,
+                                  ),
+                                ),
                         ],
                       ),
                       Column(
@@ -424,13 +443,22 @@ class _FiturOnePageState extends State<FiturOnePage> {
                           SizedBox(
                             height: 4,
                           ),
-                          Text(
-                            '$totalSampah',
-                            style: mono6TextStyle.copyWith(
-                              fontSize: 14,
-                              fontWeight: bold,
-                            ),
-                          ),
+                          getLoading
+                              ? Container(
+                                  width: 14,
+                                  height: 14,
+                                  child: CircularProgressIndicator(
+                                    color: mono6Color,
+                                    strokeWidth: 4,
+                                  ),
+                                )
+                              : Text(
+                                  '$totalSampah',
+                                  style: mono6TextStyle.copyWith(
+                                    fontSize: 14,
+                                    fontWeight: bold,
+                                  ),
+                                ),
                         ],
                       ),
                     ],
@@ -762,11 +790,10 @@ class _FiturOnePageState extends State<FiturOnePage> {
                 )
               : provider.fiturAdiwiyata == 'Tabungan Sampah'
                   ? infoCard(
-                      infoMessage: 'Total Tabungan Sampah Tahun ' +
-                          DateTime.now().toString().split('-')[0],
-                      sampahKering: '90Kg',
-                      sampahBasah: '8Kg',
-                      totalSampah: '15Kg',
+                      infoMessage: 'Total Tabungan Sampah Tahun ' + valueTahun,
+                      sampahKering: json['SAMPAH_KERING'].toString(),
+                      sampahBasah: json['SAMPAH_BASAH'].toString(),
+                      totalSampah: json['TOTAL_TABUNGAN'].toString(),
                     )
                   : Container(),
           provider.fiturAdiwiyata == 'Tabungan Sampah' ? filter() : Container(),

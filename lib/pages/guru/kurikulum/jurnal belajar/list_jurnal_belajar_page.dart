@@ -507,8 +507,8 @@ class _ListJurnalBelajarPageState extends State<ListJurnalBelajarPage> {
           Expanded(
             child: isLoading == false
                 ? FutureBuilder(
-                    future: Services()
-                        .getJurnalBelajarMengajarGuru(search: urlSearch, filterTahunAjaran: url),
+                    future: Services().getJurnalBelajarMengajarGuru(
+                        search: urlSearch, filterTahunAjaran: url),
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (snapshot.hasData) {
                         List<JadwalMengajarGuruModel> data = snapshot.data;

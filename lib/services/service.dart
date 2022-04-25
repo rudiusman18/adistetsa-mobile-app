@@ -1041,10 +1041,12 @@ class Services extends ChangeNotifier {
     print(filterHari);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url = Uri.parse(
-        '$baseUrl/kurikulum/jurnal_belajar_mengajar?search=$search&$filterTahunAjaran');
+    var url =
+        Uri.parse('$baseUrl/kurikulum/jurnal_belajar_mengajar?search=$search');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
+    print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body)['results'];
       List<JadwalMengajarGuruModel> jadwalMengajarGuru =
@@ -2452,8 +2454,9 @@ class Services extends ChangeNotifier {
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
-
-      return data;
+      Map<String, dynamic> json = data;
+      print(json);
+      return json;
     } else {
       throw Exception('Gagal Mendapatkan data fitur $fitur');
     }

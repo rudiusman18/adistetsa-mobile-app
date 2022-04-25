@@ -1,3 +1,4 @@
+// ignore: camel_case_types
 class sanitasiDrainaseModel {
   int? iD;
   String? tANGGAL;
