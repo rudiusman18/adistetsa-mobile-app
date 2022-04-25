@@ -1041,8 +1041,7 @@ class Services extends ChangeNotifier {
     print(filterHari);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url =
-        Uri.parse('$baseUrl/kurikulum/jurnal_belajar_mengajar?search=$search');
+    var url = Uri.parse('$baseUrl/kurikulum/jurnal_belajar_mengajar');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
     print(response.statusCode);
