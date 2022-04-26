@@ -10,9 +10,8 @@ class MainPage extends StatefulWidget {
   _MainPageState createState() => _MainPageState();
 }
 
-
 class _MainPageState extends State<MainPage> {
-int currentIndex = 0;
+  int currentIndex = 0;
   Widget customBottomNavbar() {
     return Container(
       decoration: BoxDecoration(
@@ -75,7 +74,7 @@ int currentIndex = 0;
                 color: currentIndex == 1 ? m2Color : mono3Color,
               ),
             ),
-            label: 'Beranda',
+            label: 'Kalender',
           ),
           BottomNavigationBarItem(
             icon: Padding(
@@ -89,7 +88,7 @@ int currentIndex = 0;
                 color: currentIndex == 2 ? m2Color : mono3Color,
               ),
             ),
-            label: 'Beranda',
+            label: 'Notifikasi',
           ),
           BottomNavigationBarItem(
             icon: Padding(
@@ -103,7 +102,7 @@ int currentIndex = 0;
                 color: currentIndex == 3 ? m2Color : mono3Color,
               ),
             ),
-            label: 'Beranda',
+            label: 'Profil',
           ),
         ],
       ),

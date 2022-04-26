@@ -53,7 +53,6 @@ import 'package:adistetsa/models/sanitasi_drainase_model.dart';
 import 'package:adistetsa/models/siswa_model.dart';
 import 'package:adistetsa/models/status_pengajuan_konseling_model.dart';
 import 'package:adistetsa/models/tabungan_sampah_model.dart';
-import 'package:adistetsa/providers/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -1682,7 +1681,7 @@ class Services extends ChangeNotifier {
       'STATUS': status,
       'RATING':
           rating != null ? int.parse(rating.toString().split('.')[0]) : null,
-      'KRITIK_SARAN': kritikSaran,
+      'KRITIK_SARAN': kritikSaran == null ? '' : kritikSaran,
     });
 
     var response = await http.patch(

@@ -1,4 +1,4 @@
-import 'package:adistetsa/models/role_model.dart';
+
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/widget/loading.dart';
@@ -18,7 +18,6 @@ class _DetailStatusDataStaffHalobkPageState
   @override
   Widget build(BuildContext context) {
     Providers provider = Provider.of(context);
-    RolesModel rolesModel = provider.role;
 
     PreferredSizeWidget header() {
       return AppBar(

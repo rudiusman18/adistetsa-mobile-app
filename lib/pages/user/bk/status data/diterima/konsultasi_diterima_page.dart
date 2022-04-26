@@ -1,6 +1,5 @@
 import 'package:adistetsa/models/konselor_model.dart';
 import 'package:adistetsa/providers/provider.dart';
-import 'package:adistetsa/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:provider/provider.dart';
