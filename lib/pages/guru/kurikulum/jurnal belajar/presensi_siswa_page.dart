@@ -19,6 +19,7 @@ class _PresensiSiswaPageState extends State<PresensiSiswaPage> {
   @override
   Widget build(BuildContext context) {
     Providers provider = Provider.of<Providers>(context);
+    Services().getPresensiSiswa(id: provider.idPresensiSiswa);
     PreferredSizeWidget presensiSiswaHeader() {
       return AppBar(
         centerTitle: true,

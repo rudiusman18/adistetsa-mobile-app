@@ -3,7 +3,7 @@ class PresensiSiswaModel {
   String? nAMA;
   String? kETERANGAN;
   String? fILEKETERANGAN;
-  String? nIS;
+  int? nIS;
 
   PresensiSiswaModel(
       {this.iD, this.nAMA, this.kETERANGAN, this.fILEKETERANGAN, this.nIS});

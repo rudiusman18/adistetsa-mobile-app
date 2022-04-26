@@ -1036,15 +1036,12 @@ class Services extends ChangeNotifier {
   //NOTE: Mendapatkan jurnal belajar dan mengajar guru
   getJurnalBelajarMengajarGuru(
       {String? search, String? filterTahunAjaran, String? filterHari}) async {
-    print(filterTahunAjaran);
-    print(filterHari);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
     var url = Uri.parse('$baseUrl/kurikulum/jurnal_belajar_mengajar');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
-    print(response.statusCode);
-    print(response.body);
+
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body)['results'];
       List<JadwalMengajarGuruModel> jadwalMengajarGuru =
@@ -1108,6 +1105,7 @@ class Services extends ChangeNotifier {
     var url = Uri.parse('$baseUrl/kurikulum/presensi_siswa/$id');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
+
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body)['results'];
       List<PresensiSiswaModel> presensiSiswa =
