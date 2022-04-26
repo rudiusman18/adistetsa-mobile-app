@@ -19,7 +19,7 @@ class _ListBkPageState extends State<ListBkPage> {
       return AppBar(
         centerTitle: true,
         title: Text(
-          'Sarana dan Prasarana',
+          'HaloBK',
           style: mono1TextStyle.copyWith(
             fontWeight: semiBold,
             fontSize: 18,

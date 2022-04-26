@@ -13,9 +13,6 @@ class DaftarPertemuanPage extends StatefulWidget {
 }
 
 class _DaftarPertemuanPageState extends State<DaftarPertemuanPage> {
-  bool isSearch = false;
-  TextEditingController searchController = TextEditingController();
-  String urlSearch = '';
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
@@ -42,60 +39,6 @@ class _DaftarPertemuanPageState extends State<DaftarPertemuanPage> {
           icon: Icon(Icons.arrow_back),
           color: mono2Color,
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              setState(() {
-                isSearch = true;
-              });
-            },
-            icon: Icon(Icons.search),
-            color: mono2Color,
-          ),
-        ],
-      );
-    }
-
-    PreferredSizeWidget searchAppbar() {
-      return AppBar(
-        backgroundColor: mono6Color,
-        automaticallyImplyLeading: true,
-        leading: GestureDetector(
-          onTap: () async {
-            setState(() {
-              searchController.clear();
-              urlSearch = '';
-              isSearch = false;
-            });
-          },
-          child: Icon(
-            Icons.arrow_back,
-            color: mono1Color,
-          ),
-        ),
-        title: TextFormField(
-          controller: searchController,
-          decoration: InputDecoration(
-            hintText: 'Search',
-            isDense: true,
-            border: InputBorder.none,
-          ),
-          onChanged: (newValue) async {
-            setState(() {
-              if (searchController.selection.start >
-                  searchController.text.length) {
-                searchController.selection = new TextSelection.fromPosition(
-                    new TextPosition(offset: searchController.text.length));
-                searchController.text = newValue.toString();
-              }
-              print(searchController.text);
-              urlSearch = 'search=${searchController.text}';
-              isLoading = true;
-            });
-          },
-        ),
-        elevation: 4,
-        centerTitle: false,
       );
     }
 
@@ -303,7 +246,7 @@ class _DaftarPertemuanPageState extends State<DaftarPertemuanPage> {
     }
 
     return Scaffold(
-        appBar: isSearch ? searchAppbar() : daftarPertemuanHeader(),
+        appBar: daftarPertemuanHeader(),
         backgroundColor: mono6Color,
         body: Column(
           children: [

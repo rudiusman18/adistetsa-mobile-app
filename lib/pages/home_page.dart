@@ -99,15 +99,6 @@ class HomePage extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.pushNamed(context, '/staff/bk/snmptn');
-              },
-              child: ItemCard(
-                urlImg: 'snmptn',
-                text: 'SNMPTN',
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
                 provider.setAngketPilihanStaffBk = 'Lintas Minat';
                 Navigator.pushNamed(context, '/staff/bk/lintasminat');
               },
@@ -134,6 +125,15 @@ class HomePage extends StatelessWidget {
               child: ItemCard(
                 urlImg: 'angket peminatan',
                 text: 'Angket Peminatan',
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/staff/bk/snmptn');
+              },
+              child: ItemCard(
+                urlImg: 'snmptn',
+                text: 'SNMPTN',
               ),
             ),
           ],
@@ -277,10 +277,6 @@ class HomePage extends StatelessWidget {
         child: Wrap(
           spacing: 25,
           children: [
-            ItemCard(
-              urlImg: 'kurikulum',
-              text: 'Kurikulum',
-            ),
             GestureDetector(
               onTap: () {
                 Navigator.pushNamed(context, '/user/perpustakaan');
@@ -318,14 +314,6 @@ class HomePage extends StatelessWidget {
                 text: 'Kesiswaan',
               ),
             ),
-            ItemCard(
-              urlImg: 'tata usaha',
-              text: 'Tata Usaha',
-            ),
-            ItemCard(
-              urlImg: 'humas',
-              text: 'Humas',
-            ),
             GestureDetector(
               onTap: () {
                 Navigator.pushNamed(context, '/user/adiwiyata');
@@ -334,34 +322,6 @@ class HomePage extends StatelessWidget {
                 urlImg: 'adiwiyata',
                 text: 'Adiwiyata',
               ),
-            ),
-            ItemCard(
-              urlImg: 'presensi',
-              text: 'Presensi',
-            ),
-            ItemCard(
-              urlImg: 'alumni',
-              text: 'Alumni',
-            ),
-            ItemCard(
-              urlImg: 'daftar harga koperasi',
-              text: 'Daftar Harga Koperasi',
-            ),
-            ItemCard(
-              urlImg: 'prestasi',
-              text: 'Prestasi',
-            ),
-            ItemCard(
-              urlImg: 'data kesehatan',
-              text: 'Data Kesehatan',
-            ),
-            ItemCard(
-              urlImg: 'tata tertib',
-              text: 'Tata Tertib',
-            ),
-            ItemCard(
-              urlImg: 'survey',
-              text: 'Survey',
             ),
           ],
         ),
@@ -383,14 +343,6 @@ class HomePage extends StatelessWidget {
             //     text: 'Bimbingan Konseling',
             //   ),
             // ),
-            ItemCard(
-              urlImg: 'kurikulum',
-              text: 'Kurikulum',
-            ),
-            ItemCard(
-              urlImg: 'tata usaha',
-              text: 'Tata Usaha',
-            ),
             GestureDetector(
               onTap: () {
                 Navigator.pushNamed(context, '/user/sarpras');
@@ -399,18 +351,6 @@ class HomePage extends StatelessWidget {
                 urlImg: 'sarana prasarana',
                 text: 'Sarana dan Prasarana',
               ),
-            ),
-            ItemCard(
-              urlImg: 'presensi',
-              text: 'Presensi',
-            ),
-            ItemCard(
-              urlImg: 'tata tertib',
-              text: 'Tata Tertib',
-            ),
-            ItemCard(
-              urlImg: 'survey',
-              text: 'Survey',
             ),
             GestureDetector(
               onTap: () {
