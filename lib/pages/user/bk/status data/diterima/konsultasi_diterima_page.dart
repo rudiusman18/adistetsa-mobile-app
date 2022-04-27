@@ -1,5 +1,6 @@
 import 'package:adistetsa/models/profil_konselor_model.dart';
 import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:provider/provider.dart';
@@ -13,11 +14,29 @@ class KonsultasiDiterimaPage extends StatefulWidget {
 class _KonsultasiDiterimaPageState extends State<KonsultasiDiterimaPage> {
   ProfilKonselorModel profile = ProfilKonselorModel();
   bool isLoading = false;
+  bool getLoading = false;
+
+  void initState() {
+    getInit();
+
+    super.initState();
+  }
+
+  void getInit({String? status}) async {
+    setState(() {
+      getLoading = true;
+    });
+    profile = await Services().getprofileKonselorBK();
+
+    setState(() {
+      getLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     Providers provider = Provider.of(context);
-    profile = provider.dataKonselor;
+    provider.setDataKonselor = profile;
 
     launchUrl(String url) async {
       if (await canLaunch(url)) {
