@@ -134,6 +134,7 @@ class _PeminjamanBarangPageState extends State<PeminjamanBarangPage> {
         leading: IconButton(
           onPressed: () {
             setState(() {
+              isLoading = false;
               nameInput.text = '';
               phoneInput.text = '';
               activityInput.text = '';
@@ -765,6 +766,7 @@ class _PeminjamanBarangPageState extends State<PeminjamanBarangPage> {
     return WillPopScope(
       onWillPop: () async {
         setState(() {
+          isLoading = false;
           file = null;
         });
         return true;

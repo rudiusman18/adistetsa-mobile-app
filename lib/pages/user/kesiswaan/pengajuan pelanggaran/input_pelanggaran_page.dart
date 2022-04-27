@@ -76,6 +76,7 @@ class _InputPelanggaranPageState extends State<InputPelanggaranPage> {
               style: mono2TextStyle.copyWith(
                 fontSize: 10,
               ),
+              overflow: TextOverflow.ellipsis,
             ),
             SizedBox(
               height: 7,
@@ -110,6 +111,7 @@ class _InputPelanggaranPageState extends State<InputPelanggaranPage> {
                     style: mono3TextStyle.copyWith(
                       fontSize: 12,
                     ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ),

@@ -140,9 +140,11 @@ class _DataPelanggaranPageState extends State<DataPelanggaranPage> {
                     SizedBox(
                       width: 10,
                     ),
-                    Text(
-                      pelanggaran,
-                      style: mono1TextStyle,
+                    Flexible(
+                      child: Text(
+                        pelanggaran,
+                        style: mono1TextStyle,
+                      ),
                     ),
                   ],
                 ),
@@ -233,9 +235,10 @@ class _DataPelanggaranPageState extends State<DataPelanggaranPage> {
                           children: data.map((item) {
                             index++;
                             return dataSiswa(
-                                index: index,
-                                pelanggaran: '${item.kETERANGAN}',
-                                jenisPelanggaran: item);
+                              index: index,
+                              pelanggaran: '${item.kETERANGAN}',
+                              jenisPelanggaran: item,
+                            );
                           }).toList(),
                         );
                 } else {

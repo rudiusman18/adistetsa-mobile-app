@@ -1,4 +1,4 @@
-import 'package:adistetsa/models/konselor_model.dart';
+import 'package:adistetsa/models/profil_konselor_model.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
@@ -11,7 +11,7 @@ class KonsultasiDiterimaPage extends StatefulWidget {
 }
 
 class _KonsultasiDiterimaPageState extends State<KonsultasiDiterimaPage> {
-  KonselorModel profile = KonselorModel();
+  ProfilKonselorModel profile = ProfilKonselorModel();
   bool isLoading = false;
 
   @override

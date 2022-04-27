@@ -488,7 +488,7 @@ class _FiturOnePageState extends State<FiturOnePage> {
           padding: const EdgeInsets.only(
             left: 7,
             right: 7,
-            bottom: 18,
+            bottom: 7,
           ),
           child: Column(
             children: [

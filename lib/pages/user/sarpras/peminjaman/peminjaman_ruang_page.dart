@@ -139,19 +139,20 @@ class _PeminjamanRuangPageState extends State<PeminjamanRuangPage> {
         setState(() {
           isLoading = true;
         });
-        if (await Services().pengajuanPeminjamanRuang(
-            nama: nameInput.text,
-            noTelp: phoneInput.text,
-            ruang: provider.ruangChart!.iD.toString(),
-            kegiatan: activityInput.text,
-            tanggalPenggunaan: selectedDate.toString().split(' ')[0],
-            tanggalPengembalian:
-                selectedDatePengembalian.toString().split(' ')[0],
-            jamPenggunaan: jamAwal,
-            jamBerakhir: jamAkhir,
-            kategori: value1Item.toString(),
-            keterangan: keteranganInput.text,
-            filepath: file != null ? file!.path : null)) {
+        try {
+          await Services().pengajuanPeminjamanRuang(
+              nama: nameInput.text,
+              noTelp: phoneInput.text,
+              ruang: provider.ruangChart!.iD.toString(),
+              kegiatan: activityInput.text,
+              tanggalPenggunaan: selectedDate.toString().split(' ')[0],
+              tanggalPengembalian:
+                  selectedDatePengembalian.toString().split(' ')[0],
+              jamPenggunaan: jamAwal,
+              jamBerakhir: jamAkhir,
+              kategori: value1Item.toString(),
+              keterangan: keteranganInput.text,
+              filepath: file != null ? file!.path : null);
           setState(() {
             nameInput.text = '';
             phoneInput.text = '';
@@ -166,21 +167,23 @@ class _PeminjamanRuangPageState extends State<PeminjamanRuangPage> {
             keteranganInput.text = '';
             file = null;
           });
+
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               backgroundColor: successColor,
               content: Text(
                 'Anda berhasil meminjam ruangan',
                 textAlign: TextAlign.center,
               )));
-        } else {
+        } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               backgroundColor: dangerColor,
               content: Text(
-                'Anda gagal meminjam ruangan',
+                '$e',
                 textAlign: TextAlign.center,
               )));
         }
       }
+
       setState(() {
         isLoading = false;
       });
@@ -203,6 +206,7 @@ class _PeminjamanRuangPageState extends State<PeminjamanRuangPage> {
         leading: IconButton(
           onPressed: () {
             setState(() {
+              isLoading = false;
               nameInput.text = '';
               phoneInput.text = '';
               activityInput.text = '';
@@ -1077,6 +1081,7 @@ class _PeminjamanRuangPageState extends State<PeminjamanRuangPage> {
       onWillPop: () async {
         setState(() {
           nameInput.text = '';
+          isLoading = false;
           phoneInput.text = '';
           activityInput.text = '';
           selectedDate = null;

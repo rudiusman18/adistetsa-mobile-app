@@ -1,4 +1,4 @@
-import 'package:adistetsa/models/konselor_model.dart';
+import 'package:adistetsa/models/profil_konselor_model.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
 import 'package:flutter/material.dart';
@@ -215,7 +215,7 @@ class _DaftarKkonselingPageState extends State<DaftarKkonselingPage> {
                       Services().getKonselorBK(search: searchController.text),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.hasData) {
-                      List<KonselorModel> data = snapshot.data;
+                      List<ProfilKonselorModel> data = snapshot.data;
                       return data.isEmpty
                           ? Center(
                               child: Text(

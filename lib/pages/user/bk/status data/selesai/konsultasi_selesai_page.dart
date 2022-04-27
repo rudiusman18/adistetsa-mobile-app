@@ -1,5 +1,5 @@
 import 'package:adistetsa/models/detail_daftar_konsultasi_bk_model.dart';
-import 'package:adistetsa/models/konselor_model.dart';
+import 'package:adistetsa/models/profil_konselor_model.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +17,7 @@ class _KonsultasiSelesaiPageState extends State<KonsultasiSelesaiPage> {
   TextEditingController kritikSaranController = TextEditingController(text: '');
   String ratingValue = '';
   bool isLoading = false;
-  KonselorModel profile = KonselorModel();
+  ProfilKonselorModel profile = ProfilKonselorModel();
   DetailDaftarKonsultasiBKModel dataInput = DetailDaftarKonsultasiBKModel();
   @override
   Widget build(BuildContext context) {

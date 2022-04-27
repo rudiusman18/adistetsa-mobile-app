@@ -195,11 +195,13 @@ class _ListBukuPageState extends State<ListBukuPage> {
                             )
                           : ListView(
                               children: data.map((item) {
-                                return listItem(
-                                  nama: item.jUDUL.toString(),
-                                  tipe: item.rEGISTER.toString(),
-                                  buku: item,
-                                );
+                                return provider.bookExist(item)
+                                    ? Container()
+                                    : listItem(
+                                        nama: item.jUDUL.toString(),
+                                        tipe: item.rEGISTER.toString(),
+                                        buku: item,
+                                      );
                               }).toList(),
                             );
                     } else {
@@ -212,7 +214,6 @@ class _ListBukuPageState extends State<ListBukuPage> {
                     }
                   },
                 ),
-        )
-        );
+        ));
   }
 }

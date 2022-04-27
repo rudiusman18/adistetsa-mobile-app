@@ -389,28 +389,9 @@ class _AjukanKonsultasiPageState extends State<AjukanKonsultasiPage> {
             ),
             onPressed: () async {
               if (selectedDate != null &&
-                      jamAwal != '' &&
-                      jamAkhir != '' &&
-                      value1Item != null //&&
-                  // int.parse(selectedDate
-                  //         .toString()
-                  //         .split(' ')[0]
-                  //         .split('-')[2]) >=
-                  //     int.parse(DateTime.now()
-                  //         .toString()
-                  //         .split(' ')[0]
-                  //         .split('-')[2]) &&
-                  // int.parse(jamAwal.toString().split(':')[0]) >=
-                  //     int.parse(DateTime.now()
-                  //         .toString()
-                  //         .split(' ')[1]
-                  //         .split(':')[0]) &&
-                  // int.parse(jamAwal.toString().split(':')[1]) >=
-                  //     int.parse(DateTime.now()
-                  //         .toString()
-                  //         .split(' ')[1]
-                  //         .split(':')[1])
-                  ) {
+                  jamAwal != '' &&
+                  jamAkhir != '' &&
+                  value1Item != null) {
                 try {
                   setState(() {
                     isLoading = true;

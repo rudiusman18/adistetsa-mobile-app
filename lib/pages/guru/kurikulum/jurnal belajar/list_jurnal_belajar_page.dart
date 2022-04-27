@@ -526,9 +526,10 @@ class _ListJurnalBelajarPageState extends State<ListJurnalBelajarPage> {
                                         ' - ' +
                                         '${item.kELAS!.split('-')[1]}',
                                     subtitle: '${item.mATAPELAJARAN}',
-                                    content: '${item.wAKTUPELAJARAN}'
-                                        .replaceAll('[', '')
-                                        .replaceAll(']', ''),
+                                    content:
+                                        '${item.hARI}, ${item.wAKTUPELAJARAN}'
+                                            .replaceAll('[', '')
+                                            .replaceAll(']', ''),
                                     subtitleContent: '${item.sEMESTER}',
                                     id: '${item.iD}',
                                   );

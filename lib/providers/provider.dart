@@ -8,7 +8,6 @@ import 'package:adistetsa/models/jadwalmengajarguru_model.dart';
 import 'package:adistetsa/models/katalogbarang_model.dart';
 import 'package:adistetsa/models/katalogekskul_model.dart';
 import 'package:adistetsa/models/katalogruangan_model.dart';
-import 'package:adistetsa/models/konselor_model.dart';
 import 'package:adistetsa/models/peminjambarang_model.dart';
 import 'package:adistetsa/models/guru_model.dart';
 import 'package:adistetsa/models/jenispelanggaran_model.dart';
@@ -223,9 +222,9 @@ class Providers with ChangeNotifier {
   // NOTE: END
 
   // NOTE: Digunakan untuk mendapatkan data konselor di role pengguna
-  KonselorModel _dataKonselor = KonselorModel();
-  KonselorModel get dataKonselor => _dataKonselor;
-  set setDataKonselor(KonselorModel dataKonselor) {
+  ProfilKonselorModel _dataKonselor = ProfilKonselorModel();
+  ProfilKonselorModel get dataKonselor => _dataKonselor;
+  set setDataKonselor(ProfilKonselorModel dataKonselor) {
     _dataKonselor = dataKonselor;
   }
   // NOTE: END

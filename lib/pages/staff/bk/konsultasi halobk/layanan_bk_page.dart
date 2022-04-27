@@ -37,6 +37,8 @@ class _LayananBkPageState extends State<LayananBkPage> {
   @override
   Widget build(BuildContext context) {
     Providers provider = Provider.of(context);
+    provider.setDataKonselor = profile;
+
     launchUrl(String url) async {
       if (await canLaunch(url)) {
         await launch(

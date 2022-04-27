@@ -18,7 +18,6 @@ import 'package:adistetsa/models/jaringan_kerja_model.dart';
 import 'package:adistetsa/models/jurnalpertemuanekskul_model.dart';
 import 'package:adistetsa/models/katalogekskul_model.dart';
 import 'package:adistetsa/models/kegiatan_kader_model.dart';
-import 'package:adistetsa/models/konselor_model.dart';
 import 'package:adistetsa/models/konservasi_air_model.dart';
 import 'package:adistetsa/models/konservasi_energi_model.dart';
 import 'package:adistetsa/models/loguks_model.dart';
@@ -822,7 +821,7 @@ class Services extends ChangeNotifier {
     if (res.statusCode == 200 || res.statusCode == 201) {
       return true;
     } else {
-      return false;
+      throw Exception(res.body);
     }
   }
 
@@ -867,7 +866,7 @@ class Services extends ChangeNotifier {
     } else if (res.statusCode == 400) {
       throw Exception('Ruangan Sedang Dipinjam');
     } else {
-      return false;
+      throw Exception(res.body);
     }
   }
 
@@ -1477,9 +1476,9 @@ class Services extends ChangeNotifier {
 
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body)['results'];
-      List<KonselorModel> konselorModel =
-          data.map((item) => KonselorModel.fromJson(item)).toList();
-      return konselorModel;
+      List<ProfilKonselorModel> konselor =
+          data.map((item) => ProfilKonselorModel.fromJson(item)).toList();
+      return konselor;
     } else {
       throw Exception('Gagal Mendapatkan data Konselor');
     }
@@ -1560,8 +1559,9 @@ class Services extends ChangeNotifier {
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
-      KonselorModel konselorModel = KonselorModel.fromJson(data);
-      return konselorModel;
+      ProfilKonselorModel profileKonselorModel =
+          ProfilKonselorModel.fromJson(data);
+      return profileKonselorModel;
     } else {
       throw Exception('Gagal Mendapatkan data Konselor');
     }
