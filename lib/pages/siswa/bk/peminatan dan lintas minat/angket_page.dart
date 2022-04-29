@@ -15,6 +15,7 @@ class AngketPage extends StatefulWidget {
 class _AngketPageState extends State<AngketPage> {
   PlatformFile? file;
   bool isLoading = true;
+  bool getLoading = true;
   FilePickerResult? result;
   AngketBKModel angket = AngketBKModel();
 
@@ -223,12 +224,12 @@ class _AngketPageState extends State<AngketPage> {
               } else {
                 try {
                   setState(() {
-                    isLoading = true;
+                    getLoading = true;
                   });
                   await Services().patchAngketSiswa(
                       jenisAngket: provider.angket, fileUpload: file!.path);
                   setState(() {
-                    isLoading = false;
+                    getLoading = false;
                   });
                   file = null;
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -247,7 +248,7 @@ class _AngketPageState extends State<AngketPage> {
                 }
               }
             },
-            child: isLoading == false
+            child: getLoading == false
                 ? Text(
                     'Simpan',
                     style: mono6TextStyle.copyWith(

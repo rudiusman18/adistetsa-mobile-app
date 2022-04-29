@@ -71,6 +71,11 @@ class _JadwalMengajarPageState extends State<JadwalMengajarPage> {
               searchController.clear();
               urlSearch = '';
               isSearch = false;
+              isLoading = true;
+            });
+            await Services().getJadwalMengajarGuru();
+            setState(() {
+              isLoading = false;
             });
           },
           child: Icon(

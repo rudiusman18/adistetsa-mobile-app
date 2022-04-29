@@ -26,6 +26,16 @@ class _StaffBkAngketPageState extends State<StaffBkAngketPage> {
   String filterJurusan = '';
   String filterKelas = '';
   String url = '';
+  List<AngketBKModel> dataAngket = [];
+
+  void initState() {
+    getInit();
+    super.initState();
+  }
+
+  void getInit() async {
+    dataAngket = await Services().getAngketPeminatan();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -248,14 +258,16 @@ class _StaffBkAngketPageState extends State<StaffBkAngketPage> {
                 dropdownColor: mono6Color,
                 elevation: 2,
                 value: value2Item,
-                items: data.map(
+                items: dataAngket.map(
                   (value) {
                     return DropdownMenuItem(
-                      value: value,
+                      value: value.kELASSISWA,
                       child: Text(
-                        value,
+                        value.kELAS.toString(),
                         style: mono2TextStyle.copyWith(
-                          color: value2Item == value ? p1Color : mono2Color,
+                          color: value2Item == value.kELASSISWA
+                              ? p1Color
+                              : mono2Color,
                           fontWeight: regular,
                           fontSize: 10,
                         ),
@@ -268,9 +280,10 @@ class _StaffBkAngketPageState extends State<StaffBkAngketPage> {
                     isLoading = true;
                     print(value);
                     value2Item = value;
-                    filterKelas = '&KELAS=$value';
+                    filterKelas = '&KELAS=1';
                     flag2 = true;
                   });
+                  await Services().getAngketPeminatan();
 
                   setState(() {
                     isLoading = false;
@@ -310,7 +323,7 @@ class _StaffBkAngketPageState extends State<StaffBkAngketPage> {
                             flag1 = false;
                             flag2 = false;
                           });
-
+                          await Services().getAngketPeminatan();
                           setState(() {
                             isLoading = false;
                           });
@@ -356,9 +369,7 @@ class _StaffBkAngketPageState extends State<StaffBkAngketPage> {
                 dropdownList2(
                   hint: 'Kelas',
                   data: [
-                    'A',
-                    'B',
-                    'C',
+                    '',
                   ],
                 ),
               ],
@@ -395,7 +406,7 @@ class _StaffBkAngketPageState extends State<StaffBkAngketPage> {
                 ),
                 TextButton(
                   onPressed: () {
-                    launchUrl(url);
+                    url != '' ? launchUrl(url) : Container();
                   },
                   style: TextButton.styleFrom(
                     backgroundColor: url == '' ? mono3Color : m5Color,

@@ -1,5 +1,6 @@
 import 'package:adistetsa/models/guru_model.dart';
 import 'package:adistetsa/providers/provider.dart';
+import 'package:adistetsa/services/service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
@@ -54,11 +55,12 @@ class _IsiJurnalPageState extends State<IsiJurnalPage> {
         setState(() {
           isLoading = true;
         });
-        if (await provider.isiJurnal(
-            id: id,
-            pertemuan: pertemuanInput.text,
-            deskripsi: deskripsiMengajarInput.text,
-            filepath: file != null ? file!.path : null)) {
+        try {
+          await Services().isiJurnal(
+              id: id,
+              pertemuan: pertemuanInput.text,
+              deskripsi: deskripsiMengajarInput.text,
+              filepath: file != null ? file!.path : null);
           setState(() {
             pertemuanInput.text = '';
             deskripsiMengajarInput.text = '';
@@ -70,13 +72,11 @@ class _IsiJurnalPageState extends State<IsiJurnalPage> {
                 'Sukses menyimpan jurnal',
                 textAlign: TextAlign.center,
               )));
-        } else {
+        } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               backgroundColor: dangerColor,
               content: Text(
-                '${provider.errorMessage}'
-                    .replaceAll('Exception: [', '')
-                    .replaceAll(']', ''),
+                '$e',
                 textAlign: TextAlign.center,
               )));
         }

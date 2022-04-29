@@ -1093,7 +1093,7 @@ class Services extends ChangeNotifier {
     } else if (res.statusCode == 400) {
       throw Exception(jsonDecode(res.body));
     } else {
-      return false;
+      throw Exception(jsonDecode(res.body));
     }
   }
 
@@ -1492,6 +1492,8 @@ class Services extends ChangeNotifier {
         Uri.parse('$baseUrl/hubungan_masyarakat/buku_tamu?$urlSearch&$filter');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
+    print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body)['results'];
       List<BukuTamuModel> bukuTamu =
@@ -1545,7 +1547,7 @@ class Services extends ChangeNotifier {
     if (response.statusCode == 200 || response.statusCode == 201) {
       return true;
     } else {
-      throw Exception('Gagal Mendapatkan data Konselor');
+      throw Exception(response.body);
     }
   }
 
@@ -2018,6 +2020,7 @@ class Services extends ChangeNotifier {
       List data = jsonDecode(response.body)['results'];
       List<AngketBKModel> angketBK =
           data.map((item) => AngketBKModel.fromJson(item)).toList();
+
       return angketBK;
     } else {
       throw Exception('Gagal Mendapatkan Angket Lintas Minat');

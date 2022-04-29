@@ -27,8 +27,7 @@ class _MenuHumasPageState extends State<MenuHumasPage> {
         elevation: 4,
         leading: IconButton(
           onPressed: () {
-            Navigator.pushNamedAndRemoveUntil(
-                context, '/main-page/back', (route) => false);
+            Navigator.pop(context);
           },
           icon: Icon(Icons.arrow_back),
           color: mono1Color,

@@ -652,26 +652,6 @@ class Providers with ChangeNotifier {
     }
   }
 
-  Future<bool> isiJurnal(
-      {required String id,
-      required String pertemuan,
-      required String deskripsi,
-      filepath}) async {
-    try {
-      await Services().isiJurnal(
-          id: id,
-          pertemuan: pertemuan,
-          deskripsi: deskripsi,
-          filepath: filepath);
-      return true;
-    } catch (e) {
-      print(e);
-      _errorMessage = e.toString();
-      notifyListeners();
-      return false;
-    }
-  }
-
   Future<bool> getDetailPresensiSiswa({String? id}) async {
     try {
       PresensiSiswaModel presensiSiswaModel =
