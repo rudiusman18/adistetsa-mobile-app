@@ -335,9 +335,8 @@ class _JadwalMengajarPageState extends State<JadwalMengajarPage> {
                     'Selasa',
                     'Rabu',
                     'Kamis',
-                    'Jum\'at',
+                    'Jum`at',
                     'Sabtu',
-                    'Minggu'
                   ],
                 ),
               ],

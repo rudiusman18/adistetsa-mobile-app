@@ -471,10 +471,10 @@ class Services extends ChangeNotifier {
   }
 
   //NOTE: Mendapatkan data siswa pada kesiswaan
-  getDataSiswaKesiswaan() async {
+  getDataSiswaKesiswaan({String? search}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url = Uri.parse('$baseUrl/kesiswaan/daftar_siswa');
+    var url = Uri.parse('$baseUrl/kesiswaan/daftar_siswa?$search');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -488,10 +488,10 @@ class Services extends ChangeNotifier {
   }
 
   //NOTE: Mendapatkan list data pelanggaran
-  getJenisPelanggaran() async {
+  getJenisPelanggaran({String? search}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url = Uri.parse('$baseUrl/kesiswaan/data_pelanggaran');
+    var url = Uri.parse('$baseUrl/kesiswaan/data_pelanggaran?$search');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -521,19 +521,14 @@ class Services extends ChangeNotifier {
           await http.MultipartFile.fromPath('BUKTI_PELANGGARAN', filepath));
       var response = await request.send();
       final res = await http.Response.fromStream(response);
+
       if (res.statusCode == 200 || res.statusCode == 201) {
         return true;
       } else {
-        return false;
+        throw Exception('Anda belum mengisi nama siswa atau jenis pelanggaran');
       }
     } else {
-      var response = await request.send();
-      final res = await http.Response.fromStream(response);
-      if (res.statusCode == 200 || res.statusCode == 201) {
-        return true;
-      } else {
-        return false;
-      }
+      throw Exception('File tidak boleh kosong');
     }
   }
 
@@ -1033,13 +1028,14 @@ class Services extends ChangeNotifier {
   }
 
   //NOTE: Mendapatkan jurnal belajar dan mengajar guru
-  getJurnalBelajarMengajarGuru(
-      {String? search, String? filterTahunAjaran, String? filterHari}) async {
+  getJurnalBelajarMengajarGuru({String? search, String? filter}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url = Uri.parse('$baseUrl/kurikulum/jurnal_belajar_mengajar');
+    var url =
+        Uri.parse('$baseUrl/kurikulum/jurnal_belajar_mengajar?$search&$filter');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
+    print(response.statusCode);
 
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body)['results'];

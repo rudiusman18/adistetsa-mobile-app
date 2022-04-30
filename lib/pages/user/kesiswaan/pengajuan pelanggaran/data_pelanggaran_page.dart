@@ -68,6 +68,11 @@ class _DataPelanggaranPageState extends State<DataPelanggaranPage> {
               searchController.clear();
               urlSearch = '';
               isSearch = false;
+              isLoading = true;
+            });
+            await Services().getJenisPelanggaran();
+            setState(() {
+              isLoading = false;
             });
           },
           child: Icon(
@@ -82,7 +87,7 @@ class _DataPelanggaranPageState extends State<DataPelanggaranPage> {
             isDense: true,
             border: InputBorder.none,
           ),
-          onChanged: (newValue) {
+          onChanged: (newValue) async {
             setState(() {
               if (searchController.selection.start >
                   searchController.text.length) {
@@ -95,7 +100,10 @@ class _DataPelanggaranPageState extends State<DataPelanggaranPage> {
               isLoading = true;
             });
 
-            //Note: await disini
+            await Services().getJenisPelanggaran();
+            setState(() {
+              isLoading = false;
+            });
           },
         ),
         elevation: 4,
@@ -204,62 +212,54 @@ class _DataPelanggaranPageState extends State<DataPelanggaranPage> {
     return Scaffold(
       appBar: isSearch ? searchAppbar() : dataSiswaHeader(),
       backgroundColor: mono6Color,
-      body: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 20),
-            child:
-                // ListView(
-                //   children: [
-                //     for (var i = 0; i < 20; i++)
-                //       dataSiswa(
-                //         index: i + 1,
-                //         pelanggaran: 'Cipokan',
-                //       ),
-                //   ],
-                // ),
-                FutureBuilder(
-              future: Services().getJenisPelanggaran(),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.hasData) {
-                  var index = 0;
-                  List<JenisPelanggaranModel> data = snapshot.data;
-                  return data.isEmpty
-                      ? Center(
-                          child: Text(
-                            'Data tidak ditemukan',
-                            style: mono1TextStyle,
+      body: isLoading
+          ? Container()
+          : Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: FutureBuilder(
+                    future: Services().getJenisPelanggaran(search: urlSearch),
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (snapshot.hasData) {
+                        var index = 0;
+                        List<JenisPelanggaranModel> data = snapshot.data;
+                        return data.isEmpty
+                            ? Center(
+                                child: Text(
+                                  'Data tidak ditemukan',
+                                  style: mono1TextStyle,
+                                ),
+                              )
+                            : ListView(
+                                children: data.map((item) {
+                                  index++;
+                                  return dataSiswa(
+                                    index: index,
+                                    pelanggaran: '${item.kETERANGAN}',
+                                    jenisPelanggaran: item,
+                                  );
+                                }).toList(),
+                              );
+                      } else {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 4,
+                            color: m1Color,
                           ),
-                        )
-                      : ListView(
-                          children: data.map((item) {
-                            index++;
-                            return dataSiswa(
-                              index: index,
-                              pelanggaran: '${item.kETERANGAN}',
-                              jenisPelanggaran: item,
-                            );
-                          }).toList(),
                         );
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      strokeWidth: 4,
-                      color: m1Color,
-                    ),
-                  );
-                }
-              },
+                      }
+                    },
+                  ),
+                ),
+                currentIndex != 0
+                    ? Align(
+                        alignment: Alignment.bottomCenter,
+                        child: submitButton(),
+                      )
+                    : SizedBox(),
+              ],
             ),
-          ),
-          currentIndex != 0
-              ? Align(
-                  alignment: Alignment.bottomCenter,
-                  child: submitButton(),
-                )
-              : SizedBox(),
-        ],
-      ),
     );
   }
 }

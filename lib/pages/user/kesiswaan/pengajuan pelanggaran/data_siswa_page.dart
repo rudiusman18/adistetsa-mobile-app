@@ -66,6 +66,12 @@ class _DataSiswaPageState extends State<DataSiswaPage> {
               searchController.clear();
               urlSearch = '';
               isSearch = false;
+              isLoading = true;
+            });
+
+            await Services().getDataSiswaKesiswaan();
+            setState(() {
+              isLoading = false;
             });
           },
           child: Icon(
@@ -80,7 +86,7 @@ class _DataSiswaPageState extends State<DataSiswaPage> {
             isDense: true,
             border: InputBorder.none,
           ),
-          onChanged: (newValue) {
+          onChanged: (newValue) async {
             setState(() {
               if (searchController.selection.start >
                   searchController.text.length) {
@@ -93,7 +99,11 @@ class _DataSiswaPageState extends State<DataSiswaPage> {
               isLoading = true;
             });
 
-            //Note: await disini
+            await Services().getDataSiswaKesiswaan();
+
+            setState(() {
+              isLoading = false;
+            });
           },
         ),
         elevation: 4,
@@ -219,52 +229,54 @@ class _DataSiswaPageState extends State<DataSiswaPage> {
     return Scaffold(
       appBar: isSearch ? searchAppbar() : dataSiswaHeader(),
       backgroundColor: mono6Color,
-      body: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 20),
-            child: FutureBuilder(
-              future: Services().getDataSiswaKesiswaan(),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.hasData) {
-                  var index = 0;
-                  List<SiswaModel> data = snapshot.data;
-                  return data.isEmpty
-                      ? Center(
-                          child: Text(
-                            'Data tidak ditemukan',
-                            style: mono1TextStyle,
+      body: isLoading
+          ? Container()
+          : Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: FutureBuilder(
+                    future: Services().getDataSiswaKesiswaan(search: urlSearch),
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (snapshot.hasData) {
+                        var index = 0;
+                        List<SiswaModel> data = snapshot.data;
+                        return data.isEmpty
+                            ? Center(
+                                child: Text(
+                                  'Data tidak ditemukan',
+                                  style: mono1TextStyle,
+                                ),
+                              )
+                            : ListView(
+                                children: data.map((item) {
+                                  index++;
+                                  return dataSiswa(
+                                    index: index,
+                                    name: '${item.nAMA}',
+                                    nis: '${item.nIS}',
+                                    kelas: 'Tidak Ada Kelas',
+                                    dataSiswa: item,
+                                  );
+                                }).toList(),
+                              );
+                      } else {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 4,
+                            color: m1Color,
                           ),
-                        )
-                      : ListView(
-                          children: data.map((item) {
-                            index++;
-                            return dataSiswa(
-                              index: index,
-                              name: '${item.nAMA}',
-                              nis: '${item.nIS}',
-                              kelas: 'Tidak Ada Kelas',
-                              dataSiswa: item,
-                            );
-                          }).toList(),
                         );
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      strokeWidth: 4,
-                      color: m1Color,
-                    ),
-                  );
-                }
-              },
+                      }
+                    },
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: currentIndex != 0 ? simpanButton() : SizedBox(),
+                ),
+              ],
             ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: currentIndex != 0 ? simpanButton() : SizedBox(),
-          ),
-        ],
-      ),
     );
   }
 }

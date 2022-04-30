@@ -205,27 +205,29 @@ class _InputPelanggaranPageState extends State<InputPelanggaranPage> {
             setState(() {
               isLoading = true;
             });
-            if (await Services().laporanPelanggaran(
-              dataSiswa: siswaModel.nIS.toString(),
-              jenisPelanggaran: jenisPelanggaranModel.iD.toString(),
-              filepath: file != null ? file!.path : null,
-            )) {
-              setState(() {
-                provider.setDataSiswa = SiswaModel();
-                provider.setJenisPelanggaran = JenisPelanggaranModel();
-                file = null;
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    backgroundColor: successColor,
-                    content: Text(
-                      'Berhasil mengajukan laporan',
-                      textAlign: TextAlign.center,
-                    )));
-              });
-            } else {
+            try {
+              if (await Services().laporanPelanggaran(
+                dataSiswa: siswaModel.nIS.toString(),
+                jenisPelanggaran: jenisPelanggaranModel.iD.toString(),
+                filepath: file != null ? file!.path : null,
+              )) {
+                setState(() {
+                  provider.setDataSiswa = SiswaModel();
+                  provider.setJenisPelanggaran = JenisPelanggaranModel();
+                  file = null;
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      backgroundColor: successColor,
+                      content: Text(
+                        'Berhasil mengajukan laporan',
+                        textAlign: TextAlign.center,
+                      )));
+                });
+              }
+            } catch (e) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   backgroundColor: dangerColor,
                   content: Text(
-                    'Gagal mengajukan laporan',
+                    '$e',
                     textAlign: TextAlign.center,
                   )));
             }

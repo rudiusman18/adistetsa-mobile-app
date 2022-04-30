@@ -336,9 +336,8 @@ class _ListJurnalBelajarPageState extends State<ListJurnalBelajarPage> {
                     'Selasa',
                     'Rabu',
                     'Kamis',
-                    'Jum\'at',
+                    'Jum`at',
                     'Sabtu',
-                    'Minggu'
                   ],
                 ),
               ],
@@ -508,7 +507,7 @@ class _ListJurnalBelajarPageState extends State<ListJurnalBelajarPage> {
             child: isLoading == false
                 ? FutureBuilder(
                     future: Services().getJurnalBelajarMengajarGuru(
-                        search: urlSearch, filterTahunAjaran: url),
+                        search: urlSearch, filter: url),
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (snapshot.hasData) {
                         List<JadwalMengajarGuruModel> data = snapshot.data;
