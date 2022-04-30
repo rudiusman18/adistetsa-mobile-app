@@ -89,7 +89,7 @@ class _ListKatalogRuangPageState extends State<ListKatalogRuangPage> {
                 searchController.text = newValue.toString();
               }
               print(searchController.text);
-              urlSearch = searchController.text;
+              urlSearch = 'search=' + searchController.text;
               isLoading = true;
             });
             await Services().getKatalogRuangan();
@@ -182,7 +182,7 @@ class _ListKatalogRuangPageState extends State<ListKatalogRuangPage> {
       body: isLoading == true
           ? Container()
           : FutureBuilder(
-              future: Services().getKatalogRuangan(),
+              future: Services().getKatalogRuangan(urlSearch: urlSearch),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
                   List<KatalogRuanganModel> data = snapshot.data;

@@ -194,9 +194,11 @@ class Services extends ChangeNotifier {
     var role = prefs.getString("role").toString();
     var url;
     if (role == 'Siswa') {
-      url = Uri.parse('$baseUrl/perpustakaan/pengajuan_peminjaman_siswa');
+      url =
+          Uri.parse('$baseUrl/perpustakaan/pengajuan_peminjaman_siswa?$search');
     } else if (role == 'Guru') {
-      url = Uri.parse('$baseUrl/perpustakaan/pengajuan_peminjaman_guru');
+      url =
+          Uri.parse('$baseUrl/perpustakaan/pengajuan_peminjaman_guru?$search');
     } else if (role == 'Staf Perpustakaan') {
       url = Uri.parse('$baseUrl/perpustakaan/pengajuan_peminjaman_guru_admin');
     }
@@ -287,9 +289,9 @@ class Services extends ChangeNotifier {
     var role = prefs.getString("role").toString();
     var url;
     if (role == 'Siswa') {
-      url = Uri.parse('$baseUrl/perpustakaan/riwayat_peminjaman_siswa');
+      url = Uri.parse('$baseUrl/perpustakaan/riwayat_peminjaman_siswa?$search');
     } else if (role == 'Guru') {
-      url = Uri.parse('$baseUrl/perpustakaan/riwayat_peminjaman_guru');
+      url = Uri.parse('$baseUrl/perpustakaan/riwayat_peminjaman_guru?$search');
     }
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
@@ -385,6 +387,7 @@ class Services extends ChangeNotifier {
           await http.MultipartFile.fromPath('FILE_TTD_PENGAJUAN', filepath));
       var response = await request.send();
       final res = await http.Response.fromStream(response);
+
       if (res.statusCode == 200 || res.statusCode == 201) {
         return true;
       } else {
@@ -393,6 +396,7 @@ class Services extends ChangeNotifier {
     } else {
       var response = await request.send();
       final res = await http.Response.fromStream(response);
+
       if (res.statusCode == 200 || res.statusCode == 201) {
         return true;
       } else {
@@ -631,9 +635,10 @@ class Services extends ChangeNotifier {
   getKatalogRuangan({String? urlSearch}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url = Uri.parse('$baseUrl/sarpras/katalog_ruangan?search=$urlSearch');
+    var url = Uri.parse('$baseUrl/sarpras/katalog_ruangan?$urlSearch');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
+    print(response.body);
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body)['results'];
       List<KatalogRuanganModel> katalogRuangan =
@@ -856,6 +861,7 @@ class Services extends ChangeNotifier {
         .add(await http.MultipartFile.fromPath('TANDA_TANGAN', filepath));
     var response = await request.send();
     final res = await http.Response.fromStream(response);
+    print(res.statusCode);
     if (res.statusCode == 200 || res.statusCode == 201) {
       return true;
     } else if (res.statusCode == 400) {

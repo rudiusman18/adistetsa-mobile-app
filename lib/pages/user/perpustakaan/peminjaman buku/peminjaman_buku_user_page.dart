@@ -112,7 +112,7 @@ class _PeminjamanBukuUserPageState extends State<PeminjamanBukuUserPage> {
       return AppBar(
         centerTitle: true,
         title: Text(
-          'Detail Peminjaman',
+          'Peminjaman Buku',
           style: mono1TextStyle.copyWith(
             fontSize: 18,
             fontWeight: semiBold,

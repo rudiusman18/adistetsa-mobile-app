@@ -17,7 +17,9 @@ class RiwayatPeminjamanBukuUserPage extends StatefulWidget {
 class _RiwayatPeminjamanBukuUserPageState
     extends State<RiwayatPeminjamanBukuUserPage> {
   bool isSearch = false;
+  bool isLoading = false;
   TextEditingController searchController = TextEditingController();
+  String urlSearch = '';
 
   @override
   Widget build(BuildContext context) {
@@ -83,8 +85,13 @@ class _RiwayatPeminjamanBukuUserPageState
           onTap: () async {
             setState(() {
               searchController.clear();
-
+              urlSearch = '';
               isSearch = false;
+              isLoading = true;
+            });
+            await Services().getRiwayatPeminjaman();
+            setState(() {
+              isLoading = false;
             });
           },
           child: Icon(
@@ -108,6 +115,12 @@ class _RiwayatPeminjamanBukuUserPageState
                 searchController.text = newValue.toString();
               }
               print(searchController.text);
+              urlSearch = 'search=${searchController.text}';
+              isLoading = true;
+            });
+            await Services().getRiwayatPeminjaman();
+            setState(() {
+              isLoading = false;
             });
           },
         ),
@@ -228,110 +241,131 @@ class _RiwayatPeminjamanBukuUserPageState
           child: Scaffold(
             backgroundColor: mono6Color,
             appBar: isSearch == true ? searchAppbar() : peminjamanBukuHeader(),
-            body: TabBarView(
-              children: [
-                Column(
-                  children: [
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Expanded(
-                      child: FutureBuilder(
-                        future: Services().getRiwayatPeminjaman(),
-                        builder:
-                            (BuildContext context, AsyncSnapshot snapshot) {
-                          if (snapshot.hasData) {
-                            List<RiwayatPeminjamanModel> data = snapshot.data;
-                            return data.isEmpty
-                                ? Center(
-                                    child: Text(
-                                      'data tidak ditemukan',
-                                      style: mono1TextStyle,
+            body: isLoading
+                ? Container()
+                : TabBarView(
+                    children: [
+                      Column(
+                        children: [
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Expanded(
+                            child: FutureBuilder(
+                              future: Services()
+                                  .getRiwayatPeminjaman(search: urlSearch),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot snapshot) {
+                                if (snapshot.hasData) {
+                                  List<RiwayatPeminjamanModel> data =
+                                      snapshot.data;
+                                  return data.isEmpty
+                                      ? Center(
+                                          child: Text(
+                                            'data tidak ditemukan',
+                                            style: mono1TextStyle,
+                                          ),
+                                        )
+                                      : ListView(
+                                          children: data.map((item) {
+                                            return item.jANGKAPEMINJAMAN ==
+                                                    'Jangka Panjang'
+                                                ? listItem(
+                                                    id: item.iD.toString(),
+                                                    tanggalPengajuan: item
+                                                        .tANGGALPEMINJAMAN
+                                                        .toString(),
+                                                    jangkaPeminjaman: item
+                                                        .jANGKAPEMINJAMAN
+                                                        .toString(),
+                                                    status: item
+                                                        .sTATUSPEMINJAMAN
+                                                        .toString(),
+                                                  )
+                                                : SizedBox(
+                                                    child: Center(
+                                                    child: Text(
+                                                      'data tidak ditemukan',
+                                                      style: mono1TextStyle,
+                                                    ),
+                                                  ));
+                                          }).toList(),
+                                        );
+                                } else {
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 4,
+                                      color: m1Color,
                                     ),
-                                  )
-                                : ListView(
-                                    children: data.map((item) {
-                                      return item.jANGKAPEMINJAMAN ==
-                                              'Jangka Panjang'
-                                          ? listItem(
-                                              id: item.iD.toString(),
-                                              tanggalPengajuan: item
-                                                  .tANGGALPEMINJAMAN
-                                                  .toString(),
-                                              jangkaPeminjaman: item
-                                                  .jANGKAPEMINJAMAN
-                                                  .toString(),
-                                              status: item.sTATUSPEMINJAMAN
-                                                  .toString(),
-                                            )
-                                          : SizedBox();
-                                    }).toList(),
                                   );
-                          } else {
-                            return Center(
-                              child: CircularProgressIndicator(
-                                strokeWidth: 4,
-                                color: m1Color,
-                              ),
-                            );
-                          }
-                        },
+                                }
+                              },
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-                Column(
-                  children: [
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Expanded(
-                      child: FutureBuilder(
-                        future: Services().getRiwayatPeminjaman(),
-                        builder:
-                            (BuildContext context, AsyncSnapshot snapshot) {
-                          if (snapshot.hasData) {
-                            List<RiwayatPeminjamanModel> data = snapshot.data;
-                            return data.isEmpty
-                                ? Center(
-                                    child: Text(
-                                      'data tidak ditemukan',
-                                      style: mono1TextStyle,
+                      Column(
+                        children: [
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Expanded(
+                            child: FutureBuilder(
+                              future: Services()
+                                  .getRiwayatPeminjaman(search: urlSearch),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot snapshot) {
+                                if (snapshot.hasData) {
+                                  List<RiwayatPeminjamanModel> data =
+                                      snapshot.data;
+                                  return data.isEmpty
+                                      ? Center(
+                                          child: Text(
+                                            'data tidak ditemukan',
+                                            style: mono1TextStyle,
+                                          ),
+                                        )
+                                      : ListView(
+                                          children: data.map((item) {
+                                            return item.jANGKAPEMINJAMAN ==
+                                                    'Jangka Pendek'
+                                                ? listItem(
+                                                    id: item.iD.toString(),
+                                                    tanggalPengajuan: item
+                                                        .tANGGALPEMINJAMAN
+                                                        .toString(),
+                                                    jangkaPeminjaman: item
+                                                        .jANGKAPEMINJAMAN
+                                                        .toString(),
+                                                    status: item
+                                                        .sTATUSPEMINJAMAN
+                                                        .toString(),
+                                                  )
+                                                : SizedBox(
+                                                    child: Center(
+                                                      child: Text(
+                                                        'data tidak ditemukan',
+                                                        style: mono1TextStyle,
+                                                      ),
+                                                    ),
+                                                  );
+                                          }).toList(),
+                                        );
+                                } else {
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 4,
+                                      color: m1Color,
                                     ),
-                                  )
-                                : ListView(
-                                    children: data.map((item) {
-                                      return item.jANGKAPEMINJAMAN ==
-                                              'Jangka Pendek'
-                                          ? listItem(
-                                              id: item.iD.toString(),
-                                              tanggalPengajuan: item
-                                                  .tANGGALPEMINJAMAN
-                                                  .toString(),
-                                              jangkaPeminjaman: item
-                                                  .jANGKAPEMINJAMAN
-                                                  .toString(),
-                                              status: item.sTATUSPEMINJAMAN
-                                                  .toString(),
-                                            )
-                                          : SizedBox();
-                                    }).toList(),
                                   );
-                          } else {
-                            return Center(
-                              child: CircularProgressIndicator(
-                                strokeWidth: 4,
-                                color: m1Color,
-                              ),
-                            );
-                          }
-                        },
+                                }
+                              },
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                    ],
+                  ),
           ),
         ),
       ),

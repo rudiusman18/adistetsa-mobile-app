@@ -92,7 +92,7 @@ class _KatalogBukuPageState extends State<KatalogBukuPage> {
               urlSearch = 'search=${searchController.text}';
               isLoading = true;
             });
-            await Services().getKatalogBuku(search: urlSearch);
+            await Services().getKatalogBuku();
             setState(() {
               isLoading = false;
             });

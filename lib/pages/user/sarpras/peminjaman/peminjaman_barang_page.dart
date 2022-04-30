@@ -79,35 +79,37 @@ class _PeminjamanBarangPageState extends State<PeminjamanBarangPage> {
           isLoading = true;
         });
 
-        if (await Services().pengajuanPeminjamanBarang(
-            nama: nameInput.text,
-            noTelp: phoneInput.text,
-            barang: provider.idBarang,
-            kegiatan: activityInput.text,
-            tanggal: selectedDate.toString().split(' ')[0],
-            keterangan: keteranganInput.text,
-            filepath: file != null ? file!.path : null)) {
-          setState(() {
-            nameInput.text = '';
-            phoneInput.text = '';
-            activityInput.text = '';
-            selectedDate = null;
-            keteranganInput.text = '';
-            file = null;
-            provider.barangChart = [];
-            provider.idBarang = [];
-          });
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              backgroundColor: successColor,
-              content: Text(
-                'Anda berhasil meminjam barang',
-                textAlign: TextAlign.center,
-              )));
-        } else {
+        try {
+          if (await Services().pengajuanPeminjamanBarang(
+              nama: nameInput.text,
+              noTelp: phoneInput.text,
+              barang: provider.idBarang,
+              kegiatan: activityInput.text,
+              tanggal: selectedDate.toString().split(' ')[0],
+              keterangan: keteranganInput.text,
+              filepath: file != null ? file!.path : null)) {
+            setState(() {
+              nameInput.text = '';
+              phoneInput.text = '';
+              activityInput.text = '';
+              selectedDate = null;
+              keteranganInput.text = '';
+              file = null;
+              provider.barangChart = [];
+              provider.idBarang = [];
+            });
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                backgroundColor: successColor,
+                content: Text(
+                  'Anda berhasil meminjam barang',
+                  textAlign: TextAlign.center,
+                )));
+          }
+        } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               backgroundColor: dangerColor,
               content: Text(
-                'Anda gagal meminjam barang',
+                '$e',
                 textAlign: TextAlign.center,
               )));
         }
