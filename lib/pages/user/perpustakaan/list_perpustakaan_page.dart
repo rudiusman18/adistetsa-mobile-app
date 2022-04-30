@@ -40,9 +40,6 @@ class _ListPerpustakaanPageState extends State<ListPerpustakaanPage> {
         margin: EdgeInsets.symmetric(
           horizontal: 20,
         ),
-        padding: EdgeInsets.only(
-          bottom: 17,
-        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -80,6 +77,9 @@ class _ListPerpustakaanPageState extends State<ListPerpustakaanPage> {
               'Katalog Buku',
             ),
           ),
+          SizedBox(
+            height: 17,
+          ),
           GestureDetector(
             onTap: () {
               Navigator.pushNamed(
@@ -89,69 +89,74 @@ class _ListPerpustakaanPageState extends State<ListPerpustakaanPage> {
               'Peminjaman',
             ),
           ),
-          ExpandableNotifier(
-              child: Padding(
-            padding: const EdgeInsets.only(
-              left: 20,
-              right: 20,
-            ),
-            child: Column(
-              children: [
-                ExpandablePanel(
-                  theme: const ExpandableThemeData(
-                    headerAlignment: ExpandablePanelHeaderAlignment.center,
-                    tapBodyToCollapse: true,
-                  ),
-                  header: Text(
-                    'Riwayat',
-                    style: mono1TextStyle.copyWith(
-                      fontSize: 16,
+          SizedBox(
+            height: 5,
+          ),
+          Container(
+            child: ExpandableNotifier(
+                child: Padding(
+              padding: const EdgeInsets.only(
+                left: 20,
+                right: 20,
+              ),
+              child: Column(
+                children: [
+                  ExpandablePanel(
+                    theme: const ExpandableThemeData(
+                      headerAlignment: ExpandablePanelHeaderAlignment.center,
+                      tapBodyToCollapse: true,
+                    ),
+                    header: Text(
+                      'Riwayat',
+                      style: mono1TextStyle.copyWith(
+                        fontSize: 16,
+                      ),
+                    ),
+                    collapsed: Container(),
+                    expanded: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 30,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context,
+                                '/user/perpustakaan/riwayat-pengajuan-buku-page');
+                          },
+                          child: Text(
+                            'Pengajuan',
+                            style: mono1TextStyle.copyWith(
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 36,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context,
+                                '/user/perpustakaan/riwayat-peminjaman-buku-page');
+                          },
+                          child: Text(
+                            'Peminjaman',
+                            style: mono1TextStyle.copyWith(
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  collapsed: Container(),
-                  expanded: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 30,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(context,
-                              '/user/perpustakaan/riwayat-pengajuan-buku-page');
-                        },
-                        child: Text(
-                          'Pengajuan',
-                          style: mono1TextStyle.copyWith(
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 36,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(context,
-                              '/user/perpustakaan/riwayat-peminjaman-buku-page');
-                        },
-                        child: Text(
-                          'Peminjaman',
-                          style: mono1TextStyle.copyWith(
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ],
+                  Divider(
+                    thickness: 0.5,
+                    color: mono3Color,
                   ),
-                ),
-                Divider(
-                  thickness: 0.5,
-                  color: mono3Color,
-                ),
-              ],
-            ),
-          ))
+                ],
+              ),
+            )),
+          )
         ],
       ),
     );

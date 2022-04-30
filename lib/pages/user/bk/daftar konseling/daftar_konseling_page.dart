@@ -63,6 +63,11 @@ class _DaftarKkonselingPageState extends State<DaftarKkonselingPage> {
               searchController.clear();
               urlSearch = '';
               isSearch = false;
+              isLoading = true;
+            });
+            await Services().getKonselorBK();
+            setState(() {
+              isLoading = false;
             });
           },
           child: Icon(
@@ -211,8 +216,7 @@ class _DaftarKkonselingPageState extends State<DaftarKkonselingPage> {
           child: isLoading == true
               ? Container()
               : FutureBuilder(
-                  future:
-                      Services().getKonselorBK(search: searchController.text),
+                  future: Services().getKonselorBK(search: urlSearch),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.hasData) {
                       List<ProfilKonselorModel> data = snapshot.data;

@@ -24,6 +24,7 @@ class _RiwayatPeminjamanBukuPageState extends State<RiwayatPeminjamanBukuPage> {
   bool flag1 = false;
   bool flag2 = false;
   bool isLoading = false;
+  String urlSearch = '';
 
   @override
   Widget build(BuildContext context) {
@@ -90,8 +91,13 @@ class _RiwayatPeminjamanBukuPageState extends State<RiwayatPeminjamanBukuPage> {
           onTap: () async {
             setState(() {
               searchController.clear();
-
+              urlSearch = '';
               isSearch = false;
+              isLoading = true;
+            });
+            await Services().getRiwayatPeminjamanSiswaAdmin();
+            setState(() {
+              isLoading = false;
             });
           },
           child: Icon(
@@ -115,10 +121,10 @@ class _RiwayatPeminjamanBukuPageState extends State<RiwayatPeminjamanBukuPage> {
                 searchController.text = newValue.toString();
               }
               print(searchController.text);
+              urlSearch = 'search=${searchController.text}';
               isLoading = true;
             });
-            await Services().getRiwayatPeminjamanSiswaAdmin(
-                search: 'search=${searchController.text}');
+            await Services().getRiwayatPeminjamanSiswaAdmin();
             setState(() {
               isLoading = false;
             });
@@ -265,7 +271,7 @@ class _RiwayatPeminjamanBukuPageState extends State<RiwayatPeminjamanBukuPage> {
                         ? Container()
                         : FutureBuilder(
                             future: Services().getRiwayatPeminjamanSiswaAdmin(
-                                search: 'search=${searchController.text}'),
+                                search: urlSearch),
                             builder:
                                 (BuildContext context, AsyncSnapshot snapshot) {
                               if (snapshot.hasData) {
@@ -292,7 +298,14 @@ class _RiwayatPeminjamanBukuPageState extends State<RiwayatPeminjamanBukuPage> {
                                                       : '${item.dATAGURU}',
                                                   dataGuru: '${item.dATAGURU}',
                                                   nis: '${item.nIS}')
-                                              : SizedBox();
+                                              : SizedBox(
+                                                  child: Center(
+                                                    child: Text(
+                                                      'Data tidak ditemukan',
+                                                      style: mono1TextStyle,
+                                                    ),
+                                                  ),
+                                                );
                                         }).toList(),
                                       );
                               } else {
@@ -312,7 +325,7 @@ class _RiwayatPeminjamanBukuPageState extends State<RiwayatPeminjamanBukuPage> {
                         ? Container()
                         : FutureBuilder(
                             future: Services().getRiwayatPeminjamanSiswaAdmin(
-                                search: 'search=${searchController.text}'),
+                                search: urlSearch),
                             builder:
                                 (BuildContext context, AsyncSnapshot snapshot) {
                               if (snapshot.hasData) {
@@ -339,7 +352,14 @@ class _RiwayatPeminjamanBukuPageState extends State<RiwayatPeminjamanBukuPage> {
                                                       : '${item.dATAGURU}',
                                                   dataGuru: '${item.dATAGURU}',
                                                   nis: '${item.nIS}')
-                                              : SizedBox();
+                                              : SizedBox(
+                                                  child: Center(
+                                                    child: Text(
+                                                      'Data tidak ditemukan',
+                                                      style: mono1TextStyle,
+                                                    ),
+                                                  ),
+                                                );
                                         }).toList(),
                                       );
                               } else {

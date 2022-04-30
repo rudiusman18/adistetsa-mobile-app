@@ -249,8 +249,8 @@ class Services extends ChangeNotifier {
   getPengajuanPeminjamanSiswaAdmin({String? search}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url =
-        Uri.parse('$baseUrl/perpustakaan/pengajuan_peminjaman_siswa_admin');
+    var url = Uri.parse(
+        '$baseUrl/perpustakaan/pengajuan_peminjaman_siswa_admin?$search');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -267,8 +267,8 @@ class Services extends ChangeNotifier {
   getPengajuanPeminjamanGuruAdmin({String? search}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url =
-        Uri.parse('$baseUrl/perpustakaan/pengajuan_peminjaman_guru_admin');
+    var url = Uri.parse(
+        '$baseUrl/perpustakaan/pengajuan_peminjaman_guru_admin?$search');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -310,9 +310,10 @@ class Services extends ChangeNotifier {
       {String? search}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url1 =
-        Uri.parse('$baseUrl/perpustakaan/riwayat_peminjaman_siswa_admin');
-    var url2 = Uri.parse('$baseUrl/perpustakaan/riwayat_peminjaman_guru_admin');
+    var url1 = Uri.parse(
+        '$baseUrl/perpustakaan/riwayat_peminjaman_siswa_admin?$search');
+    var url2 = Uri.parse(
+        '$baseUrl/perpustakaan/riwayat_peminjaman_guru_admin?$search');
     var headers = {"Content-type": "application/json", "authorization": token};
     var responses = await Future.wait([
       http.get(url1, headers: headers),
@@ -1964,6 +1965,7 @@ class Services extends ChangeNotifier {
     }
     var headers = {"Accept": "application/json", "authorization": token};
     var response = await http.post(url, headers: headers, body: body);
+
     if (response.statusCode == 200 || response.statusCode == 201) {
       return true;
     } else {

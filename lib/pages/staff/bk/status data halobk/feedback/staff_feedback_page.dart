@@ -183,7 +183,7 @@ class _StaffFeedbackPageState extends State<StaffFeedbackPage> {
           children: [
             body(
               urlImage: '${profile.fOTO}',
-              name: '${provider.dataKonselor.nAMA}',
+              name: '${profile.nAMA}',
             ),
             kritikSaranInput(),
             SizedBox(

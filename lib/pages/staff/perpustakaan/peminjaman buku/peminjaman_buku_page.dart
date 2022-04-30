@@ -16,6 +16,7 @@ class _PeminjamanBukuPageState extends State<PeminjamanBukuPage> {
   bool isSearch = false;
   TextEditingController searchController = TextEditingController();
   bool isLoading = false;
+  String urlSearch = '';
 
   @override
   Widget build(BuildContext context) {
@@ -82,8 +83,16 @@ class _PeminjamanBukuPageState extends State<PeminjamanBukuPage> {
           onTap: () async {
             setState(() {
               searchController.clear();
-
+              urlSearch = '';
               isSearch = false;
+              isLoading = true;
+            });
+            await Services()
+                .getPengajuanPeminjamanSiswaAdmin(search: 'search=$urlSearch');
+            await Services()
+                .getPengajuanPeminjamanGuruAdmin(search: 'search=$urlSearch');
+            setState(() {
+              isLoading = false;
             });
           },
           child: Icon(
@@ -107,12 +116,11 @@ class _PeminjamanBukuPageState extends State<PeminjamanBukuPage> {
                 searchController.text = newValue.toString();
               }
               print(searchController.text);
+              urlSearch = 'search=${searchController.text}';
               isLoading = true;
             });
-            await Services().getPengajuanPeminjamanSiswaAdmin(
-                search: 'search=${searchController.text}');
-            await Services().getPengajuanPeminjamanGuruAdmin(
-                search: 'search=${searchController.text}');
+            await Services().getPengajuanPeminjamanSiswaAdmin();
+            await Services().getPengajuanPeminjamanGuruAdmin();
             setState(() {
               isLoading = false;
             });
@@ -228,104 +236,108 @@ class _PeminjamanBukuPageState extends State<PeminjamanBukuPage> {
               backgroundColor: mono6Color,
               appBar:
                   isSearch == true ? searchAppbar() : peminjamanBukuHeader(),
-              body: TabBarView(
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(
-                      top: 17,
-                    ),
-                    child: isLoading == true
-                        ? Container()
-                        : FutureBuilder(
-                            future: Services().getPengajuanPeminjamanSiswaAdmin(
-                                search: 'search=${searchController.text}'),
-                            builder:
-                                (BuildContext context, AsyncSnapshot snapshot) {
-                              if (snapshot.hasData) {
-                                List<PengajuanPeminjamanModel> data =
-                                    snapshot.data;
-                                return data.isEmpty
-                                    ? Center(
-                                        child: Text(
-                                          'data tidak ditemukan',
-                                          style: mono1TextStyle,
-                                        ),
-                                      )
-                                    : ListView(
-                                        children: data.map((item) {
-                                          return item.sTATUSPENGAJUAN ==
-                                                      'Pengajuan' ||
-                                                  item.sTATUSPENGAJUAN ==
-                                                      'Diajukan'
-                                              ? listItem(
-                                                  id: '${item.iD}',
-                                                  nama: '${item.nAMA}',
-                                                  nis:
-                                                      '${item.tANGGALPENGAJUAN}',
-                                                  user: 'Admin Siswa')
-                                              : SizedBox();
-                                        }).toList(),
-                                      );
-                              } else {
-                                return Center(
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 4,
-                                    color: m1Color,
-                                  ),
-                                );
-                              }
-                            },
+              body: isLoading
+                  ? Container()
+                  : TabBarView(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(
+                            top: 17,
                           ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(
-                      top: 17,
-                    ),
-                    child: isLoading == true
-                        ? Container()
-                        : FutureBuilder(
-                            future: Services().getPengajuanPeminjamanGuruAdmin(
-                                search: 'search=${searchController.text}'),
-                            builder:
-                                (BuildContext context, AsyncSnapshot snapshot) {
-                              if (snapshot.hasData) {
-                                List<PengajuanPeminjamanModel> data =
-                                    snapshot.data;
-                                return data.isEmpty
-                                    ? Center(
-                                        child: Text(
-                                          'data tidak ditemukan',
-                                          style: mono1TextStyle,
+                          child: isLoading == true
+                              ? Container()
+                              : FutureBuilder(
+                                  future: Services()
+                                      .getPengajuanPeminjamanSiswaAdmin(
+                                          search: urlSearch),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot snapshot) {
+                                    if (snapshot.hasData) {
+                                      List<PengajuanPeminjamanModel> data =
+                                          snapshot.data;
+                                      return data.isEmpty
+                                          ? Center(
+                                              child: Text(
+                                                'data tidak ditemukan',
+                                                style: mono1TextStyle,
+                                              ),
+                                            )
+                                          : ListView(
+                                              children: data.map((item) {
+                                                return item.sTATUSPENGAJUAN ==
+                                                            'Pengajuan' ||
+                                                        item.sTATUSPENGAJUAN ==
+                                                            'Diajukan'
+                                                    ? listItem(
+                                                        id: '${item.iD}',
+                                                        nama: '${item.nAMA}',
+                                                        nis:
+                                                            '${item.tANGGALPENGAJUAN}',
+                                                        user: 'Admin Siswa')
+                                                    : SizedBox();
+                                              }).toList(),
+                                            );
+                                    } else {
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 4,
+                                          color: m1Color,
                                         ),
-                                      )
-                                    : Column(
-                                        children: data.map((item) {
-                                          return item.sTATUSPENGAJUAN ==
-                                                      'Pengajuan' ||
-                                                  item.sTATUSPENGAJUAN ==
-                                                      'Diajukan'
-                                              ? listItem(
-                                                  id: '${item.iD}',
-                                                  nama: '${item.nAMA}',
-                                                  nis:
-                                                      '${item.tANGGALPENGAJUAN}',
-                                                  user: 'Admin Guru')
-                                              : SizedBox();
-                                        }).toList(),
                                       );
-                              } else {
-                                return Center(
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 4,
-                                    color: m1Color,
-                                  ),
-                                );
-                              }
-                            },
+                                    }
+                                  },
+                                ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(
+                            top: 17,
                           ),
-                  ),
-                ],
-              ),
+                          child: isLoading == true
+                              ? Container()
+                              : FutureBuilder(
+                                  future: Services()
+                                      .getPengajuanPeminjamanGuruAdmin(
+                                          search: urlSearch),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot snapshot) {
+                                    if (snapshot.hasData) {
+                                      List<PengajuanPeminjamanModel> data =
+                                          snapshot.data;
+                                      return data.isEmpty
+                                          ? Center(
+                                              child: Text(
+                                                'data tidak ditemukan',
+                                                style: mono1TextStyle,
+                                              ),
+                                            )
+                                          : Column(
+                                              children: data.map((item) {
+                                                return item.sTATUSPENGAJUAN ==
+                                                            'Pengajuan' ||
+                                                        item.sTATUSPENGAJUAN ==
+                                                            'Diajukan'
+                                                    ? listItem(
+                                                        id: '${item.iD}',
+                                                        nama: '${item.nAMA}',
+                                                        nis:
+                                                            '${item.tANGGALPENGAJUAN}',
+                                                        user: 'Admin Guru')
+                                                    : SizedBox();
+                                              }).toList(),
+                                            );
+                                    } else {
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 4,
+                                          color: m1Color,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
+                        ),
+                      ],
+                    ),
             ),
           ),
         ),
