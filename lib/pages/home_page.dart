@@ -371,15 +371,6 @@ class HomePage extends StatelessWidget {
                 text: 'Kesiswaan',
               ),
             ),
-            GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(context, '/karyawan/humas');
-              },
-              child: ItemCard(
-                urlImg: 'humas',
-                text: 'Hubungan Masyarakat',
-              ),
-            ),
           ],
         ),
       );

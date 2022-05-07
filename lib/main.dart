@@ -7,7 +7,6 @@ import 'package:adistetsa/pages/guru/kurikulum/jurnal%20belajar/isi_jurnal_page.
 import 'package:adistetsa/pages/guru/kurikulum/jurnal%20belajar/list_jurnal_belajar_page.dart';
 import 'package:adistetsa/pages/guru/kurikulum/jurnal%20belajar/presensi_siswa_page.dart';
 import 'package:adistetsa/pages/guru/kurikulum/list_kurikulum_page.dart';
-import 'package:adistetsa/pages/karyawan/list_humas_page.dart';
 import 'package:adistetsa/pages/main_page.dart';
 import 'package:adistetsa/pages/pelatih/daftar%20anggota/daftar_anggota_page.dart';
 import 'package:adistetsa/pages/pelatih/daftar%20anggota/detail_daftar_anggota_page.dart';
@@ -638,11 +637,7 @@ class AdiStetsa extends StatelessWidget {
                 child: FiturOnePage(),
                 type: PageTransitionType.rightToLeft,
               );
-            case '/karyawan/humas':
-              return PageTransition(
-                child: ListHumasPage(),
-                type: PageTransitionType.rightToLeft,
-              );
+
             case '/main-page/back':
               return PageTransition(
                 child: MainPage(),
