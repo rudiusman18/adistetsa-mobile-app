@@ -231,8 +231,12 @@ class _DaftarKkonselingPageState extends State<DaftarKkonselingPage> {
                               children: data.map((item) {
                                 return listKonsulen(
                                   id: item.iD.toString(),
-                                  urlImage: item.fOTO.toString(),
-                                  name: item.nAMA.toString(),
+                                  urlImage: item.fOTO == null
+                                      ? 'https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482953.jpg'
+                                      : item.fOTO.toString(),
+                                  name: item.nAMA == null
+                                      ? 'Tidak ada data'
+                                      : item.nAMA.toString(),
                                   role: 'Konselor HaloBK',
                                   status: item.sTATUS.toString(),
                                 );

@@ -23,10 +23,13 @@ class _StaffBkAngketPageState extends State<StaffBkAngketPage> {
   Object? value1Item;
   bool flag2 = false;
   Object? value2Item;
+  bool getLoading = true;
   String filterJurusan = '';
   String filterKelas = '';
   String url = '';
   List<AngketBKModel> dataAngket = [];
+  List parameterJurusan = [];
+  List parameterKelas = [];
 
   void initState() {
     getInit();
@@ -35,6 +38,13 @@ class _StaffBkAngketPageState extends State<StaffBkAngketPage> {
 
   void getInit() async {
     dataAngket = await Services().getAngketPeminatan();
+    parameterJurusan = await Services().getParameterJurusan();
+    parameterKelas = await Services().getParameterKelas();
+    setState(() {
+      getLoading = false;
+    });
+
+    // parameterKelas = await ;
   }
 
   @override
@@ -174,6 +184,16 @@ class _StaffBkAngketPageState extends State<StaffBkAngketPage> {
                   flag1 = false;
                   value1Item = null;
                 });
+                if (provider.angketPilihanStaffBk == 'Lintas Minat') {
+                  await Services().getAngketLintasMinat();
+                } else if (provider.angketPilihanStaffBk == 'Data Siswa') {
+                  await Services().getAngketDataSiswa();
+                } else if (provider.angketPilihanStaffBk == 'Peminatan') {
+                  await Services().getAngketPeminatan();
+                }
+                setState(() {
+                  isLoading = false;
+                });
               },
               child: DropdownButton(
                 icon: Icon(
@@ -191,14 +211,15 @@ class _StaffBkAngketPageState extends State<StaffBkAngketPage> {
                 dropdownColor: mono6Color,
                 elevation: 2,
                 value: value1Item,
-                items: data.map(
+                items: parameterJurusan.map(
                   (value) {
                     return DropdownMenuItem(
-                      value: value,
+                      value: value['ID'],
                       child: Text(
-                        value,
+                        value['NAMA'],
                         style: mono2TextStyle.copyWith(
-                          color: value1Item == value ? p1Color : mono2Color,
+                          color:
+                              value1Item == value['ID'] ? p1Color : mono2Color,
                           fontWeight: regular,
                           fontSize: 10,
                         ),
@@ -213,6 +234,16 @@ class _StaffBkAngketPageState extends State<StaffBkAngketPage> {
                     value1Item = value;
                     filterJurusan = 'JURUSAN=$value';
                     flag1 = true;
+                  });
+                  if (provider.angketPilihanStaffBk == 'Lintas Minat') {
+                    await Services().getAngketLintasMinat();
+                  } else if (provider.angketPilihanStaffBk == 'Data Siswa') {
+                    await Services().getAngketDataSiswa();
+                  } else if (provider.angketPilihanStaffBk == 'Peminatan') {
+                    await Services().getAngketPeminatan();
+                  }
+                  setState(() {
+                    isLoading = false;
                   });
                 },
               ),
@@ -241,6 +272,10 @@ class _StaffBkAngketPageState extends State<StaffBkAngketPage> {
                   flag2 = false;
                   value2Item = null;
                 });
+                await Services().getAngketLintasMinat();
+                setState(() {
+                  isLoading = false;
+                });
               },
               child: DropdownButton(
                 icon: Icon(
@@ -258,16 +293,15 @@ class _StaffBkAngketPageState extends State<StaffBkAngketPage> {
                 dropdownColor: mono6Color,
                 elevation: 2,
                 value: value2Item,
-                items: dataAngket.map(
+                items: parameterKelas.map(
                   (value) {
                     return DropdownMenuItem(
-                      value: value.kELASSISWA,
+                      value: value['ID'],
                       child: Text(
-                        value.kELAS.toString(),
+                        value['NAMA'],
                         style: mono2TextStyle.copyWith(
-                          color: value2Item == value.kELASSISWA
-                              ? p1Color
-                              : mono2Color,
+                          color:
+                              value2Item == value['ID'] ? p1Color : mono2Color,
                           fontWeight: regular,
                           fontSize: 10,
                         ),
@@ -280,10 +314,16 @@ class _StaffBkAngketPageState extends State<StaffBkAngketPage> {
                     isLoading = true;
                     print(value);
                     value2Item = value;
-                    filterKelas = '&KELAS=1';
+                    filterKelas = '&KELAS=$value';
                     flag2 = true;
                   });
-                  await Services().getAngketPeminatan();
+                  if (provider.angketPilihanStaffBk == 'Lintas Minat') {
+                    await Services().getAngketLintasMinat();
+                  } else if (provider.angketPilihanStaffBk == 'Data Siswa') {
+                    await Services().getAngketDataSiswa();
+                  } else if (provider.angketPilihanStaffBk == 'Peminatan') {
+                    await Services().getAngketPeminatan();
+                  }
 
                   setState(() {
                     isLoading = false;
@@ -323,7 +363,15 @@ class _StaffBkAngketPageState extends State<StaffBkAngketPage> {
                             flag1 = false;
                             flag2 = false;
                           });
-                          await Services().getAngketPeminatan();
+                          if (provider.angketPilihanStaffBk == 'Lintas Minat') {
+                            await Services().getAngketLintasMinat();
+                          } else if (provider.angketPilihanStaffBk ==
+                              'Data Siswa') {
+                            await Services().getAngketDataSiswa();
+                          } else if (provider.angketPilihanStaffBk ==
+                              'Peminatan') {
+                            await Services().getAngketPeminatan();
+                          }
                           setState(() {
                             isLoading = false;
                           });
@@ -359,15 +407,11 @@ class _StaffBkAngketPageState extends State<StaffBkAngketPage> {
                       )
                     : Container(),
                 dropdownList1(
-                  hint: 'Jurusan',
-                  data: [
-                    'IPA',
-                    'IPS',
-                    'Bahasa',
-                  ],
+                  hint: getLoading ? 'Loading data' : 'Jurusan',
+                  data: [],
                 ),
                 dropdownList2(
-                  hint: 'Kelas',
+                  hint: getLoading ? 'Loading data' : 'Kelas',
                   data: [
                     '',
                   ],
@@ -460,8 +504,8 @@ class _StaffBkAngketPageState extends State<StaffBkAngketPage> {
                 ? Container()
                 : provider.angketPilihanStaffBk == 'Lintas Minat'
                     ? FutureBuilder(
-                        future: Services()
-                            .getAngketLintasMinat(urlSearch: urlSearch),
+                        future: Services().getAngketLintasMinat(
+                            urlSearch: urlSearch, filter: url),
                         builder:
                             (BuildContext context, AsyncSnapshot snapshot) {
                           if (snapshot.hasData) {
@@ -494,8 +538,8 @@ class _StaffBkAngketPageState extends State<StaffBkAngketPage> {
                       )
                     : provider.angketPilihanStaffBk == 'Data Siswa'
                         ? FutureBuilder(
-                            future: Services()
-                                .getAngketDataSiswa(urlSearch: urlSearch),
+                            future: Services().getAngketDataSiswa(
+                                urlSearch: urlSearch, filter: url),
                             builder:
                                 (BuildContext context, AsyncSnapshot snapshot) {
                               if (snapshot.hasData) {
@@ -526,39 +570,41 @@ class _StaffBkAngketPageState extends State<StaffBkAngketPage> {
                               }
                             },
                           )
-                        : FutureBuilder(
-                            future: Services()
-                                .getAngketPeminatan(urlSearch: urlSearch),
-                            builder:
-                                (BuildContext context, AsyncSnapshot snapshot) {
-                              if (snapshot.hasData) {
-                                List<AngketBKModel> data = snapshot.data;
-                                return data.isEmpty
-                                    ? Center(
-                                        child: Text(
-                                          'data tidak ditemukan',
-                                          style: mono1TextStyle,
-                                        ),
-                                      )
-                                    : ListView(
-                                        children: data.map((item) {
-                                          return listItem(
-                                            name: '${item.nAMA}',
-                                            kelas: '${item.kELAS}',
-                                            url: '${item.fILE}',
+                        : provider.angketPilihanStaffBk == 'Peminatan'
+                            ? FutureBuilder(
+                                future: Services().getAngketPeminatan(
+                                    urlSearch: urlSearch, filter: url),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot snapshot) {
+                                  if (snapshot.hasData) {
+                                    List<AngketBKModel> data = snapshot.data;
+                                    return data.isEmpty
+                                        ? Center(
+                                            child: Text(
+                                              'data tidak ditemukan',
+                                              style: mono1TextStyle,
+                                            ),
+                                          )
+                                        : ListView(
+                                            children: data.map((item) {
+                                              return listItem(
+                                                name: '${item.nAMA}',
+                                                kelas: '${item.kELAS}',
+                                                url: '${item.fILE}',
+                                              );
+                                            }).toList(),
                                           );
-                                        }).toList(),
-                                      );
-                              } else {
-                                return Center(
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 4,
-                                    color: m1Color,
-                                  ),
-                                );
-                              }
-                            },
-                          ),
+                                  } else {
+                                    return Center(
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 4,
+                                        color: m1Color,
+                                      ),
+                                    );
+                                  }
+                                },
+                              )
+                            : Container(),
           )
         ],
       ),

@@ -1580,6 +1580,7 @@ class Services extends ChangeNotifier {
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
     print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       ProfilKonselorModel profilKonselorModel =
@@ -2483,6 +2484,48 @@ class Services extends ChangeNotifier {
       return data;
     } else {
       throw Exception('Gagal Mendapatkan data fitur tahun');
+    }
+  }
+
+  // NOTE: digunakan untuk mendapatkan data parameter jurusan pada angket role staf BK
+  getParameterJurusan() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString("token").toString();
+    var url;
+
+    url = Uri.parse('$baseUrl/bimbingan_konseling/parameter_jurusan');
+
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+
+      return data;
+    } else {
+      throw Exception(response.body);
+    }
+  }
+
+  // NOTE: digunakan untuk mendapatkan data parameter kelas pada angket role staf BK
+  getParameterKelas() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString("token").toString();
+    var url;
+
+    url = Uri.parse('$baseUrl/bimbingan_konseling/parameter_kelas');
+
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      print(response.body);
+      return data;
+    } else {
+      throw Exception(response.body);
     }
   }
 }
