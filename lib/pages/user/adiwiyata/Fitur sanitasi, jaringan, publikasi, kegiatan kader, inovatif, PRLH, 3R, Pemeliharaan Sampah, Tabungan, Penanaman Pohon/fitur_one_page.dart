@@ -40,7 +40,7 @@ class _FiturOnePageState extends State<FiturOnePage> {
     json = await Services().getTotalTabunganSampah();
     tahun = await Services().getPenamamanPohon();
     filterTahunTabunganSampah = await Services().getTahunTabunganSampah();
-    getTahun = tahun.last;
+    getTahun = tahun.first;
     getTotalPohon = await Services().getJumlahPenamamanPohon();
     setState(() {});
     getLoading = false;

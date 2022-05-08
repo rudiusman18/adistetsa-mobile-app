@@ -4,7 +4,7 @@ class ListBukuModel {
   String? jUDUL;
   String? pENULIS;
   String? bAHASA;
-  int? tAHUNTERBIT;
+  String? tAHUNTERBIT;
   String? mEDIA;
 
   ListBukuModel(

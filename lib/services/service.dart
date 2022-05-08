@@ -144,7 +144,7 @@ class Services extends ChangeNotifier {
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
     print(response.statusCode);
-    print(response.body);
+
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body)['results'];
       List<KatalogBukuModel> katalogBuku =
@@ -243,7 +243,7 @@ class Services extends ChangeNotifier {
           PengajuanPeminjamanModel.fromJson(data);
       return pengajuanPeminjamanModel;
     } else {
-      throw Exception('Gagal Mendapatkan Detail Pengajuan Peminjaman');
+      throw Exception(response.body);
     }
   }
 
@@ -321,6 +321,8 @@ class Services extends ChangeNotifier {
       http.get(url1, headers: headers),
       http.get(url2, headers: headers),
     ]);
+    print(responses[0].statusCode);
+    print(responses[1].statusCode);
     return <RiwayatPeminjamanModel>[
       ..._getRiwayat(responses[0]),
       ..._getRiwayat(responses[1]),

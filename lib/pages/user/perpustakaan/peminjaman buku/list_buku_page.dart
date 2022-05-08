@@ -65,6 +65,11 @@ class _ListBukuPageState extends State<ListBukuPage> {
               searchController.clear();
               urlSearch = '';
               isSearch = false;
+              isLoading = true;
+            });
+            await Services().getListBuku();
+            setState(() {
+              isLoading = false;
             });
           },
           child: Icon(
@@ -150,6 +155,7 @@ class _ListBukuPageState extends State<ListBukuPage> {
               TextButton(
                 onPressed: () {
                   provider.addBooks(buku: buku);
+                  Navigator.pop(context);
                 },
                 style: TextButton.styleFrom(
                     padding: EdgeInsets.symmetric(

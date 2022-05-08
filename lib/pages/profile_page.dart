@@ -99,7 +99,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 vertical: 12,
                 horizontal: 20,
               ),
-              width: 305,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
@@ -146,7 +145,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        width: 120,
                         height: 46,
                         child: TextButton(
                           onPressed: () {
@@ -154,6 +152,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           },
                           style: TextButton.styleFrom(
                             backgroundColor: mono3Color,
+                            padding: EdgeInsets.symmetric(horizontal: 25),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -170,7 +169,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         width: 20,
                       ),
                       Container(
-                        width: 120,
                         height: 46,
                         child: TextButton(
                           onPressed: () async {
@@ -185,6 +183,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 (route) => false);
                           },
                           style: TextButton.styleFrom(
+                            padding: EdgeInsets.symmetric(horizontal: 25),
                             backgroundColor: dangerColor,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),

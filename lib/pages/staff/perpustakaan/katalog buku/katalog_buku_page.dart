@@ -66,6 +66,11 @@ class _KatalogBukuPageState extends State<KatalogBukuPage> {
               searchController.clear();
               urlSearch = '';
               isSearch = false;
+              isLoading = true;
+            });
+            await Services().getKatalogBuku();
+            setState(() {
+              isLoading = false;
             });
           },
           child: Icon(

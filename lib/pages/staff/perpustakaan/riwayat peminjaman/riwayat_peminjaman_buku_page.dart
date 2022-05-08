@@ -298,14 +298,7 @@ class _RiwayatPeminjamanBukuPageState extends State<RiwayatPeminjamanBukuPage> {
                                                       : '${item.dATAGURU}',
                                                   dataGuru: '${item.dATAGURU}',
                                                   nis: '${item.nIS}')
-                                              : SizedBox(
-                                                  child: Center(
-                                                    child: Text(
-                                                      'Data tidak ditemukan',
-                                                      style: mono1TextStyle,
-                                                    ),
-                                                  ),
-                                                );
+                                              : SizedBox();
                                         }).toList(),
                                       );
                               } else {
@@ -352,14 +345,7 @@ class _RiwayatPeminjamanBukuPageState extends State<RiwayatPeminjamanBukuPage> {
                                                       : '${item.dATAGURU}',
                                                   dataGuru: '${item.dATAGURU}',
                                                   nis: '${item.nIS}')
-                                              : SizedBox(
-                                                  child: Center(
-                                                    child: Text(
-                                                      'Data tidak ditemukan',
-                                                      style: mono1TextStyle,
-                                                    ),
-                                                  ),
-                                                );
+                                              : SizedBox();
                                         }).toList(),
                                       );
                               } else {

@@ -88,9 +88,9 @@ class _PeminjamanBukuPageState extends State<PeminjamanBukuPage> {
               isLoading = true;
             });
             await Services()
-                .getPengajuanPeminjamanSiswaAdmin(search: 'search=$urlSearch');
+                .getPengajuanPeminjamanSiswaAdmin(search: '$urlSearch');
             await Services()
-                .getPengajuanPeminjamanGuruAdmin(search: 'search=$urlSearch');
+                .getPengajuanPeminjamanGuruAdmin(search: '$urlSearch');
             setState(() {
               isLoading = false;
             });
@@ -161,6 +161,7 @@ class _PeminjamanBukuPageState extends State<PeminjamanBukuPage> {
           }
 
           setState(() {
+            print(id);
             searchController.clear();
             isSearch = false;
             saveRoles();
@@ -310,7 +311,7 @@ class _PeminjamanBukuPageState extends State<PeminjamanBukuPage> {
                                                 style: mono1TextStyle,
                                               ),
                                             )
-                                          : Column(
+                                          : ListView(
                                               children: data.map((item) {
                                                 return item.sTATUSPENGAJUAN ==
                                                             'Pengajuan' ||
