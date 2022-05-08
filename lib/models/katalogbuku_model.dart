@@ -3,7 +3,7 @@ class KatalogBukuModel {
   String? jUDUL;
   String? pENULIS;
   String? bAHASA;
-  int? tAHUNTERBIT;
+  String? tAHUNTERBIT;
   String? mEDIA;
   String? tERSEDIA;
   String? jENISBUKU;

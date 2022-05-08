@@ -143,13 +143,15 @@ class Services extends ChangeNotifier {
     var token = prefs.getString("token").toString();
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
+    print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body)['results'];
       List<KatalogBukuModel> katalogBuku =
           data.map((item) => KatalogBukuModel.fromJson(item)).toList();
       return katalogBuku;
     } else {
-      throw Exception('Gagal Mendapatkan Katalog Buku');
+      throw Exception(response.body);
     }
   }
 
