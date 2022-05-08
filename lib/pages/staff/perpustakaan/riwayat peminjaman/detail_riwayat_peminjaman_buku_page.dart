@@ -80,7 +80,7 @@ class _DetailRiwayatPeminjamanBukuPageState
                                   ? m1Color
                                   : value == 'Hilang'
                                       ? dangerColor
-                                      : value == 'Ditolak'
+                                      : value == 'Ditolak' || value == 'Tidak Ada Data'
                                           ? dangerColor
                                           : mono1Color,
                 ),
@@ -134,11 +134,14 @@ class _DetailRiwayatPeminjamanBukuPageState
               teks: 'Kategori',
               value: '${riwayatPeminjamanModel.jANGKAPEMINJAMAN}',
             ),
-            riwayatPeminjamanModel.fILETTDPENGAJUAN != null ?itemInfoPeminjam(
-              teks: 'File Pengajuan',
-              value:
-                  '${riwayatPeminjamanModel.fILETTDPENGAJUAN!.split('/')[5]}',
-            ) : Container(),
+            riwayatPeminjamanModel.jANGKAPEMINJAMAN == 'Jangka Panjang'
+                ? itemInfoPeminjam(
+                    teks: 'File Pengajuan',
+                    value: riwayatPeminjamanModel.fILETTDPENGAJUAN != null
+                        ? '${riwayatPeminjamanModel.fILETTDPENGAJUAN!.split('/')[5]}'
+                        : 'Tidak Ada Data',
+                  )
+                : Container(),
             itemInfoPeminjam(
               teks: 'Status Pengajuan',
               value: '${riwayatPeminjamanModel.sTATUSPEMINJAMAN}',

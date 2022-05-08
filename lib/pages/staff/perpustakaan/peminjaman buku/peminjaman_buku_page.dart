@@ -169,7 +169,17 @@ class _PeminjamanBukuPageState extends State<PeminjamanBukuPage> {
           });
           await provider.getDetailPengajuanPeminjaman(id: id);
           Navigator.pushReplacementNamed(
-              context, '/staff-perpus/peminjaman-buku/detail-page');
+                  context, '/staff-perpus/peminjaman-buku/detail-page')
+              .then((_) async {
+                setState(() {
+                  isLoading = true;
+                });
+                await Services().getPengajuanPeminjamanSiswaAdmin();
+                await Services().getPengajuanPeminjamanGuruAdmin();
+                setState(() {
+                  isLoading = false;
+                });
+              });
         },
         child: Container(
           decoration: BoxDecoration(

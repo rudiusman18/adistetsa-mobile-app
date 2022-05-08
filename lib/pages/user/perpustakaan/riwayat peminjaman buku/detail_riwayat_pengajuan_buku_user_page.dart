@@ -113,11 +113,12 @@ class _DetailRiwayatPengajuanBukuUserPageState
               teks: 'Kategori',
               value: '${pengajuanPeminjamanModel.jANGKAPEMINJAMAN}',
             ),
-            pengajuanPeminjamanModel.fILETTDPENGAJUAN != null
+            pengajuanPeminjamanModel.jANGKAPEMINJAMAN == 'Jangka Panjang'
                 ? itemInfoPeminjam(
                     teks: 'File Pengajuan',
-                    value:
-                        '${pengajuanPeminjamanModel.fILETTDPENGAJUAN!.split('/')[5]}',
+                    value: pengajuanPeminjamanModel.fILETTDPENGAJUAN != null
+                        ? '${pengajuanPeminjamanModel.fILETTDPENGAJUAN!.split('/')[5]}'
+                        : 'Tidak Ada Data',
                   )
                 : Container(),
             itemInfoPeminjam(
