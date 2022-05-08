@@ -485,7 +485,7 @@ class _InputTamuPageState extends State<InputTamuPage> {
                   minLines: 1,
                   controller: keperluanInput,
                   decoration: InputDecoration.collapsed(
-                    hintText: 'Alamat',
+                    hintText: 'Keperluan',
                     hintStyle: p1TextStyle.copyWith(
                       fontSize: 12,
                       color: keperluanFocusNode.hasFocus ||
