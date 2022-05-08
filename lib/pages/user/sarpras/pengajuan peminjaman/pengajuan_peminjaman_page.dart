@@ -256,7 +256,8 @@ class _PengajuanPeminjamanPageState extends State<PengajuanPeminjamanPage> {
                   child: isLoading == true
                       ? Container()
                       : FutureBuilder(
-                          future: Services().getPeminjamanBarang(urlSearch: urlSearch),
+                          future: Services()
+                              .getPeminjamanBarang(urlSearch: urlSearch),
                           builder:
                               (BuildContext context, AsyncSnapshot snapshot) {
                             if (snapshot.hasData) {
@@ -296,7 +297,8 @@ class _PengajuanPeminjamanPageState extends State<PengajuanPeminjamanPage> {
                   child: isLoading == true
                       ? Container()
                       : FutureBuilder(
-                          future: Services().getPeminjamanRuangan(urlSearch: urlSearch),
+                          future: Services()
+                              .getPeminjamanRuangan(urlSearch: urlSearch),
                           builder:
                               (BuildContext context, AsyncSnapshot snapshot) {
                             if (snapshot.hasData) {
@@ -310,14 +312,16 @@ class _PengajuanPeminjamanPageState extends State<PengajuanPeminjamanPage> {
                                     )
                                   : ListView(
                                       children: data.map((item) {
-                                        return listItem(
-                                          id: '${item.iD}',
-                                          nama: '${item.rUANGAN}',
-                                          tanggalPengajuan:
-                                              '${item.tANGGALPENGAJUAN}',
-                                          status: '${item.sTATUS}',
-                                          detail: 'Ruang',
-                                        );
+                                        return item.sTATUS != 'Diajukan'
+                                            ? Container()
+                                            : listItem(
+                                                id: '${item.iD}',
+                                                nama: '${item.rUANGAN}',
+                                                tanggalPengajuan:
+                                                    '${item.tANGGALPENGAJUAN}',
+                                                status: '${item.sTATUS}',
+                                                detail: 'Ruang',
+                                              );
                                       }).toList(),
                                     );
                             } else {
