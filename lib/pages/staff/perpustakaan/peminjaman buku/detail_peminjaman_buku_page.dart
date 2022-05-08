@@ -147,6 +147,7 @@ class _DetailPeminjamanBukuPageState extends State<DetailPeminjamanBukuPage> {
                                 id: pengajuanPeminjamanModel.iD.toString(),
                                 user: user.toString());
                             Navigator.pop(context);
+                            Navigator.pop(context);
                           },
                           style: TextButton.styleFrom(
                             backgroundColor: successColor,
@@ -270,6 +271,7 @@ class _DetailPeminjamanBukuPageState extends State<DetailPeminjamanBukuPage> {
                                 id: pengajuanPeminjamanModel.iD.toString(),
                                 user: user.toString());
                             Navigator.pop(context);
+                            Navigator.pop(context);
                           },
                           style: TextButton.styleFrom(
                             backgroundColor: dangerColor,
@@ -339,7 +341,7 @@ class _DetailPeminjamanBukuPageState extends State<DetailPeminjamanBukuPage> {
                                   ? m1Color
                                   : value == 'Hilang'
                                       ? dangerColor
-                                      : value == 'Ditolak'
+                                      : value == 'Ditolak' || value == 'Tidak Ada Data'
                                           ? dangerColor
                                           : mono1Color,
                 ),
@@ -382,8 +384,8 @@ class _DetailPeminjamanBukuPageState extends State<DetailPeminjamanBukuPage> {
             pengajuanPeminjamanModel.jANGKAPEMINJAMAN != 'Jangka Pendek'
                 ? itemInfoPeminjam(
                     teks: 'File Pengajuan',
-                    value:
-                        '${pengajuanPeminjamanModel.fILETTDPENGAJUAN!.split('/')[5]}',
+                    value: pengajuanPeminjamanModel.fILETTDPENGAJUAN != null ?
+                        '${pengajuanPeminjamanModel.fILETTDPENGAJUAN!.split('/')[5]}' : 'Tidak Ada Data',
                   )
                 : Container(),
             itemInfoPeminjam(

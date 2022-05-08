@@ -236,7 +236,6 @@ class Services extends ChangeNotifier {
     }
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
-    print(response.statusCode);
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       PengajuanPeminjamanModel pengajuanPeminjamanModel =
