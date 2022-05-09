@@ -1040,9 +1040,11 @@ class Services extends ChangeNotifier {
   //NOTE: Mendapatkan jurnal belajar dan mengajar guru
   getJurnalBelajarMengajarGuru({String? search, String? filter}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    print(filter);
     var token = prefs.getString("token").toString();
     var url =
         Uri.parse('$baseUrl/kurikulum/jurnal_belajar_mengajar?$search&$filter');
+
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
     print(response.statusCode);

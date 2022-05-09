@@ -172,7 +172,7 @@ class _ListJurnalBelajarPageState extends State<ListJurnalBelajarPage> {
                   setState(() {
                     isLoading = true;
                     value1Item = value;
-                    filterTahun = '?TAHUN_AJARAN=$value';
+                    filterTahun = 'TAHUN_AJARAN=$value';
 
                     flag1 = true;
                   });
