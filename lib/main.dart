@@ -10,6 +10,7 @@ import 'package:adistetsa/pages/guru/kurikulum/list_kurikulum_page.dart';
 import 'package:adistetsa/pages/main_page.dart';
 import 'package:adistetsa/pages/pelatih/daftar%20anggota/daftar_anggota_page.dart';
 import 'package:adistetsa/pages/pelatih/daftar%20anggota/detail_daftar_anggota_page.dart';
+import 'package:adistetsa/pages/pelatih/daftar%20anggota/list_ekskul_pelatih.dart';
 import 'package:adistetsa/pages/pelatih/jadwal%20ekskul/jadwal_ekskul_page.dart';
 import 'package:adistetsa/pages/pelatih/jurnal%20ekskul/edit_presensi_ekskul_page.dart';
 import 'package:adistetsa/pages/pelatih/jurnal%20ekskul/isi_jurnal_ekskul_page.dart';
@@ -635,6 +636,11 @@ class AdiStetsa extends StatelessWidget {
             case '/user/adiwiyata/pengelolaan-sampah':
               return PageTransition(
                 child: FiturOnePage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/pelatih/list_ekskul':
+              return PageTransition(
+                child: ListEkskulPelatih(),
                 type: PageTransitionType.rightToLeft,
               );
 

@@ -1106,10 +1106,10 @@ class Services extends ChangeNotifier {
   }
 
   //NOTE: Mendapatkan data siswa sesuai presensi
-  getPresensiSiswa({String? id}) async {
+  getPresensiSiswa({String? id, String? search}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url = Uri.parse('$baseUrl/kurikulum/presensi_siswa/$id');
+    var url = Uri.parse('$baseUrl/kurikulum/presensi_siswa/$id?$search');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
 
@@ -1119,7 +1119,7 @@ class Services extends ChangeNotifier {
           data.map((item) => PresensiSiswaModel.fromJson(item)).toList();
       return presensiSiswa;
     } else {
-      throw Exception('Gagal Mendapatkan Barang Admin');
+      throw Exception(response.body);
     }
   }
 
@@ -1177,10 +1177,11 @@ class Services extends ChangeNotifier {
   getPengajuanEkskul({String? urlSerach}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
-    var url =
-        Uri.parse('$baseUrl/kesiswaan/pengajuan_ekskul?search=$urlSerach');
+    var url = Uri.parse('$baseUrl/kesiswaan/pengajuan_ekskul?$urlSerach');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
+    print(response.body);
+    print(response.statusCode);
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body)['results'];
       List<PengajuanEkskulModel> pengajuanEkskul =
@@ -1244,6 +1245,8 @@ class Services extends ChangeNotifier {
     var url = Uri.parse('$baseUrl/kesiswaan/jadwal_ekskul$filter');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
+    print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body)['results'];
       List<JadwalEkskulModel> jadwalEkskulModel =
@@ -1261,6 +1264,9 @@ class Services extends ChangeNotifier {
     var url = Uri.parse('$baseUrl/kesiswaan/daftar_anggota/$id');
     var headers = {"Content-type": "application/json", "authorization": token};
     var response = await http.get(url, headers: headers);
+    print(id);
+    print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body)['results'];
       List<DaftarAnggotaEkskulModel> daftarAnggota =

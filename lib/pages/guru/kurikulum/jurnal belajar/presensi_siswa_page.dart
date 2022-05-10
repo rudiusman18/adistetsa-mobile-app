@@ -65,6 +65,12 @@ class _PresensiSiswaPageState extends State<PresensiSiswaPage> {
               searchController.clear();
               urlSearch = '';
               isSearch = false;
+              isLoading = true;
+            });
+            await Services().getPresensiSiswa(
+                id: provider.idPresensiSiswa, search: urlSearch);
+            setState(() {
+              isLoading = false;
             });
           },
           child: Icon(
@@ -90,6 +96,11 @@ class _PresensiSiswaPageState extends State<PresensiSiswaPage> {
               print(searchController.text);
               urlSearch = 'search=${searchController.text}';
               isLoading = true;
+            });
+            await Services().getPresensiSiswa(
+                id: provider.idPresensiSiswa, search: urlSearch);
+            setState(() {
+              isLoading = false;
             });
           },
         ),
@@ -189,11 +200,11 @@ class _PresensiSiswaPageState extends State<PresensiSiswaPage> {
         padding: const EdgeInsets.only(
           top: 20,
         ),
-        child: isLoading == true
+        child: isLoading
             ? Container()
             : FutureBuilder(
-                future:
-                    Services().getPresensiSiswa(id: provider.idPresensiSiswa),
+                future: Services().getPresensiSiswa(
+                    id: provider.idPresensiSiswa, search: urlSearch),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (snapshot.hasData) {
                     List<PresensiSiswaModel> data = snapshot.data;
@@ -224,16 +235,6 @@ class _PresensiSiswaPageState extends State<PresensiSiswaPage> {
                   }
                 },
               ),
-        // ListView(
-        //   children: [
-        //     for (var i = 0; i < 20; i++)
-        // listSiswa(
-        //   nama: 'Syauqi',
-        //   nis: '123455',
-        //   status: 'Janda',
-        // ),
-        //   ],
-        // ),
       ),
     );
   }

@@ -180,7 +180,7 @@ class _PengajuanEkskulPageState extends State<PengajuanEkskulPage> {
           ),
           child: isLoading == false
               ? FutureBuilder(
-                  future: Services().getPengajuanEkskul(),
+                  future: Services().getPengajuanEkskul(urlSerach: urlSearch),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.hasData) {
                       List<PengajuanEkskulModel> data = snapshot.data;

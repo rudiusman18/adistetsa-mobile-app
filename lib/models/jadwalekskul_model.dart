@@ -4,6 +4,7 @@ class JadwalEkskulModel {
   String? tAHUNAJARAN;
   String? sEMESTER;
   String? eKSKUL;
+  String? iDEKSKUL;
   String? hARI;
   String? wAKTUMULAI;
   String? wAKTUBERAKHIR;
@@ -14,6 +15,7 @@ class JadwalEkskulModel {
       this.tAHUNAJARAN,
       this.sEMESTER,
       this.eKSKUL,
+      this.iDEKSKUL,
       this.hARI,
       this.wAKTUMULAI,
       this.wAKTUBERAKHIR});
@@ -24,6 +26,7 @@ class JadwalEkskulModel {
     tAHUNAJARAN = json['TAHUN_AJARAN'];
     sEMESTER = json['SEMESTER'];
     eKSKUL = json['EKSKUL'];
+    iDEKSKUL = json['ID_EKSKUL'];
     hARI = json['HARI'];
     wAKTUMULAI = json['WAKTU_MULAI'];
     wAKTUBERAKHIR = json['WAKTU_BERAKHIR'];
@@ -36,6 +39,7 @@ class JadwalEkskulModel {
     data['TAHUN_AJARAN'] = this.tAHUNAJARAN;
     data['SEMESTER'] = this.sEMESTER;
     data['EKSKUL'] = this.eKSKUL;
+    data['ID_EKSKUL'] = this.iDEKSKUL;
     data['HARI'] = this.hARI;
     data['WAKTU_MULAI'] = this.wAKTUMULAI;
     data['WAKTU_BERAKHIR'] = this.wAKTUBERAKHIR;
