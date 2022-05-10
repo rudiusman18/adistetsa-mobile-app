@@ -195,8 +195,8 @@ class _DaftarAnggotaPageState extends State<DaftarAnggotaPage> {
             ),
             child: isLoading == false
                 ? FutureBuilder(
-                    future: Services().getDaftarAnggotaEkskul(
-                        id: jadwalEkskulModel.first.iDEKSKUL.toString()),
+                    future: Services()
+                        .getDaftarAnggotaEkskul(id: provider.idEkskul),
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (snapshot.hasData) {
                         List<DaftarAnggotaEkskulModel> data = snapshot.data;

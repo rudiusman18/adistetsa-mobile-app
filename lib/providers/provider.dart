@@ -142,6 +142,13 @@ class Providers with ChangeNotifier {
     _errorMessage = errorMessage;
   }
 
+  // NOTE: digunakan untuk mengambil idKekskul
+  String _idEkskul = '';
+  String get idEkskul => _idEkskul;
+  set setIdEkskul(String idEkskul) {
+    _idEkskul = idEkskul;
+  }
+
 // NOTE: END
   String idJurnalEkstrakurikuler = '';
 

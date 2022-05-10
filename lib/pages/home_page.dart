@@ -444,7 +444,7 @@ class HomePage extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.pushNamed(context, '/pelatih/daftar-anggota-page');
+                Navigator.pushNamed(context, '/pelatih/list_ekskul');
               },
               child: ItemCard(
                 urlImg: 'daftar anggota',

@@ -1,7 +1,6 @@
 import 'package:adistetsa/models/jadwalekskul_model.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
-import 'package:adistetsa/widget/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:adistetsa/theme.dart';
 import 'package:provider/provider.dart';
@@ -39,30 +38,36 @@ class _ListEkskulPelatihState extends State<ListEkskulPelatih> {
       );
     }
 
-    contentItem({required String name}) {
-      return Container(
-        margin: EdgeInsets.only(
-          left: 20,
-          right: 20,
-          bottom: 18,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              name,
-              style: mono1TextStyle.copyWith(
-                fontSize: 16,
+    contentItem({required String name, required String idEkskul}) {
+      return GestureDetector(
+        onTap: () {
+          provider.setIdEkskul = idEkskul;
+          Navigator.pushNamed(context, '/pelatih/daftar-anggota-page');
+        },
+        child: Container(
+          margin: EdgeInsets.only(
+            left: 20,
+            right: 20,
+            bottom: 18,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                name,
+                style: mono1TextStyle.copyWith(
+                  fontSize: 16,
+                ),
               ),
-            ),
-            SizedBox(
-              height: 18,
-            ),
-            Divider(
-              thickness: 0.5,
-              color: mono3Color,
-            ),
-          ],
+              SizedBox(
+                height: 18,
+              ),
+              Divider(
+                thickness: 0.5,
+                color: mono3Color,
+              ),
+            ],
+          ),
         ),
       );
     }
@@ -82,10 +87,15 @@ class _ListEkskulPelatihState extends State<ListEkskulPelatih> {
                       style: mono1TextStyle,
                     ),
                   )
-                : ListView(
-                    children: data.map((item) {
-                      return contentItem(name: item.eKSKUL.toString());
-                    }).toList(),
+                : Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: ListView(
+                      children: data.map((item) {
+                        return contentItem(
+                            name: item.eKSKUL.toString(),
+                            idEkskul: item.iDEKSKUL.toString());
+                      }).toList(),
+                    ),
                   );
           } else {
             return Center(
