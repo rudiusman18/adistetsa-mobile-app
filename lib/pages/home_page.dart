@@ -451,10 +451,6 @@ class HomePage extends StatelessWidget {
                 text: 'Daftar Anggota',
               ),
             ),
-            ItemCard(
-              urlImg: 'daftar jurnal',
-              text: 'Daftar Jurnal',
-            ),
             GestureDetector(
               onTap: () {
                 Navigator.pushNamed(context, '/pelatih/jurnal-ekskul');
