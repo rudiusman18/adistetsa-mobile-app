@@ -153,7 +153,9 @@ class _DaftarAnggotaPageState extends State<DaftarAnggotaPage> {
                       ],
                     ),
                   ),
-                  Spacer(),
+                  SizedBox(
+                    width: 30,
+                  ),
                   Text(
                     status,
                     style: mono1TextStyle.copyWith(
