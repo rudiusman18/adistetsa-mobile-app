@@ -335,14 +335,7 @@ class _RiwayatPeminjamanBukuUserPageState
                                                         .sTATUSPEMINJAMAN
                                                         .toString(),
                                                   )
-                                                : SizedBox(
-                                                    child: Center(
-                                                      child: Text(
-                                                        'data tidak ditemukan',
-                                                        style: mono1TextStyle,
-                                                      ),
-                                                    ),
-                                                  );
+                                                : SizedBox();
                                           }).toList(),
                                         );
                                 } else {

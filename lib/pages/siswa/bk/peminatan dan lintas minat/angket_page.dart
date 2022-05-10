@@ -15,7 +15,7 @@ class AngketPage extends StatefulWidget {
 class _AngketPageState extends State<AngketPage> {
   PlatformFile? file;
   bool isLoading = true;
-  bool getLoading = true;
+  bool getLoading = false;
   FilePickerResult? result;
   AngketBKModel angket = AngketBKModel();
 
