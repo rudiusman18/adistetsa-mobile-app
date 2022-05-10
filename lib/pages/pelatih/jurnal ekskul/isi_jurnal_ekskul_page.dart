@@ -412,9 +412,7 @@ class _IsiJurnalEkskulPageState extends State<IsiJurnalEkskulPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        selectedDate == null
-                            ? 'Tanggal Pengajuan'
-                            : tanggalMelatih,
+                        selectedDate == null ? 'Tanggal' : tanggalMelatih,
                         style: mono2TextStyle.copyWith(
                           fontSize: 12,
                         ),
