@@ -1,5 +1,6 @@
 import 'package:adistetsa/models/bukutamu_model.dart';
 import 'package:adistetsa/models/daftaranggotaekskul_model.dart';
+import 'package:adistetsa/models/data_siswa_uks_model.dart';
 import 'package:adistetsa/models/detail_daftar_alumni_model.dart';
 import 'package:adistetsa/models/detail_daftar_konsultasi_bk_model.dart';
 import 'package:adistetsa/models/detailjurnalmengajarguru_model.dart';
@@ -174,6 +175,14 @@ class Providers with ChangeNotifier {
     notifyListeners();
   }
   // NOTE: End of sementara
+
+  // NOTE: Digunakan untuk mendapatkan data siswa yang akan digunakan input data UKS
+  DataSiswaUksModel _dataSiswaUKS = DataSiswaUksModel();
+  DataSiswaUksModel get dataSiswaUKS => _dataSiswaUKS;
+  set setDataSiswaUKS(DataSiswaUksModel dataSiswa) {
+    _dataSiswaUKS = dataSiswa;
+    notifyListeners();
+  }
 
   //NOTE: Digunakan untuk mendapatkan angket pada role staff BK
   String _angketPilihanStaffBk = '';

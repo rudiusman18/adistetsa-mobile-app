@@ -44,7 +44,7 @@ class _PilihPTKPageState extends State<PilihPTKPage> {
           Navigator.pushNamed(context, '/staff/humas/loguks/input-data');
         },
         child: Container(
-          // color: m1Color,
+          color: mono6Color,
           width: double.infinity,
           margin: EdgeInsets.only(
             bottom: 18,
@@ -89,7 +89,10 @@ class _PilihPTKPageState extends State<PilihPTKPage> {
             name: 'Siswa',
           ),
           itemList(
-            name: 'Tendik',
+            name: 'Guru',
+          ),
+          itemList(
+            name: 'Karyawan',
           ),
         ],
       ),

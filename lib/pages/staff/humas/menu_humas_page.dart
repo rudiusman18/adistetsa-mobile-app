@@ -41,7 +41,7 @@ class _MenuHumasPageState extends State<MenuHumasPage> {
           Navigator.pushNamed(context, '$url');
         },
         child: Container(
-          // color: m1Color,
+          color: mono6Color,
           width: double.infinity,
           margin: EdgeInsets.only(
             bottom: 18,

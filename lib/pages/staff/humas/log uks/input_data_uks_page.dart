@@ -1,3 +1,4 @@
+import 'package:adistetsa/models/data_siswa_uks_model.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
 import 'package:flutter/material.dart';
@@ -73,6 +74,14 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
   @override
   Widget build(BuildContext context) {
     Providers provider = Provider.of(context);
+
+    setState(() {
+      nameInput.text = provider.dataSiswaUKS.nAMA.toString();
+      nameInput.text == 'null'
+          ? nameInput.text = ''
+          : nameInput.text = provider.dataSiswaUKS.nAMA.toString();
+    });
+
     PreferredSizeWidget inputdataUKSHeader() {
       return AppBar(
         centerTitle: true,
@@ -88,6 +97,7 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
         elevation: 4,
         leading: IconButton(
           onPressed: () {
+            provider.setDataSiswaUKS = DataSiswaUksModel();
             Navigator.pop(context);
           },
           icon: Icon(Icons.arrow_back),
@@ -97,161 +107,88 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
     }
 
     Widget inputNama() {
-      return Container(
-        margin: EdgeInsets.only(
-          left: 20,
-          right: 20,
-          bottom: 20,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Nama',
-              style: mono1TextStyle.copyWith(
-                fontWeight: semiBold,
-                fontSize: 12,
-              ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(
-                12,
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: nameFocusNode.hasFocus || isActiveInputName == true
-                      ? p1Color
-                      : mono3Color,
+      return GestureDetector(
+        onTap: () {
+          Navigator.pushNamed(context, '/humas/data_siswa');
+        },
+        child: Container(
+          margin: EdgeInsets.only(
+            left: 20,
+            right: 20,
+            bottom: 20,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Nama',
+                style: mono1TextStyle.copyWith(
+                  fontWeight: semiBold,
+                  fontSize: 12,
                 ),
               ),
-              child: GestureDetector(
-                child: TextFormField(
-                  onTap: () {
-                    setState(() {
-                      isActiveInputName = true;
-                      isActiveInputnisn = false;
-                      isActiveJenisPemeriksaan = false;
-                      isActiveobatDiberikan = false;
-                      isActivetindakLanjut = false;
-                      isActivedate = false;
-                      flag1 = false;
-                      flag2 = false;
-                      flag3 = false;
-                    });
-                  },
-                  focusNode: nameFocusNode,
-                  onEditingComplete: () {
-                    FocusScopeNode currentFocus = FocusScope.of(context);
+              SizedBox(
+                height: 15,
+              ),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(
+                  12,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: nameFocusNode.hasFocus || isActiveInputName == true
+                        ? p1Color
+                        : mono3Color,
+                  ),
+                ),
+                child: GestureDetector(
+                  child: TextFormField(
+                    onTap: () {
+                      setState(() {
+                        isActiveInputName = true;
+                        isActiveInputnisn = false;
+                        isActiveJenisPemeriksaan = false;
+                        isActiveobatDiberikan = false;
+                        isActivetindakLanjut = false;
+                        isActivedate = false;
+                        flag1 = false;
+                        flag2 = false;
+                        flag3 = false;
+                      });
+                    },
+                    focusNode: nameFocusNode,
+                    onEditingComplete: () {
+                      FocusScopeNode currentFocus = FocusScope.of(context);
 
-                    if (!currentFocus.hasPrimaryFocus) {
-                      currentFocus.unfocus();
-                    }
-                    setState(() {
-                      isActiveInputName = false;
-                    });
-                  },
-                  controller: nameInput,
-                  decoration: InputDecoration.collapsed(
-                    hintText: 'Nama',
-                    hintStyle: p1TextStyle.copyWith(
+                      if (!currentFocus.hasPrimaryFocus) {
+                        currentFocus.unfocus();
+                      }
+                      setState(() {
+                        isActiveInputName = false;
+                      });
+                    },
+                    controller: nameInput,
+                    decoration: InputDecoration.collapsed(
+                      hintText: 'Nama',
+                      enabled: false,
+                      hintStyle: p1TextStyle.copyWith(
+                        fontSize: 12,
+                        color:
+                            nameFocusNode.hasFocus || isActiveInputName == true
+                                ? p1Color
+                                : mono3Color,
+                      ),
+                    ),
+                    style: p1TextStyle.copyWith(
                       fontSize: 12,
-                      color: nameFocusNode.hasFocus || isActiveInputName == true
-                          ? p1Color
-                          : mono3Color,
                     ),
                   ),
-                  style: p1TextStyle.copyWith(
-                    fontSize: 12,
-                  ),
                 ),
               ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    Widget inputNISN() {
-      return Container(
-        margin: EdgeInsets.only(
-          left: 20,
-          right: 20,
-          bottom: 20,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'NISN',
-              style: mono1TextStyle.copyWith(
-                fontWeight: semiBold,
-                fontSize: 12,
-              ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(
-                12,
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: nisnFocusNode.hasFocus || isActiveInputnisn == true
-                      ? p1Color
-                      : mono3Color,
-                ),
-              ),
-              child: GestureDetector(
-                child: TextFormField(
-                  onTap: () {
-                    setState(() {
-                      isActiveInputName = false;
-                      isActiveInputnisn = true;
-                      isActiveJenisPemeriksaan = false;
-                      isActiveobatDiberikan = false;
-                      isActivetindakLanjut = false;
-                      flag1 = false;
-                      flag2 = false;
-                      flag3 = false;
-                    });
-                  },
-                  focusNode: nisnFocusNode,
-                  onEditingComplete: () {
-                    FocusScopeNode currentFocus = FocusScope.of(context);
-
-                    if (!currentFocus.hasPrimaryFocus) {
-                      currentFocus.unfocus();
-                    }
-                    setState(() {
-                      isActiveInputnisn = false;
-                    });
-                  },
-                  controller: nisnInput,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration.collapsed(
-                    hintText: 'NISN',
-                    hintStyle: p1TextStyle.copyWith(
-                      fontSize: 12,
-                      color: nisnFocusNode.hasFocus || isActiveInputnisn == true
-                          ? p1Color
-                          : mono3Color,
-                    ),
-                  ),
-                  style: p1TextStyle.copyWith(
-                    fontSize: 12,
-                  ),
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     }
@@ -581,108 +518,6 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
       );
     }
 
-    Widget inputDropdownSiswa({required String hint, required List item}) {
-      return Container(
-        margin: EdgeInsets.only(
-          left: 20,
-          right: 20,
-          bottom: 20,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '$hint',
-              style: mono1TextStyle.copyWith(
-                fontWeight: semiBold,
-                fontSize: 12,
-              ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Container(
-                height: 40,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: flag1 == true && value1Item != null
-                        ? p1Color
-                        : mono3Color,
-                  ),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                padding: EdgeInsets.symmetric(
-                  horizontal: 12,
-                ),
-                child: DropdownButtonHideUnderline(
-                  child: GestureDetector(
-                    onLongPress: () {
-                      setState(() {
-                        flag1 = false;
-                        value1Item = null;
-                      });
-                    },
-                    child: DropdownButton(
-                      onTap: () {
-                        FocusScopeNode currentFocus = FocusScope.of(context);
-                        currentFocus.unfocus();
-                        isActivedate = false;
-                        isActiveInputName = false;
-                        isActiveInputnisn = false;
-                        isActiveJenisPemeriksaan = false;
-                        isActiveobatDiberikan = false;
-                        isActivetindakLanjut = false;
-                      },
-                      icon: Icon(
-                        Icons.keyboard_arrow_down_outlined,
-                        color: flag1 == true && value1Item != null
-                            ? p1Color
-                            : mono3Color,
-                      ),
-                      hint: Text(
-                        hint,
-                        style: mono3TextStyle.copyWith(
-                          color: flag1 == true && value1Item != null
-                              ? p1Color
-                              : mono3Color,
-                          fontSize: 12,
-                        ),
-                      ),
-                      dropdownColor: mono6Color,
-                      elevation: 2,
-                      value: value1Item,
-                      items: item.map(
-                        (value) {
-                          return DropdownMenuItem(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: mono3TextStyle.copyWith(
-                                color:
-                                    value1Item == value ? p1Color : mono1Color,
-                                fontWeight: regular,
-                                fontSize: 12,
-                              ),
-                            ),
-                          );
-                        },
-                      ).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          print(value);
-                          flag1 = true;
-                          value1Item = value;
-                        });
-                      },
-                    ),
-                  ),
-                )),
-          ],
-        ),
-      );
-    }
-
     Widget inputDropdownASNPTTGTT({required String hint, required List item}) {
       return Container(
         margin: EdgeInsets.only(
@@ -909,8 +744,6 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
           onPressed: () async {
             if (provider.namaPTK == 'Siswa') {
               if (nameInput.text == '' ||
-                  value1Item == null ||
-                  nisnInput.text == '' ||
                   selectedDate == null ||
                   jenisPemeriksaanInput.text == '' ||
                   obatDiberikanInput.text == '' ||
@@ -927,17 +760,15 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
                     isLoading = true;
                   });
                   await Services().tambahLogUKS(
-                      nama: nameInput.text,
-                      kelas: value1Item.toString(),
-                      nisn: nisnInput.text,
+                      nama: provider.dataSiswaUKS.iD.toString(),
+                      kelas: provider.dataSiswaUKS.kELAS,
+                      nisn: provider.dataSiswaUKS.nIS.toString(),
                       tanggal: selectedDate.toString().split(' ')[0],
                       jenisPemeriksaan: jenisPemeriksaanInput.text,
                       obatDiberikan: obatDiberikanInput.text,
                       tindakLanjut: tindakLanjutInput.text,
                       jenisPTK: provider.namaPTK);
-                  nameInput.text = '';
-                  value1Item = null;
-                  nisnInput.text = '';
+                  provider.setDataSiswaUKS = DataSiswaUksModel();
                   selectedDate = null;
                   jenisPemeriksaanInput.text = '';
                   obatDiberikanInput.text = '';
@@ -952,6 +783,9 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
                     isLoading = false;
                   });
                 } catch (e) {
+                  setState(() {
+                    isLoading = false;
+                  });
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       backgroundColor: dangerColor,
                       content: Text(
@@ -1049,15 +883,6 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
             height: 20,
           ),
           inputNama(),
-          inputDropdownSiswa(
-            hint: 'Kelas',
-            item: [
-              'X',
-              'XI',
-              'XII',
-            ],
-          ),
-          inputNISN(),
           inputTanggal(),
           inputJenisPemeriksaan(),
           inputObatDiberikan(),
@@ -1112,18 +937,24 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
       );
     }
 
-    return Scaffold(
-      backgroundColor: mono6Color,
-      appBar: inputdataUKSHeader(),
-      body: ListView(
-        children: [
-          provider.namaPTK == 'Siswa'
-              ? itemSiswa()
-              : provider.namaPTK == 'Tendik'
-                  ? itemASN()
-                  : itemGuru(),
-          buttonSubmit(),
-        ],
+    return WillPopScope(
+      onWillPop: () async {
+        provider.setDataSiswaUKS = DataSiswaUksModel();
+        return true;
+      },
+      child: Scaffold(
+        backgroundColor: mono6Color,
+        appBar: inputdataUKSHeader(),
+        body: ListView(
+          children: [
+            provider.namaPTK == 'Siswa'
+                ? itemSiswa()
+                : provider.namaPTK == 'Karyawan'
+                    ? itemASN()
+                    : itemGuru(),
+            buttonSubmit(),
+          ],
+        ),
       ),
     );
   }
