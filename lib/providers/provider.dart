@@ -158,7 +158,6 @@ class Providers with ChangeNotifier {
   String _angket = '';
   String get angket => _angket;
 
-  // NOTE: Sementara
   String _status = '';
   String get status => _status;
 
@@ -174,7 +173,6 @@ class Providers with ChangeNotifier {
     _staffStatus = staffStatus;
     notifyListeners();
   }
-  // NOTE: End of sementara
 
   // NOTE: Digunakan untuk mendapatkan data siswa yang akan digunakan input data UKS
   DataSiswaUksModel _dataSiswaUKS = DataSiswaUksModel();
