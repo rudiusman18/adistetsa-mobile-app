@@ -2567,7 +2567,7 @@ class Services extends ChangeNotifier {
     }
   }
 
-  // NOTE: digunakan untuk mendapatkan data siswa yang akan diinputkan kedalam log UKS
+  // NOTE: digunakan untuk mendapatkan data guru yang akan diinputkan kedalam log UKS
   getDataGuruUKS({String? search}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 

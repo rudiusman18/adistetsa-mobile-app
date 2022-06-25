@@ -77,15 +77,15 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
     Providers provider = Provider.of(context);
 
     setState(() {
-      nameInput.text == 'null'
-          ? nameInput.text = '0'
-          : nameInput.text = provider.dataSiswaUKS.nAMA.toString();
-
       provider.namaPTK == 'Siswa'
           ? nameInput.text = provider.dataSiswaUKS.nAMA.toString()
           : provider.namaPTK == 'Guru'
               ? nameInput.text = provider.dataGuruUKS.nAMALENGKAP.toString()
-              : Navigator.pushNamed(context, '/humas/data_karyawan');
+              : nameInput.text = '';
+
+      if (nameInput.text == 'null') {
+        nameInput.text = '';
+      }
     });
 
     PreferredSizeWidget inputdataUKSHeader() {
@@ -854,6 +854,9 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
                     isLoading = false;
                   });
                 } catch (e) {
+                  setState(() {
+                    isLoading = false;
+                  });
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       backgroundColor: dangerColor,
                       content: Text(
