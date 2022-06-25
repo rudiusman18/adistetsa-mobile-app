@@ -1,5 +1,4 @@
 import 'package:adistetsa/models/data_siswa_uks_model.dart';
-import 'package:adistetsa/models/siswa_model.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
 import 'package:adistetsa/theme.dart';
@@ -70,7 +69,7 @@ class _DataSiswaUKSPageState extends State<DataSiswaUKSPage> {
               isLoading = true;
             });
 
-            await Services().getDataSiswaKesiswaan();
+            await Services().getDataSiswaUKS();
             setState(() {
               isLoading = false;
             });
