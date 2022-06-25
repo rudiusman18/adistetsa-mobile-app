@@ -1,5 +1,6 @@
 import 'package:adistetsa/models/bukutamu_model.dart';
 import 'package:adistetsa/models/daftaranggotaekskul_model.dart';
+import 'package:adistetsa/models/data_guru_uks_model.dart';
 import 'package:adistetsa/models/data_siswa_uks_model.dart';
 import 'package:adistetsa/models/detail_daftar_alumni_model.dart';
 import 'package:adistetsa/models/detail_daftar_konsultasi_bk_model.dart';
@@ -179,6 +180,14 @@ class Providers with ChangeNotifier {
   DataSiswaUksModel get dataSiswaUKS => _dataSiswaUKS;
   set setDataSiswaUKS(DataSiswaUksModel dataSiswa) {
     _dataSiswaUKS = dataSiswa;
+    notifyListeners();
+  }
+
+  // NOTE: Digunakan untuk mendapatkan data guru yang akan digunakan input data UKS
+  DataGuruUksModel _dataGuruUKS = DataGuruUksModel();
+  DataGuruUksModel get dataGuruUKS => _dataGuruUKS;
+  set setDataGuruUKS(DataGuruUksModel dataGuru) {
+    _dataGuruUKS = dataGuru;
     notifyListeners();
   }
 
