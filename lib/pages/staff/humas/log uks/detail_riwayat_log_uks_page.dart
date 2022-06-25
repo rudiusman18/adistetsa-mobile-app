@@ -142,18 +142,6 @@ class _DetailRiwayatLogUKSPageState extends State<DetailRiwayatLogUKSPage> {
                 Expanded(
                   child: ListView(
                     children: [
-                      provider.roleRiwayatLogUks == 'Siswa'
-                          ? listItem(
-                              name: 'Kelas',
-                              value: '${siswa.kELAS}',
-                            )
-                          : Container(),
-                      provider.roleRiwayatLogUks == 'Siswa'
-                          ? listItem(
-                              name: 'NISN',
-                              value: '${siswa.nISN}',
-                            )
-                          : Container(),
                       listItem(
                         name: 'Tanggal',
                         value: provider.roleRiwayatLogUks == 'Siswa'

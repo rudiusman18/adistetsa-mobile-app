@@ -1940,15 +1940,16 @@ class Services extends ChangeNotifier {
   }
 
   //NOTE: Menambahkan log UKS
-  tambahLogUKS(
-      {String? nama,
-      String? kelas,
-      String? nisn,
-      String? tanggal,
-      String? jenisPemeriksaan,
-      String? obatDiberikan,
-      String? tindakLanjut,
-      String? jenisPTK}) async {
+  tambahLogUKS({
+    String? nama,
+    String? kelas,
+    String? nisn,
+    String? tanggal,
+    String? jenisPemeriksaan,
+    String? obatDiberikan,
+    String? tindakLanjut,
+    String? jenisPTK,
+  }) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token").toString();
     var url;

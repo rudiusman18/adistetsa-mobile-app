@@ -764,8 +764,9 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
                             child: Text(
                               value.split('.')[0],
                               style: mono3TextStyle.copyWith(
-                                color:
-                                    value2Item == value.split('.')[0] ? p1Color : mono1Color,
+                                color: value2Item == value.split('.')[0]
+                                    ? p1Color
+                                    : mono1Color,
                                 fontWeight: regular,
                                 fontSize: 12,
                               ),

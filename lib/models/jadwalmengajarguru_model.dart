@@ -8,15 +8,16 @@ class JadwalMengajarGuruModel {
   String? sEMESTER;
   String? hARI;
 
-  JadwalMengajarGuruModel(
-      {this.iD,
-      this.gURU,
-      this.tAHUNAJARAN,
-      this.kELAS,
-      this.mATAPELAJARAN,
-      this.wAKTUPELAJARAN,
-      this.sEMESTER,
-      this.hARI});
+  JadwalMengajarGuruModel({
+    this.iD,
+    this.gURU,
+    this.tAHUNAJARAN,
+    this.kELAS,
+    this.mATAPELAJARAN,
+    this.wAKTUPELAJARAN,
+    this.sEMESTER,
+    this.hARI,
+  });
 
   JadwalMengajarGuruModel.fromJson(Map<String, dynamic> json) {
     iD = json['ID'];
