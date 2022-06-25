@@ -1967,8 +1967,18 @@ class Services extends ChangeNotifier {
         'OBAT_DIBERIKAN': obatDiberikan,
         'TINDAK_LANJUT': tindakLanjut,
       };
-    } else {
+    } else if (jenisPTK == 'Guru') {
       url = Uri.parse('$baseUrl/hubungan_masyarakat/tambah_log_uks_tendik');
+      body = {
+        'JENIS_PTK': jenisPTK,
+        'NAMA': nama,
+        'TANGGAL': tanggal,
+        'JENIS_PEMERIKSAAN': jenisPemeriksaan,
+        'OBAT_DIBERIKAN': obatDiberikan,
+        'TINDAK_LANJUT': tindakLanjut,
+      };
+    } else {
+      url = Uri.parse('$baseUrl/hubungan_masyarakat/tambah_log_uks_karyawan');
       body = {
         'JENIS_PTK': jenisPTK,
         'NAMA': nama,
