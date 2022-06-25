@@ -27,7 +27,7 @@ class _DataGuruUKSPageState extends State<DataGuruUKSPage> {
       return AppBar(
         centerTitle: true,
         title: Text(
-          'Data Guru',
+          'Data ${provider.namaPTK}',
           style: mono1TextStyle.copyWith(
             fontWeight: semiBold,
             fontSize: 18,
@@ -70,8 +70,9 @@ class _DataGuruUKSPageState extends State<DataGuruUKSPage> {
               isSearch = false;
               isLoading = true;
             });
-
-            await Services().getDataGuruUKS();
+            provider.namaPTK == 'Guru'
+                ? await Services().getDataGuruUKS()
+                : await Services().getDataKaryawanUKS();
             setState(() {
               isLoading = false;
             });
@@ -101,7 +102,9 @@ class _DataGuruUKSPageState extends State<DataGuruUKSPage> {
               isLoading = true;
             });
 
-            await Services().getDataGuruUKS();
+            provider.namaPTK == 'Guru'
+                ? await Services().getDataGuruUKS()
+                : await Services().getDataKaryawanUKS();
 
             setState(() {
               isLoading = false;
@@ -218,7 +221,7 @@ class _DataGuruUKSPageState extends State<DataGuruUKSPage> {
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 40),
               child: Text(
-                'Pilih Guru',
+                'Pilih ${provider.namaPTK}',
                 style: mono6TextStyle.copyWith(
                   fontWeight: bold,
                   fontSize: 16,
@@ -238,7 +241,9 @@ class _DataGuruUKSPageState extends State<DataGuruUKSPage> {
                 Padding(
                   padding: const EdgeInsets.only(top: 20),
                   child: FutureBuilder(
-                    future: Services().getDataGuruUKS(search: urlSearch),
+                    future: provider.namaPTK == 'Guru'
+                        ? Services().getDataGuruUKS(search: urlSearch)
+                        : Services().getDataKaryawanUKS(search: urlSearch),
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (snapshot.hasData) {
                         var index = 0;

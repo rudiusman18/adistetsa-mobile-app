@@ -38,7 +38,6 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
   Object? value1Item;
   bool flag1 = false;
 
-  Object? value2Item;
   bool flag2 = false;
 
   Object? value3Item;
@@ -79,7 +78,7 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
     setState(() {
       provider.namaPTK == 'Siswa'
           ? nameInput.text = provider.dataSiswaUKS.nAMA.toString()
-          : provider.namaPTK == 'Guru'
+          : provider.namaPTK == 'Guru' || provider.namaPTK == 'Karyawan'
               ? nameInput.text = provider.dataGuruUKS.nAMALENGKAP.toString()
               : nameInput.text = '';
 
@@ -118,9 +117,7 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
         onTap: () {
           provider.namaPTK == 'Siswa'
               ? Navigator.pushNamed(context, '/humas/data_siswa')
-              : provider.namaPTK == 'Guru'
-                  ? Navigator.pushNamed(context, '/humas/data_guru')
-                  : Navigator.pushNamed(context, '/humas/data_karyawan');
+              : Navigator.pushNamed(context, '/humas/data_guru');
         },
         child: Container(
           margin: EdgeInsets.only(
@@ -529,112 +526,6 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
       );
     }
 
-    Widget inputDropdownASNPTTGTT({required String hint, required List item}) {
-      return Container(
-        margin: EdgeInsets.only(
-          left: 20,
-          right: 20,
-          bottom: 20,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '$hint',
-              style: mono1TextStyle.copyWith(
-                fontWeight: semiBold,
-                fontSize: 12,
-              ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Container(
-                height: 40,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: flag2 == true && value2Item != null
-                        ? p1Color
-                        : mono3Color,
-                  ),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                padding: EdgeInsets.symmetric(
-                  horizontal: 12,
-                ),
-                child: DropdownButtonHideUnderline(
-                  child: GestureDetector(
-                    onLongPress: () {
-                      setState(() {
-                        flag2 = false;
-                        value2Item = null;
-                      });
-                    },
-                    child: DropdownButton(
-                      onTap: () {
-                        FocusScopeNode currentFocus = FocusScope.of(context);
-                        currentFocus.unfocus();
-                        isActiveInputName = false;
-                        isActiveInputnisn = false;
-                        isActiveJenisPemeriksaan = false;
-                        isActiveobatDiberikan = false;
-                        isActivetindakLanjut = false;
-                        isActivedate = false;
-                        flag1 = false;
-                        flag2 = false;
-                        flag3 = false;
-                      },
-                      icon: Icon(
-                        Icons.keyboard_arrow_down_outlined,
-                        color: flag2 == true && value2Item != null
-                            ? p1Color
-                            : mono3Color,
-                      ),
-                      hint: Text(
-                        hint,
-                        style: mono3TextStyle.copyWith(
-                          color: flag2 == true && value2Item != null
-                              ? p1Color
-                              : mono3Color,
-                          fontSize: 12,
-                        ),
-                      ),
-                      dropdownColor: mono6Color,
-                      elevation: 2,
-                      value: value2Item,
-                      items: item.map(
-                        (value) {
-                          return DropdownMenuItem(
-                            value: value.split('.')[1],
-                            child: Text(
-                              value.split('.')[0],
-                              style: mono3TextStyle.copyWith(
-                                color: value2Item == value.split('.')[0]
-                                    ? p1Color
-                                    : mono1Color,
-                                fontWeight: regular,
-                                fontSize: 12,
-                              ),
-                            ),
-                          );
-                        },
-                      ).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          print(value);
-                          flag2 = true;
-                          value2Item = value;
-                        });
-                      },
-                    ),
-                  ),
-                )),
-          ],
-        ),
-      );
-    }
-
     Widget inputDropdownGuruKaryawan(
         {required String hint, required List item}) {
       return Container(
@@ -781,6 +672,7 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
                       tindakLanjut: tindakLanjutInput.text,
                       jenisPTK: provider.namaPTK);
                   provider.setDataSiswaUKS = DataSiswaUksModel();
+
                   selectedDate = null;
                   jenisPemeriksaanInput.text = '';
                   obatDiberikanInput.text = '';
@@ -841,6 +733,7 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
                   value3Item = null;
                   nameInput.text = '';
                   selectedDate = null;
+                  provider.setDataGuruUKS = DataGuruUksModel();
                   jenisPemeriksaanInput.text = '';
                   obatDiberikanInput.text = '';
                   tindakLanjutInput.text = '';
@@ -918,13 +811,13 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
           SizedBox(
             height: 20,
           ),
-          inputDropdownASNPTTGTT(
+          inputDropdownGuruKaryawan(
             hint: 'Jenis PTK',
             item: [
-              'ASN (Aparatur Sipil Negara).Aparatur Sipil Negara',
-              'GTT (Guru Tidak Tetap).Guru Tidak Tetap',
-              'PTT (Pegawai Tidak Tetap).Pegawai Tidak Tetap',
-              'Guru.Guru',
+              'Guru Tidak Tetap',
+              'Aparatur Sipil Negara',
+              'Pegawai Tidak Tetap',
+              'Guru',
             ],
           ),
           inputNama(),

@@ -416,12 +416,10 @@ class _RiwayatLogUKSPageState extends State<RiwayatLogUKSPage> {
                 dropdownList3(
                   hint: 'Jenis PTK',
                   data: [
-                    'Siswa',
-                    'ASN (Aparatur Sipil Negara)',
-                    'GTT (Guru Tidak Tetap)',
-                    'PTT (Pegawai Tidak Tetap)',
+                    'Guru Tidak Tetap',
+                    'Aparatur Sipil Negara',
+                    'Pegawai Tidak Tetap',
                     'Guru',
-                    'Tendik',
                   ],
                 ),
               ],

@@ -2590,4 +2590,28 @@ class Services extends ChangeNotifier {
       throw Exception(response.body);
     }
   }
+
+  // NOTE: digunakan untuk mendapatkan data karyawan yang akan diinputkan kedalam log UKS
+  getDataKaryawanUKS({String? search}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString("token").toString();
+    var url;
+
+    url = Uri.parse('$baseUrl/hubungan_masyarakat/data_karyawan?$search');
+
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    print(response.statusCode);
+
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<DataGuruUksModel> dataGuru =
+          data.map((item) => DataGuruUksModel.fromJson(item)).toList();
+      print(response.body);
+      return dataGuru;
+    } else {
+      throw Exception(response.body);
+    }
+  }
 }
