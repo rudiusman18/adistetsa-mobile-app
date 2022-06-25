@@ -44,6 +44,7 @@ import 'package:adistetsa/pages/staff/bk/status%20data%20halobk/status_data_staf
 import 'package:adistetsa/pages/staff/humas/buku%20tamu/detail_riwayat_buku_tamu_page.dart';
 import 'package:adistetsa/pages/staff/humas/buku%20tamu/input_tamu_page.dart';
 import 'package:adistetsa/pages/staff/humas/buku%20tamu/riwayat_buku_tamu_page.dart';
+import 'package:adistetsa/pages/staff/humas/log%20uks/data_guru_uks_page.dart';
 import 'package:adistetsa/pages/staff/humas/log%20uks/data_siswa_uks_page.dart';
 import 'package:adistetsa/pages/staff/humas/log%20uks/detail_riwayat_log_uks_page.dart';
 import 'package:adistetsa/pages/staff/humas/log%20uks/input_data_uks_page.dart';
@@ -647,6 +648,11 @@ class AdiStetsa extends StatelessWidget {
             case '/humas/data_siswa':
               return PageTransition(
                 child: DataSiswaUKSPage(),
+                type: PageTransitionType.rightToLeft,
+              );
+            case '/humas/data_guru':
+              return PageTransition(
+                child: DataGuruUKSPage(),
                 type: PageTransitionType.rightToLeft,
               );
 

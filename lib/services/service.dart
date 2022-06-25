@@ -6,6 +6,7 @@ import 'package:adistetsa/models/daftar_alumni_model.dart';
 import 'package:adistetsa/models/daftar_kader_model.dart';
 import 'package:adistetsa/models/daftar_konsultasi_BK_model.dart';
 import 'package:adistetsa/models/daftaranggotaekskul_model.dart';
+import 'package:adistetsa/models/data_guru_uks_model.dart';
 import 'package:adistetsa/models/data_siswa_uks_model.dart';
 import 'package:adistetsa/models/detail_daftar_alumni_model.dart';
 import 'package:adistetsa/models/detail_daftar_konsultasi_bk_model.dart';
@@ -53,7 +54,6 @@ import 'package:adistetsa/models/sanitasi_drainase_model.dart';
 import 'package:adistetsa/models/siswa_model.dart';
 import 'package:adistetsa/models/status_pengajuan_konseling_model.dart';
 import 'package:adistetsa/models/tabungan_sampah_model.dart';
-import 'package:adistetsa/pages/staff/humas/log%20uks/data_siswa_uks_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -2562,6 +2562,30 @@ class Services extends ChangeNotifier {
           data.map((item) => DataSiswaUksModel.fromJson(item)).toList();
       print(response.body);
       return dataSiswa;
+    } else {
+      throw Exception(response.body);
+    }
+  }
+
+  // NOTE: digunakan untuk mendapatkan data siswa yang akan diinputkan kedalam log UKS
+  getDataGuruUKS({String? search}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.getString("token").toString();
+    var url;
+
+    url = Uri.parse('$baseUrl/hubungan_masyarakat/data_guru?$search');
+
+    var headers = {"Content-type": "application/json", "authorization": token};
+    var response = await http.get(url, headers: headers);
+    print(response.statusCode);
+
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['results'];
+      List<DataGuruUksModel> dataGuru =
+          data.map((item) => DataGuruUksModel.fromJson(item)).toList();
+      print(response.body);
+      return dataGuru;
     } else {
       throw Exception(response.body);
     }

@@ -1,3 +1,4 @@
+import 'package:adistetsa/models/data_guru_uks_model.dart';
 import 'package:adistetsa/models/data_siswa_uks_model.dart';
 import 'package:adistetsa/providers/provider.dart';
 import 'package:adistetsa/services/service.dart';
@@ -76,10 +77,15 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
     Providers provider = Provider.of(context);
 
     setState(() {
-      nameInput.text = provider.dataSiswaUKS.nAMA.toString();
       nameInput.text == 'null'
-          ? nameInput.text = ''
+          ? nameInput.text = '0'
           : nameInput.text = provider.dataSiswaUKS.nAMA.toString();
+
+      provider.namaPTK == 'Siswa'
+          ? nameInput.text = provider.dataSiswaUKS.nAMA.toString()
+          : provider.namaPTK == 'Guru'
+              ? nameInput.text = provider.dataGuruUKS.nAMALENGKAP.toString()
+              : Navigator.pushNamed(context, '/humas/data_karyawan');
     });
 
     PreferredSizeWidget inputdataUKSHeader() {
@@ -98,6 +104,7 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
         leading: IconButton(
           onPressed: () {
             provider.setDataSiswaUKS = DataSiswaUksModel();
+            provider.setDataGuruUKS = DataGuruUksModel();
             Navigator.pop(context);
           },
           icon: Icon(Icons.arrow_back),
@@ -109,7 +116,11 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
     Widget inputNama() {
       return GestureDetector(
         onTap: () {
-          Navigator.pushNamed(context, '/humas/data_siswa');
+          provider.namaPTK == 'Siswa'
+              ? Navigator.pushNamed(context, '/humas/data_siswa')
+              : provider.namaPTK == 'Guru'
+                  ? Navigator.pushNamed(context, '/humas/data_guru')
+                  : Navigator.pushNamed(context, '/humas/data_karyawan');
         },
         child: Container(
           margin: EdgeInsets.only(
@@ -742,6 +753,7 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
         ),
         child: TextButton(
           onPressed: () async {
+            print(provider.namaPTK);
             if (provider.namaPTK == 'Siswa') {
               if (nameInput.text == '' ||
                   selectedDate == null ||
@@ -795,7 +807,13 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
                 }
               }
             } else {
-              if (value2Item == null ||
+              print(value3Item);
+              print(nameInput.text);
+              print(selectedDate);
+              print(jenisPemeriksaanInput.text);
+              print(obatDiberikanInput.text);
+              print(tindakLanjutInput.text);
+              if (value3Item == null ||
                   nameInput.text == '' ||
                   selectedDate == null ||
                   jenisPemeriksaanInput.text == '' ||
@@ -813,14 +831,14 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
                     isLoading = true;
                   });
                   await Services().tambahLogUKS(
-                    jenisPTK: value2Item.toString(),
-                    nama: nameInput.text,
+                    jenisPTK: value3Item.toString(),
+                    nama: provider.dataGuruUKS.iD.toString(),
                     tanggal: selectedDate.toString().split(' ')[0],
                     jenisPemeriksaan: jenisPemeriksaanInput.text,
                     obatDiberikan: obatDiberikanInput.text,
                     tindakLanjut: tindakLanjutInput.text,
                   );
-                  value2Item = null;
+                  value3Item = null;
                   nameInput.text = '';
                   selectedDate = null;
                   jenisPemeriksaanInput.text = '';
@@ -924,8 +942,10 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
           inputDropdownGuruKaryawan(
             hint: 'Jenis PTK',
             item: [
+              'Guru Tidak Tetap',
+              'Aparatur Sipil Negara',
+              'Pegawai Tidak Tetap',
               'Guru',
-              'Tendik',
             ],
           ),
           inputNama(),
@@ -940,6 +960,7 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
     return WillPopScope(
       onWillPop: () async {
         provider.setDataSiswaUKS = DataSiswaUksModel();
+        provider.setDataGuruUKS = DataGuruUksModel();
         return true;
       },
       child: Scaffold(
