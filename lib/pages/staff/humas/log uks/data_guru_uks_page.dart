@@ -248,7 +248,7 @@ class _DataGuruUKSPageState extends State<DataGuruUKSPage> {
                       if (snapshot.hasData) {
                         var index = 0;
                         List<DataGuruUksModel> data = snapshot.data;
-                        print(data[1]);
+
                         return data.isEmpty
                             ? Center(
                                 child: Text(
