@@ -78,7 +78,7 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
     setState(() {
       provider.namaPTK == 'Siswa'
           ? nameInput.text = provider.dataSiswaUKS.nAMA.toString()
-          : provider.namaPTK == 'Guru' || provider.namaPTK == 'Karyawan'
+          : provider.namaPTK == 'Guru' || provider.namaPTK == 'Tendik'
               ? nameInput.text = provider.dataGuruUKS.nAMALENGKAP.toString()
               : nameInput.text = '';
 
@@ -817,7 +817,6 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
               'Guru Tidak Tetap',
               'Aparatur Sipil Negara',
               'Pegawai Tidak Tetap',
-              'Guru',
             ],
           ),
           inputNama(),
@@ -841,7 +840,6 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
               'Guru Tidak Tetap',
               'Aparatur Sipil Negara',
               'Pegawai Tidak Tetap',
-              'Guru',
             ],
           ),
           inputNama(),
@@ -866,7 +864,7 @@ class _InputDataUKSPageState extends State<InputDataUKSPage> {
           children: [
             provider.namaPTK == 'Siswa'
                 ? itemSiswa()
-                : provider.namaPTK == 'Karyawan'
+                : provider.namaPTK == 'Tendik'
                     ? itemASN()
                     : itemGuru(),
             buttonSubmit(),
