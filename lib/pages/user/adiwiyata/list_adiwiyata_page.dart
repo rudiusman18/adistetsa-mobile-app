@@ -144,12 +144,12 @@ class _ListAdiwiyataPageState extends State<ListAdiwiyataPage> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          provider.setfiturAdiwiyata = 'Pemeliharaan Sampah';
+                          provider.setfiturAdiwiyata = 'Pengolahan Sampah';
                           Navigator.pushNamed(
                               context, '/user/adiwiyata/pengelolaan-sampah');
                         },
                         child: Text(
-                          'Pemeliharaan Sampah',
+                          'Pengolahan Sampah',
                           style: mono1TextStyle.copyWith(
                             fontSize: 16,
                           ),

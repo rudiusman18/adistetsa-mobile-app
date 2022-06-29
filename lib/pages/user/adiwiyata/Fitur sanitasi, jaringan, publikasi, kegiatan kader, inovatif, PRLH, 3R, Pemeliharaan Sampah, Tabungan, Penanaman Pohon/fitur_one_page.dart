@@ -161,7 +161,7 @@ class _FiturOnePageState extends State<FiturOnePage> {
                                                         '3R'
                                                     ? await Services().get3R()
                                                     : provider.fiturAdiwiyata ==
-                                                            'Pemeliharaan Sampah'
+                                                            'Pengolahan Sampah'
                                                         ? await Services()
                                                             .getPemeliharaanSampah()
                                                         : Container();
@@ -527,8 +527,7 @@ class _FiturOnePageState extends State<FiturOnePage> {
                       ),
                       provider.fiturAdiwiyata == 'Kegiatan Kader' ||
                               provider.fiturAdiwiyata == 'Pembibitan Pohon' ||
-                              provider.fiturAdiwiyata ==
-                                  'Pemeliharaan Sampah' ||
+                              provider.fiturAdiwiyata == 'Pengolahan Sampah' ||
                               provider.fiturAdiwiyata == 'Tabungan Sampah'
                           ? Container()
                           : Text(
@@ -857,7 +856,7 @@ class _FiturOnePageState extends State<FiturOnePage> {
                                                                   search:
                                                                       urlSearch)
                                                               : provider.fiturAdiwiyata ==
-                                                                      'Pemeliharaan Sampah'
+                                                                      'Pengolahan Sampah'
                                                                   ? Services().getPemeliharaanSampah(
                                                                       search:
                                                                           urlSearch,
@@ -1032,7 +1031,7 @@ class _FiturOnePageState extends State<FiturOnePage> {
                                                                                 urlDokumentasi: '${item.fILE}',
                                                                                 urlMOU: '',
                                                                               )
-                                                                            : provider.fiturAdiwiyata == 'Pemeliharaan Sampah'
+                                                                            : provider.fiturAdiwiyata == 'Pengolahan Sampah'
                                                                                 ? expandableItem(
                                                                                     inputSatu: '${item.tANGGAL}',
                                                                                     inputDua: '${item.nAMAKEGIATAN}',
